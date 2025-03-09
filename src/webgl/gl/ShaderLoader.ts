@@ -17,13 +17,19 @@ export class ShaderLoader{
     public async loadCommonShaders(): Promise<void> {
         const vertShaderFiles = import.meta.glob('@webgl/shader/*.vert', {query: '?raw', import: 'default'});
         const fragShaderFiles = import.meta.glob('@webgl/shader/*.frag', {query: '?raw', import: 'default'});
-        for (const file in vertShaderFiles) {
-            const content = await vertShaderFiles[file]();
-            console.log(content);
+        for (const filePath in vertShaderFiles) {
+            const content = await vertShaderFiles[filePath]() as string;
+            let shaderKey = filePath.split('/').pop()?.split('.').shift() as string;
+            ShaderLoader.vertexShaderCache.set(shaderKey, content);
         }
-        for (const file in fragShaderFiles) {
-            const content = await fragShaderFiles[file]();
-            console.log(content);
+        for (const filePath in fragShaderFiles) {
+            const content = await fragShaderFiles[filePath]() as string;
+            let shaderKey = filePath.split('/').pop()?.split('.').shift() as string;
+            ShaderLoader.fragmentShaderCache.set(shaderKey, content);
         }
+
+        console.log("Common shaders loaded");
+        console.log(ShaderLoader.vertexShaderCache);
+        console.log(ShaderLoader.fragmentShaderCache);
     }
 }
