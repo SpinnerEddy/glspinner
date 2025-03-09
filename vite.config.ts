@@ -9,6 +9,9 @@ export default defineConfig({
             fileName: 'spinnergl-lib',
         }
     },
+    server: {
+        port: 2222
+    },
     plugins: [
         glsl({
             include: /\.(glsl|vert|frag)$/,
