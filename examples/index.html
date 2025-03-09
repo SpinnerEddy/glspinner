@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>glspinner</title>
+    <style type="text/css">
+        canvas {
+            border: 5px dotted orangered;
+        }
+    </style>
 </head>
+<script type="module" src="sample.ts"></script>
 <body>
-    <h1>glspinner Test</h1>
-
-    <script type="module">
-        import * as GLSpinner from '../src/index.ts';
-
-        GLSpinner.initializeLibrary();
-    </script>
+    <canvas id="webgl-canvas" width="800" height="800"></canvas>
 </body>
 </html>
