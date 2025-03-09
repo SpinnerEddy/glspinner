@@ -25,7 +25,7 @@ export default defineConfig({
     },
     plugins: [
         glsl({
-            include: /\.(glsl|vert|frag)$/,
+            include: ['**/*.glsl', '**/*.vert', '**/*.frag'],
         })
     ]
 });

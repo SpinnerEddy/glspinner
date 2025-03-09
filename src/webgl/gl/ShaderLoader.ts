@@ -22,26 +22,25 @@ export class ShaderLoader{
     }
 
     public async loadCommonShaders(): Promise<void> {
-        const vertShaderFiles = import.meta.glob('@webgl/shader/*.vert', {query: '?raw', import: 'default'});
-        const fragShaderFiles = import.meta.glob('@webgl/shader/*.frag', {query: '?raw', import: 'default'});
+        const vertShaderFiles = import.meta.glob('@webgl/shader/*.vert', {query: '?raw', eager: true});
+        const fragShaderFiles = import.meta.glob('@webgl/shader/*.frag', {query: '?raw', eager: true});
 
         const vertexShaderCache: Map<string, string> = new Map();
         const fragmentShaderCache: Map<string, string> = new Map();
 
-        await Promise.all([
-            ...Object.entries(vertShaderFiles).map(async ([filePath, importer]) => {
-                const content = await importer() as string;
-                const shaderKey = filePath.split('/').pop()?.split('.').shift()!;
-                vertexShaderCache.set(shaderKey, content);
-                this.programKey.add(shaderKey);
-            }),
-            ...Object.entries(fragShaderFiles).map(async ([filePath, importer]) => {
-                const content = await importer() as string;
-                const shaderKey = filePath.split('/').pop()?.split('.').shift()!;
-                fragmentShaderCache.set(shaderKey, content);
-                this.programKey.add(shaderKey);
-            }),
-        ]);
+        Object.entries(vertShaderFiles).forEach(([filePath, module]) => {
+            const content = (module as { default: string }).default;
+            const shaderKey = filePath.split('/').pop()?.split('.').shift()!;
+            vertexShaderCache.set(shaderKey, content as string);
+            this.programKey.add(shaderKey);
+        });
+        
+        Object.entries(fragShaderFiles).forEach(([filePath, module]) => {
+            const content = (module as { default: string }).default;
+            const shaderKey = filePath.split('/').pop()?.split('.').shift()!;
+            fragmentShaderCache.set(shaderKey, content as string);
+            this.programKey.add(shaderKey);
+        });
 
         for (const key of this.programKey) {
             console.log(key);
