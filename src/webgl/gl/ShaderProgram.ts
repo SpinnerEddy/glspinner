@@ -1,6 +1,8 @@
 export class ShaderProgram{
     private gl: WebGL2RenderingContext;
     private program: WebGLProgram;
+    private vertexShader: WebGLShader | undefined;
+    private fragmentShader: WebGLShader | undefined;
 
     constructor(gl: WebGL2RenderingContext, vertShaderSource: string, fragShaderSource: string){
         this.gl = gl;
@@ -14,14 +16,16 @@ export class ShaderProgram{
     private createProgram(vertexShaderSource: string, fragmentShaderSource: string): WebGLProgram{
         const program = this.gl.createProgram();
 
-        const vertexShader = this.compileShader(vertexShaderSource, 'vert');
-        const fragmentShader = this.compileShader(fragmentShaderSource, 'frag');
-        this.gl.attachShader(program, vertexShader);
-        this.gl.attachShader(program, fragmentShader);
+        this.vertexShader = this.compileShader(vertexShaderSource, 'vert');
+        this.fragmentShader = this.compileShader(fragmentShaderSource, 'frag');
+        this.gl.attachShader(program, this.vertexShader);
+        this.gl.attachShader(program, this.fragmentShader);
         this.gl.linkProgram(program);
 
         if(this.gl.getProgramParameter(program, this.gl.LINK_STATUS)){
             this.gl.useProgram(program);
+
+            console.log('Create program success!!');
 
             return program;
         }
