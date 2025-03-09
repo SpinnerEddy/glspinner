@@ -29,6 +29,7 @@ export * from './math/ValueConstants';
 
 // WebGL
 export * from './webgl/gl/WebGLUtility';
+export * from './webgl/gl/ShaderLoader';
 
 export function initializeLibrary() {
     console.log("ライブラリが初期化されました");
