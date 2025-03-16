@@ -1,6 +1,5 @@
 import { ShaderAttribute } from "./ShaderAttribute";
 import { ShaderUniform } from "./uniform/ShaderUniform";
-import { UniformType } from "./uniform/ShaderUniformConstants";
 import { ShaderUniformValue } from "./uniform/ShaderUniformValue";
 
 export class ShaderProgram{
