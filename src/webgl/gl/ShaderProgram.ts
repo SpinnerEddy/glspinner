@@ -3,6 +3,7 @@ export class ShaderProgram{
     private program: WebGLProgram;
     private vertexShader: WebGLShader | undefined;
     private fragmentShader: WebGLShader | undefined;
+    
 
     constructor(gl: WebGL2RenderingContext, vertShaderSource: string, fragShaderSource: string){
         this.gl = gl;
