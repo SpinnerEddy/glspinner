@@ -1,9 +1,15 @@
+import { ShaderAttribute } from "./ShaderAttribute";
+import { ShaderUniform } from "./uniform/ShaderUniform";
+import { UniformType } from "./uniform/ShaderUniformConstants";
+import { ShaderUniformValue } from "./uniform/ShaderUniformValue";
+
 export class ShaderProgram{
     private gl: WebGL2RenderingContext;
     private program: WebGLProgram;
     private vertexShader: WebGLShader | undefined;
     private fragmentShader: WebGLShader | undefined;
-    
+    private attributes: Map<string, ShaderAttribute> = new Map();
+    private uniforms: Map<string, ShaderUniform> = new Map();
 
     constructor(gl: WebGL2RenderingContext, vertShaderSource: string, fragShaderSource: string){
         this.gl = gl;
@@ -12,6 +18,28 @@ export class ShaderProgram{
 
     public getProgram(): WebGLProgram{
         return this.program;
+    }
+
+    public getAttribute(name: string): ShaderAttribute{
+        if(!this.attributes.has(name)){
+            this.attributes.set(name, new ShaderAttribute(this.gl, this.program, name));
+        }
+        return this.attributes.get(name)!;
+    }
+
+    public setAttribute(name: string, size: number, type: number, stride: number, offset: number): void{
+        this.getAttribute(name).setAttributeBuffer(size, type, stride, offset);
+    }
+
+    public getUniform(name: string): ShaderUniform{
+        if(!this.uniforms.has(name)){
+            this.uniforms.set(name, new ShaderUniform(this.gl, this.program, name));
+        }
+        return this.uniforms.get(name)!;
+    }
+
+    public setUniform(name: string, value: ShaderUniformValue): void{
+        this.getUniform(name).setUniform(value.getUniformValues(), value.getUniformType())
     }
 
     private createProgram(vertexShaderSource: string, fragmentShaderSource: string): WebGLProgram{
