@@ -2,11 +2,19 @@ import { ShaderProgram } from "./ShaderProgram";
 
 export class ShaderLoader{
     private gl: WebGL2RenderingContext;
-    private commonProgramCache: Map<string, ShaderProgram> = new Map();
-    private programKey: Set<string> = new Set();
+    private shaderProgramCache: Map<string, ShaderProgram> = new Map();
+    private shaderProgramKey: Set<string> = new Set();
 
     constructor(gl: WebGL2RenderingContext){
         this.gl = gl;
+    }
+
+    public getShaderProgram(key: string): ShaderProgram{
+        if(!this.shaderProgramKey.has(key)){
+            throw new Error(`Common program with key ${key} not found`);
+        }
+        
+        return this.shaderProgramCache.get(key)!;
     }
 
     public async loadShaderFromPath(vertShaderPath: string, fragShaderPath: string): Promise<void> {
@@ -15,10 +23,11 @@ export class ShaderLoader{
         let shaderKey = fragShaderPath.split('/').pop()?.split('.').shift() as string;
 
         let program = new ShaderProgram(this.gl, vertShaderSource, fragShaderSource);
-        this.commonProgramCache.set(shaderKey, program);
+        this.shaderProgramCache.set(shaderKey, program);
+        this.shaderProgramKey.add(shaderKey);
         
         console.log("loadShaderFromPath done");
-        console.log(this.commonProgramCache);
+        console.log(this.shaderProgramCache);
     }
 
     public async loadCommonShaders(): Promise<void> {
@@ -32,17 +41,17 @@ export class ShaderLoader{
             const content = (module as { default: string }).default;
             const shaderKey = filePath.split('/').pop()?.split('.').shift()!;
             vertexShaderCache.set(shaderKey, content as string);
-            this.programKey.add(shaderKey);
+            this.shaderProgramKey.add(shaderKey);
         });
         
         Object.entries(fragShaderFiles).forEach(([filePath, module]) => {
             const content = (module as { default: string }).default;
             const shaderKey = filePath.split('/').pop()?.split('.').shift()!;
             fragmentShaderCache.set(shaderKey, content as string);
-            this.programKey.add(shaderKey);
+            this.shaderProgramKey.add(shaderKey);
         });
 
-        for (const key of this.programKey) {
+        for (const key of this.shaderProgramKey) {
             console.log(key);
             let vertexShaderSource = vertexShaderCache.get(key) as string;
             let fragmentShaderSource = fragmentShaderCache.get(key) as string;
@@ -51,11 +60,11 @@ export class ShaderLoader{
                 continue;
             }
             let program = new ShaderProgram(this.gl, vertexShaderSource, fragmentShaderSource);
-            this.commonProgramCache.set(key, program);
+            this.shaderProgramCache.set(key, program);
         }
 
         console.log("loadCommonShaders done");
-        console.log(this.commonProgramCache);
+        console.log(this.shaderProgramCache);
     }
 
     async loadShader(path: string): Promise<string>{

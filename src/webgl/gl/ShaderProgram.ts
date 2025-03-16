@@ -19,6 +19,14 @@ export class ShaderProgram{
         return this.program;
     }
 
+    public getVertexShader(): string{
+        return this.gl.getShaderSource(this.vertexShader!)!;
+    }
+
+    public getFragmentShader(): string{
+        return this.gl.getShaderSource(this.fragmentShader!)!;
+    }
+
     public getAttribute(name: string): ShaderAttribute{
         if(!this.attributes.has(name)){
             this.attributes.set(name, new ShaderAttribute(this.gl, this.program, name));
