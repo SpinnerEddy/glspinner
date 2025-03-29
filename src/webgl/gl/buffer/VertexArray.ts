@@ -15,7 +15,7 @@ export class VertexArray{
     }
 
     bind(): void {
-        if(!this.vao){
+        if(this.vao == null){
             this.vao = this.gl.createVertexArray();
         }
 
@@ -26,10 +26,10 @@ export class VertexArray{
     }
 
     unbind(): void {
+        this.gl.bindVertexArray(null);
         for(const buffer of this.buffers.values()){
             buffer.unbind();
         }
-        this.gl.bindVertexArray(null);
     }
 
     dispose(): void {

@@ -9,7 +9,7 @@ export class IndexBuffer extends BaseBuffer{
     }
 
     get BufferType(): number {
-        return this.gl.ARRAY_BUFFER;
+        return this.gl.ELEMENT_ARRAY_BUFFER;
     }
 
     bind(): void {
@@ -22,7 +22,7 @@ export class IndexBuffer extends BaseBuffer{
 
     setData(): void {
         this.gl.bindBuffer(this.BufferType, this.buffer);
-        this.gl.bufferData(this.BufferType, this.indices, this.gl.DYNAMIC_DRAW);
+        this.gl.bufferData(this.BufferType, this.indices, this.gl.STATIC_DRAW);
     }
 
     dispose(): void {

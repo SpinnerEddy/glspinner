@@ -6,7 +6,6 @@ if(canvas == null){
 }
 
 const util = new GLSpinner.WebGLUtility(canvas);
-util.clearColor(GLSpinner.ColorUtility.hexToColor01(GLSpinner.MyColorCode.COLOR_SENA));
 const gl = util.getWebGL2RenderingContext();
     
 const loader = new GLSpinner.ShaderLoader(gl);
@@ -18,22 +17,7 @@ await loader.loadShaderFromPath(
 const program = loader.getShaderProgram("default");
 gl.useProgram(program.getProgram());
 
-const vertices = new Float32Array([
-    -0.5, -0.5, 0.0,
-     0.5, -0.5, 0.0,
-     0.5,  0.5, 0.0,
-
-    -0.5, -0.5, 0.0,
-     0.5,  0.5, 0.0,
-    -0.5,  0.5, 0.0,
-]);
-
-const vao = gl.createVertexArray();
-const vbo = gl.createBuffer();
-
-gl.bindVertexArray(vao);
-gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
-gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+const rect = new GLSpinner.Rectangle(gl);
 
 program.setAttribute('aPosition', 3, gl.FLOAT, 0, 0);
 
@@ -48,6 +32,7 @@ let mvpMatrix = GLSpinner.MatrixCalculator.multiply(GLSpinner.MatrixCalculator.m
 
 program.setUniform('mvpMatrix', new GLSpinner.ShaderUniformValue(mvpMatrix));
 program.setUniform('uColor', new GLSpinner.ShaderUniformValue(GLSpinner.ColorUtility.hexToColor01(GLSpinner.MyColorCode.COLOR_SENA).toRGBArray));
+util.clearColor(GLSpinner.ColorUtility.hexToColor01(GLSpinner.MyColorCode.COLOR_HARUKI));
 
 function render(){
     util.clearColor(GLSpinner.ColorUtility.hexToColor01(GLSpinner.MyColorCode.COLOR_HARUKI));
@@ -57,7 +42,7 @@ function render(){
 
     program.setUniform('mvpMatrix', new GLSpinner.ShaderUniformValue(mvpMatrix));
     program.setUniform('uColor', new GLSpinner.ShaderUniformValue(GLSpinner.ColorUtility.hexToColor01(GLSpinner.MyColorCode.COLOR_SENA).toRGBArray));
-    gl.drawArrays(gl.TRIANGLES, 0, vertices.length / 3);
+    rect.render();
     requestAnimationFrame(render);
 }
 

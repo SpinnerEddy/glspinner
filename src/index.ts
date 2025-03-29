@@ -34,6 +34,14 @@ export * from './webgl/gl/ShaderProgram';
 export * from './webgl/gl/uniform/ShaderUniformValue';
 export * from './webgl/gl/uniform/ShaderUniform';
 export * from './webgl/gl/ShaderAttribute';
+export * from './webgl/gl/buffer/VertexArray';
+export * from './webgl/gl/buffer/BufferOperation';
+export * from './webgl/gl/buffer/BaseBuffer';
+export * from './webgl/gl/buffer/VertexBuffer';
+export * from './webgl/gl/buffer/IndexBuffer';
+
+// Geometry
+export * from './webgl/gl/geometry/Rectangle'
 
 export function initializeLibrary() {
     console.log("ライブラリが初期化されました");

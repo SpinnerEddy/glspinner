@@ -22,7 +22,7 @@ export class VertexBuffer extends BaseBuffer{
 
     setData(): void {
         this.gl.bindBuffer(this.BufferType, this.buffer);
-        this.gl.bufferData(this.BufferType, this.vertices, this.gl.DYNAMIC_DRAW);
+        this.gl.bufferData(this.BufferType, this.vertices, this.gl.STATIC_DRAW);
     }
 
     dispose(): void {
