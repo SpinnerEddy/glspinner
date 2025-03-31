@@ -30,11 +30,13 @@ export class Rectangle{
         ib.setData();
 
         this.vao.addBuffer("vertex", vb);
-        this.vao.addBuffer("index", ib);
+        this.vao.addBuffer("index", ib);        
     }
 
     render(): void {
+        this.vao.bind();
         this.gl.drawElements(this.gl.TRIANGLES, this.indices.length, this.gl.UNSIGNED_SHORT, 0);
+        this.vao.unbind();
     }
 
     dispose(): void {

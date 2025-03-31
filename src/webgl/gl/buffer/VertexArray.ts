@@ -15,10 +15,6 @@ export class VertexArray{
     }
 
     bind(): void {
-        if(this.vao == null){
-            this.vao = this.gl.createVertexArray();
-        }
-
         this.gl.bindVertexArray(this.vao);
         for(const buffer of this.buffers.values()){
             buffer.bind();
