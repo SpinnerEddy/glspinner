@@ -18,8 +18,11 @@ const program = loader.getShaderProgram("default");
 gl.useProgram(program.getProgram());
 
 const rect = new GLSpinner.Rectangle(gl);
+var attributes = {
+    aPosition: program.getAttribute('aPosition')
+};
 
-program.setAttribute('aPosition', 3, gl.FLOAT, 0, 0);
+rect.setUpBuffers(attributes);
 
 let modelMatrix = GLSpinner.MatrixCalculator.identity44();
 let vpMatrix = GLSpinner.MatrixCalculator.identity44();

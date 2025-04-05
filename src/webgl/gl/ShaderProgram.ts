@@ -34,10 +34,6 @@ export class ShaderProgram{
         return this.attributes.get(name)!;
     }
 
-    public setAttribute(name: string, size: number, type: number, stride: number, offset: number): void{
-        this.getAttribute(name).setAttributeBuffer(size, type, stride, offset);
-    }
-
     public getUniform(name: string): ShaderUniform{
         if(!this.uniforms.has(name)){
             this.uniforms.set(name, new ShaderUniform(this.gl, this.program, name));

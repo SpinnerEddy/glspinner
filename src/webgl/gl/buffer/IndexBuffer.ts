@@ -23,7 +23,6 @@ export class IndexBuffer extends BaseBuffer{
     setData(): void {
         this.gl.bindBuffer(this.BufferType, this.buffer);
         this.gl.bufferData(this.BufferType, this.indices, this.gl.STATIC_DRAW);
-        this.gl.bindBuffer(this.BufferType, null);
     }
 
     dispose(): void {

@@ -1193,9 +1193,6 @@ class N {
   getAttribute(t) {
     return this.attributes.has(t) || this.attributes.set(t, new W(this.gl, this.program, t)), this.attributes.get(t);
   }
-  setAttribute(t, s, e, r, n) {
-    this.getAttribute(t).setAttributeBuffer(s, e, r, n);
-  }
   getUniform(t) {
     return this.uniforms.has(t) || this.uniforms.set(t, new q(this.gl, this.program, t)), this.uniforms.get(t);
   }
@@ -1384,15 +1381,21 @@ class J {
   addBuffer(t, s) {
     this.buffers.set(t, s);
   }
+  bindVao() {
+    this.vao == null && (this.vao = this.gl.createVertexArray()), this.gl.bindVertexArray(this.vao);
+  }
   bind() {
-    this.gl.bindVertexArray(this.vao);
+    this.bindVao();
     for (const t of this.buffers.values())
       t.bind();
   }
   unbind() {
-    this.gl.bindVertexArray(null);
+    this.unbindVao();
     for (const t of this.buffers.values())
       t.unbind();
+  }
+  unbindVao() {
+    this.gl.bindVertexArray(null);
   }
   dispose() {
     for (const t of this.buffers.values())
@@ -1460,7 +1463,7 @@ class Q extends U {
     this.gl.bindBuffer(this.BufferType, null);
   }
   setData() {
-    this.gl.bindBuffer(this.BufferType, this.buffer), this.gl.bufferData(this.BufferType, this.indices, this.gl.STATIC_DRAW), this.gl.bindBuffer(this.BufferType, null);
+    this.gl.bindBuffer(this.BufferType, this.buffer), this.gl.bufferData(this.BufferType, this.indices, this.gl.STATIC_DRAW);
   }
   dispose() {
     this.buffer && (this.gl.deleteBuffer(this.buffer), this.buffer = null);
@@ -1493,8 +1496,11 @@ class ct {
       3,
       0
     ]);
+  }
+  setUpBuffers(t) {
+    this.vao.bindVao();
     var s = new _(this.gl, this.vertices), e = new Q(this.gl, this.indices);
-    s.setData(), e.setData(), this.vao.addBuffer("vertex", s), this.vao.addBuffer("index", e);
+    s.setData(), e.setData(), t.aPosition.setAttributeBuffer(3, this.gl.FLOAT, 0, 0), this.vao.addBuffer("vertex", s), this.vao.addBuffer("index", e), s.unbind(), e.unbind(), this.vao.unbindVao();
   }
   render() {
     this.vao.bind(), this.gl.drawElements(this.gl.TRIANGLES, this.indices.length, this.gl.UNSIGNED_SHORT, 0), this.vao.unbind();

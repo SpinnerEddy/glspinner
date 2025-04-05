@@ -14,18 +14,30 @@ export class VertexArray{
         this.buffers.set(keyName, buffer);
     }
 
-    bind(): void {
+    bindVao(): void {
+        if (this.vao == null) {
+            this.vao = this.gl.createVertexArray();
+        }
+
         this.gl.bindVertexArray(this.vao);
+    }
+
+    bind(): void {
+        this.bindVao();
         for(const buffer of this.buffers.values()){
             buffer.bind();
         }
     }
 
     unbind(): void {
-        this.gl.bindVertexArray(null);
+        this.unbindVao();
         for(const buffer of this.buffers.values()){
             buffer.unbind();
         }
+    }
+
+    unbindVao(): void {
+        this.gl.bindVertexArray(null);
     }
 
     dispose(): void {
