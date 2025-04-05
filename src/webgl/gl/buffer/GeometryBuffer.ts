@@ -1,0 +1,74 @@
+import { AttributeElementSize } from "../attribute/ShaderAttributeConstants";
+import { BaseBuffer } from "./BaseBuffer";
+
+export class GeometryBuffer extends BaseBuffer{
+    private interleavedArray: Float32Array;
+
+    constructor(
+        gl: WebGL2RenderingContext,
+        vertices: Float32Array,
+        color: Float32Array){
+        super(gl);
+        this.interleavedArray = this.createInterleavedArray(vertices, color);
+    }
+
+    get BufferType(): number {
+        return this.gl.ARRAY_BUFFER;
+    }
+
+    bind(): void {
+        this.gl.bindBuffer(this.BufferType, this.buffer);
+    }
+
+    unbind(): void {
+        this.gl.bindBuffer(this.BufferType, null);
+    }
+
+    setData(): void {
+        this.gl.bindBuffer(this.BufferType, this.buffer);
+        this.gl.bufferData(this.BufferType, this.interleavedArray, this.gl.STATIC_DRAW);
+    }
+
+    dispose(): void {
+        if (this.buffer){
+            this.gl.deleteBuffer(this.buffer);
+            this.buffer = null;
+        }
+    }
+
+    createInterleavedArray(
+        vertices: Float32Array,
+        color: Float32Array
+    ): Float32Array {
+        const interleavedArray = new Float32Array(vertices.length + color.length);
+        const vertexNum = vertices.length / AttributeElementSize.aPosition;
+        const colorNum = color.length / AttributeElementSize.aColor;
+
+        if(vertexNum != colorNum){
+            throw new Error("Vertex array and color array must have the same length.");
+        }
+        
+        let arrayIndex = 0;
+        for(let i = 0; i < vertexNum; i++){
+            const vertexOffset = i * AttributeElementSize.aPosition;
+            const colorOffset = i * AttributeElementSize.aColor;
+
+            interleavedArray.set(
+                vertices.subarray(
+                    vertexOffset, 
+                    vertexOffset + AttributeElementSize.aPosition),
+                arrayIndex);
+            arrayIndex += AttributeElementSize.aPosition;
+
+            interleavedArray.set(
+                color.subarray(
+                    colorOffset, 
+                    colorOffset + AttributeElementSize.aColor),
+                arrayIndex);
+            arrayIndex += AttributeElementSize.aColor;
+        }
+        console.log(interleavedArray);
+        
+        return interleavedArray;
+    }
+}

@@ -1,6 +1,6 @@
 import { BufferOperation } from "./BufferOperation";
 
-export class BaseBuffer implements BufferOperation{
+export abstract class BaseBuffer implements BufferOperation{
     protected gl: WebGL2RenderingContext;
     protected buffer: WebGLBuffer | null = null;
 

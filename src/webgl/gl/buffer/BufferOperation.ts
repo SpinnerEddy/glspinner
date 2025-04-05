@@ -1,4 +1,4 @@
-export interface BufferOperation{
+export interface BufferOperation {
     bind(): void;
     unbind(): void;
     setData(): void;

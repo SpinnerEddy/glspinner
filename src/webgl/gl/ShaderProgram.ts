@@ -1,4 +1,4 @@
-import { ShaderAttribute } from "./ShaderAttribute";
+import { ShaderAttribute } from "./attribute/ShaderAttribute";
 import { ShaderUniform } from "./uniform/ShaderUniform";
 import { ShaderUniformValue } from "./uniform/ShaderUniformValue";
 

@@ -1,19 +1,12 @@
-import { ColorBuffer } from "../buffer/ColorBuffer";
+import { GeometryBuffer } from "../buffer/GeometryBuffer";
 import { IndexBuffer } from "../buffer/IndexBuffer";
-import { VertexArray } from "../buffer/VertexArray";
-import { VertexBuffer } from "../buffer/VertexBuffer";
-import { ShaderAttribute } from "../ShaderAttribute";
+import { ShaderAttribute } from "../attribute/ShaderAttribute";
+import { Geometry } from "./Geometry";
+import { AttributeElementSize } from "../attribute/ShaderAttributeConstants";
 
-export class Rectangle{
-    private gl: WebGL2RenderingContext;
-    private vao: VertexArray;
-    private vertices: Float32Array;
-    private indices: Int16Array;
-    private color: Float32Array;
-
+export class Rectangle extends Geometry{
     constructor(gl: WebGL2RenderingContext) {
-        this.gl = gl;
-        this.vao = new VertexArray(gl);
+        super(gl);
 
         this.vertices = new Float32Array([
             -0.5, -0.5, 0.0,
@@ -37,34 +30,30 @@ export class Rectangle{
     setUpBuffers(attributes: Record<string, ShaderAttribute>): void {
         this.vao.bindVao();
 
-        var vb = new VertexBuffer(this.gl, this.vertices);
-        var cb = new ColorBuffer(this.gl, this.color);
-        var ib = new IndexBuffer(this.gl, this.indices);
+        const gb = new GeometryBuffer(this.gl, this.vertices, this.color);
+        const ib = new IndexBuffer(this.gl, this.indices);
 
-        vb.setData();
-        attributes["aPosition"].setAttributeBuffer(3, this.gl.FLOAT, 0, 0);
-        this.vao.addBuffer("vertex", vb);
-        vb.unbind();
-
-        cb.setData();
-        attributes["aColor"].setAttributeBuffer(4, this.gl.FLOAT, 0, 0);
-        this.vao.addBuffer("color", cb);
-        cb.unbind();
-
+        gb.setData();
         ib.setData();
+
+        const stride = (AttributeElementSize.aPosition + AttributeElementSize.aColor) * Float32Array.BYTES_PER_ELEMENT;
+        attributes["aPosition"].setAttributeBuffer(
+            AttributeElementSize.aPosition, 
+            this.gl.FLOAT, 
+            stride, 
+            0);
+        attributes["aColor"].setAttributeBuffer(
+            AttributeElementSize.aColor,
+            this.gl.FLOAT, 
+            stride, 
+            AttributeElementSize.aPosition * Float32Array.BYTES_PER_ELEMENT);
+
+        this.vao.addBuffer("geometry", gb);
         this.vao.addBuffer("index", ib);
+
+        gb.unbind();
         ib.unbind();
 
         this.vao.unbindVao();
-    }
-
-    render(): void {
-        this.vao.bind();
-        this.gl.drawElements(this.gl.TRIANGLES, this.indices.length, this.gl.UNSIGNED_SHORT, 0);
-        this.vao.unbind();
-    }
-
-    dispose(): void {
-        this.vao.dispose();
     }
 }
