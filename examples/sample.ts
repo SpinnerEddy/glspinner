@@ -19,7 +19,8 @@ gl.useProgram(program.getProgram());
 
 const rect = new GLSpinner.Rectangle(gl);
 var attributes = {
-    aPosition: program.getAttribute('aPosition')
+    aPosition: program.getAttribute('aPosition'),
+    aColor: program.getAttribute('aColor')
 };
 
 rect.setUpBuffers(attributes);
@@ -34,7 +35,6 @@ let projectionMatrix = GLSpinner.MatrixCalculator.perspective(45, canvas.width, 
 let mvpMatrix = GLSpinner.MatrixCalculator.multiply(GLSpinner.MatrixCalculator.multiply(projectionMatrix, viewMatrix), modelMatrix);
 
 program.setUniform('mvpMatrix', new GLSpinner.ShaderUniformValue(mvpMatrix));
-program.setUniform('uColor', new GLSpinner.ShaderUniformValue(GLSpinner.ColorUtility.hexToColor01(GLSpinner.MyColorCode.COLOR_SENA).toRGBArray));
 util.clearColor(GLSpinner.ColorUtility.hexToColor01(GLSpinner.MyColorCode.COLOR_HARUKI));
 
 function render(){
@@ -44,7 +44,6 @@ function render(){
     mvpMatrix = vpMatrix.multiply(modelMatrix, mvpMatrix);
 
     program.setUniform('mvpMatrix', new GLSpinner.ShaderUniformValue(mvpMatrix));
-    program.setUniform('uColor', new GLSpinner.ShaderUniformValue(GLSpinner.ColorUtility.hexToColor01(GLSpinner.MyColorCode.COLOR_SENA).toRGBArray));
     rect.render();
     requestAnimationFrame(render);
 }
