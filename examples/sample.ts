@@ -27,24 +27,24 @@ rect.setUpBuffers(attributes);
 
 let modelMatrix = GLSpinner.MatrixCalculator.identity44();
 let vpMatrix = GLSpinner.MatrixCalculator.identity44();
-let viewMatrix = GLSpinner.MatrixCalculator.lookAt(
-    new GLSpinner.Vector3(0.0, 0.0, -3.0), 
-    new GLSpinner.Vector3(0.0, 0.0, 0.0), 
-    new GLSpinner.Vector3(0.0, 1.0, 0.0));
-let projectionMatrix = GLSpinner.MatrixCalculator.perspective(45, canvas.width, canvas.height, 0.1, 100);
+let camera = new GLSpinner.Camera();
+let viewMatrix = camera.getViewMatrix();
+let projectionMatrix = camera.getProjectionMatrix();
 let mvpMatrix = GLSpinner.MatrixCalculator.multiply(GLSpinner.MatrixCalculator.multiply(projectionMatrix, viewMatrix), modelMatrix);
 
 program.setUniform('mvpMatrix', new GLSpinner.ShaderUniformValue(mvpMatrix));
 util.clearColor(GLSpinner.ColorUtility.hexToColor01(GLSpinner.MyColorCode.COLOR_HARUKI));
 
+let incrementer = 0;
 function render(){
     util.clearColor(GLSpinner.ColorUtility.hexToColor01(GLSpinner.MyColorCode.COLOR_HARUKI));
-    // modelMatrix = modelMatrix.rotate3D(0.05, GLSpinner.DefaultVectorConstants.AXIS2DZ, modelMatrix);
+    modelMatrix = modelMatrix.rotate3D(0.05, GLSpinner.DefaultVectorConstants.AXIS2DZ, modelMatrix);
     vpMatrix = projectionMatrix.multiply(viewMatrix, vpMatrix);
     mvpMatrix = vpMatrix.multiply(modelMatrix, mvpMatrix);
 
     program.setUniform('mvpMatrix', new GLSpinner.ShaderUniformValue(mvpMatrix));
     rect.render();
+    incrementer++;
     requestAnimationFrame(render);
 }
 

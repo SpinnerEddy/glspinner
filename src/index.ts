@@ -46,6 +46,9 @@ export * from './webgl/gl/geometry/Rectangle'
 export * from './webgl/gl/geometry/Geometry'
 export * from './webgl/gl/geometry/GeometryOperation'
 
+// Scene
+export * from './scene/Camera'
+
 export function initializeLibrary() {
     console.log("ライブラリが初期化されました");
 }
