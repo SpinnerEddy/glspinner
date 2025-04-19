@@ -1,4 +1,5 @@
 import * as GLSpinner from '../src/index.ts';
+import { CameraType } from '../src/scene/CameraConstants.ts';
 
 const canvas = document.getElementById('webgl-canvas') as HTMLCanvasElement;
 if(canvas == null){
@@ -17,7 +18,7 @@ await loader.loadShaderFromPath(
 const program = loader.getShaderProgram("default");
 gl.useProgram(program.getProgram());
 
-const rect = new GLSpinner.Rectangle(gl);
+const rect = new GLSpinner.Rectangle(gl, 2, 2);
 var attributes = {
     aPosition: program.getAttribute('aPosition'),
     aColor: program.getAttribute('aColor'),
@@ -27,7 +28,7 @@ rect.setUpBuffers(attributes);
 
 let modelMatrix = GLSpinner.MatrixCalculator.identity44();
 let vpMatrix = GLSpinner.MatrixCalculator.identity44();
-let camera = new GLSpinner.Camera();
+let camera = new GLSpinner.Camera(CameraType.Orthography);
 let viewMatrix = camera.getViewMatrix();
 let projectionMatrix = camera.getProjectionMatrix();
 let mvpMatrix = GLSpinner.MatrixCalculator.multiply(GLSpinner.MatrixCalculator.multiply(projectionMatrix, viewMatrix), modelMatrix);
@@ -37,8 +38,9 @@ util.clearColor(GLSpinner.ColorUtility.hexToColor01(GLSpinner.MyColorCode.COLOR_
 
 let incrementer = 0;
 function render(){
+    util.setViewport(canvas);
     util.clearColor(GLSpinner.ColorUtility.hexToColor01(GLSpinner.MyColorCode.COLOR_HARUKI));
-    modelMatrix = modelMatrix.rotate3D(0.05, GLSpinner.DefaultVectorConstants.AXIS2DZ, modelMatrix);
+    // modelMatrix = modelMatrix.rotate3D(0.05, GLSpinner.DefaultVectorConstants.AXIS2DZ, modelMatrix);
     vpMatrix = projectionMatrix.multiply(viewMatrix, vpMatrix);
     mvpMatrix = vpMatrix.multiply(modelMatrix, mvpMatrix);
 

@@ -3,23 +3,10 @@ import { MatrixCalculator } from "../math/MatrixCalculator";
 import { Quaternion } from "../math/quaternion/Quaternion";
 import { QuaternionCalculator } from "../math/QuaternionCalculator";
 import { Vector3 } from "../math/vector/Vector3";
-
-type CameraOptions = {
-    position?: Vector3;
-    rotation?: Quaternion;
-    near?: number;
-    far?: number;
-    fov?: number;
-    viewportWidth?: number;
-    viewportHeight?: number;
-}
-
-type CameraDirection = {
-    up?: Vector3;
-    forward?: Vector3; 
-}
+import { CameraDirection, CameraOptions, CameraType } from "./CameraConstants";
 
 export class Camera {
+    private cameraType: number;
     private viewMatrix: Matrix44 = MatrixCalculator.identity44();
     private projectionMatrix: Matrix44 = MatrixCalculator.identity44();
 
@@ -34,7 +21,8 @@ export class Camera {
     private up: Vector3;
     private forward: Vector3;
 
-    constructor(options: CameraOptions = {}, direction: CameraDirection = {}){
+    constructor(cameraType: number = CameraType.Perspective, options: CameraOptions = {}, direction: CameraDirection = {}){
+        this.cameraType = cameraType;
         this.position = options.position ?? new Vector3(0.0, 0.0, -3.0);
         this.rotation = options.rotation ?? new Quaternion(0.0, 0.0, 0.0, 1.0);
         this.near = options.near ?? 0.1;
@@ -46,7 +34,7 @@ export class Camera {
         this.up = direction.up ?? new Vector3(0.0, 1.0, 0.0);
         this.forward = direction.forward ?? new Vector3(0.0, 0.0, 1.0);
 
-        this.calculatePerspectiveMatrix();
+        this.calculateProjectionMatrix();
         this.calculateViewMatrix();
     }
 
@@ -67,7 +55,7 @@ export class Camera {
 
         this.viewportWidth = width;
         this.viewportHeight = height;
-        this.calculatePerspectiveMatrix();
+        this.calculateProjectionMatrix();
     }
 
     public getViewMatrix(): Matrix44 {
@@ -85,6 +73,17 @@ export class Camera {
         this.viewMatrix = MatrixCalculator.lookAt(this.position, this.position.add(calcForward), calcUp);
     }
 
+    private calculateProjectionMatrix(){
+        if(this.cameraType == CameraType.Perspective){
+            this.calculatePerspectiveMatrix();
+        }
+        else{
+            this.calculateOrthographicMatrix();
+        }
+
+        console.log(this.projectionMatrix);
+    }
+
     private calculatePerspectiveMatrix(){
         this.projectionMatrix = MatrixCalculator.perspective(
             this.fov, 
@@ -92,5 +91,29 @@ export class Camera {
             this.viewportHeight, 
             this.near, 
             this.far);
+    }
+
+    private calculateOrthographicMatrix(){
+        if(this.viewportHeight == 0){
+            throw new Error("Height is zero.");
+        }
+
+        const aspect = this.viewportWidth / this.viewportHeight;
+        const orthoHeight = 1.0
+        const orthoWidth = orthoHeight * aspect;
+
+        const left = -orthoWidth;
+        const right = orthoWidth;
+        const top = orthoHeight;
+        const bottom = -orthoHeight;
+
+        this.projectionMatrix = MatrixCalculator.orthographic(
+            left,
+            right,
+            top,
+            bottom,
+            this.near,
+            this.far
+        );
     }
 }

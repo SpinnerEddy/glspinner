@@ -7,14 +7,14 @@ import { AttributeElementSize } from "../attribute/ShaderAttributeConstants";
 export class Rectangle extends Geometry{
     protected uv: Float32Array;
 
-    constructor(gl: WebGL2RenderingContext) {
+    constructor(gl: WebGL2RenderingContext, width: number = 1, height: number = 1) {
         super(gl);
 
         this.vertices = new Float32Array([
-            -0.5, -0.5, 0.0,
-             0.5, -0.5, 0.0,
-             0.5,  0.5, 0.0,
-            -0.5,  0.5, 0.0,
+            -width*0.5, -height*0.5, 0.0,
+             width*0.5, -height*0.5, 0.0,
+             width*0.5,  height*0.5, 0.0,
+            -width*0.5,  height*0.5, 0.0,
         ]);
 
         this.color = new Float32Array([
