@@ -47,7 +47,8 @@ export * from './webgl/gl/geometry/Geometry'
 export * from './webgl/gl/geometry/GeometryOperation'
 
 // Scene
-export * from './scene/Camera'
+export * from './scene/camera/Camera'
+export * from './scene/camera/CameraConstants'
 
 export function initializeLibrary() {
     console.log("ライブラリが初期化されました");

@@ -1,5 +1,5 @@
 import * as GLSpinner from '../src/index.ts';
-import { CameraType } from '../src/scene/CameraConstants.ts';
+import { CameraType } from '../src/scene/camera/CameraConstants.ts';
 
 const canvas = document.getElementById('webgl-canvas') as HTMLCanvasElement;
 if(canvas == null){
@@ -36,7 +36,6 @@ let mvpMatrix = GLSpinner.MatrixCalculator.multiply(GLSpinner.MatrixCalculator.m
 program.setUniform('mvpMatrix', new GLSpinner.ShaderUniformValue(mvpMatrix));
 util.clearColor(GLSpinner.ColorUtility.hexToColor01(GLSpinner.MyColorCode.COLOR_HARUKI));
 
-let incrementer = 0;
 function render(){
     util.setViewport(canvas);
     util.clearColor(GLSpinner.ColorUtility.hexToColor01(GLSpinner.MyColorCode.COLOR_HARUKI));
@@ -46,7 +45,6 @@ function render(){
 
     program.setUniform('mvpMatrix', new GLSpinner.ShaderUniformValue(mvpMatrix));
     rect.render();
-    incrementer++;
     requestAnimationFrame(render);
 }
 

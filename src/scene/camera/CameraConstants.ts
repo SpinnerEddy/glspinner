@@ -1,5 +1,5 @@
-import { Quaternion } from "../math/quaternion/Quaternion";
-import { Vector3 } from "../math/vector/Vector3";
+import { Quaternion } from "../../math/quaternion/Quaternion";
+import { Vector3 } from "../../math/vector/Vector3";
 
 export type CameraOptions = {
     position?: Vector3;

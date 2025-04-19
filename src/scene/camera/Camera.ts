@@ -1,8 +1,8 @@
-import { Matrix44 } from "../math/matrix/Matrix44";
-import { MatrixCalculator } from "../math/MatrixCalculator";
-import { Quaternion } from "../math/quaternion/Quaternion";
-import { QuaternionCalculator } from "../math/QuaternionCalculator";
-import { Vector3 } from "../math/vector/Vector3";
+import { Matrix44 } from "../../math/matrix/Matrix44";
+import { MatrixCalculator } from "../../math/MatrixCalculator";
+import { Quaternion } from "../../math/quaternion/Quaternion";
+import { QuaternionCalculator } from "../../math/QuaternionCalculator";
+import { Vector3 } from "../../math/vector/Vector3";
 import { CameraDirection, CameraOptions, CameraType } from "./CameraConstants";
 
 export class Camera {
@@ -58,6 +58,11 @@ export class Camera {
         this.calculateProjectionMatrix();
     }
 
+    public setCameraType(type: number){
+        this.cameraType = type;
+        this.calculateProjectionMatrix();
+    }
+
     public getViewMatrix(): Matrix44 {
         return this.viewMatrix;
     }
@@ -80,8 +85,6 @@ export class Camera {
         else{
             this.calculateOrthographicMatrix();
         }
-
-        console.log(this.projectionMatrix);
     }
 
     private calculatePerspectiveMatrix(){

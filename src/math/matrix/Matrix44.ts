@@ -207,10 +207,6 @@ export class Matrix44 extends Matrix<Matrix44>{
             throw new Error('Far and Near are same value. Cannot calculate orthographic.');
         }
 
-        console.log(width);
-        console.log(height);
-        console.log(depth);
-
         const rw = 1 / width;
         const rh = 1 / height;
         const rd = 1 / depth;
