@@ -46,9 +46,21 @@ export * from './webgl/gl/geometry/Rectangle'
 export * from './webgl/gl/geometry/Geometry'
 export * from './webgl/gl/geometry/GeometryOperation'
 
-// Scene
+// Scene/Camera
 export * from './scene/camera/Camera'
 export * from './scene/camera/CameraConstants'
+
+// Scene/Clock
+export * from './scene/clock/Clock'
+export * from './scene/clock/ClockOperation'
+
+// Scene/Material
+export * from './scene/material/MaterialOperation'
+export * from './scene/material/BaseMaterial'
+export * from './scene/material/FragmentCanvasMaterial'
+
+// Scene
+export * from './scene/Scene'
 
 export function initializeLibrary() {
     console.log("ライブラリが初期化されました");

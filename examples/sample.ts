@@ -36,6 +36,9 @@ let mvpMatrix = GLSpinner.MatrixCalculator.multiply(GLSpinner.MatrixCalculator.m
 program.setUniform('mvpMatrix', new GLSpinner.ShaderUniformValue(mvpMatrix));
 util.clearColor(GLSpinner.ColorUtility.hexToColor01(GLSpinner.MyColorCode.COLOR_HARUKI));
 
+// const scene = new GLSpinner.Scene();
+// scene.start();
+
 function render(){
     util.setViewport(canvas);
     util.clearColor(GLSpinner.ColorUtility.hexToColor01(GLSpinner.MyColorCode.COLOR_HARUKI));
