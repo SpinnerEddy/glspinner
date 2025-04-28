@@ -9,7 +9,7 @@ export class ShaderLoader{
         this.gl = gl;
     }
 
-    public getShaderProgram(key: string): ShaderProgram{
+    public getShaderProgram(key: string): ShaderProgram {
         if(!this.shaderProgramKey.has(key)){
             throw new Error(`Common program with key ${key} not found`);
         }
@@ -67,7 +67,7 @@ export class ShaderLoader{
         console.log(this.shaderProgramCache);
     }
 
-    async loadShader(path: string): Promise<string>{
+    async loadShader(path: string): Promise<string> {
         try {
             const response = await fetch(path);
             const shaderSource = await response.text();
