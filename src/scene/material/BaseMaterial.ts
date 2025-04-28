@@ -8,13 +8,12 @@ export abstract class BaseMaterial implements MaterialOperation {
     constructor(shaderProgram: ShaderProgram){
         this.shaderProgram = shaderProgram;
     }
-    
+
     use(): void {
-        throw new Error("Method not implemented.");
+        this.shaderProgram.use();
     }
 
     setUniform(uniforms: UniformPairs): void {
-        throw new Error("Method not implemented.");
+        console.log(uniforms);
     }
-
 }
