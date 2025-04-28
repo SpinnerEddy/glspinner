@@ -13,4 +13,6 @@ export type UniformType = '1f' | '1fv' | '1i' | '1iv' |
 
 export type UniformAvailableType = number | number[] | Float32Array | Int32Array | 
                                    Matrix22 | Matrix33 | Matrix44 | 
-                                   Vector2 | Vector3 | Vector4; 
+                                   Vector2 | Vector3 | Vector4;
+
+export type UniformPairs = Record<string, any>;

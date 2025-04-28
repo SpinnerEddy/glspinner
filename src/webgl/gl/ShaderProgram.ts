@@ -15,6 +15,10 @@ export class ShaderProgram{
         this.program = this.createProgram(vertShaderSource, fragShaderSource);
     }
 
+    public use(): void{
+        this.gl.useProgram(this.program);
+    }
+
     public getProgram(): WebGLProgram{
         return this.program;
     }

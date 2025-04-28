@@ -16,7 +16,7 @@ await loader.loadShaderFromPath(
     "shader/basic.frag");
 
 const program = loader.getShaderProgram("default");
-gl.useProgram(program.getProgram());
+program.use();
 
 const rect = new GLSpinner.Rectangle(gl, 2, 2);
 var attributes = {
