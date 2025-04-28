@@ -325,14 +325,14 @@ class T {
   }
   translateTo01() {
     const t = Number.parseFloat((this.r / 255).toFixed(3)), s = Number.parseFloat((this.g / 255).toFixed(3)), e = Number.parseFloat((this.b / 255).toFixed(3)), r = Number.parseFloat((this.a / 255).toFixed(3));
-    return new L(t, s, e, r);
+    return new M(t, s, e, r);
   }
   translateToColorCode() {
     const t = (s) => s.toString(16).padStart(2, "0").toUpperCase();
     return `#${t(this.r)}${t(this.g)}${t(this.b)}`;
   }
 }
-class L {
+class M {
   constructor(t, s, e, r = 1) {
     c(this, "r");
     c(this, "g");
@@ -361,11 +361,11 @@ class L {
   }
 }
 const lt = {
-  RED: new L(1, 0, 0),
-  GREEN: new L(0, 1, 0),
-  BLUE: new L(0, 0, 1),
-  WHITE: new L(1, 1, 1),
-  BLACK: new L(0, 0, 0)
+  RED: new M(1, 0, 0),
+  GREEN: new M(0, 1, 0),
+  BLUE: new M(0, 0, 1),
+  WHITE: new M(1, 1, 1),
+  BLACK: new M(0, 0, 0)
 }, Q = {
   COLOR_EMPTY: new T(0, 0, 0, 0),
   COLOR_SUBARU: new T(174, 180, 156, 255),
@@ -708,7 +708,7 @@ class P extends R {
     return new P(this.x, this.y, this.z, this.w);
   }
 }
-const F = {
+const D = {
   AXIS2DX: new E(1, 0, 0),
   AXIS2DY: new E(0, 1, 0),
   AXIS2DZ: new E(0, 0, 1)
@@ -717,7 +717,7 @@ const F = {
   3: E,
   4: P
 };
-class D {
+class L {
   constructor(t, s, e = 0) {
     c(this, "dimensionNum");
     c(this, "data");
@@ -745,7 +745,7 @@ class D {
     return this.data;
   }
 }
-class C extends D {
+class C extends L {
   constructor(t) {
     super(2, t);
   }
@@ -767,7 +767,7 @@ class C extends D {
   }
   multiply(t, s) {
     const e = s ?? new C(new Float32Array(this.elementSize));
-    if (t instanceof D)
+    if (t instanceof L)
       for (let r = 0; r < this.row; r++)
         for (let n = 0; n < t.col; n++) {
           let i = 0;
@@ -806,7 +806,7 @@ class C extends D {
     this.data.fill(t);
   }
 }
-class O extends D {
+class O extends L {
   constructor(t) {
     super(3, t);
   }
@@ -833,7 +833,7 @@ class O extends D {
   }
   multiply(t, s) {
     const e = s ?? new O(new Float32Array(this.elementSize));
-    if (t instanceof D)
+    if (t instanceof L)
       for (let r = 0; r < this.row; r++)
         for (let n = 0; n < t.col; n++) {
           let i = 0;
@@ -975,7 +975,7 @@ class m {
     return new e(...s);
   }
 }
-class z extends D {
+class z extends L {
   constructor(t) {
     super(4, t);
   }
@@ -1009,7 +1009,7 @@ class z extends D {
   }
   multiply(t, s) {
     const e = s ?? new z();
-    if (t instanceof D)
+    if (t instanceof L)
       for (let r = 0; r < this.row; r++)
         for (let n = 0; n < t.col; n++) {
           let i = 0;
@@ -1083,13 +1083,13 @@ class z extends D {
     return r.set(0, 3, t.x), r.set(1, 3, t.y), r.set(2, 3, t.z), e = r.multiply(this), e;
   }
   rotateX(t, s) {
-    return this.rotate3D(t, F.AXIS2DX, s);
+    return this.rotate3D(t, D.AXIS2DX, s);
   }
   rotateY(t, s) {
-    return this.rotate3D(t, F.AXIS2DY, s);
+    return this.rotate3D(t, D.AXIS2DY, s);
   }
   rotateZ(t, s) {
-    return this.rotate3D(t, F.AXIS2DZ, s);
+    return this.rotate3D(t, D.AXIS2DZ, s);
   }
   rotate2D(t, s) {
     return this.rotateZ(t, s);
@@ -1108,7 +1108,7 @@ class z extends D {
   }
   createRotateMatrix3D(t, s) {
     const e = this.identity();
-    return s == F.AXIS2DX && (e.set(1, 1, l.cos(t)), e.set(1, 2, -l.sin(t)), e.set(2, 1, l.sin(t)), e.set(2, 2, l.cos(t))), s == F.AXIS2DY && (e.set(0, 0, l.cos(t)), e.set(0, 2, l.sin(t)), e.set(2, 0, -l.sin(t)), e.set(2, 2, l.cos(t))), s == F.AXIS2DZ && (e.set(0, 0, l.cos(t)), e.set(0, 1, -l.sin(t)), e.set(1, 0, l.sin(t)), e.set(1, 1, l.cos(t))), e;
+    return s == D.AXIS2DX && (e.set(1, 1, l.cos(t)), e.set(1, 2, -l.sin(t)), e.set(2, 1, l.sin(t)), e.set(2, 2, l.cos(t))), s == D.AXIS2DY && (e.set(0, 0, l.cos(t)), e.set(0, 2, l.sin(t)), e.set(2, 0, -l.sin(t)), e.set(2, 2, l.cos(t))), s == D.AXIS2DZ && (e.set(0, 0, l.cos(t)), e.set(0, 1, -l.sin(t)), e.set(1, 0, l.sin(t)), e.set(1, 1, l.cos(t))), e;
   }
   createScaleMatrix2D(t, s) {
     const e = this.identity();
@@ -1215,7 +1215,7 @@ class U {
   toMatrix() {
     const t = new z();
     let s = t.identity();
-    const e = w.rotateVector(this, F.AXIS2DX), r = w.rotateVector(this, F.AXIS2DY), n = w.rotateVector(this, F.AXIS2DZ);
+    const e = w.rotateVector(this, D.AXIS2DX), r = w.rotateVector(this, D.AXIS2DY), n = w.rotateVector(this, D.AXIS2DZ);
     return s.set(0, 0, e.x), s.set(0, 1, e.y), s.set(0, 2, e.z), s.set(0, 0, r.x), s.set(0, 1, r.y), s.set(0, 2, r.z), s.set(0, 0, n.x), s.set(0, 1, n.y), s.set(0, 2, n.z), t;
   }
   toEuler() {
@@ -1223,7 +1223,7 @@ class U {
     return { pitch: s, yaw: e, roll: r };
   }
 }
-class M {
+class F {
   static identity22() {
     return new C().identity();
   }
@@ -1247,7 +1247,7 @@ class M {
   }
   static multiply(t, s) {
     const e = this.createMatrixInstance(t.size);
-    if (s instanceof D) {
+    if (s instanceof L) {
       if (t.col != s.row)
         throw new Error("Not Equal A Row Number and B Col Number. Cannot Multiply!");
       t.multiply(s, e);
@@ -1324,7 +1324,7 @@ class gt {
       return t;
     if (Array.isArray(t))
       return t;
-    if (t instanceof D)
+    if (t instanceof L)
       return t.toArray();
     if (t instanceof R)
       return t.values;
@@ -1340,13 +1340,13 @@ class gt {
     if (Array.isArray(t))
       switch (t.length) {
         case 1:
-          return this.isFloat(t[0]) ? "1fv" : "1iv";
+          return "1fv";
         case 2:
-          return t.some((s) => this.isFloat(s)) ? "2fv" : "2iv";
+          return "2fv";
         case 3:
-          return t.some((s) => this.isFloat(s)) ? "3fv" : "3iv";
+          return "3fv";
         case 4:
-          return t.some((s) => this.isFloat(s)) ? "4fv" : "4iv";
+          return "4fv";
         default:
           throw new Error("Invalid uniform values type");
       }
@@ -1363,7 +1363,7 @@ class gt {
         default:
           throw new Error("Invalid uniform values type");
       }
-    else if (t instanceof D)
+    else if (t instanceof L)
       switch (t.size) {
         case 2:
           return "Matrix2fv";
@@ -1600,6 +1600,7 @@ class ft extends it {
     ]);
   }
   setUpBuffers(s) {
+    var i, o;
     this.vao.bindVao();
     const e = new rt(this.gl, this.vertices, this.color, this.uv), r = new nt(this.gl, this.indices);
     e.setData(), r.setData();
@@ -1609,12 +1610,12 @@ class ft extends it {
       this.gl.FLOAT,
       n,
       0
-    ), s.aColor.setAttributeBuffer(
+    ), (i = s.aColor) == null || i.setAttributeBuffer(
       b.aColor,
       this.gl.FLOAT,
       n,
       b.aPosition * Float32Array.BYTES_PER_ELEMENT
-    ), s.aUv.setAttributeBuffer(
+    ), (o = s.aUv) == null || o.setAttributeBuffer(
       b.aUv,
       this.gl.FLOAT,
       n,
@@ -1629,8 +1630,8 @@ const V = {
 class wt {
   constructor(t = V.Perspective, s = {}, e = {}) {
     c(this, "cameraType");
-    c(this, "viewMatrix", M.identity44());
-    c(this, "projectionMatrix", M.identity44());
+    c(this, "viewMatrix", F.identity44());
+    c(this, "projectionMatrix", F.identity44());
     c(this, "position", new E(0, 0, 0));
     c(this, "rotation", new U(0, 0, 0, 0));
     c(this, "near", 1);
@@ -1664,13 +1665,13 @@ class wt {
   }
   calculateViewMatrix() {
     const t = w.rotateVector(this.rotation, this.up), s = w.rotateVector(this.rotation, this.forward);
-    this.viewMatrix = M.lookAt(this.position, this.position.add(s), t);
+    this.viewMatrix = F.lookAt(this.position, this.position.add(s), t);
   }
   calculateProjectionMatrix() {
     this.cameraType == V.Perspective ? this.calculatePerspectiveMatrix() : this.calculateOrthographicMatrix();
   }
   calculatePerspectiveMatrix() {
-    this.projectionMatrix = M.perspective(
+    this.projectionMatrix = F.perspective(
       this.fov,
       this.viewportWidth,
       this.viewportHeight,
@@ -1682,7 +1683,7 @@ class wt {
     if (this.viewportHeight == 0)
       throw new Error("Height is zero.");
     const t = this.viewportWidth / this.viewportHeight, s = 1, e = s * t, r = -e, n = e, i = s, o = -1;
-    this.projectionMatrix = M.orthographic(
+    this.projectionMatrix = F.orthographic(
       r,
       n,
       i,
@@ -1765,6 +1766,9 @@ class pt {
   setDraw(t) {
     this.drawFunction = t;
   }
+  get Clock() {
+    return this.clock;
+  }
   run() {
     this.isRunning && (this.clock.update(), this.updateObjects(), this.drawObjects(), requestAnimationFrame(() => {
       this.run();
@@ -1788,22 +1792,22 @@ export {
   wt as Camera,
   V as CameraType,
   ot as Clock,
-  L as Color,
+  M as Color,
   T as Color255,
   dt as ColorUtility,
   lt as DefaultColorConstants,
   _ as DefaultValueConstants,
-  F as DefaultVectorConstants,
+  D as DefaultVectorConstants,
   mt as FragmentCanvasMaterial,
   it as Geometry,
   rt as GeometryBuffer,
   nt as IndexBuffer,
   l as MathUtility,
-  D as Matrix,
+  L as Matrix,
   C as Matrix22,
   O as Matrix33,
   z as Matrix44,
-  M as MatrixCalculator,
+  F as MatrixCalculator,
   et as MatrixClassAndSizePair,
   ut as MyColorCode,
   Q as MyColorConstants255,

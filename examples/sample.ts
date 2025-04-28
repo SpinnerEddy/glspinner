@@ -10,16 +10,20 @@ class Sample extends GLSpinner.BaseApplication {
     private mvpMatrix: GLSpinner.Matrix44;
     private camera: GLSpinner.Camera;
 
+    async preload(): Promise<void> {
+        await super.preload();
+        await this.shaderLoader.loadShaderFromPath(
+            "shader/basic.vert",
+            "shader/basic.frag");
+    }
+
     setup(): void {
-        console.log("setup");
-        this.program = this.shaderLoader.getShaderProgram("default");
+        this.program = this.shaderLoader.getShaderProgram("basic");
         this.program.use();
 
         this.rect = new GLSpinner.Rectangle(this.gl, 2, 2);
         const attributes = {
             aPosition: this.program.getAttribute('aPosition'),
-            aColor: this.program.getAttribute('aColor'),
-            aUv: this.program.getAttribute('aUv')
         };
         this.rect.setUpBuffers(attributes);
 
@@ -38,11 +42,19 @@ class Sample extends GLSpinner.BaseApplication {
     }
 
     update(): void {
-        // this.modelMatrix = this.modelMatrix.rotate3D(0.05, GLSpinner.DefaultVectorConstants.AXIS2DZ, this.modelMatrix);
         this.vpMatrix = this.projectionMatrix.multiply(this.viewMatrix, this.vpMatrix);
         this.mvpMatrix = this.vpMatrix.multiply(this.modelMatrix, this.mvpMatrix);
 
-        this.program.setUniform('mvpMatrix', new GLSpinner.ShaderUniformValue(this.mvpMatrix));
+        this.program.setUniform('mvpMatrix',
+             new GLSpinner.ShaderUniformValue(
+                this.mvpMatrix));
+        this.program.setUniform('time', 
+            new GLSpinner.ShaderUniformValue(
+                this.scene.Clock.getElapsedTime()
+        ));
+        this.program.setUniform('resolution', 
+            new GLSpinner.ShaderUniformValue(
+                [this.canvas.width, this.canvas.height]));
     }
 
     draw(): void {

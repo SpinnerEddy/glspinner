@@ -40,6 +40,10 @@ export class Scene {
         this.drawFunction = drawFunction;
     }
 
+    get Clock(): ClockOperation{
+        return this.clock;
+    }
+
     private run(): void {
         if(!this.isRunning) return;
 

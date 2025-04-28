@@ -37,6 +37,7 @@ export * from './webgl/gl/ShaderLoader';
 export * from './webgl/gl/ShaderProgram';
 export * from './webgl/gl/uniform/ShaderUniformValue';
 export * from './webgl/gl/uniform/ShaderUniform';
+export * from './webgl/gl/uniform/ShaderUniformConstants'
 export * from './webgl/gl/attribute/ShaderAttribute';
 export * from './webgl/gl/attribute/ShaderAttributeConstants'
 export * from './webgl/gl/buffer/VertexArray';

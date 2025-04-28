@@ -50,13 +50,13 @@ export class ShaderUniformValue{
         else if(Array.isArray(values)){
             switch(values.length){
                 case 1:
-                    return this.isFloat(values[0]) ? '1fv' : '1iv';
+                    return '1fv';
                 case 2:
-                    return values.some(v => this.isFloat(v)) ? '2fv' : '2iv';
+                    return '2fv';
                 case 3:
-                    return values.some(v => this.isFloat(v)) ? '3fv' : '3iv';
+                    return '3fv';
                 case 4:
-                    return values.some(v => this.isFloat(v)) ? '4fv' : '4iv';
+                    return '4fv';
                 default:
                     throw new Error('Invalid uniform values type');
             }

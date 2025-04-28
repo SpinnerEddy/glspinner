@@ -51,12 +51,12 @@ export class Rectangle extends Geometry{
             this.gl.FLOAT, 
             stride, 
             0);
-        attributes["aColor"].setAttributeBuffer(
+        attributes["aColor"]?.setAttributeBuffer(
             AttributeElementSize.aColor,
             this.gl.FLOAT, 
             stride, 
             AttributeElementSize.aPosition * Float32Array.BYTES_PER_ELEMENT);
-        attributes["aUv"].setAttributeBuffer(
+        attributes["aUv"]?.setAttributeBuffer(
             AttributeElementSize.aUv,
             this.gl.FLOAT, 
             stride, 
