@@ -13,7 +13,5 @@ export abstract class BaseMaterial implements MaterialOperation {
         this.shaderProgram.use();
     }
 
-    setUniform(uniforms: UniformPairs): void {
-        console.log(uniforms);
-    }
+    abstract setUniform(uniforms: UniformPairs): void;
 }

@@ -4,6 +4,7 @@ import { Matrix44 } from "../../../math/matrix/Matrix44";
 import { Vector2 } from "../../../math/vector/Vector2";
 import { Vector3 } from "../../../math/vector/Vector3";
 import { Vector4 } from "../../../math/vector/Vector4";
+import { ShaderUniformValue } from "./ShaderUniformValue";
 
 export type UniformType = '1f' | '1fv' | '1i' | '1iv' | 
                           '2f' | '2fv' | '2i' | '2iv' | 
@@ -15,4 +16,4 @@ export type UniformAvailableType = number | number[] | Float32Array | Int32Array
                                    Matrix22 | Matrix33 | Matrix44 | 
                                    Vector2 | Vector3 | Vector4;
 
-export type UniformPairs = Record<string, any>;
+export type UniformPairs = Record<string, ShaderUniformValue>;

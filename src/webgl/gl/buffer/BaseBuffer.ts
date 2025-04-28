@@ -13,19 +13,8 @@ export abstract class BaseBuffer implements BufferOperation{
         return this.gl.ARRAY_BUFFER;
     }
 
-    bind(): void {
-        throw new Error("Method not implemented.");
-    }
-
-    unbind(): void {
-        throw new Error("Method not implemented.");
-    }
-
-    setData(): void {
-        throw new Error("Method not implemented.");
-    }
-
-    dispose(): void {
-        throw new Error("Method not implemented.");
-    }
+    abstract bind(): void;
+    abstract unbind(): void;
+    abstract setData(): void;
+    abstract dispose(): void;
 }
