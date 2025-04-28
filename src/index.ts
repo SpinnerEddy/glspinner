@@ -1,3 +1,7 @@
+// App
+export * from './app/ApplicationOperation'
+export * from './app/BaseApplication'
+
 // Color
 export * from './color/Color';
 export * from './color/Color255';

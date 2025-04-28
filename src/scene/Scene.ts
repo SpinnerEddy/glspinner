@@ -4,10 +4,14 @@ import { ClockOperation } from "./clock/ClockOperation";
 export class Scene {
     private clock: ClockOperation;
     private isRunning: boolean;
+    private updateFunction: Function;
+    private drawFunction: Function;
 
     constructor(){
         this.clock = new Clock();
         this.isRunning = false;
+        this.updateFunction = () => {};
+        this.drawFunction = () => {};
     }
 
     public start(): void {
@@ -16,7 +20,6 @@ export class Scene {
         this.clock.reset();
         this.isRunning = true;
         this.run();
-        
     }
 
     public stop(): void {
@@ -27,6 +30,14 @@ export class Scene {
 
     public reset(): void {
         this.clock.reset();
+    }
+
+    public setUpdate(updateFunction: Function): void {
+        this.updateFunction = updateFunction;
+    }
+
+    public setDraw(drawFunction: Function): void {
+        this.drawFunction = drawFunction;
     }
 
     private run(): void {
@@ -44,10 +55,10 @@ export class Scene {
     }
 
     private updateObjects(): void {
-        // 計算など
+        this.updateFunction();
     }
 
     private drawObjects(): void {
-        // 描画など
+        this.drawFunction();
     }
 }
