@@ -2,6 +2,9 @@
 export * from './app/ApplicationOperation'
 export * from './app/BaseApplication'
 
+// Tools
+export * from './tools/GuiUtility'
+
 // Color
 export * from './color/Color';
 export * from './color/Color255';

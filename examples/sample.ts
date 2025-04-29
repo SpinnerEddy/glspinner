@@ -1,5 +1,7 @@
 import * as GLSpinner from '../src/index.ts';
 
+let gui;
+
 class Sample extends GLSpinner.BaseApplication {
     private program: GLSpinner.ShaderProgram;
     private rect: GLSpinner.Rectangle;
@@ -9,6 +11,7 @@ class Sample extends GLSpinner.BaseApplication {
     private vpMatrix: GLSpinner.Matrix44;
     private mvpMatrix: GLSpinner.Matrix44;
     private camera: GLSpinner.Camera;
+    private gui: GLSpinner.GuiUtility;
 
     async preload(): Promise<void> {
         await super.preload();
@@ -39,6 +42,13 @@ class Sample extends GLSpinner.BaseApplication {
                 this.modelMatrix);
 
         this.webglUtility.clearColor(GLSpinner.ColorUtility.hexToColor01(GLSpinner.MyColorCode.COLOR_HARUKI));
+
+        GLSpinner.GuiUtility.initialize();
+        const guiElements = {
+            color: GLSpinner.MyColorCode.COLOR_CHINA
+        };
+        GLSpinner.GuiUtility.addFolder("default");
+        GLSpinner.GuiUtility.addElement(guiElements, "color");
     }
 
     update(): void {
