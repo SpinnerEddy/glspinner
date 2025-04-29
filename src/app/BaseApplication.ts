@@ -33,5 +33,4 @@ export abstract class BaseApplication implements ApplicationOperation{
     abstract setup(): void;
     abstract update(): void;
     abstract draw(): void;
-    abstract additionalSupport(): Promise<void>;
 }

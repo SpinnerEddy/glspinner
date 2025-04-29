@@ -1,6 +1,6 @@
 import * as GLSpinner from '../src/index.ts';
 
-class Sample extends GLSpinner.BaseApplication {
+class Sample extends GLSpinner.RecordingApplication {
     private program: GLSpinner.ShaderProgram;
     private rect: GLSpinner.Rectangle;
     private modelMatrix: GLSpinner.Matrix44;
@@ -10,7 +10,9 @@ class Sample extends GLSpinner.BaseApplication {
     private mvpMatrix: GLSpinner.Matrix44;
     private camera: GLSpinner.Camera;
     private backgroundColorStr: string;
-    private shaderUniformColorStr: string;
+
+    private fps: number;
+    private frameNum: number;
 
     async preload(): Promise<void> {
         await super.preload();
@@ -53,17 +55,36 @@ class Sample extends GLSpinner.BaseApplication {
             });
         GLSpinner.GuiUtility.resetFolder();
 
-        GLSpinner.GuiUtility.addFolder("shaderUniform");
-        GLSpinner.GuiUtility.addColorElement(
-            guiElements, 
-            "color",
-            (value: string) => {
-                this.shaderUniformColorStr = value;
+        GLSpinner.GuiUtility.addFolder("Recording");
+        GLSpinner.GuiUtility.addElement(
+            {fps: 60}, 
+            "fps",
+            (value: number) => {
+                this.fps = value;
+            }
+        );
+        GLSpinner.GuiUtility.addElement(
+            {frameNum: 300}, 
+            "frameNum",
+            (value: number) => {
+                this.frameNum = value;
+            }
+        );
+        GLSpinner.GuiUtility.addAction(() => {
+            this.setRecordingOptions({
+                type: 'StartAndStop',
+                fps: 60,
+                resolution: [800, 800],
+                saveName: 'test',
+                frameNum: 300,
             });
-        GLSpinner.GuiUtility.resetFolder();
-
-        this.backgroundColorStr = GLSpinner.MyColorCode.COLOR_SENA;
-        this.shaderUniformColorStr = GLSpinner.MyColorCode.COLOR_CHINA;
+            this.startRecording();
+        }, 
+        "StartRecord");
+        GLSpinner.GuiUtility.addAction(() => {
+            this.endRecording();
+        }, 
+        "StopRecord");
     }
 
     update(): void {

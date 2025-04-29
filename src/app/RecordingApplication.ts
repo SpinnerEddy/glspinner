@@ -11,7 +11,7 @@ export abstract class RecordingApplication extends BaseApplication{
         super(scene);
         this.recorder = new Recorder(this.canvas);
         this.options = {
-            type: 'Frame',
+            type: 'SequencialFrames',
             fps: 60,
             resolution: [800, 800],
             saveName: 'test',
@@ -30,15 +30,19 @@ export abstract class RecordingApplication extends BaseApplication{
 
     protected setRecordingOptions(options: RecordOptions) {
         this.options = options;
+        this.recorder.setOptions(this.options);
     }
 
     protected startRecording(): void {
+        if(this.isRecording) return;
+
         this.recorder.resetRecord();
-        this.recorder.setOptions(this.options);
         this.isRecording = true;
     }
 
     protected endRecording(): void {
+        if(!this.isRecording) return;
+
         this.isRecording = false;
         if(this.options.type == 'Frame') return;
 
@@ -46,7 +50,7 @@ export abstract class RecordingApplication extends BaseApplication{
     }
 
     async preload(): Promise<void> {
-        await this.preload();
+        await super.preload();
     }
 
     async additionalSupport(): Promise<void> {

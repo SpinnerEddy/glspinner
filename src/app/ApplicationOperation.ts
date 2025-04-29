@@ -4,5 +4,4 @@ export interface ApplicationOperation{
     setup(): void;
     update(): void;
     draw(): void;
-    additionalSupport(): Promise<void>;
 }

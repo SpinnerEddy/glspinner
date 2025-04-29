@@ -1,6 +1,7 @@
 import GUI from 'lil-gui'
+import { RecordType } from './Recorder';
 
-type SettingValue = number | string | boolean;
+type SettingValue = number | string | boolean | RecordType;
 type SettingArray = number[] | Float32Array | string[] | boolean[]
 type SettingType = SettingValue | SettingArray;
 
@@ -41,6 +42,12 @@ export class GuiUtility{
         if(onChangeAction){
             controller.onChange(onChangeAction);
         }
+    }
+
+    static addAction(action: () => void, name: string): void {
+        const gui = this.GUI;
+        const actionObject = {[name]: action}
+        gui.add(actionObject, name);
     }
 
     private static get GUI(): GUI {

@@ -1,6 +1,6 @@
 import JSZip from 'jszip';
 
-export type RecordType = 'Frame' | 'SequencialFrame' | 'StartAndStop';
+export type RecordType = 'Frame' | 'SequencialFrames' | 'StartAndStop';
 
 export type RecordOptions = {
     type: RecordType,
@@ -17,7 +17,7 @@ type FrameData = {
 
 export class Recorder{
     private canvas: HTMLCanvasElement;
-    private options: RecordOptions | undefined = undefined;
+    private options: RecordOptions | undefined;
     private frames: FrameData[] = [];
     private currentFrameCount: number;
 
@@ -56,13 +56,16 @@ export class Recorder{
                 }
 
                 this.currentFrameCount++;
+                console.log(this.currentFrameCount);
                 resolve();
             }, 'image/png');
         });
     }
 
     public endRecordingAuto(): boolean {
-        if(this.options == undefined) return true;
+        if(this.options == undefined) {
+            return true
+        };
         if(this.options.type == 'StartAndStop') return false;
 
         const saveFrameNum = (this.options.type == 'Frame') ? 1 : this.options.frameNum;

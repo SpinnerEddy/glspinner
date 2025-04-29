@@ -1,9 +1,11 @@
 // App
 export * from './app/ApplicationOperation'
 export * from './app/BaseApplication'
+export * from './app/RecordingApplication'
 
 // Tools
 export * from './tools/GuiUtility'
+export * from './tools/Recorder'
 
 // Color
 export * from './color/Color';
