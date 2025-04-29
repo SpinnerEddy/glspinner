@@ -35,6 +35,14 @@ export class GuiUtility{
         }
     }
 
+    static addColorElement<T extends SettingElement, K extends keyof T>(params: T, name: K, onChangeAction?: (value: T[K]) => void){
+        const gui = this.GUI;
+        const controller = gui.addColor(params, name as string);
+        if(onChangeAction){
+            controller.onChange(onChangeAction);
+        }
+    }
+
     private static get GUI(): GUI {
         if(this.targetFolderGUI != undefined) return this.targetFolderGUI;
         if(this.parentGUI == undefined) this.parentGUI = new GUI();
