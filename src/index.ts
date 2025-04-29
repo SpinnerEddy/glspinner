@@ -68,7 +68,7 @@ export * from './scene/material/BaseMaterial'
 export * from './scene/material/FragmentCanvasMaterial'
 
 // Scene
-export * from './scene/Scene'
+export * from './scene/core/Scene'
 
 export function initializeLibrary() {
     console.log("ライブラリが初期化されました");

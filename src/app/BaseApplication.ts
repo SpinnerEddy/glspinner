@@ -1,4 +1,4 @@
-import { Scene } from "../scene/Scene";
+import { Scene } from "../scene/core/Scene";
 import { ShaderLoader } from "../webgl/gl/ShaderLoader";
 import { WebGLUtility } from "../webgl/gl/WebGLUtility";
 import { ApplicationOperation } from "./ApplicationOperation";
@@ -33,4 +33,5 @@ export abstract class BaseApplication implements ApplicationOperation{
     abstract setup(): void;
     abstract update(): void;
     abstract draw(): void;
+    abstract additionalSupport(): Promise<void>;
 }
