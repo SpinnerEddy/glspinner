@@ -50,11 +50,13 @@ class Sample extends GLSpinner.BaseApplication {
                 this.mvpMatrix));
         this.program.setUniform('time', 
             new GLSpinner.ShaderUniformValue(
-                this.scene.Clock.getElapsedTime()
+                this.scene.Clock.getElapsedTime(),
+                'float'
         ));
         this.program.setUniform('resolution', 
             new GLSpinner.ShaderUniformValue(
-                [this.canvas.width, this.canvas.height]));
+                [this.canvas.width, this.canvas.height],
+                'float'));
     }
 
     draw(): void {

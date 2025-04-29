@@ -1,14 +1,14 @@
 import { Matrix } from "../../../math/matrix/Matrix";
 import { Vector } from "../../../math/vector/Vector";
-import { UniformAvailableType, UniformType } from "./ShaderUniformConstants";
+import { UniformAvailableType, UniformType, UniformValueType } from "./ShaderUniformConstants";
 
 export class ShaderUniformValue{
     private values: number | number[] | Float32Array | Int32Array;
     private type: UniformType;
 
-    constructor(value: UniformAvailableType){
+    constructor(value: UniformAvailableType, type: UniformValueType = 'float'){
         this.values = this.getValue(value);
-        this.type = this.getType(value);
+        this.type = this.getType(value, type);
     }
 
     public getUniformValues(): number | number[] | Float32Array | Int32Array{
@@ -43,20 +43,20 @@ export class ShaderUniformValue{
         }
     }
 
-    private getType(values: UniformAvailableType): UniformType{
+    private getType(values: UniformAvailableType, type: UniformValueType): UniformType{
         if(typeof values === 'number'){
-            return this.isFloat(values) ? '1f' : '1i';
+            return this.isFloat(type) ? '1f' : '1f';
         }
         else if(Array.isArray(values)){
             switch(values.length){
                 case 1:
-                    return '1fv';
+                    return this.isFloat(type) ? '1fv' : '1iv';
                 case 2:
-                    return '2fv';
+                    return this.isFloat(type) ? '2fv' : '2iv';
                 case 3:
-                    return '3fv';
+                    return this.isFloat(type) ? '3fv' : '3iv';
                 case 4:
-                    return '4fv';
+                    return this.isFloat(type) ? '4fv' : '4iv';
                 default:
                     throw new Error('Invalid uniform values type');
             }
@@ -64,13 +64,13 @@ export class ShaderUniformValue{
         else if(values instanceof Vector){
             switch(values.size){
                 case 1:
-                    return '1fv';
+                    return this.isFloat(type) ? '1fv' : '1iv';
                 case 2:
-                    return '2fv';
+                    return this.isFloat(type) ? '2fv' : '2iv';
                 case 3:
-                    return '3fv';
+                    return this.isFloat(type) ? '3fv' : '3iv';
                 case 4:
-                    return '4fv';
+                    return this.isFloat(type) ? '4fv' : '4iv';
                 default:
                     throw new Error('Invalid uniform values type');
             }
@@ -120,7 +120,7 @@ export class ShaderUniformValue{
         }
     }
 
-    private isFloat(value: number): boolean{
-        return !Number.isInteger(value);
+    private isFloat(type: UniformValueType): boolean{
+        return type == 'float';
     }
 }
