@@ -64,6 +64,8 @@ export * from './scene/camera/CameraConstants'
 // Scene/Clock
 export * from './scene/clock/Clock'
 export * from './scene/clock/ClockOperation'
+export * from './scene/clock/FixedTimeClock'
+export * from './scene/clock/RealTimeClock'
 
 // Scene/Material
 export * from './scene/material/MaterialOperation'
@@ -72,6 +74,7 @@ export * from './scene/material/FragmentCanvasMaterial'
 
 // Scene
 export * from './scene/core/Scene'
+export * from './scene/core/SceneOperation'
 
 export function initializeLibrary() {
     console.log("ライブラリが初期化されました");
