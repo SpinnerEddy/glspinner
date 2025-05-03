@@ -38,50 +38,6 @@ class Sample extends GLSpinner.RecordingApplication {
                 this.projectionMatrix, 
                 this.viewMatrix), 
                 this.modelMatrix);
-
-        // GLSpinner.RecordGuiController.initialize();
-        // const guiElements = {
-        //     color: GLSpinner.MyColorCode.COLOR_CHINA
-        // };
-        // GLSpinner.GuiUtility.addFolder("default");
-        // GLSpinner.GuiUtility.addColorElement(
-        //     guiElements, 
-        //     "color",
-        //     (value: string) => {
-        //         this.backgroundColorStr = value;
-        //     });
-        // GLSpinner.GuiUtility.resetFolder();
-
-        // GLSpinner.GuiUtility.addFolder("Recording");
-        // GLSpinner.GuiUtility.addElement(
-        //     {fps: 60}, 
-        //     "fps",
-        //     (value: number) => {
-        //         this.fps = value;
-        //     }
-        // );
-        // GLSpinner.GuiUtility.addElement(
-        //     {frameNum: 300}, 
-        //     "frameNum",
-        //     (value: number) => {
-        //         this.frameNum = value;
-        //     }
-        // );
-        // GLSpinner.GuiUtility.addAction(() => {
-        //     this.setRecordingOptions({
-        //         type: 'SequencialFrames',
-        //         fps: 60,
-        //         resolution: [800, 800],
-        //         saveName: 'test',
-        //         frameNum: 300,
-        //     });
-        //     this.startRecording();
-        // }, 
-        // "StartRecord");
-        // GLSpinner.GuiUtility.addAction(() => {
-        //     this.endRecording();
-        // }, 
-        // "StopRecord");
     }
 
     update(): void {

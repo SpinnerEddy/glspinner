@@ -7,6 +7,9 @@ export class Clock implements ClockOperation{
     private frameCount: number;
     private deltaTime: number;
     private lastTime: number;
+    private lastDrawCallTime: number;
+    private fps: number;
+    private frameInterval: number;
 
     constructor(){
         this.startTime = performance.now();
@@ -15,6 +18,25 @@ export class Clock implements ClockOperation{
         this.frameCount = 0;
         this.deltaTime = 0;
         this.lastTime = 0;
+        this.lastDrawCallTime = -1;
+        this.fps = 60;
+        this.frameInterval = 1 / this.fps;
+    }
+
+    public setFps(fps: number): void {
+        this.fps = fps;
+        this.frameInterval = 1 / this.fps;
+    }
+
+    public shouldDraw(): boolean {
+        if(this.lastDrawCallTime == -1) return true;
+
+        if(this.lastDrawCallTime >= this.frameInterval){
+            this.lastDrawCallTime = -1;
+            return true;
+        }
+
+        return false;
     }
 
     public update(): void {
@@ -24,6 +46,12 @@ export class Clock implements ClockOperation{
 
         this.lastTime = currentTime;
         this.frameCount++;
+
+        if(this.lastDrawCallTime <= -1){
+            this.lastDrawCallTime = this.deltaTime;
+        }else{
+            this.lastDrawCallTime += this.deltaTime;
+        }
     }
 
     public setTimeScale(timeScale: number) {
@@ -42,6 +70,10 @@ export class Clock implements ClockOperation{
         return this.frameCount;
     }
 
+    public getFrameInterval(): number {
+        return this.frameInterval;
+    }
+
     public reset(): void {
         this.startTime = performance.now();
         this.elapsedTime = 0.0;
@@ -49,5 +81,7 @@ export class Clock implements ClockOperation{
         this.frameCount = 0;
         this.deltaTime = 0;
         this.lastTime = 0;
+        this.fps = 60;
+        this.frameInterval = 1 / this.fps;
     }
 }
