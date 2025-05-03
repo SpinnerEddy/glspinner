@@ -1,15 +1,14 @@
 import { ClockOperation } from "./ClockOperation";
 
-export class Clock implements ClockOperation{
-    private startTime: number;
-    private elapsedTime: number;
-    private timeScale: number;
-    private frameCount: number;
-    private deltaTime: number;
-    private lastTime: number;
-    private lastDrawCallTime: number;
-    private fps: number;
-    private frameInterval: number;
+export abstract class Clock implements ClockOperation{
+    protected startTime: number;
+    protected elapsedTime: number;
+    protected timeScale: number;
+    protected frameCount: number;
+    protected deltaTime: number;
+    protected lastDrawCallTime: number;
+    protected fps: number;
+    protected frameInterval: number;
 
     constructor(){
         this.startTime = performance.now();
@@ -17,7 +16,6 @@ export class Clock implements ClockOperation{
         this.timeScale = 1;
         this.frameCount = 0;
         this.deltaTime = 0;
-        this.lastTime = 0;
         this.lastDrawCallTime = -1;
         this.fps = 60;
         this.frameInterval = 1 / this.fps;
@@ -28,30 +26,8 @@ export class Clock implements ClockOperation{
         this.frameInterval = 1 / this.fps;
     }
 
-    public shouldDraw(): boolean {
-        if(this.lastDrawCallTime == -1) return true;
-
-        if(this.lastDrawCallTime >= this.frameInterval){
-            this.lastDrawCallTime = -1;
-            return true;
-        }
-
-        return false;
-    }
-
-    public update(): void {
-        const currentTime = performance.now();
-        this.elapsedTime = (currentTime - this.startTime) * this.timeScale / 1000;
-        this.deltaTime = Math.max((currentTime - this.lastTime) * this.timeScale / 1000, 0);
-
-        this.lastTime = currentTime;
-        this.frameCount++;
-
-        if(this.lastDrawCallTime <= -1){
-            this.lastDrawCallTime = this.deltaTime;
-        }else{
-            this.lastDrawCallTime += this.deltaTime;
-        }
+    public setFrameInterval(fps: number): void {
+        this.frameInterval = 1 / fps;
     }
 
     public setTimeScale(timeScale: number) {
@@ -80,8 +56,10 @@ export class Clock implements ClockOperation{
         this.timeScale = 1;
         this.frameCount = 0;
         this.deltaTime = 0;
-        this.lastTime = 0;
         this.fps = 60;
         this.frameInterval = 1 / this.fps;
     }
+
+    public abstract update(): void;
+    public abstract shouldDraw(): boolean
 }

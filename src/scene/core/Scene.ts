@@ -1,5 +1,5 @@
-import { Clock } from "../clock/Clock";
 import { ClockOperation } from "../clock/ClockOperation";
+import { RealTimeClock } from "../clock/RealTimeClock";
 import { SceneOperation } from "./SceneOperation";
 
 export class Scene implements SceneOperation{
@@ -10,7 +10,7 @@ export class Scene implements SceneOperation{
     private additionalSupportFunctionAsync: Function;
 
     constructor(){
-        this.clock = new Clock();
+        this.clock = new RealTimeClock();
         this.isRunning = false;
         this.updateFunction = () => {};
         this.drawFunction = () => {};
@@ -21,6 +21,8 @@ export class Scene implements SceneOperation{
         if(this.isRunning) return;
 
         this.clock.reset();
+        this.clock.setFps(60);
+        this.clock.setFrameInterval(60);
         this.isRunning = true;
         this.run();
     }
@@ -57,11 +59,14 @@ export class Scene implements SceneOperation{
         this.clock.update();
 
         if(this.clock.shouldDraw()){
+            // console.log("Draw");
             this.updateObjects();
 
             this.drawObjects();
 
             await this.additionalSupport();
+        }else{
+            // console.log("Not Draw");
         }
 
         requestAnimationFrame(() => {
