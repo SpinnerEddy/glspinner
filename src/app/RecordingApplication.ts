@@ -1,17 +1,21 @@
 import { Scene } from "../scene/core/Scene";
-import { RecordGuiController } from "../tools/gui/RecordGuiController";
+import { ClockType, RecordGuiController } from "../tools/gui/RecordGuiController";
 import { Recorder } from "../tools/Recorder";
 import { BaseApplication } from "./BaseApplication";
 
 export abstract class RecordingApplication extends BaseApplication{
     protected recorder: Recorder;
-    private isRecoding: boolean;
+    private isRecording: boolean;
 
     constructor(scene: Scene){
         super(scene);
         this.recorder = new Recorder(this.canvas);
-        this.isRecoding = false;
-        RecordGuiController.initialize(this.startRecording.bind(this), this.endRecording.bind(this));
+        this.isRecording = false;
+        RecordGuiController.initialize(
+            this.startRecording.bind(this), 
+            this.endRecording.bind(this),
+            this.changeSceneClock.bind(this)
+        );
     }
 
     public async start(): Promise<void> {
@@ -24,21 +28,31 @@ export abstract class RecordingApplication extends BaseApplication{
     }
 
     startRecording(): void {
-        if(this.isRecoding) return;
+        if(this.isRecording) return;
 
         this.recorder.resetRecord();
         this.recorder.setOptions(RecordGuiController.recordOptions);
 
-        this.isRecoding = true;
+        this.isRecording = true;
     }
 
     endRecording(): void {
-        if(!this.isRecoding) return;
-        this.isRecoding = false;
+        if(!this.isRecording) return;
+        this.isRecording = false;
         
         if(RecordGuiController.recordOptions.type == 'Frame') return;
 
         this.recorder.saveFramesAsZip();
+    }
+    
+    changeSceneClock(clockType: ClockType): void {
+        const options = RecordGuiController.recordOptions;
+        if(clockType == 'RealTime'){
+            this.scene.setRealTimeClock(options.fps);
+        }
+        else{
+            this.scene.setFixedTimeClock(options.fps, options.fixedFrameInterval);
+        }
     }
 
     async preload(): Promise<void> {
@@ -46,7 +60,7 @@ export abstract class RecordingApplication extends BaseApplication{
     }
 
     async additionalSupport(): Promise<void> {
-        if(this.isRecoding){
+        if(this.isRecording){
             await this.recorder.saveSequentialFrames();
 
             if(this.recorder.endRecordingAuto()){

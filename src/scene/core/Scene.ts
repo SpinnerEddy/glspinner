@@ -1,4 +1,5 @@
 import { ClockOperation } from "../clock/ClockOperation";
+import { FixedTimeClock } from "../clock/FixedTimeClock";
 import { RealTimeClock } from "../clock/RealTimeClock";
 import { SceneOperation } from "./SceneOperation";
 
@@ -8,22 +9,24 @@ export class Scene implements SceneOperation{
     private updateFunction: Function;
     private drawFunction: Function;
     private additionalSupportFunctionAsync: Function;
+    private animationId: number;
 
     constructor(){
         this.clock = new RealTimeClock();
+        this.clock.reset();
+        this.clock.setFps(60);
         this.isRunning = false;
         this.updateFunction = () => {};
         this.drawFunction = () => {};
         this.additionalSupportFunctionAsync = () => {};
+        this.animationId = 0;
     }
 
     public start(): void {
         if(this.isRunning) return;
 
-        this.clock.reset();
-        this.clock.setFps(60);
-        this.clock.setFrameInterval(60);
         this.isRunning = true;
+        this.clock.reset();
         this.run();
     }
 
@@ -31,6 +34,7 @@ export class Scene implements SceneOperation{
         if(!this.isRunning) return;
 
         this.isRunning = false;
+        cancelAnimationFrame(this.animationId);
     }
 
     public reset(): void {
@@ -49,6 +53,19 @@ export class Scene implements SceneOperation{
         this.additionalSupportFunctionAsync = additionalSupport;
     }
 
+    public setRealTimeClock(fps: number): void {
+        this.clock = new RealTimeClock();
+        this.clock.reset();
+        this.clock.setFps(fps);
+    }
+
+    public setFixedTimeClock(fps: number, frameInterval: number): void {
+        this.clock = new FixedTimeClock();
+        this.clock.reset();
+        this.clock.setFps(fps);
+        this.clock.setFrameInterval(frameInterval);
+    }
+
     get Clock(): ClockOperation {
         return this.clock;
     }
@@ -59,19 +76,17 @@ export class Scene implements SceneOperation{
         this.clock.update();
 
         if(this.clock.shouldDraw()){
-            // console.log("Draw");
             this.updateObjects();
 
             this.drawObjects();
 
             await this.additionalSupport();
-        }else{
-            // console.log("Not Draw");
         }
 
-        requestAnimationFrame(() => {
+        this.animationId = requestAnimationFrame(() => {
             this.run();
         });
+
     }
 
     private updateObjects(): void {

@@ -5,6 +5,7 @@ export type RecordType = 'Frame' | 'SequencialFrames' | 'StartAndStop';
 export type RecordOptions = {
     type: RecordType,
     fps: number,
+    fixedFrameInterval: number,
     resolution: [number, number],
     saveName: string,
     frameNum?: number,

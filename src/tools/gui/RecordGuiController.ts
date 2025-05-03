@@ -1,19 +1,28 @@
 import { RecordOptions, RecordType } from "../Recorder";
 import { GuiUtility } from "./GuiUtility";
 
+export type ClockType = 'RealTime' | 'Fixed';
+
 export class RecordGuiController{
     private static recordType: RecordType = 'SequencialFrames'
+    private static clockType: ClockType = 'RealTime';
     private static fps: number = 60;
+    private static fixedFrameInterval: number = 60;
     private static frameNum: number = 300;
     private static width: number = 800;
     private static height: number = 800;
     private static saveName: string = "test";
     private static onRecordStart: () => void;
     private static onRecordEnd: () => void;
+    private static onChangeClockType: (clockType: ClockType) => void;
 
-    static initialize(onRecordStart: () => void, onRecordEnd: () => void){
+    static initialize(
+        onRecordStart: () => void, 
+        onRecordEnd: () => void,
+        onChangeClockType: (clockType: ClockType) => void){
         this.onRecordStart = onRecordStart;
         this.onRecordEnd = onRecordEnd;
+        this.onChangeClockType = onChangeClockType;
 
         GuiUtility.initialize();
         GuiUtility.addFolder("Recording");
@@ -26,10 +35,28 @@ export class RecordGuiController{
             ['Frame', 'SequencialFrames', 'StartAndStop']
         );
         GuiUtility.addElement(
+            {clockType: 'RealTime'}, 
+            "clockType",
+            (value: string) => {
+                this.clockType = value as ClockType;
+                this.onChangeClockType?.(this.clockType);
+            },
+            ['RealTime', 'Fixed']
+        );
+        GuiUtility.addElement(
             {fps: 60}, 
             "fps",
             (value: number) => {
                 this.fps = value;
+                this.onChangeClockType?.(this.clockType);
+            }
+        );
+        GuiUtility.addElement(
+            {fixedFrameInterval: 60}, 
+            "fixedFrameInterval",
+            (value: number) => {
+                this.fixedFrameInterval = value;
+                this.onChangeClockType?.(this.clockType);
             }
         );
         GuiUtility.addElement(
@@ -76,9 +103,14 @@ export class RecordGuiController{
         return {
             type: this.recordType,
             fps: this.fps,
+            fixedFrameInterval: this.fixedFrameInterval,
             resolution: [this.width, this.height],
             saveName: this.saveName,
             frameNum: this.frameNum
         };
     }
+
+    static get clock(): ClockType {
+        return this.clockType;
+    } 
 }

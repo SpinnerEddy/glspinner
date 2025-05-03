@@ -56,8 +56,6 @@ export abstract class Clock implements ClockOperation{
         this.timeScale = 1;
         this.frameCount = 0;
         this.deltaTime = 0;
-        this.fps = 60;
-        this.frameInterval = 1 / this.fps;
     }
 
     public abstract update(): void;
