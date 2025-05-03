@@ -68,8 +68,9 @@ export class Recorder{
         };
         if(this.options.type == 'StartAndStop') return false;
 
-        const saveFrameNum = (this.options.type == 'Frame') ? 1 : this.options.frameNum;
-        return this.currentFrameCount >= (saveFrameNum ?? 0);
+        const saveFrameNum = ((this.options.type == 'Frame') ? 1 : this.options.frameNum) ?? 0;
+        const isEnd = this.currentFrameCount >= saveFrameNum;
+        return isEnd;
     }
 
     public async saveFramesAsZip(zipName: string = 'record.zip'): Promise<void> {

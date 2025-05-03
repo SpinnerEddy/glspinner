@@ -1,22 +1,17 @@
 import { Scene } from "../scene/core/Scene";
-import { Recorder, RecordOptions } from "../tools/Recorder";
+import { RecordGuiController } from "../tools/gui/RecordGuiController";
+import { Recorder } from "../tools/Recorder";
 import { BaseApplication } from "./BaseApplication";
 
 export abstract class RecordingApplication extends BaseApplication{
     protected recorder: Recorder;
-    protected isRecording: boolean = false;
-    protected options: RecordOptions;
+    private isRecoding: boolean;
 
     constructor(scene: Scene){
         super(scene);
         this.recorder = new Recorder(this.canvas);
-        this.options = {
-            type: 'SequencialFrames',
-            fps: 60,
-            resolution: [800, 800],
-            saveName: 'test',
-            frameNum: 1
-        };
+        this.isRecoding = false;
+        RecordGuiController.initialize(this.startRecording.bind(this), this.endRecording.bind(this));
     }
 
     public async start(): Promise<void> {
@@ -28,23 +23,20 @@ export abstract class RecordingApplication extends BaseApplication{
         this.scene.start();
     }
 
-    protected setRecordingOptions(options: RecordOptions) {
-        this.options = options;
-        this.recorder.setOptions(this.options);
-    }
-
-    protected startRecording(): void {
-        if(this.isRecording) return;
+    startRecording(): void {
+        if(this.isRecoding) return;
 
         this.recorder.resetRecord();
-        this.isRecording = true;
+        this.recorder.setOptions(RecordGuiController.recordOptions);
+
+        this.isRecoding = true;
     }
 
-    protected endRecording(): void {
-        if(!this.isRecording) return;
-
-        this.isRecording = false;
-        if(this.options.type == 'Frame') return;
+    endRecording(): void {
+        if(!this.isRecoding) return;
+        this.isRecoding = false;
+        
+        if(RecordGuiController.recordOptions.type == 'Frame') return;
 
         this.recorder.saveFramesAsZip();
     }
@@ -54,7 +46,7 @@ export abstract class RecordingApplication extends BaseApplication{
     }
 
     async additionalSupport(): Promise<void> {
-        if(this.isRecording){
+        if(this.isRecoding){
             await this.recorder.saveSequentialFrames();
 
             if(this.recorder.endRecordingAuto()){

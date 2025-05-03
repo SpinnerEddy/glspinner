@@ -4,7 +4,8 @@ export * from './app/BaseApplication'
 export * from './app/RecordingApplication'
 
 // Tools
-export * from './tools/GuiUtility'
+export * from './tools/gui/GuiUtility'
+export * from './tools/gui/RecordGuiController'
 export * from './tools/Recorder'
 
 // Color
