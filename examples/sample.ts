@@ -1,6 +1,6 @@
 import * as GLSpinner from '../src/index.ts';
 
-class Sample extends GLSpinner.RecordingApplication {
+class Sample extends GLSpinner.BaseApplication {
     private program: GLSpinner.ShaderProgram;
     private rect: GLSpinner.Rectangle;
     private modelMatrix: GLSpinner.Matrix44;
@@ -10,6 +10,7 @@ class Sample extends GLSpinner.RecordingApplication {
     private mvpMatrix: GLSpinner.Matrix44;
     private camera: GLSpinner.Camera;
     private backgroundColorStr: string;
+    private testTransform: GLSpinner.Transform;
 
     async preload(): Promise<void> {
         await super.preload();
@@ -38,6 +39,28 @@ class Sample extends GLSpinner.RecordingApplication {
                 this.projectionMatrix, 
                 this.viewMatrix), 
                 this.modelMatrix);
+
+        const B = new GLSpinner.Transform("B");
+        const C = new GLSpinner.Transform("C", B);
+        this.testTransform = new GLSpinner.Transform("A", undefined, [B]);
+        this.testTransform.outputLog();
+        
+        const D = new GLSpinner.Transform("D", undefined, [C]);
+        this.testTransform.removeChild(B);
+        this.testTransform.addChild(D);
+        this.testTransform.outputLog();
+        
+        // this.testTransform.addChild(child);
+        // this.testTransform.outputLog();
+        // console.log("-----------------");
+
+        // this.testTransform.addChild(child2);
+        // this.testTransform.outputLog();
+        // console.log("-----------------");
+
+        // this.testTransform.removeChild(child2);
+        // this.testTransform.outputLog();
+        // console.log("-----------------");
     }
 
     update(): void {

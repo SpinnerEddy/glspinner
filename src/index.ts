@@ -72,6 +72,9 @@ export * from './scene/material/MaterialOperation'
 export * from './scene/material/BaseMaterial'
 export * from './scene/material/FragmentCanvasMaterial'
 
+// Scene/Transform
+export * from './scene/transform/Transform'
+
 // Scene
 export * from './scene/core/Scene'
 export * from './scene/core/SceneOperation'
