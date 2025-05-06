@@ -1,3 +1,4 @@
+import { MathUtility } from "../MathUtility";
 import { Matrix44 } from "../matrix/Matrix44";
 import { QuaternionCalculator } from "../QuaternionCalculator";
 import { DefaultVectorConstants } from "../vector/VectorConstants";
@@ -29,20 +30,17 @@ export class Quaternion{
         const matrix = new Matrix44();
         let result = matrix.identity();
 
-        const x = QuaternionCalculator.rotateVector(this, DefaultVectorConstants.AXIS2DX);
-        const y = QuaternionCalculator.rotateVector(this, DefaultVectorConstants.AXIS2DY);
-        const z = QuaternionCalculator.rotateVector(this, DefaultVectorConstants.AXIS2DZ);
-        result.set(0, 0, x.x);
-        result.set(0, 1, x.y);
-        result.set(0, 2, x.z);
-        result.set(0, 0, y.x);
-        result.set(0, 1, y.y);
-        result.set(0, 2, y.z);
-        result.set(0, 0, z.x);
-        result.set(0, 1, z.y);
-        result.set(0, 2, z.z);
+        result.set(0, 0, 1 - 2 * Math.pow(this.y, 2) - 2 * Math.pow(this.z, 2));
+        result.set(0, 1, 2 * this.x * this.y - 2 * this.z * this.w);
+        result.set(0, 2, 2 * this.x * this.z + 2 * this.y * this.w);
+        result.set(1, 0, 2 * this.x * this.y + 2 * this.z * this.w);
+        result.set(1, 1, 1 - 2 * Math.pow(this.x, 2) - 2 * Math.pow(this.z, 2));
+        result.set(1, 2, 2 * this.y * this.z - 2 * this.x * this.w);
+        result.set(2, 0, 2 * this.x * this.z - 2 * this.y * this.w);
+        result.set(2, 1, 2 * this.y * this.z + 2 * this.x * this.w);
+        result.set(2, 2, 1 - 2 * Math.pow(this.x, 2) - 2 * Math.pow(this.y, 2));
 
-        return matrix;
+        return result;
     }
 
     toEuler(): {pitch: number, yaw: number, roll: number}{

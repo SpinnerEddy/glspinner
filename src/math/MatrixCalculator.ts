@@ -3,6 +3,7 @@ import { Matrix22 } from "./matrix/Matrix22";
 import { Matrix33 } from "./matrix/Matrix33";
 import { Matrix44 } from "./matrix/Matrix44";
 import { MatrixClassAndSizePair } from "./matrix/MatrixConstants";
+import { Quaternion } from "./quaternion/Quaternion";
 import { Vector2 } from "./vector/Vector2";
 import { Vector3 } from "./vector/Vector3";
 
@@ -89,6 +90,11 @@ export class MatrixCalculator{
 
     static rotate3D(target: Matrix44, angle: number, axis: Vector3): Matrix44 {
         const result = target.rotate3D(angle, axis);
+        return result;
+    }
+    
+    static rotateByQuaternion(target: Matrix44, rotation: Quaternion): Matrix44 {
+        const result = target.rotateByQuaternion(rotation);
         return result;
     }
 

@@ -1,4 +1,5 @@
 import { MathUtility } from "../MathUtility";
+import { Quaternion } from "../quaternion/Quaternion";
 import { Vector2 } from "../vector/Vector2";
 import { Vector3 } from "../vector/Vector3";
 import { DefaultVectorConstants } from "../vector/VectorConstants";
@@ -308,6 +309,14 @@ export class Matrix44 extends Matrix<Matrix44>{
         let result = out ? out : new Matrix44();
 
         const rotateMatrix = this.createRotateMatrix3D(angle, axis);
+        result = rotateMatrix.multiply(this);
+        return result;
+    }
+
+    rotateByQuaternion(rotation: Quaternion, out?: Matrix44): Matrix44 {
+        let result = out ? out : new Matrix44();
+
+        const rotateMatrix = rotation.toMatrix();
         result = rotateMatrix.multiply(this);
         return result;
     }
