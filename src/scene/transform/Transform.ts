@@ -5,19 +5,15 @@ import { QuaternionCalculator } from "../../math/QuaternionCalculator";
 import { Vector3 } from "../../math/vector/Vector3";
 
 export class Transform{
-    private id: string;
     private position: Vector3;
     private scale: Vector3;
     private rotation: Quaternion;
 
     private localMatrix: Matrix44;
     private worldMatrix: Matrix44;
+    private isRequiredRecalculation: boolean;
 
-    private parent: Transform | undefined;
-    private children: Transform[] = [];
-
-    constructor(id: string = "", parent: Transform | undefined = undefined, children: Transform[] = []){
-        this.id = id;
+    constructor(){
         this.position = new Vector3(0, 0, 0);
         this.scale = new Vector3(1, 1, 1);
         this.rotation = QuaternionCalculator.identity();
@@ -25,48 +21,49 @@ export class Transform{
         this.localMatrix = MatrixCalculator.identity44();
         this.worldMatrix = MatrixCalculator.identity44();
 
-        this.parent = parent;
-        if(this.parent !== undefined){
-            this.parent.addChild(this);
-        }
-
-        children.forEach(child => {
-            this.addChild(child);
-        });
+        this.isRequiredRecalculation = false;
     }
 
-    public outputLog(): void {
-        console.log("this : " + this.id);
-        console.log("parent : " + this.parent?.id);
-        if(this.children.length == 0){
-            console.log("No Child");
-            console.log("-----------------");
-            return;
-        }
+    public updateMatrix(parentMatrix: Matrix44 | undefined = undefined): void {
+        if(!this.isRequiredRecalculation) return;
 
-        this.children.forEach(element => {
-            console.log("parent : " + this.id + " child : " + element?.id);
-            element.outputLog();
-        });
+        this.calculateLocalMatrix();
+        this.calculateWorldMatrix(parentMatrix);
+
+        this.isRequiredRecalculation = false;
     }
 
-    public addChild(child: Transform): void {
-        const index = this.children.indexOf(child);
-        if(index !== -1) return;
-
-        if(child.parent !== undefined){
-            child.parent.removeChild(child);
-        }
-
-        this.children.push(child);
-        child.parent = this;
+    public getWorldMatrix(): Matrix44 {
+        return this.worldMatrix;
     }
 
-    public removeChild(child: Transform): void {
-        const index = this.children.indexOf(child);
-        if(index === -1) return;
+    public setPosition(position: Vector3): void {
+        this.position = position;
+        this.isRequiredRecalculation = true;
+    }
 
-        child.parent = undefined;
-        this.children.splice(index, 1);
+    public setScale(scale: Vector3): void {
+        this.scale = scale;
+        this.isRequiredRecalculation = true;
+    }
+
+    public setRotation(rotation: Quaternion): void {
+        this.rotation = rotation;
+        this.isRequiredRecalculation = true;
+    }
+
+    private calculateLocalMatrix(): void {
+        this.localMatrix = MatrixCalculator.scale3D(this.localMatrix, this.scale.x, this.scale.y, this.scale.z);
+        this.localMatrix = MatrixCalculator.rotateByQuaternion(this.localMatrix, this.rotation);
+        this.localMatrix = MatrixCalculator.translate3D(this.localMatrix, this.position);
+    }
+
+    private calculateWorldMatrix(parentMatrix: Matrix44 | undefined): void {
+        if(parentMatrix === undefined){
+            this.worldMatrix = this.localMatrix;
+        }
+        else{
+            this.worldMatrix = MatrixCalculator.multiply(this.worldMatrix, this.localMatrix);
+        }
     }
 }

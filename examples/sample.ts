@@ -40,15 +40,15 @@ class Sample extends GLSpinner.BaseApplication {
                 this.viewMatrix), 
                 this.modelMatrix);
 
-        const B = new GLSpinner.Transform("B");
-        const C = new GLSpinner.Transform("C", B);
-        this.testTransform = new GLSpinner.Transform("A", undefined, [B]);
-        this.testTransform.outputLog();
+        // const B = new GLSpinner.Transform("B");
+        // const C = new GLSpinner.Transform("C", B);
+        // this.testTransform = new GLSpinner.Transform("A", undefined, [B]);
+        // this.testTransform.outputLog();
         
-        const D = new GLSpinner.Transform("D", undefined, [C]);
-        this.testTransform.removeChild(B);
-        this.testTransform.addChild(D);
-        this.testTransform.outputLog();
+        // const D = new GLSpinner.Transform("D", undefined, [C]);
+        // this.testTransform.removeChild(B);
+        // this.testTransform.addChild(D);
+        // this.testTransform.outputLog();
         
         // this.testTransform.addChild(child);
         // this.testTransform.outputLog();
