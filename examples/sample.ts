@@ -74,7 +74,7 @@ class Sample extends GLSpinner.BaseApplication {
             'time':  new GLSpinner.ShaderUniformValue(this.scene.Clock.getElapsedTime(), 'float'),
             'resolution': new GLSpinner.ShaderUniformValue([this.canvas.width, this.canvas.height], 'float')
         };
-        this.mesh.update(this.gl, uniforms);
+        this.mesh.updateUniforms(this.gl, uniforms);
     }
 
     draw(): void {
