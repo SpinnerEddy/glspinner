@@ -2,7 +2,7 @@ import { VertexArray } from "../buffer/VertexArray";
 import { ShaderAttribute } from "../attribute/ShaderAttribute";
 import { GeometryOperation } from "./GeometryOperation";
 
-export abstract class Geometry implements GeometryOperation {
+export abstract class BaseGeometry implements GeometryOperation {
     protected gl: WebGL2RenderingContext;
     protected vao: VertexArray;
     protected vertices: Float32Array;

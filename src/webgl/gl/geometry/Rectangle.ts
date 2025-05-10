@@ -1,10 +1,10 @@
 import { GeometryBuffer } from "../buffer/GeometryBuffer";
 import { IndexBuffer } from "../buffer/IndexBuffer";
 import { ShaderAttribute } from "../attribute/ShaderAttribute";
-import { Geometry } from "./Geometry";
+import { BaseGeometry } from "./BaseGeometry";
 import { AttributeElementSize } from "../attribute/ShaderAttributeConstants";
 
-export class Rectangle extends Geometry{
+export class Rectangle extends BaseGeometry{
     protected uv: Float32Array;
 
     constructor(gl: WebGL2RenderingContext, width: number = 1, height: number = 1) {
