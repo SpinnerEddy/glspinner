@@ -36,29 +36,32 @@ export class Rectangle extends BaseGeometry{
         ]);
     }
 
-    setUpBuffers(attributes: Record<string, ShaderAttribute>): void {
+    setUpBuffers(gl: WebGL2RenderingContext, attributes: Record<string, ShaderAttribute>): void {
         this.vao.bindVao();
 
-        const gb = new GeometryBuffer(this.gl, this.vertices, this.color, this.uv);
-        const ib = new IndexBuffer(this.gl, this.indices);
+        const gb = new GeometryBuffer(gl, this.vertices, this.color, this.uv);
+        const ib = new IndexBuffer(gl, this.indices);
 
         gb.setData();
         ib.setData();
 
         const stride = (AttributeElementSize.aPosition + AttributeElementSize.aColor + AttributeElementSize.aUv) * Float32Array.BYTES_PER_ELEMENT;
         attributes["aPosition"].setAttributeBuffer(
+            gl,
             AttributeElementSize.aPosition, 
-            this.gl.FLOAT, 
+            gl.FLOAT, 
             stride, 
             0);
         attributes["aColor"]?.setAttributeBuffer(
+            gl,
             AttributeElementSize.aColor,
-            this.gl.FLOAT, 
+            gl.FLOAT, 
             stride, 
             AttributeElementSize.aPosition * Float32Array.BYTES_PER_ELEMENT);
         attributes["aUv"]?.setAttributeBuffer(
+            gl,
             AttributeElementSize.aUv,
-            this.gl.FLOAT, 
+            gl.FLOAT, 
             stride, 
             (AttributeElementSize.aPosition + AttributeElementSize.aColor) * Float32Array.BYTES_PER_ELEMENT);
 

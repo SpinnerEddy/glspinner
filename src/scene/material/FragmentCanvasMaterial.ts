@@ -7,9 +7,9 @@ export class FragmentCanvasMaterial extends BaseMaterial{
         super(shaderProgram);
     }
 
-    setUniform(uniforms: UniformPairs): void {
+    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void {
         for(const key in uniforms){
-            this.shaderProgram.setUniform(key, uniforms[key]);
+            this.shaderProgram.setUniform(gl, key, uniforms[key]);
         }
     }
 }

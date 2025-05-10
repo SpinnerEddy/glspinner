@@ -21,13 +21,13 @@ class Sample extends GLSpinner.BaseApplication {
 
     setup(): void {
         this.program = this.shaderLoader.getShaderProgram("basic");
-        this.program.use();
+        this.program.use(this.gl);
 
         this.rect = new GLSpinner.Rectangle(this.gl, 2, 2);
         const attributes = {
-            aPosition: this.program.getAttribute('aPosition'),
+            aPosition: this.program.getAttribute(this.gl, 'aPosition'),
         };
-        this.rect.setUpBuffers(attributes);
+        this.rect.setUpBuffers(this.gl, attributes);
 
         this.modelMatrix = GLSpinner.MatrixCalculator.identity44();
         this.vpMatrix = GLSpinner.MatrixCalculator.identity44();
@@ -67,14 +67,17 @@ class Sample extends GLSpinner.BaseApplication {
         this.vpMatrix = this.projectionMatrix.multiply(this.viewMatrix, this.vpMatrix);
         this.mvpMatrix = this.vpMatrix.multiply(this.modelMatrix, this.mvpMatrix);
 
-        this.program.setUniform('mvpMatrix',
+        this.program.setUniform(this.gl,
+            'mvpMatrix',
              new GLSpinner.ShaderUniformValue(
                 this.mvpMatrix));
-        this.program.setUniform('time', 
+        this.program.setUniform(this.gl,
+            'time', 
             new GLSpinner.ShaderUniformValue(
                 this.scene.Clock.getElapsedTime(),
                 'float'));
-        this.program.setUniform('resolution', 
+        this.program.setUniform(this.gl,
+            'resolution', 
             new GLSpinner.ShaderUniformValue(
                 [this.canvas.width, this.canvas.height],
                 'float'));
@@ -84,7 +87,9 @@ class Sample extends GLSpinner.BaseApplication {
         this.webglUtility.setViewport(this.canvas);
         this.webglUtility.clearColor(GLSpinner.ColorUtility.hexToColor01(this.backgroundColorStr));
 
-        this.rect.render();
+        this.rect.bind();
+        this.gl.drawElements(this.gl.TRIANGLES, this.rect.getIndexCount(), this.gl.UNSIGNED_SHORT, 0);
+        this.rect.unbind();
     }
 }
 

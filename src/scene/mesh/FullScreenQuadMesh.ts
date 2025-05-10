@@ -1,0 +1,22 @@
+import { Rectangle } from "../../webgl/gl/geometry/Rectangle";
+import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
+import { FragmentCanvasMaterial } from "../material/FragmentCanvasMaterial";
+import { BaseMesh } from "./BaseMesh";
+
+export class FullScreenQuadMesh extends BaseMesh{
+
+    constructor(geometry: Rectangle, material: FragmentCanvasMaterial){
+        super(geometry, material);
+    }
+
+    update(gl: WebGL2RenderingContext, uniforms: UniformPairs): void {
+        this.material.setUniform(gl, uniforms);
+    }
+
+    draw(gl: WebGL2RenderingContext): void {
+        this.material.use(gl);
+        this.geometry.bind();
+        gl.drawElements(gl.TRIANGLES, this.geometry.getIndexCount(), gl.UNSIGNED_SHORT, 0);
+        this.geometry.unbind();
+    }
+}

@@ -3,14 +3,12 @@ import { ShaderAttribute } from "../attribute/ShaderAttribute";
 import { GeometryOperation } from "./GeometryOperation";
 
 export abstract class BaseGeometry implements GeometryOperation {
-    protected gl: WebGL2RenderingContext;
     protected vao: VertexArray;
     protected vertices: Float32Array;
     protected color: Float32Array;
     protected indices: Int16Array;
 
     constructor(gl: WebGL2RenderingContext) {
-        this.gl = gl;
         this.vao = new VertexArray(gl);
 
         this.vertices = new Float32Array;
@@ -18,12 +16,18 @@ export abstract class BaseGeometry implements GeometryOperation {
         this.indices = new Int16Array;
     }
 
-    abstract setUpBuffers(attributes: Record<string, ShaderAttribute>): void;
+    abstract setUpBuffers(gl: WebGL2RenderingContext, attributes: Record<string, ShaderAttribute>): void;
 
-    render(): void {
+    bind(): void {
         this.vao.bind();
-        this.gl.drawElements(this.gl.TRIANGLES, this.indices.length, this.gl.UNSIGNED_SHORT, 0);
+    }
+
+    unbind(): void {
         this.vao.unbind();
+    }
+
+    getIndexCount(): number {
+        return this.indices.length;
     }
 
     dispose(): void {

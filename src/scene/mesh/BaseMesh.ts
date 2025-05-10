@@ -1,15 +1,17 @@
 import { BaseGeometry } from "../../webgl/gl/geometry/BaseGeometry";
+import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
 import { BaseMaterial } from "../material/BaseMaterial";
 import { MeshOperation } from "./MeshOperation";
 
 export abstract class BaseMesh implements MeshOperation{
-    private geometry: BaseGeometry;
-    private material: BaseMaterial;
+    protected geometry: BaseGeometry;
+    protected material: BaseMaterial;
     
     constructor(geometry: BaseGeometry, material: BaseMaterial){
         this.geometry = geometry;
         this.material = material;
     }
 
+    abstract update(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
     abstract draw(gl: WebGL2RenderingContext): void;
 }

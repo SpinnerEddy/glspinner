@@ -9,9 +9,9 @@ export abstract class BaseMaterial implements MaterialOperation {
         this.shaderProgram = shaderProgram;
     }
 
-    use(): void {
-        this.shaderProgram.use();
+    use(gl: WebGL2RenderingContext): void {
+        this.shaderProgram.use(gl);
     }
 
-    abstract setUniform(uniforms: UniformPairs): void;
+    abstract setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
 }
