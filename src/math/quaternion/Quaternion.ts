@@ -1,7 +1,4 @@
-import { MathUtility } from "../MathUtility";
 import { Matrix44 } from "../matrix/Matrix44";
-import { QuaternionCalculator } from "../QuaternionCalculator";
-import { DefaultVectorConstants } from "../vector/VectorConstants";
 
 export class Quaternion{
     private components: Float32Array;
