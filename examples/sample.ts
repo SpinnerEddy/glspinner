@@ -2,7 +2,6 @@ import * as GLSpinner from '../src/index.ts';
 
 class Sample extends GLSpinner.BaseApplication {
     private program: GLSpinner.ShaderProgram;
-    private rect: GLSpinner.Rectangle;
     private modelMatrix: GLSpinner.Matrix44;
     private viewMatrix: GLSpinner.Matrix44;
     private projectionMatrix: GLSpinner.Matrix44;
@@ -11,6 +10,7 @@ class Sample extends GLSpinner.BaseApplication {
     private camera: GLSpinner.Camera;
     private backgroundColorStr: string;
     private testTransform: GLSpinner.Transform;
+    private mesh: GLSpinner.FullScreenQuadMesh;
 
     async preload(): Promise<void> {
         await super.preload();
@@ -21,13 +21,15 @@ class Sample extends GLSpinner.BaseApplication {
 
     setup(): void {
         this.program = this.shaderLoader.getShaderProgram("basic");
-        this.program.use(this.gl);
 
-        this.rect = new GLSpinner.Rectangle(this.gl, 2, 2);
+        const rect = new GLSpinner.Rectangle(this.gl, 2, 2);
         const attributes = {
             aPosition: this.program.getAttribute(this.gl, 'aPosition'),
         };
-        this.rect.setUpBuffers(this.gl, attributes);
+        rect.setUpBuffers(this.gl, attributes);
+
+        const material = new GLSpinner.FragmentCanvasMaterial(this.program);
+        this.mesh = new GLSpinner.FullScreenQuadMesh(rect, material);
 
         this.modelMatrix = GLSpinner.MatrixCalculator.identity44();
         this.vpMatrix = GLSpinner.MatrixCalculator.identity44();
@@ -67,29 +69,18 @@ class Sample extends GLSpinner.BaseApplication {
         this.vpMatrix = this.projectionMatrix.multiply(this.viewMatrix, this.vpMatrix);
         this.mvpMatrix = this.vpMatrix.multiply(this.modelMatrix, this.mvpMatrix);
 
-        this.program.setUniform(this.gl,
-            'mvpMatrix',
-             new GLSpinner.ShaderUniformValue(
-                this.mvpMatrix));
-        this.program.setUniform(this.gl,
-            'time', 
-            new GLSpinner.ShaderUniformValue(
-                this.scene.Clock.getElapsedTime(),
-                'float'));
-        this.program.setUniform(this.gl,
-            'resolution', 
-            new GLSpinner.ShaderUniformValue(
-                [this.canvas.width, this.canvas.height],
-                'float'));
+        const uniforms = {
+            'mvpMatrix': new GLSpinner.ShaderUniformValue(this.mvpMatrix),
+            'time':  new GLSpinner.ShaderUniformValue(this.scene.Clock.getElapsedTime(), 'float'),
+            'resolution': new GLSpinner.ShaderUniformValue([this.canvas.width, this.canvas.height], 'float')
+        };
+        this.mesh.update(this.gl, uniforms);
     }
 
     draw(): void {
         this.webglUtility.setViewport(this.canvas);
         this.webglUtility.clearColor(GLSpinner.ColorUtility.hexToColor01(this.backgroundColorStr));
-
-        this.rect.bind();
-        this.gl.drawElements(this.gl.TRIANGLES, this.rect.getIndexCount(), this.gl.UNSIGNED_SHORT, 0);
-        this.rect.unbind();
+        this.mesh.draw(this.gl);
     }
 }
 

@@ -72,6 +72,12 @@ export * from './scene/material/MaterialOperation'
 export * from './scene/material/BaseMaterial'
 export * from './scene/material/FragmentCanvasMaterial'
 
+// Scene/Mesh
+export * from './scene/mesh/BaseMesh'
+export * from './scene/mesh/FullScreenQuadMesh'
+export * from './scene/mesh/MeshOperation'
+export * from './scene/mesh/NormalMesh'
+
 // Scene/Transform
 export * from './scene/transform/Transform'
 
