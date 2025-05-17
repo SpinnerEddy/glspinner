@@ -35,6 +35,10 @@ export abstract class SceneNode{
         return this.id;
     }
 
+    public getTransform(): Transform {
+        return this.transform;
+    }
+
     private setParent(parent: SceneNode | undefined): void {
         if(this.parent == parent) return;
 
