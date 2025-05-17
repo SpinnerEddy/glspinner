@@ -1,4 +1,5 @@
 import { Transform } from "../../transform/Transform";
+import { SceneGraphNodeIdGenerator } from "../SceneGraphNodeIdGenerator";
 
 export abstract class SceneNode{
     protected id: string;
@@ -7,9 +8,11 @@ export abstract class SceneNode{
     protected transform: Transform;
 
     constructor(id: string = ""){
-        this.id = id;
         this.transform = new Transform();
         this.children = [];
+
+        const className = this.constructor as Function;
+        this.id = id !== "" ? id : SceneGraphNodeIdGenerator.generateId(className.name);
     }
 
     public addChild(child: SceneNode): void {
