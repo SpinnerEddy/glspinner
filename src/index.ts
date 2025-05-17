@@ -84,6 +84,12 @@ export * from './scene/transform/Transform'
 // Scene
 export * from './scene/core/Scene'
 export * from './scene/core/SceneOperation'
+export * from './scene/core/SceneGraphUtility'
+export * from './scene/core/SceneGraphNodeIdGenerator'
+export * from './scene/core/node/EmptyNode'
+export * from './scene/core/node/GroupNode'
+export * from './scene/core/node/MeshNode'
+export * from './scene/core/node/SceneNode'
 
 export function initializeLibrary() {
     console.log("ライブラリが初期化されました");
