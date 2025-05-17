@@ -12,20 +12,41 @@ export abstract class SceneNode{
         this.children = [];
     }
 
-    public addChild(child: SceneNode){
-        const index = this.children.indexOf(child);
-        if(index === -1) return;
+    public addChild(child: SceneNode): void {
+        if(child === this) return;
 
-        this.children.push(child);
-        child.parent = this;
+        child.setParent(this);
     }
 
-    public removeChild(child: SceneNode){
-        const index = this.children.indexOf(child);
-        if(index === -1) return;
+    public removeChild(child: SceneNode): void {
+        if(child.parent !== this) return;
 
-        this.children.splice(index, 1);
-        child.parent = undefined;
+        child.setParent(undefined);
+    }
+
+    public getChildren(): SceneNode[] {
+        return this.children;
+    }
+
+    public getId(): string {
+        return this.id;
+    }
+
+    private setParent(parent: SceneNode | undefined): void {
+        if(this.parent == parent) return;
+
+        if(this.parent !== undefined){
+            const index = this.parent.children.indexOf(this);
+            if(index !== -1){
+                this.parent.children.splice(index, 1);
+            }
+        }
+
+        this.parent = parent;
+
+        if(parent !== undefined && !parent.children.includes(this)){
+            parent.children.push(this);
+        }
     }
 
     public abstract update(): void;

@@ -71,7 +71,7 @@ class Sample extends GLSpinner.BaseApplication {
 
         const uniforms = {
             'mvpMatrix': new GLSpinner.ShaderUniformValue(this.mvpMatrix),
-            'time':  new GLSpinner.ShaderUniformValue(this.scene.Clock.getElapsedTime(), 'float'),
+            'time':  new GLSpinner.ShaderUniformValue(0.0, 'float'),//this.scene.Clock.getElapsedTime(), 'float'),
             'resolution': new GLSpinner.ShaderUniformValue([this.canvas.width, this.canvas.height], 'float')
         };
         this.mesh.updateUniforms(this.gl, uniforms);
