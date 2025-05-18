@@ -15,6 +15,10 @@ export class SceneGraphUtility{
         root.addChild(newNode);
     }
 
+    public static addChild(target: SceneNode, newNode: SceneNode): void {
+        target.addChild(newNode);
+    }
+
     public static findNodeById(root: SceneNode, id: string): SceneNode | undefined {
         if(root.getId() === id) return root;
         for(const child of root.getChildren()){

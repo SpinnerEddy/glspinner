@@ -1,4 +1,5 @@
 import { Scene } from "../scene/core/Scene";
+import { SceneGraph } from "../scene/core/SceneGraph";
 import { ShaderLoader } from "../webgl/gl/ShaderLoader";
 import { WebGLUtility } from "../webgl/gl/WebGLUtility";
 import { ApplicationOperation } from "./ApplicationOperation";
@@ -9,6 +10,7 @@ export abstract class BaseApplication implements ApplicationOperation{
     protected gl: WebGL2RenderingContext;
     protected shaderLoader: ShaderLoader;
     protected scene: Scene;
+    protected sceneGraph: SceneGraph;
 
     constructor(scene: Scene){
         this.canvas = document.getElementById('webgl-canvas') as HTMLCanvasElement;
@@ -16,6 +18,7 @@ export abstract class BaseApplication implements ApplicationOperation{
         this.gl = this.webglUtility.getWebGL2RenderingContext();
         this.shaderLoader = new ShaderLoader(this.gl);
         this.scene = scene;
+        this.sceneGraph = new SceneGraph();
     }
 
     public async start(): Promise<void> {

@@ -57,5 +57,5 @@ export abstract class SceneNode{
     }
 
     public abstract update(): void;
-    public abstract draw(): void;
+    public abstract draw(gl: WebGL2RenderingContext): void;
 }

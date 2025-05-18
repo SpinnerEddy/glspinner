@@ -12,8 +12,8 @@ export class SceneGraph{
         this.root.update();
     }
 
-    public draw(): void {
-        this.root.draw();
+    public draw(gl: WebGL2RenderingContext): void {
+        this.root.draw(gl);
     }
 
     public getGraph(): SceneNode {

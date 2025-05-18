@@ -9,8 +9,8 @@ class Sample extends GLSpinner.BaseApplication {
     private mvpMatrix: GLSpinner.Matrix44;
     private camera: GLSpinner.Camera;
     private backgroundColorStr: string;
-    private testTransform: GLSpinner.Transform;
     private mesh: GLSpinner.FullScreenQuadMesh;
+    private meshNode: GLSpinner.MeshNode;
 
     async preload(): Promise<void> {
         await super.preload();
@@ -22,7 +22,7 @@ class Sample extends GLSpinner.BaseApplication {
     setup(): void {
         this.program = this.shaderLoader.getShaderProgram("basic");
 
-        const rect = new GLSpinner.Rectangle(this.gl, 2, 2);
+        const rect = new GLSpinner.Rectangle(this.gl, 1, 1);
         const attributes = {
             aPosition: this.program.getAttribute(this.gl, 'aPosition'),
         };
@@ -30,6 +30,7 @@ class Sample extends GLSpinner.BaseApplication {
 
         const material = new GLSpinner.FragmentCanvasMaterial(this.program);
         this.mesh = new GLSpinner.FullScreenQuadMesh(rect, material);
+        this.meshNode = new GLSpinner.MeshNode(this.mesh);
 
         this.modelMatrix = GLSpinner.MatrixCalculator.identity44();
         this.vpMatrix = GLSpinner.MatrixCalculator.identity44();
@@ -63,6 +64,13 @@ class Sample extends GLSpinner.BaseApplication {
         // this.testTransform.removeChild(child2);
         // this.testTransform.outputLog();
         // console.log("-----------------");
+
+        // let emptyNode = new GLSpinner.EmptyNode();
+        // let meshNode = new GLSpinner.MeshNode(this.mesh);
+        // GLSpinner.SceneGraphUtility.addChild(emptyNode, meshNode);
+        // GLSpinner.SceneGraphUtility.addChild(this.sceneGraph.getGraph(), emptyNode);
+
+        // console.log(this.sceneGraph.getGraph());
     }
 
     update(): void {
