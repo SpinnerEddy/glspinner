@@ -1,3 +1,4 @@
+import { RendererContext } from "../../renderer/RendererContext";
 import { Transform } from "../../transform/Transform";
 import { SceneGraphNodeIdGenerator } from "../SceneGraphNodeIdGenerator";
 
@@ -57,5 +58,5 @@ export abstract class SceneNode{
     }
 
     public abstract update(): void;
-    public abstract draw(gl: WebGL2RenderingContext): void;
+    public abstract draw(gl: WebGL2RenderingContext, context: RendererContext): void;
 }

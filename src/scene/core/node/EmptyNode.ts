@@ -1,3 +1,4 @@
+import { RendererContext } from "../../renderer/RendererContext";
 import { SceneNode } from "./SceneNode";
 
 export class EmptyNode extends SceneNode{
@@ -9,9 +10,9 @@ export class EmptyNode extends SceneNode{
         }
     }
 
-    public draw(gl: WebGL2RenderingContext): void {
+    public draw(gl: WebGL2RenderingContext, context: RendererContext): void {
         for (const child of this.children) {
-            child.draw(gl);
+            child.draw(gl, context);
         }
     }
 }

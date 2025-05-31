@@ -9,8 +9,6 @@ class Sample extends GLSpinner.BaseApplication {
     private mvpMatrix: GLSpinner.Matrix44;
     private camera: GLSpinner.Camera;
     private backgroundColorStr: string;
-    private mesh: GLSpinner.FullScreenQuadMesh;
-    private meshNode: GLSpinner.MeshNode;
 
     async preload(): Promise<void> {
         await super.preload();
@@ -22,19 +20,23 @@ class Sample extends GLSpinner.BaseApplication {
     setup(): void {
         this.program = this.shaderLoader.getShaderProgram("basic");
 
-        const rect = new GLSpinner.Rectangle(this.gl, 1, 1);
+        const rect = new GLSpinner.Rectangle(this.gl, 2, 2);
         const attributes = {
             aPosition: this.program.getAttribute(this.gl, 'aPosition'),
         };
         rect.setUpBuffers(this.gl, attributes);
 
         const material = new GLSpinner.FragmentCanvasMaterial(this.program);
-        this.mesh = new GLSpinner.FullScreenQuadMesh(rect, material);
-        this.meshNode = new GLSpinner.MeshNode(this.mesh);
+        const mesh = new GLSpinner.FullScreenQuadMesh(rect, material);
+        const meshNode = new GLSpinner.MeshNode(mesh);
 
         this.modelMatrix = GLSpinner.MatrixCalculator.identity44();
         this.vpMatrix = GLSpinner.MatrixCalculator.identity44();
         this.camera = new GLSpinner.Camera(GLSpinner.CameraType.Orthography);
+        
+        this.rendererContext.setCamera(this.camera);
+        this.rendererContext.updateGlobalUniform('resolution', new GLSpinner.ShaderUniformValue([this.canvas.width, this.canvas.height], 'float'));
+
         this.viewMatrix = this.camera.getViewMatrix();
         this.projectionMatrix = this.camera.getProjectionMatrix();
         this.mvpMatrix = GLSpinner.MatrixCalculator.multiply(
@@ -43,52 +45,26 @@ class Sample extends GLSpinner.BaseApplication {
                 this.viewMatrix), 
                 this.modelMatrix);
 
-        // const B = new GLSpinner.Transform("B");
-        // const C = new GLSpinner.Transform("C", B);
-        // this.testTransform = new GLSpinner.Transform("A", undefined, [B]);
-        // this.testTransform.outputLog();
-        
-        // const D = new GLSpinner.Transform("D", undefined, [C]);
-        // this.testTransform.removeChild(B);
-        // this.testTransform.addChild(D);
-        // this.testTransform.outputLog();
-        
-        // this.testTransform.addChild(child);
-        // this.testTransform.outputLog();
-        // console.log("-----------------");
+        let emptyNode = new GLSpinner.EmptyNode();
+        GLSpinner.SceneGraphUtility.addChild(emptyNode, meshNode);
+        GLSpinner.SceneGraphUtility.addChild(this.sceneGraph.getGraph(), emptyNode);
 
-        // this.testTransform.addChild(child2);
-        // this.testTransform.outputLog();
-        // console.log("-----------------");
-
-        // this.testTransform.removeChild(child2);
-        // this.testTransform.outputLog();
-        // console.log("-----------------");
-
-        // let emptyNode = new GLSpinner.EmptyNode();
-        // let meshNode = new GLSpinner.MeshNode(this.mesh);
-        // GLSpinner.SceneGraphUtility.addChild(emptyNode, meshNode);
-        // GLSpinner.SceneGraphUtility.addChild(this.sceneGraph.getGraph(), emptyNode);
-
-        // console.log(this.sceneGraph.getGraph());
+        console.log(this.sceneGraph.getGraph());
     }
 
     update(): void {
         this.vpMatrix = this.projectionMatrix.multiply(this.viewMatrix, this.vpMatrix);
         this.mvpMatrix = this.vpMatrix.multiply(this.modelMatrix, this.mvpMatrix);
 
-        const uniforms = {
-            'mvpMatrix': new GLSpinner.ShaderUniformValue(this.mvpMatrix),
-            'time':  new GLSpinner.ShaderUniformValue(0.0, 'float'),//this.scene.Clock.getElapsedTime(), 'float'),
-            'resolution': new GLSpinner.ShaderUniformValue([this.canvas.width, this.canvas.height], 'float')
-        };
-        this.mesh.updateUniforms(this.gl, uniforms);
+        this.rendererContext.updateGlobalUniform('mvpMatrix', new GLSpinner.ShaderUniformValue(this.mvpMatrix));
+        this.rendererContext.updateGlobalUniform('time',  new GLSpinner.ShaderUniformValue(0.0, 'float'));//this.scene.Clock.getElapsedTime(), 'float'));
+        this.sceneGraph.update();
     }
 
     draw(): void {
         this.webglUtility.setViewport(this.canvas);
         this.webglUtility.clearColor(GLSpinner.ColorUtility.hexToColor01(this.backgroundColorStr));
-        this.mesh.draw(this.gl);
+        this.sceneGraph.draw(this.gl, this.rendererContext);
     }
 }
 

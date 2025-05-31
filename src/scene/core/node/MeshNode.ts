@@ -1,4 +1,5 @@
 import { BaseMesh } from "../../mesh/BaseMesh";
+import { RendererContext } from "../../renderer/RendererContext";
 import { SceneNode } from "./SceneNode";
 
 export class MeshNode extends SceneNode{
@@ -13,7 +14,8 @@ export class MeshNode extends SceneNode{
         this.transform.updateMatrix(this.parent?.getTransform().getWorldMatrix());
     }
 
-    public draw(gl: WebGL2RenderingContext): void {
+    public draw(gl: WebGL2RenderingContext, context: RendererContext): void {
+        this.mesh.updateUniforms(gl, context.getGlobalUniform());
         this.mesh.draw(gl);
     }
 }

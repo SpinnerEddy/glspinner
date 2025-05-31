@@ -1,3 +1,4 @@
+import { RendererContext } from "../renderer/RendererContext";
 import { EmptyNode } from "./node/EmptyNode";
 import { SceneNode } from "./node/SceneNode";
 
@@ -12,8 +13,8 @@ export class SceneGraph{
         this.root.update();
     }
 
-    public draw(gl: WebGL2RenderingContext): void {
-        this.root.draw(gl);
+    public draw(gl: WebGL2RenderingContext, context: RendererContext): void {
+        this.root.draw(gl, context);
     }
 
     public getGraph(): SceneNode {
