@@ -28,4 +28,25 @@ export class ColorUtility
 
         return color255.translateTo01();
     } 
+
+    public static hsvToRgb(hue: number, saturation: number, value: number, alpha: number){
+        if(saturation > 1 || value > 1 || alpha > 1) return;
+
+        var th = hue % 360;
+        var i = Math.floor(th / 60);
+        var f = th / 60 - i;
+        var m = value * (1 - saturation);
+        var n = value * (1 - saturation * f);
+        var k = value * (1 - saturation * (1 - f));
+        var color = new Array();
+        if(!(saturation > 0) && !(saturation < 0)){
+            color.push(value, value, value, alpha); 
+        } else {
+            var r = new Array(value, n, m, m, k, value);
+            var g = new Array(k, value, value, n, m, m);
+            var b = new Array(m, m, k, value, value, n);
+            color.push(r[i], g[i], b[i], alpha);
+        }
+        return color;
+    }
 }

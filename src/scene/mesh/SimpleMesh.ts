@@ -1,7 +1,7 @@
 import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
 import { BaseMesh } from "./BaseMesh";
 
-export class NormalMesh extends BaseMesh{
+export class SimpleMesh extends BaseMesh{
 
     updateUniforms(gl: WebGL2RenderingContext, uniforms: UniformPairs): void {
         this.material.setUniform(gl, uniforms);

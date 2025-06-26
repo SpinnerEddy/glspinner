@@ -54,6 +54,7 @@ export * from './webgl/gl/buffer/IndexBuffer';
 
 // Geometry
 export * from './webgl/gl/geometry/Rectangle'
+export * from './webgl/gl/geometry/Torus'
 export * from './webgl/gl/geometry/BaseGeometry'
 export * from './webgl/gl/geometry/GeometryOperation'
 
@@ -71,12 +72,13 @@ export * from './scene/clock/RealTimeClock'
 export * from './scene/material/MaterialOperation'
 export * from './scene/material/BaseMaterial'
 export * from './scene/material/FragmentCanvasMaterial'
+export * from './scene/material/SimpleMaterial'
 
 // Scene/Mesh
 export * from './scene/mesh/BaseMesh'
 export * from './scene/mesh/FullScreenQuadMesh'
 export * from './scene/mesh/MeshOperation'
-export * from './scene/mesh/NormalMesh'
+export * from './scene/mesh/SimpleMesh'
 
 // Scene/Transform
 export * from './scene/transform/Transform'

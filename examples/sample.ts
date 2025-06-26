@@ -9,6 +9,7 @@ class Sample extends GLSpinner.BaseApplication {
     private mvpMatrix: GLSpinner.Matrix44;
     private camera: GLSpinner.Camera;
     private backgroundColorStr: string;
+    private meshNode: GLSpinner.MeshNode;
 
     async preload(): Promise<void> {
         await super.preload();
@@ -18,24 +19,27 @@ class Sample extends GLSpinner.BaseApplication {
     }
 
     setup(): void {
-        this.program = this.shaderLoader.getShaderProgram("basic");
+        this.backgroundColorStr = "#000000";
+        this.program = this.shaderLoader.getShaderProgram("default");
+        this.program.use(this.gl);
 
-        const rect = new GLSpinner.Rectangle(this.gl, 2, 2);
+        const torus = new GLSpinner.Torus(this.gl, 32, 32, 0.5, 1);
         const attributes = {
             aPosition: this.program.getAttribute(this.gl, 'aPosition'),
+            aColor: this.program.getAttribute(this.gl, 'aColor')
         };
-        rect.setUpBuffers(this.gl, attributes);
+        torus.setUpBuffers(this.gl, attributes);
 
-        const material = new GLSpinner.FragmentCanvasMaterial(this.program);
-        const mesh = new GLSpinner.FullScreenQuadMesh(rect, material);
-        const meshNode = new GLSpinner.MeshNode(mesh);
+        const material = new GLSpinner.SimpleMaterial(this.program);
+        const mesh = new GLSpinner.SimpleMesh(torus, material);
+        this.meshNode = new GLSpinner.MeshNode(mesh);
 
         this.modelMatrix = GLSpinner.MatrixCalculator.identity44();
         this.vpMatrix = GLSpinner.MatrixCalculator.identity44();
-        this.camera = new GLSpinner.Camera(GLSpinner.CameraType.Orthography);
+        this.camera = new GLSpinner.Camera(GLSpinner.CameraType.Perspective);
         
         this.rendererContext.setCamera(this.camera);
-        this.rendererContext.updateGlobalUniform('resolution', new GLSpinner.ShaderUniformValue([this.canvas.width, this.canvas.height], 'float'));
+        // this.rendererContext.updateGlobalUniform('resolution', new GLSpinner.ShaderUniformValue([this.canvas.width, this.canvas.height], 'float'));
 
         this.viewMatrix = this.camera.getViewMatrix();
         this.projectionMatrix = this.camera.getProjectionMatrix();
@@ -46,18 +50,24 @@ class Sample extends GLSpinner.BaseApplication {
                 this.modelMatrix);
 
         let emptyNode = new GLSpinner.EmptyNode();
-        GLSpinner.SceneGraphUtility.addChild(emptyNode, meshNode);
+        GLSpinner.SceneGraphUtility.addChild(emptyNode, this.meshNode);
         GLSpinner.SceneGraphUtility.addChild(this.sceneGraph.getGraph(), emptyNode);
 
+        this.gl.enable(this.gl.DEPTH_TEST);
+    	this.gl.depthFunc(this.gl.LEQUAL);
+    	this.gl.enable(this.gl.CULL_FACE);
         console.log(this.sceneGraph.getGraph());
     }
 
     update(): void {
+        this.modelMatrix = this.modelMatrix.rotateX(0.03);
+        this.modelMatrix = this.modelMatrix.rotateZ(0.02);
+        
         this.vpMatrix = this.projectionMatrix.multiply(this.viewMatrix, this.vpMatrix);
         this.mvpMatrix = this.vpMatrix.multiply(this.modelMatrix, this.mvpMatrix);
 
         this.rendererContext.updateGlobalUniform('mvpMatrix', new GLSpinner.ShaderUniformValue(this.mvpMatrix));
-        this.rendererContext.updateGlobalUniform('time',  new GLSpinner.ShaderUniformValue(0.0, 'float'));//this.scene.Clock.getElapsedTime(), 'float'));
+        // this.rendererContext.updateGlobalUniform('time',  new GLSpinner.ShaderUniformValue(0.0, 'float'));//this.scene.Clock.getElapsedTime(), 'float'));
         this.sceneGraph.update();
     }
 
