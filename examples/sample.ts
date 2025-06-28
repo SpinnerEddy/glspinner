@@ -20,13 +20,15 @@ class Sample extends GLSpinner.BaseApplication {
 
     setup(): void {
         this.backgroundColorStr = "#000000";
-        this.program = this.shaderLoader.getShaderProgram("default");
+        this.program = this.shaderLoader.getShaderProgram("lighting");
+        // this.program = this.shaderLoader.getShaderProgram("lighting");
         this.program.use(this.gl);
 
         const torus = new GLSpinner.Torus(this.gl, 32, 32, 1, 2);
         const attributes = {
             aPosition: this.program.getAttribute(this.gl, 'aPosition'),
-            aColor: this.program.getAttribute(this.gl, 'aColor')
+            aNormal: this.program.getAttribute(this.gl, 'aNormal'),
+            aColor: this.program.getAttribute(this.gl, 'aColor'),
         };
         torus.setUpBuffers(this.gl, attributes);
 
@@ -60,13 +62,17 @@ class Sample extends GLSpinner.BaseApplication {
     }
 
     update(): void {
-        this.modelMatrix = this.modelMatrix.rotateX(0.03);
-        this.modelMatrix = this.modelMatrix.rotateZ(0.02);
+        this.modelMatrix = this.modelMatrix.rotateY(0.01);
+        this.modelMatrix = this.modelMatrix.rotateZ(0.01);
         
         this.vpMatrix = this.projectionMatrix.multiply(this.viewMatrix, this.vpMatrix);
         this.mvpMatrix = this.vpMatrix.multiply(this.modelMatrix, this.mvpMatrix);
+        const invertMatrix = this.modelMatrix.inverse();
 
         this.rendererContext.updateGlobalUniform('mvpMatrix', new GLSpinner.ShaderUniformValue(this.mvpMatrix));
+        this.rendererContext.updateGlobalUniform('invMatrix', new GLSpinner.ShaderUniformValue(invertMatrix));
+        this.rendererContext.updateGlobalUniform('lightDirection', new GLSpinner.ShaderUniformValue(new GLSpinner.Vector3(-0.5, 0.5, 0.5)));
+        
         // this.rendererContext.updateGlobalUniform('time',  new GLSpinner.ShaderUniformValue(0.0, 'float'));//this.scene.Clock.getElapsedTime(), 'float'));
         this.sceneGraph.update();
     }

@@ -6,6 +6,7 @@ export abstract class BaseGeometry implements GeometryOperation {
     protected vao: VertexArray;
     protected vertices: Float32Array;
     protected color: Float32Array;
+    protected normal: Float32Array;
     protected indices: Int16Array;
 
     constructor(gl: WebGL2RenderingContext) {
@@ -13,6 +14,7 @@ export abstract class BaseGeometry implements GeometryOperation {
 
         this.vertices = new Float32Array;
         this.color = new Float32Array;
+        this.normal = new Float32Array;
         this.indices = new Int16Array;
     }
 

@@ -10,6 +10,7 @@ export class Matrix44 extends Matrix<Matrix44>{
 
     constructor(data?: Float32Array){
         super(4, data);
+        // console.count('Matrix44 constructor');
     }
 
     identity(): Matrix44 {

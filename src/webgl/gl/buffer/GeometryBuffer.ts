@@ -8,10 +8,11 @@ export class GeometryBuffer extends BaseBuffer{
         gl: WebGL2RenderingContext,
         vertices: Float32Array,
         color: Float32Array,
+        normal: Float32Array,
         uv: Float32Array = new Float32Array
     ){
         super(gl);
-        this.interleavedArray = this.createInterleavedArray(vertices, color, uv);
+        this.interleavedArray = this.createInterleavedArray(vertices, color, normal, uv);
     }
 
     get BufferType(): number {
@@ -41,9 +42,10 @@ export class GeometryBuffer extends BaseBuffer{
     createInterleavedArray(
         vertices: Float32Array,
         color: Float32Array,
+        normal: Float32Array,
         uv: Float32Array
     ): Float32Array {
-        const interleavedArray = new Float32Array(vertices.length + color.length + uv.length);
+        const interleavedArray = new Float32Array(vertices.length + color.length + normal.length + uv.length);
         const vertexNum = vertices.length / AttributeElementSize.aPosition;
         const colorNum = color.length / AttributeElementSize.aColor;
 
@@ -69,15 +71,27 @@ export class GeometryBuffer extends BaseBuffer{
                 arrayIndex);
             arrayIndex += AttributeElementSize.aColor;
 
-            if(uv.length == 0) continue;
+            // if(uv.length == 0) continue;
 
-            const uvOffset = i * AttributeElementSize.aUv;
-            interleavedArray.set(
-                uv.subarray(
-                    uvOffset, 
-                    uvOffset + AttributeElementSize.aUv),
-                arrayIndex);
-            arrayIndex += AttributeElementSize.aUv;
+            if(normal.length > 0){
+                const normalOffset = i * AttributeElementSize.aNormal;
+                interleavedArray.set(
+                    normal.subarray(
+                        normalOffset, 
+                        normalOffset + AttributeElementSize.aNormal),
+                    arrayIndex);
+                arrayIndex += AttributeElementSize.aNormal;
+            }
+
+            if(uv.length > 0){
+                const uvOffset = i * AttributeElementSize.aUv;
+                interleavedArray.set(
+                    uv.subarray(
+                        uvOffset, 
+                        uvOffset + AttributeElementSize.aUv),
+                    arrayIndex);
+                arrayIndex += AttributeElementSize.aUv;
+            }
         }
         console.log(interleavedArray);
         
