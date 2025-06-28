@@ -63,12 +63,6 @@ export class Torus extends BaseGeometry{
             gl.FLOAT, 
             stride, 
             AttributeElementSize.aPosition * Float32Array.BYTES_PER_ELEMENT);
-        // attributes["aUv"]?.setAttributeBuffer(
-        //     gl,
-        //     AttributeElementSize.aUv,
-        //     gl.FLOAT, 
-        //     stride, 
-        //     (AttributeElementSize.aPosition + AttributeElementSize.aColor) * Float32Array.BYTES_PER_ELEMENT);
 
         this.vao.addBuffer("geometry", gb);
         this.vao.addBuffer("index", ib);

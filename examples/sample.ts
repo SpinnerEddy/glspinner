@@ -23,7 +23,7 @@ class Sample extends GLSpinner.BaseApplication {
         this.program = this.shaderLoader.getShaderProgram("default");
         this.program.use(this.gl);
 
-        const torus = new GLSpinner.Torus(this.gl, 32, 32, 0.5, 1);
+        const torus = new GLSpinner.Torus(this.gl, 32, 32, 1, 2);
         const attributes = {
             aPosition: this.program.getAttribute(this.gl, 'aPosition'),
             aColor: this.program.getAttribute(this.gl, 'aColor')
