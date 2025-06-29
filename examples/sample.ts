@@ -32,9 +32,9 @@ class Sample extends GLSpinner.BaseApplication {
         };
         torus.setUpBuffers(this.gl, attributes);
 
-        const material = new GLSpinner.SimpleMaterial(this.program);
-        const mesh = new GLSpinner.SimpleMesh(torus, material);
-        this.meshNode = new GLSpinner.MeshNode(mesh);
+        const material = new GLSpinner.SimpleMaterial();
+        const mesh = new GLSpinner.SimpleMesh(torus, this.program);
+        this.meshNode = new GLSpinner.MeshNode(mesh, material);
 
         this.modelMatrix = GLSpinner.MatrixCalculator.identity44();
         this.vpMatrix = GLSpinner.MatrixCalculator.identity44();
@@ -62,8 +62,8 @@ class Sample extends GLSpinner.BaseApplication {
     }
 
     update(): void {
-        this.modelMatrix = this.modelMatrix.rotateY(0.01);
-        this.modelMatrix = this.modelMatrix.rotateZ(0.01);
+        // this.modelMatrix = this.modelMatrix.rotateY(0.01);
+        // this.modelMatrix = this.modelMatrix.rotateZ(0.01);
         
         this.vpMatrix = this.projectionMatrix.multiply(this.viewMatrix, this.vpMatrix);
         this.mvpMatrix = this.vpMatrix.multiply(this.modelMatrix, this.mvpMatrix);
@@ -75,6 +75,8 @@ class Sample extends GLSpinner.BaseApplication {
         
         // this.rendererContext.updateGlobalUniform('time',  new GLSpinner.ShaderUniformValue(0.0, 'float'));//this.scene.Clock.getElapsedTime(), 'float'));
         this.sceneGraph.update();
+
+        this.meshNode.updateUniforms(this.gl, this.rendererContext);
     }
 
     draw(): void {

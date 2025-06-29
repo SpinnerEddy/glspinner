@@ -3,13 +3,11 @@ import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
 import { BaseMaterial } from "./BaseMaterial";
 
 export class SimpleMaterial extends BaseMaterial{
-    constructor(shaderProgram: ShaderProgram){
-        super(shaderProgram);
-    }
-
-    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void {
+    setUniform(gl: WebGL2RenderingContext, shaderProgram: ShaderProgram, uniforms: UniformPairs): void {
         for(const key in uniforms){
-            this.shaderProgram.setUniform(gl, key, uniforms[key]);
+            shaderProgram.setUniform(gl, key, uniforms[key]);
         }
+
+        //NOTE: マテリアルに関係するもののみをUniform設定する
     }
 }

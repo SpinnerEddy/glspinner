@@ -53,6 +53,7 @@ export class Transform{
     }
 
     private calculateLocalMatrix(): void {
+        this.localMatrix = MatrixCalculator.identity44();
         this.localMatrix = MatrixCalculator.scale3D(this.localMatrix, this.scale.x, this.scale.y, this.scale.z);
         this.localMatrix = MatrixCalculator.rotateByQuaternion(this.localMatrix, this.rotation);
         this.localMatrix = MatrixCalculator.translate3D(this.localMatrix, this.position);
@@ -63,7 +64,7 @@ export class Transform{
             this.worldMatrix = this.localMatrix;
         }
         else{
-            this.worldMatrix = MatrixCalculator.multiply(this.worldMatrix, this.localMatrix);
+            this.worldMatrix = MatrixCalculator.multiply(parentMatrix, this.localMatrix);
         }
     }
 }
