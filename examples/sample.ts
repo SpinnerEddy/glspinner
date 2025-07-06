@@ -20,7 +20,7 @@ class Sample extends GLSpinner.BaseApplication {
 
     setup(): void {
         this.backgroundColorStr = "#000000";
-        this.program = this.shaderLoader.getShaderProgram("lighting");
+        this.program = this.shaderLoader.getShaderProgram("gouraudLighting");
         // this.program = this.shaderLoader.getShaderProgram("lighting");
         this.program.use(this.gl);
 
