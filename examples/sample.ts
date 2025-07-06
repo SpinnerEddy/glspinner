@@ -20,7 +20,7 @@ class Sample extends GLSpinner.BaseApplication {
 
     setup(): void {
         this.backgroundColorStr = "#000000";
-        this.program = this.shaderLoader.getShaderProgram("gouraudLighting");
+        this.program = this.shaderLoader.getShaderProgram("phongLighting");
         this.program.use(this.gl);
 
         const torus = new GLSpinner.Torus(this.gl, 32, 32, 1, 2);
