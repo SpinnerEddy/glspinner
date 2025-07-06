@@ -36,6 +36,14 @@ export class GuiUtility{
         }
     }
 
+    static addElementWithRange<T extends SettingElement, K extends keyof T>(params: T, name: K, min: number, max: number, onChangeAction?: (value: T[K]) => void){
+        const gui = this.GUI;
+        const controller = gui.add(params, name as string, min, max);
+        if(onChangeAction){
+            controller.onChange(onChangeAction);
+        }
+    }
+
     static addColorElement<T extends SettingElement, K extends keyof T>(params: T, name: K, onChangeAction?: (value: T[K]) => void){
         const gui = this.GUI;
         const controller = gui.addColor(params, name as string);

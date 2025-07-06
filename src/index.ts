@@ -6,6 +6,7 @@ export * from './app/RecordingApplication'
 // Tools
 export * from './tools/gui/GuiUtility'
 export * from './tools/gui/RecordGuiController'
+export * from './tools/gui/LightGuiController'
 export * from './tools/Recorder'
 
 // Color

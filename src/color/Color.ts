@@ -1,4 +1,6 @@
 import { MathUtility } from "../math/MathUtility";
+import { Vector3 } from "../math/vector/Vector3";
+import { Vector4 } from "../math/vector/Vector4";
 import { Color255 } from "./Color255";
 
 export class Color{
@@ -38,6 +40,16 @@ export class Color{
     get toRGBArray(): Float32Array
     {
         return new Float32Array([this.r, this.g, this.b]);
+    }
+
+    public getRgbToVector3(): Vector3
+    {
+        return new Vector3(this.r, this.g, this.b);
+    }
+
+    public toVector4(): Vector4
+    {
+        return new Vector4(this.r, this.g, this.b, this.a);
     }
 
     public translateTo255(): Color255

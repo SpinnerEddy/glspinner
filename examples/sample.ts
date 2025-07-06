@@ -59,11 +59,13 @@ class Sample extends GLSpinner.BaseApplication {
     	this.gl.depthFunc(this.gl.LEQUAL);
     	this.gl.enable(this.gl.CULL_FACE);
         console.log(this.sceneGraph.getGraph());
+
+        GLSpinner.LightGuiController.initialize();
     }
 
     update(): void {
-        // this.modelMatrix = this.modelMatrix.rotateY(0.01);
-        // this.modelMatrix = this.modelMatrix.rotateZ(0.01);
+        this.modelMatrix = this.modelMatrix.rotateY(0.01);
+        this.modelMatrix = this.modelMatrix.rotateZ(0.01);
         
         this.vpMatrix = this.projectionMatrix.multiply(this.viewMatrix, this.vpMatrix);
         this.mvpMatrix = this.vpMatrix.multiply(this.modelMatrix, this.mvpMatrix);
@@ -71,7 +73,11 @@ class Sample extends GLSpinner.BaseApplication {
 
         this.rendererContext.updateGlobalUniform('mvpMatrix', new GLSpinner.ShaderUniformValue(this.mvpMatrix));
         this.rendererContext.updateGlobalUniform('invMatrix', new GLSpinner.ShaderUniformValue(invertMatrix));
-        this.rendererContext.updateGlobalUniform('lightDirection', new GLSpinner.ShaderUniformValue(new GLSpinner.Vector3(-0.5, 0.5, 0.5)));
+        this.rendererContext.updateGlobalUniform('lightDirection', new GLSpinner.ShaderUniformValue(GLSpinner.LightGuiController.lightOptions.lightDirection));
+
+        const ambientColor = GLSpinner.ColorUtility.hexToColor01(GLSpinner.LightGuiController.lightOptions.ambientColor).toVector4();
+        this.rendererContext.updateGlobalUniform('ambientColor', new GLSpinner.ShaderUniformValue(ambientColor));
+
         
         // this.rendererContext.updateGlobalUniform('time',  new GLSpinner.ShaderUniformValue(0.0, 'float'));//this.scene.Clock.getElapsedTime(), 'float'));
         this.sceneGraph.update();
