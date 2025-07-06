@@ -31,9 +31,13 @@ class Sample extends GLSpinner.BaseApplication {
         };
         torus.setUpBuffers(this.gl, attributes);
 
-        const material = new GLSpinner.UnlitMaterial(this.program, GLSpinner.ColorUtility.hexToColor01("#000000"));
+        const material = new GLSpinner.GouraudMaterial(
+            this.program,
+            new GLSpinner.Vector3(-0.5, 0.5, 0.5),
+            new GLSpinner.Vector3(0, 0, 20.0),
+            GLSpinner.ColorUtility.hexToColor01("#000000"));
         const mesh = new GLSpinner.SimpleMesh(torus, material);
-        this.meshNode = new GLSpinner.MeshNode(mesh, material);
+        this.meshNode = new GLSpinner.MeshNode(mesh);
 
         this.modelMatrix = GLSpinner.MatrixCalculator.identity44();
         this.vpMatrix = GLSpinner.MatrixCalculator.identity44();
@@ -72,16 +76,10 @@ class Sample extends GLSpinner.BaseApplication {
 
         this.rendererContext.updateGlobalUniform('mvpMatrix', new GLSpinner.ShaderUniformValue(this.mvpMatrix));
         this.rendererContext.updateGlobalUniform('invMatrix', new GLSpinner.ShaderUniformValue(invertMatrix));
-        this.rendererContext.updateGlobalUniform('lightDirection', new GLSpinner.ShaderUniformValue(GLSpinner.LightGuiController.lightOptions.lightDirection));
-
-        const ambientColor = GLSpinner.ColorUtility.hexToColor01(GLSpinner.LightGuiController.lightOptions.ambientColor).toVector4();
-        this.rendererContext.updateGlobalUniform('ambientColor', new GLSpinner.ShaderUniformValue(ambientColor));
-
-        this.rendererContext.updateGlobalUniform('eyeDirection', new GLSpinner.ShaderUniformValue(GLSpinner.LightGuiController.lightOptions.eyeDirection));
-        
         // this.rendererContext.updateGlobalUniform('time',  new GLSpinner.ShaderUniformValue(0.0, 'float'));//this.scene.Clock.getElapsedTime(), 'float'));
         this.sceneGraph.update();
 
+        this.meshNode.updateMaterialParams();
         this.meshNode.updateUniforms(this.gl, this.rendererContext);
     }
 

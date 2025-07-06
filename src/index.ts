@@ -74,6 +74,7 @@ export * from './scene/material/MaterialOperation'
 export * from './scene/material/BaseMaterial'
 export * from './scene/material/FragmentCanvasMaterial'
 export * from './scene/material/UnlitMaterial'
+export * from './scene/material/GouraudMaterial'
 
 // Scene/Mesh
 export * from './scene/mesh/BaseMesh'

@@ -4,7 +4,6 @@ import { SceneNode } from "./SceneNode";
 
 export class MeshNode extends SceneNode{
     private mesh: BaseMesh;
-    
 
     constructor(mesh: BaseMesh, id: string = ""){
         super(id);
@@ -13,6 +12,10 @@ export class MeshNode extends SceneNode{
 
     public update(): void {
         this.transform.updateMatrix(this.parent?.getTransform().getWorldMatrix());
+    }
+
+    public updateMaterialParams(): void {
+        this.mesh.updateMaterialParams();
     }
 
     public updateUniforms(gl: WebGL2RenderingContext, context: RendererContext){

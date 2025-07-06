@@ -9,6 +9,10 @@ export class FullScreenQuadMesh extends BaseMesh{
         super(geometry, material);
     }
 
+    updateMaterialParams(): void {
+        
+    }
+
     updateUniforms(gl: WebGL2RenderingContext, uniforms: UniformPairs): void {
         this.material.setUniform(gl, uniforms);
     }
