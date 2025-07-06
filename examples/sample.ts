@@ -78,6 +78,7 @@ class Sample extends GLSpinner.BaseApplication {
         const ambientColor = GLSpinner.ColorUtility.hexToColor01(GLSpinner.LightGuiController.lightOptions.ambientColor).toVector4();
         this.rendererContext.updateGlobalUniform('ambientColor', new GLSpinner.ShaderUniformValue(ambientColor));
 
+        this.rendererContext.updateGlobalUniform('eyeDirection', new GLSpinner.ShaderUniformValue(GLSpinner.LightGuiController.lightOptions.eyeDirection));
         
         // this.rendererContext.updateGlobalUniform('time',  new GLSpinner.ShaderUniformValue(0.0, 'float'));//this.scene.Clock.getElapsedTime(), 'float'));
         this.sceneGraph.update();
