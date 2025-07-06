@@ -1,26 +1,16 @@
 import { Rectangle } from "../../webgl/gl/geometry/Rectangle";
-import { ShaderProgram } from "../../webgl/gl/ShaderProgram";
 import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
+import { BaseMaterial } from "../material/BaseMaterial";
 import { BaseMesh } from "./BaseMesh";
 
 export class FullScreenQuadMesh extends BaseMesh{
 
-    constructor(geometry: Rectangle, shaderProgram: ShaderProgram){
-        super(geometry, shaderProgram);
-    }
-
-    getShaderProgram(): ShaderProgram {
-        return this.shaderProgram;
-    }
-
-    useShaderProgram(gl: WebGL2RenderingContext): void {
-        this.shaderProgram.use(gl);
+    constructor(geometry: Rectangle, material: BaseMaterial){
+        super(geometry, material);
     }
 
     updateUniforms(gl: WebGL2RenderingContext, uniforms: UniformPairs): void {
-        for(const key in uniforms){
-            this.shaderProgram.setUniform(gl, key, uniforms[key]);
-        }
+        this.material.setUniform(gl, uniforms);
     }
 
     draw(gl: WebGL2RenderingContext): void {

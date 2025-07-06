@@ -73,7 +73,7 @@ export * from './scene/clock/RealTimeClock'
 export * from './scene/material/MaterialOperation'
 export * from './scene/material/BaseMaterial'
 export * from './scene/material/FragmentCanvasMaterial'
-export * from './scene/material/SimpleMaterial'
+export * from './scene/material/UnlitMaterial'
 
 // Scene/Mesh
 export * from './scene/mesh/BaseMesh'

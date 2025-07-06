@@ -21,7 +21,6 @@ class Sample extends GLSpinner.BaseApplication {
     setup(): void {
         this.backgroundColorStr = "#000000";
         this.program = this.shaderLoader.getShaderProgram("gouraudLighting");
-        // this.program = this.shaderLoader.getShaderProgram("lighting");
         this.program.use(this.gl);
 
         const torus = new GLSpinner.Torus(this.gl, 32, 32, 1, 2);
@@ -32,8 +31,8 @@ class Sample extends GLSpinner.BaseApplication {
         };
         torus.setUpBuffers(this.gl, attributes);
 
-        const material = new GLSpinner.SimpleMaterial();
-        const mesh = new GLSpinner.SimpleMesh(torus, this.program);
+        const material = new GLSpinner.UnlitMaterial(this.program, GLSpinner.ColorUtility.hexToColor01("#000000"));
+        const mesh = new GLSpinner.SimpleMesh(torus, material);
         this.meshNode = new GLSpinner.MeshNode(mesh, material);
 
         this.modelMatrix = GLSpinner.MatrixCalculator.identity44();
