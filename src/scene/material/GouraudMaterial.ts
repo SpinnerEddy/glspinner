@@ -1,6 +1,5 @@
 import { Color } from "../../color/Color";
 import { Vector3 } from "../../math/vector/Vector3";
-import { Vector4 } from "../../math/vector/Vector4";
 import { ShaderProgram } from "../../webgl/gl/ShaderProgram";
 import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
 import { ShaderUniformValue } from "../../webgl/gl/uniform/ShaderUniformValue";

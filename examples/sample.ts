@@ -2,11 +2,6 @@ import * as GLSpinner from '../src/index.ts';
 
 class Sample extends GLSpinner.BaseApplication {
     private program: GLSpinner.ShaderProgram;
-    private modelMatrix: GLSpinner.Matrix44;
-    private viewMatrix: GLSpinner.Matrix44;
-    private projectionMatrix: GLSpinner.Matrix44;
-    private vpMatrix: GLSpinner.Matrix44;
-    private mvpMatrix: GLSpinner.Matrix44;
     private camera: GLSpinner.Camera;
     private backgroundColorStr: string;
     private meshNode: GLSpinner.MeshNode;
@@ -39,20 +34,9 @@ class Sample extends GLSpinner.BaseApplication {
         const mesh = new GLSpinner.SimpleMesh(torus, material);
         this.meshNode = new GLSpinner.MeshNode(mesh);
 
-        this.modelMatrix = GLSpinner.MatrixCalculator.identity44();
-        this.vpMatrix = GLSpinner.MatrixCalculator.identity44();
         this.camera = new GLSpinner.Camera(GLSpinner.CameraType.Perspective);
-        
         this.rendererContext.setCamera(this.camera);
         // this.rendererContext.updateGlobalUniform('resolution', new GLSpinner.ShaderUniformValue([this.canvas.width, this.canvas.height], 'float'));
-
-        this.viewMatrix = this.camera.getViewMatrix();
-        this.projectionMatrix = this.camera.getProjectionMatrix();
-        this.mvpMatrix = GLSpinner.MatrixCalculator.multiply(
-            GLSpinner.MatrixCalculator.multiply(
-                this.projectionMatrix, 
-                this.viewMatrix), 
-                this.modelMatrix);
 
         let emptyNode = new GLSpinner.EmptyNode();
         GLSpinner.SceneGraphUtility.addChild(emptyNode, this.meshNode);
@@ -67,23 +51,15 @@ class Sample extends GLSpinner.BaseApplication {
     }
 
     update(): void {
-        this.modelMatrix = this.modelMatrix.rotateY(0.01);
-        this.modelMatrix = this.modelMatrix.rotateZ(0.01);
-        
-        this.vpMatrix = this.projectionMatrix.multiply(this.viewMatrix, this.vpMatrix);
-        this.mvpMatrix = this.vpMatrix.multiply(this.modelMatrix, this.mvpMatrix);
-        const invertMatrix = this.modelMatrix.inverse();
-
-        this.rendererContext.updateGlobalUniform('mvpMatrix', new GLSpinner.ShaderUniformValue(this.mvpMatrix));
-        this.rendererContext.updateGlobalUniform('invMatrix', new GLSpinner.ShaderUniformValue(invertMatrix));
-        // this.rendererContext.updateGlobalUniform('time',  new GLSpinner.ShaderUniformValue(0.0, 'float'));//this.scene.Clock.getElapsedTime(), 'float'));
+        // ロジック専用
+        this.meshNode.getTransform().setRotation(GLSpinner.QuaternionCalculator.createFromAxisAndRadians(new GLSpinner.Vector3(1.0, 0.0, 0.0), this.scene.Clock.getElapsedTime()));
+        this.meshNode.getTransform().setPosition(new GLSpinner.Vector3(6.0 * GLSpinner.MathUtility.cos(this.scene.Clock.getElapsedTime()), 6.0 * GLSpinner.MathUtility.sin(this.scene.Clock.getElapsedTime()), 0.0));
         this.sceneGraph.update();
-
-        this.meshNode.updateMaterialParams();
-        this.meshNode.updateUniforms(this.gl, this.rendererContext);
     }
 
     draw(): void {
+        // this.modelMatrix = this.modelMatrix.rotateY(0.01);
+        // this.modelMatrix = this.modelMatrix.rotateZ(0.01);
         this.webglUtility.setViewport(this.canvas);
         this.webglUtility.clearColor(GLSpinner.ColorUtility.hexToColor01(this.backgroundColorStr));
         this.sceneGraph.draw(this.gl, this.rendererContext);
