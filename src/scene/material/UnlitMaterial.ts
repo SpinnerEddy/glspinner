@@ -1,16 +1,11 @@
-import { Color } from "../../color/Color";
 import { ShaderProgram } from "../../webgl/gl/ShaderProgram";
 import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
-import { ShaderUniformValue } from "../../webgl/gl/uniform/ShaderUniformValue";
 import { BaseMaterial } from "./BaseMaterial";
 
 export class UnlitMaterial extends BaseMaterial{
 
-    private emissiveColor: Color;
-
-    constructor(shaderProgram: ShaderProgram, emissiveColor: Color){
+    constructor(shaderProgram: ShaderProgram){
         super(shaderProgram);
-        this.emissiveColor = emissiveColor;
     }
 
     setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void {
