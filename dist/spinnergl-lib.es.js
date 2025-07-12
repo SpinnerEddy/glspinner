@@ -1282,6 +1282,9 @@ class Gt {
   use(t) {
     this.shaderProgram.use(t);
   }
+  getAttribute(t, e) {
+    return this.shaderProgram.getAttribute(t, e);
+  }
 }
 class re extends Gt {
   constructor(e, i, r, s) {

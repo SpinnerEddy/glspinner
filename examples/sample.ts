@@ -1,7 +1,6 @@
 import * as GLSpinner from '../src/index.ts';
 
 class Sample extends GLSpinner.BaseApplication {
-    private program: GLSpinner.ShaderProgram;
     private camera: GLSpinner.Camera;
     private backgroundColorStr: string;
     private meshNode: GLSpinner.MeshNode;
@@ -15,18 +14,17 @@ class Sample extends GLSpinner.BaseApplication {
 
     setup(): void {
         this.backgroundColorStr = "#000000";
-        this.program = this.shaderLoader.getShaderProgram("phongLighting");
-        this.program.use(this.gl);
+        const material = GLSpinner.MaterialFactory.phongMaterial();
+        material.use(this.gl);
 
         const torus = new GLSpinner.Torus(this.gl, 32, 32, 1, 2);
         const attributes = {
-            aPosition: this.program.getAttribute(this.gl, 'aPosition'),
-            aNormal: this.program.getAttribute(this.gl, 'aNormal'),
-            aColor: this.program.getAttribute(this.gl, 'aColor'),
+            aPosition: material.getAttribute(this.gl, 'aPosition'),
+            aNormal: material.getAttribute(this.gl, 'aNormal'),
+            aColor: material.getAttribute(this.gl, 'aColor'),
         };
         torus.setUpBuffers(this.gl, attributes);
 
-        const material = GLSpinner.MaterialFactory.phongMaterial();
         const mesh = new GLSpinner.SimpleMesh(torus, material);
         this.meshNode = new GLSpinner.MeshNode(mesh);
 
