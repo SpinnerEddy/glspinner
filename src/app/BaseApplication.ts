@@ -1,5 +1,6 @@
 import { Scene } from "../scene/core/Scene";
 import { SceneGraph } from "../scene/core/SceneGraph";
+import { MaterialFactory } from "../scene/factory/MaterialFactory";
 import { RendererContext } from "../scene/renderer/RendererContext";
 import { ShaderLoader } from "../webgl/gl/ShaderLoader";
 import { WebGLUtility } from "../webgl/gl/WebGLUtility";
@@ -26,6 +27,7 @@ export abstract class BaseApplication implements ApplicationOperation{
 
     public async start(): Promise<void> {
         await this.preload();
+        MaterialFactory.init(this.shaderLoader);
         this.setup();
         this.scene.setUpdate(this.update.bind(this));
         this.scene.setDraw(this.draw.bind(this))

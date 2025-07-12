@@ -26,11 +26,7 @@ class Sample extends GLSpinner.BaseApplication {
         };
         torus.setUpBuffers(this.gl, attributes);
 
-        const material = new GLSpinner.GouraudMaterial(
-            this.program,
-            new GLSpinner.Vector3(-0.5, 0.5, 0.5),
-            new GLSpinner.Vector3(0, 0, 20.0),
-            GLSpinner.ColorUtility.hexToColor01("#000000"));
+        const material = GLSpinner.MaterialFactory.phongMaterial();
         const mesh = new GLSpinner.SimpleMesh(torus, material);
         this.meshNode = new GLSpinner.MeshNode(mesh);
 
@@ -52,17 +48,20 @@ class Sample extends GLSpinner.BaseApplication {
 
     update(): void {
         // ロジック専用
+        this.meshNode.getTransform().setScale(new GLSpinner.Vector3(0.5, 0.5, 0.5));
         this.meshNode.getTransform().setRotation(GLSpinner.QuaternionCalculator.createFromAxisAndRadians(new GLSpinner.Vector3(1.0, 0.0, 0.0), this.scene.Clock.getElapsedTime()));
-        this.meshNode.getTransform().setPosition(new GLSpinner.Vector3(6.0 * GLSpinner.MathUtility.cos(this.scene.Clock.getElapsedTime()), 6.0 * GLSpinner.MathUtility.sin(this.scene.Clock.getElapsedTime()), 0.0));
-        this.sceneGraph.update();
+        this.meshNode.getTransform().setPosition(new GLSpinner.Vector3(4.0 * GLSpinner.MathUtility.cos(this.scene.Clock.getElapsedTime()), 4.0 * GLSpinner.MathUtility.sin(this.scene.Clock.getElapsedTime()), 0.0));
+        GLSpinner.SceneGraphUtility.traverse(this.sceneGraph.getGraph(), (node) => {
+            node.update();
+        });
     }
 
     draw(): void {
-        // this.modelMatrix = this.modelMatrix.rotateY(0.01);
-        // this.modelMatrix = this.modelMatrix.rotateZ(0.01);
         this.webglUtility.setViewport(this.canvas);
         this.webglUtility.clearColor(GLSpinner.ColorUtility.hexToColor01(this.backgroundColorStr));
-        this.sceneGraph.draw(this.gl, this.rendererContext);
+        GLSpinner.SceneGraphUtility.traverse(this.sceneGraph.getGraph(), (node) => {
+            node.draw(this.gl, this.rendererContext);
+        });
     }
 }
 
