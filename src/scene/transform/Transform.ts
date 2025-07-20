@@ -52,6 +52,13 @@ export class Transform{
         this.isRequiredRecalculation = true;
     }
 
+    public getWorldPosition(): Vector3 {
+        return new Vector3(
+            this.worldMatrix.get(0, 3),
+            this.worldMatrix.get(1, 3),
+            this.worldMatrix.get(2, 3));
+    }
+
     private calculateLocalMatrix(): void {
         this.localMatrix = MatrixCalculator.identity44();
         this.localMatrix = MatrixCalculator.scale3D(this.localMatrix, this.scale.x, this.scale.y, this.scale.z);
