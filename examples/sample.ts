@@ -46,9 +46,9 @@ class Sample extends GLSpinner.BaseApplication {
 
     update(): void {
         // ロジック専用
-        this.meshNode.getTransform().setScale(new GLSpinner.Vector3(0.5, 0.5, 0.5));
-        this.meshNode.getTransform().setRotation(GLSpinner.QuaternionCalculator.createFromAxisAndRadians(new GLSpinner.Vector3(1.0, 0.0, 0.0), this.scene.Clock.getElapsedTime()));
-        this.meshNode.getTransform().setPosition(new GLSpinner.Vector3(4.0 * GLSpinner.MathUtility.cos(this.scene.Clock.getElapsedTime()), 4.0 * GLSpinner.MathUtility.sin(this.scene.Clock.getElapsedTime()), 0.0));
+        // this.meshNode.getTransform().setScale(new GLSpinner.Vector3(0.5, 0.5, 0.5));
+        this.meshNode.getTransform().setRotation(GLSpinner.QuaternionCalculator.createFromAxisAndRadians(GLSpinner.DefaultVectorConstants.AXIS2DX, GLSpinner.TrigonometricConstants.DEG_TO_RAD * 90.0));
+        // this.meshNode.getTransform().setPosition(new GLSpinner.Vector3(4.0 * GLSpinner.MathUtility.cos(this.scene.Clock.getElapsedTime()), 4.0 * GLSpinner.MathUtility.sin(this.scene.Clock.getElapsedTime()), 0.0));
         GLSpinner.SceneGraphUtility.traverse(this.sceneGraph.getGraph(), (node) => {
             node.update();
         });
