@@ -15,12 +15,9 @@ export class MeshNode extends SceneNode{
         this.transform.updateMatrix(this.parent?.getTransform().getWorldMatrix());
     }
 
-    public updateMaterialParams(): void {
-        this.mesh.updateMaterialParams();
-    }
-
     public draw(gl: WebGL2RenderingContext, context: RendererContext): void {
         this.updateUniforms(gl, context);
+        this.updateMaterialParams(gl, context);
         this.mesh.draw(gl);
     }
 
@@ -38,5 +35,9 @@ export class MeshNode extends SceneNode{
         uniforms["invMatrix"] = new ShaderUniformValue(invertMatrix);
 
         this.mesh.updateUniforms(gl, uniforms);
+    }
+
+    private updateMaterialParams(gl: WebGL2RenderingContext, context: RendererContext): void {
+        this.mesh.updateMaterialParams(gl, context);
     }
 }

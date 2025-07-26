@@ -2,6 +2,7 @@ import { Color } from "../../color/Color";
 import { ColorUtility } from "../../color/ColorUtility";
 import { Vector3 } from "../../math/vector/Vector3";
 import { ShaderLoader } from "../../webgl/gl/ShaderLoader";
+import { GouraudMaterial } from "../material/GouraudMaterial";
 import { PhongMaterial } from "../material/PhongMaterial";
 
 export class MaterialFactory {
@@ -11,19 +12,16 @@ export class MaterialFactory {
         this.shaderLoader = shaderLoader;
     }
 
-    static phongMaterial(lightDirection?: Vector3, eyeDirection?: Vector3, ambientColor?: Color): PhongMaterial {
+    static phongMaterial(): PhongMaterial {
         if (!this.shaderLoader) {
             throw new Error('MaterialFac†øry not initialized. Call init!!');
         }
 
         const shader = this.shaderLoader.getShaderProgram("phongLighting");
-        const ld = lightDirection ?? new Vector3(-0.5, 0.5, 0.5);
-        const ed = eyeDirection ?? new Vector3(0, 0, 20.0);
-        const amb = ambientColor ?? ColorUtility.hexToColor01("#000000");
-        return new PhongMaterial(shader, ld, ed, amb);
+        return new PhongMaterial(shader);
     }
 
-    static gouraudMaterial(lightDirection?: Vector3, eyeDirection?: Vector3, ambientColor?: Color): PhongMaterial {
+    static gouraudMaterial(lightDirection?: Vector3, eyeDirection?: Vector3, ambientColor?: Color): GouraudMaterial {
         if (!this.shaderLoader) {
             throw new Error('MaterialFac†øry not initialized. Call init!!');
         }
@@ -32,6 +30,6 @@ export class MaterialFactory {
         const ld = lightDirection ?? new Vector3(-0.5, 0.5, 0.5);
         const ed = eyeDirection ?? new Vector3(0, 0, 20.0);
         const amb = ambientColor ?? ColorUtility.hexToColor01("#000000");
-        return new PhongMaterial(shader, ld, ed, amb);
+        return new GouraudMaterial(shader, ld, ed, amb);
     }
 }

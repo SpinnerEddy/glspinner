@@ -89,7 +89,12 @@ export * from './scene/transform/Transform'
 // Scene/Factory
 export * from './scene/factory/MaterialFactory'
 
-// Scene
+// Scene/Light
+export * from './scene/light/Light'
+export * from './scene/light/LightConstants'
+export * from './scene/light/LightOperation'
+
+// Scene/Node
 export * from './scene/core/Scene'
 export * from './scene/core/SceneOperation'
 export * from './scene/core/SceneGraphUtility'
@@ -98,6 +103,9 @@ export * from './scene/core/node/EmptyNode'
 export * from './scene/core/node/GroupNode'
 export * from './scene/core/node/MeshNode'
 export * from './scene/core/node/SceneNode'
+export * from './scene/core/node/LightNode'
+export * from './scene/core/node/PointLightNode'
+export * from './scene/core/node/DirectionalLightNode'
 
 export function initializeLibrary() {
     console.log("ライブラリが初期化されました");

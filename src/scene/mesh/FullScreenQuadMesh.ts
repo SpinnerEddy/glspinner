@@ -1,6 +1,7 @@
 import { Rectangle } from "../../webgl/gl/geometry/Rectangle";
 import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
 import { BaseMaterial } from "../material/BaseMaterial";
+import { RendererContext } from "../renderer/RendererContext";
 import { BaseMesh } from "./BaseMesh";
 
 export class FullScreenQuadMesh extends BaseMesh{
@@ -9,7 +10,7 @@ export class FullScreenQuadMesh extends BaseMesh{
         super(geometry, material);
     }
 
-    updateMaterialParams(): void {
+    updateMaterialParams(gl: WebGL2RenderingContext, context: RendererContext): void {
         
     }
 

@@ -1,7 +1,7 @@
 import { Color } from "../../color/Color";
 import { LightOperation } from "./LightOperation";
 
-export abstract class Light implements LightOperation { 
+export class Light implements LightOperation { 
     private color: Color;
     private intensity: number;
 

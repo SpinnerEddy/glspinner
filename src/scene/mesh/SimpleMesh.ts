@@ -1,9 +1,8 @@
-import { ColorUtility } from "../../color/ColorUtility";
-import { LightGuiController } from "../../tools/gui/LightGuiController";
 import { BaseGeometry } from "../../webgl/gl/geometry/BaseGeometry";
 import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
 import { BaseMaterial } from "../material/BaseMaterial";
-import { GouraudMaterial } from "../material/GouraudMaterial";
+import { PhongMaterial } from "../material/PhongMaterial";
+import { RendererContext } from "../renderer/RendererContext";
 import { BaseMesh } from "./BaseMesh";
 
 export class SimpleMesh extends BaseMesh {
@@ -11,11 +10,13 @@ export class SimpleMesh extends BaseMesh {
         super(geometry, material);
     }
 
-    updateMaterialParams(): void {
-        const gouraud = this.material as GouraudMaterial;
-        gouraud.setLightDirection(LightGuiController.lightOptions.lightDirection);
-        gouraud.setEyeDirection(LightGuiController.lightOptions.eyeDirection);
-        gouraud.setAmbientColor(ColorUtility.hexToColor01(LightGuiController.lightOptions.ambientColor));
+    updateMaterialParams(gl: WebGL2RenderingContext, context: RendererContext): void {
+        const phong = this.material as PhongMaterial;
+        if(phong == null) return;
+        if(context.getLights().length == 0) return;
+
+        let light = context.getLights().at(0)!;
+        phong.setLightUniform(gl, light);
     }
     
     updateUniforms(gl: WebGL2RenderingContext, uniforms: UniformPairs): void {

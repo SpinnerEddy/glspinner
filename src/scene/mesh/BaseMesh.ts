@@ -1,6 +1,7 @@
 import { BaseGeometry } from "../../webgl/gl/geometry/BaseGeometry";
 import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
 import { BaseMaterial } from "../material/BaseMaterial";
+import { RendererContext } from "../renderer/RendererContext";
 import { MeshOperation } from "./MeshOperation";
 
 export abstract class BaseMesh implements MeshOperation {
@@ -12,7 +13,7 @@ export abstract class BaseMesh implements MeshOperation {
         this.material = material;
     }
 
-    abstract updateMaterialParams(): void;
+    abstract updateMaterialParams(gl: WebGL2RenderingContext, context: RendererContext): void;
     abstract updateUniforms(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
     abstract draw(gl: WebGL2RenderingContext): void;
 }

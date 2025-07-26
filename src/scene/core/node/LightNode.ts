@@ -1,5 +1,5 @@
 import { Light } from "../../light/Light";
-import { LightOptions } from "../../light/LightConstants";
+import { LightParams } from "../../light/LightConstants";
 import { RendererContext } from "../../renderer/RendererContext";
 import { SceneNode } from "./SceneNode";
 
@@ -11,7 +11,7 @@ export abstract class LightNode extends SceneNode{
         this.light = light;
     }
 
-    public abstract getLightData(): LightOptions;
+    public abstract getLightData(): LightParams;
 
     public update(): void {
         this.transform.updateMatrix(this.parent?.getTransform().getWorldMatrix());
