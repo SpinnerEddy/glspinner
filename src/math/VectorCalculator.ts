@@ -31,7 +31,7 @@ export class VectorCalculator{
             throw new Error("Vector lengths not equal! Cannot Additive!")
         }
 
-        const result = b.values.map((val, index) => val - a.values[index]);
+        const result = a.values.map((val, index) => val - b.values[index]);
         return VectorCalculator.convertVector(a.size, result);
     }
 

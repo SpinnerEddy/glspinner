@@ -264,7 +264,7 @@ export class Matrix44 extends Matrix<Matrix44>{
         result.set(2, 2, -f.z);
         result.set(0, 3, -VectorCalculator.dot(r, eyePos));
         result.set(1, 3, -VectorCalculator.dot(u, eyePos));
-        result.set(2, 3, -VectorCalculator.dot(f, eyePos));
+        result.set(2, 3, VectorCalculator.dot(f, eyePos));
 
         return result;
     }

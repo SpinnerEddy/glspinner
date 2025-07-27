@@ -30,9 +30,12 @@ export class MeshNode extends SceneNode{
         const mvpMatrix = vpMatrix.multiply(modelMatrix);
         const invertMatrix = modelMatrix.inverse();
 
+        const eyeDirection = context.getCamera().calculateEyeDirection();
+
         let uniforms = context.getGlobalUniform();
         uniforms["mvpMatrix"] = new ShaderUniformValue(mvpMatrix);
         uniforms["invMatrix"] = new ShaderUniformValue(invertMatrix);
+        uniforms["eyeDirection"] = new ShaderUniformValue(eyeDirection);
 
         this.mesh.updateUniforms(gl, uniforms);
     }

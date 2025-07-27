@@ -23,7 +23,7 @@ export class Camera {
 
     constructor(cameraType: number = CameraType.Perspective, options: CameraOptions = {}, direction: CameraDirection = {}){
         this.cameraType = cameraType;
-        this.position = options.position ?? new Vector3(0.0, 0.0, -20.0);
+        this.position = options.position ?? new Vector3(0.0, 0.0, 20.0);
         this.rotation = options.rotation ?? new Quaternion(0.0, 0.0, 0.0, 1.0);
         this.near = options.near ?? 0.1;
         this.far = options.far ?? 100;
@@ -32,7 +32,7 @@ export class Camera {
         this.viewportHeight = options.viewportHeight ?? 800;
 
         this.up = direction.up ?? new Vector3(0.0, 1.0, 0.0);
-        this.forward = direction.forward ?? new Vector3(0.0, 0.0, 1.0);
+        this.forward = direction.forward ?? new Vector3(0.0, 0.0, -1.0);
 
         this.calculateProjectionMatrix();
         this.calculateViewMatrix();
@@ -71,11 +71,27 @@ export class Camera {
         return this.projectionMatrix;
     }
 
+    public calculateEyeDirection(): Vector3 {
+        // console.log(this.rotation);
+        // const result = QuaternionCalculator.rotateVector(this.rotation, new Vector3(0.0, 0.0, -1.0));
+        // console.log(result);
+        return new Vector3(0.0, 0.0, 1.0);
+    }
+
     private calculateViewMatrix(){
         const calcUp = QuaternionCalculator.rotateVector(this.rotation, this.up);
         const calcForward = QuaternionCalculator.rotateVector(this.rotation, this.forward);
 
-        this.viewMatrix = MatrixCalculator.lookAt(this.position, this.position.add(calcForward), calcUp);
+        console.log(calcUp);
+        console.log(calcForward);
+        console.log(this.position);
+
+        const target = this.position.add(calcForward);
+
+        console.log(target);
+
+        this.viewMatrix = MatrixCalculator.lookAt(this.position, target, calcUp);
+        console.log(this.viewMatrix);
     }
 
     private calculateProjectionMatrix(){
