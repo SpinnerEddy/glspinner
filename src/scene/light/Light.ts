@@ -10,6 +10,14 @@ export class Light implements LightOperation {
         this.intensity = intensity;
     }
 
+    setColor(color: Color): void {
+        this.color = color;
+    }
+    
+    setIntensity(intensity: number): void {
+        this.intensity = intensity
+    }
+
     getColor(): Color {
         return this.color;
     }
