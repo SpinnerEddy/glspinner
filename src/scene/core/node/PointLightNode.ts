@@ -1,11 +1,15 @@
 import { Light } from "../../light/Light";
-import { LightParams } from "../../light/LightConstants";
+import { LightParams, LightType } from "../../light/LightConstants";
 import { LightNode } from "./LightNode";
 
 export class PointLightNode extends LightNode {
     
     constructor(light: Light){
         super(light);
+    }
+
+    public getLightType(): number {
+        return LightType.Point;
     }
 
     public getLightData(): LightParams {

@@ -12,6 +12,7 @@ export abstract class LightNode extends SceneNode{
     }
 
     public abstract getLightData(): LightParams;
+    public abstract getLightType(): number;
 
     public update(): void {
         this.transform.updateMatrix(this.parent?.getTransform().getWorldMatrix());

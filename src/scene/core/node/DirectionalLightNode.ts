@@ -1,11 +1,16 @@
 import { Vector3 } from "../../../math/vector/Vector3";
 import { Light } from "../../light/Light";
-import { LightParams } from "../../light/LightConstants";
+import { LightParams, LightType } from "../../light/LightConstants";
 import { LightNode } from "./LightNode";
 
 export class DirectionalLightNode extends LightNode {
+    
     constructor(light: Light){
         super(light);
+    }
+
+    public getLightType(): number {
+        return LightType.Directional;
     }
 
     public getLightData(): LightParams {
@@ -15,6 +20,4 @@ export class DirectionalLightNode extends LightNode {
             intensity: this.light.getIntensity()
         }
     }
-
-
 }
