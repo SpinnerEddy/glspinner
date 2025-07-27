@@ -29,8 +29,8 @@ export class ColorUtility
         return color255.translateTo01();
     } 
 
-    public static hsvToRgb(hue: number, saturation: number, value: number, alpha: number){
-        if(saturation > 1 || value > 1 || alpha > 1) return;
+    public static hsvToRgb(hue: number, saturation: number, value: number, alpha: number): Color {
+        if(saturation > 1 || value > 1 || alpha > 1) return Color.empty();
 
         var th = hue % 360;
         var i = Math.floor(th / 60);
@@ -47,6 +47,6 @@ export class ColorUtility
             var b = new Array(m, m, k, value, value, n);
             color.push(r[i], g[i], b[i], alpha);
         }
-        return color;
+        return new Color(color[0], color[1], color[2], color[3]);
     }
 }

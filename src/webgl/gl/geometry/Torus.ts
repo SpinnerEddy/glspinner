@@ -6,9 +6,10 @@ import { AttributeElementSize } from "../attribute/ShaderAttributeConstants";
 import { ColorUtility } from "../../../color/ColorUtility";
 import { MathUtility } from "../../../math/MathUtility";
 import { TrigonometricConstants } from "../../../math/ValueConstants";
+import { Color } from "../../../color/Color";
 
 export class Torus extends BaseGeometry{
-    constructor(gl: WebGL2RenderingContext, row: number, column: number, inRadius: number, outRadius: number) {
+    constructor(gl: WebGL2RenderingContext, row: number, column: number, inRadius: number, outRadius: number, color: Color = Color.empty()) {
         super(gl);
 
         const pos = [];
@@ -28,8 +29,13 @@ export class Torus extends BaseGeometry{
                 const rz = rr * MathUtility.sin(tr);
                 pos.push(tx, ty, tz);
                 normals.push(rx, ry, rz);
-                const tc = ColorUtility.hsvToRgb(360 / column * ii, 1, 1, 1)!;
-                col.push(tc[0], tc[1], tc[2], tc[3]);
+                if(Color.isEmpty(color)){
+                    const tc = ColorUtility.hsvToRgb(360 / column * ii, 1, 1, 1)!;
+                    col.push(tc.red, tc.green, tc.blue, tc.alpha);
+                }
+                else{
+                    col.push(color.red, color.green, color.blue, color.alpha);
+                }
             }
         }
         for(let i = 0; i < row; i++){

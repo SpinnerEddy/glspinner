@@ -17,6 +17,14 @@ export class Color{
         this.a = MathUtility.clamp(a, 0.0, 1.0);
     }
 
+    static empty(): Color {
+        return new Color(0, 0, 0, 0);
+    }
+
+    static isEmpty(color: Color): boolean {
+        return color.red == 0 && color.green == 0 && color.blue == 0 && color.alpha == 0;
+    }
+
     get red(): number
     {
         return this.r;

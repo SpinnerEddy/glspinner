@@ -56,6 +56,7 @@ export * from './webgl/gl/buffer/IndexBuffer';
 // Geometry
 export * from './webgl/gl/geometry/Rectangle'
 export * from './webgl/gl/geometry/Torus'
+export * from './webgl/gl/geometry/Sphere'
 export * from './webgl/gl/geometry/BaseGeometry'
 export * from './webgl/gl/geometry/GeometryOperation'
 
