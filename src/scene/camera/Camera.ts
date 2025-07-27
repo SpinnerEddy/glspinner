@@ -72,24 +72,16 @@ export class Camera {
     }
 
     public calculateEyeDirection(): Vector3 {
-        // console.log(this.rotation);
-        // const result = QuaternionCalculator.rotateVector(this.rotation, new Vector3(0.0, 0.0, -1.0));
-        // console.log(result);
-        return new Vector3(0.0, 0.0, 1.0);
+        const invViewMatrix = MatrixCalculator.inverse(this.viewMatrix);
+        const eyeDirection = new Vector3(invViewMatrix.get(0, 2), invViewMatrix.get(1, 2), invViewMatrix.get(2, 2));
+        return eyeDirection;
     }
 
     private calculateViewMatrix(){
         const calcUp = QuaternionCalculator.rotateVector(this.rotation, this.up);
         const calcForward = QuaternionCalculator.rotateVector(this.rotation, this.forward);
 
-        console.log(calcUp);
-        console.log(calcForward);
-        console.log(this.position);
-
         const target = this.position.add(calcForward);
-
-        console.log(target);
-
         this.viewMatrix = MatrixCalculator.lookAt(this.position, target, calcUp);
         console.log(this.viewMatrix);
     }
