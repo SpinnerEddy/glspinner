@@ -1,5 +1,5 @@
 import { Light } from "../../light/Light";
-import { LightParams, LightType } from "../../light/LightConstants";
+import { LightType, PointLightParams } from "../../light/LightConstants";
 import { LightNode } from "./LightNode";
 
 export class PointLightNode extends LightNode {
@@ -8,13 +8,10 @@ export class PointLightNode extends LightNode {
         super(light);
     }
 
-    public getLightType(): number {
-        return LightType.Point;
-    }
-
-    public getLightData(): LightParams {
+    public getLightData(): PointLightParams {
         return {
             position: this.transform.getWorldPosition(),
+            lightType: LightType.Point,
             color: this.light.getColor(),
             intensity: this.light.getIntensity()
         }
