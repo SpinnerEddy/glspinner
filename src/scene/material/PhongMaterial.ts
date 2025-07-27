@@ -1,7 +1,7 @@
 import { ShaderProgram } from "../../webgl/gl/ShaderProgram";
 import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
 import { ShaderUniformValue } from "../../webgl/gl/uniform/ShaderUniformValue";
-import { DirectionalLightParams, LightParams, LightType } from "../light/LightConstants";
+import { DirectionalLightParams, LightParams, LightType, PointLightParams } from "../light/LightConstants";
 import { BaseMaterial } from "./BaseMaterial";
 
 export class PhongMaterial extends BaseMaterial {
@@ -21,6 +21,12 @@ export class PhongMaterial extends BaseMaterial {
             const directional = light as DirectionalLightParams;
             this.shaderProgram.setUniform(gl, "lightDirection", new ShaderUniformValue(directional.direction));
             this.shaderProgram.setUniform(gl, "ambientColor", new ShaderUniformValue(directional.color.toVector4()));
+            this.shaderProgram.setUniform(gl, "lightType", new ShaderUniformValue(directional.lightType));
+        }else if(light.lightType == LightType.Point){
+            const point = light as PointLightParams;
+            this.shaderProgram.setUniform(gl, "lightPosition", new ShaderUniformValue(point.position));
+            this.shaderProgram.setUniform(gl, "ambientColor", new ShaderUniformValue(point.color.toVector4()));
+            this.shaderProgram.setUniform(gl, "lightType", new ShaderUniformValue(point.lightType));
         }
     }
 }

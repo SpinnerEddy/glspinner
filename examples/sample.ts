@@ -4,6 +4,7 @@ class Sample extends GLSpinner.BaseApplication {
     private camera: GLSpinner.Camera;
     private backgroundColorStr: string;
     private meshNode: GLSpinner.MeshNode;
+    private pointLightNode: GLSpinner.PointLightNode;
 
     async preload(): Promise<void> {
         await super.preload();
@@ -40,8 +41,10 @@ class Sample extends GLSpinner.BaseApplication {
         let light = new GLSpinner.Light(
             GLSpinner.ColorUtility.hexToColor01("#000000"),
             1.0);
-        let directionalLightNode = new GLSpinner.DirectionalLightNode(light);
-        GLSpinner.SceneGraphUtility.addChild(this.sceneGraph.getGraph(), directionalLightNode);
+        // const directionalLightNode = new GLSpinner.DirectionalLightNode(light);
+        // GLSpinner.SceneGraphUtility.addChild(this.sceneGraph.getGraph(), directionalLightNode);
+        this.pointLightNode = new GLSpinner.PointLightNode(light);
+        GLSpinner.SceneGraphUtility.addChild(this.sceneGraph.getGraph(), this.pointLightNode);
 
         this.gl.enable(this.gl.DEPTH_TEST);
     	this.gl.depthFunc(this.gl.LEQUAL);
@@ -55,8 +58,8 @@ class Sample extends GLSpinner.BaseApplication {
         // ロジック専用
         // this.meshNode.getTransform().setScale(new GLSpinner.Vector3(0.5, 0.5, 0.5));
         this.meshNode.getTransform().setRotation(GLSpinner.QuaternionCalculator.createFromAxisAndRadians(GLSpinner.DefaultVectorConstants.AXIS2DX, GLSpinner.TrigonometricConstants.DEG_TO_RAD * 90.0));
-        // this.meshNode.getTransform().setPosition(new GLSpinner.Vector3(4.0 * GLSpinner.MathUtility.cos(this.scene.Clock.getElapsedTime()), 4.0 * GLSpinner.MathUtility.sin(this.scene.Clock.getElapsedTime()), 0.0));
 
+        this.pointLightNode.getTransform().setPosition(new GLSpinner.Vector3(0.0, 20.0 * GLSpinner.MathUtility.cos(this.scene.Clock.getElapsedTime()), 20.0 * GLSpinner.MathUtility.sin(this.scene.Clock.getElapsedTime())));
         const lights: GLSpinner.LightParams[] = [];
         GLSpinner.SceneGraphUtility.traverse(this.sceneGraph.getGraph(), (node) => {
             if(node instanceof GLSpinner.LightNode){

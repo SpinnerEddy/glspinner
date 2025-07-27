@@ -33,6 +33,7 @@ export class MeshNode extends SceneNode{
         const eyeDirection = context.getCamera().calculateEyeDirection();
 
         let uniforms = context.getGlobalUniform();
+        uniforms["modelMatrix"] = new ShaderUniformValue(modelMatrix);
         uniforms["mvpMatrix"] = new ShaderUniformValue(mvpMatrix);
         uniforms["invMatrix"] = new ShaderUniformValue(invertMatrix);
         uniforms["eyeDirection"] = new ShaderUniformValue(eyeDirection);
