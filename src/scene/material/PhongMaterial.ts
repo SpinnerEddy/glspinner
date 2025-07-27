@@ -26,7 +26,7 @@ export class PhongMaterial extends BaseMaterial {
             const point = light as PointLightParams;
             this.shaderProgram.setUniform(gl, "lightPosition", new ShaderUniformValue(point.position));
             this.shaderProgram.setUniform(gl, "ambientColor", new ShaderUniformValue(point.color.toVector4()));
-            this.shaderProgram.setUniform(gl, "lightType", new ShaderUniformValue(point.lightType));
+            this.shaderProgram.setUniform(gl, "lightType", new ShaderUniformValue(point.lightType, 'int'));
         }
     }
 }

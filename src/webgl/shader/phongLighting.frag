@@ -10,14 +10,14 @@ uniform vec3 lightDirection;
 uniform vec3 lightPosition;
 uniform vec3 eyeDirection;
 uniform vec4 ambientColor;
-uniform float lightType;
+uniform int lightType;
 
 out vec4 outputColor;
 
 vec3 calculateInvLight(){
     vec3 lightVec = lightDirection;
     
-    if(lightType == 2.0){
+    if(lightType == 2){
         // 点光源
         lightVec = lightPosition - vPosition;
     }

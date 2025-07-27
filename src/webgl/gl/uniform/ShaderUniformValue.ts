@@ -45,7 +45,7 @@ export class ShaderUniformValue{
 
     private getType(values: UniformAvailableType, type: UniformValueType): UniformType{
         if(typeof values === 'number'){
-            return this.isFloat(type) ? '1f' : '1f';
+            return this.isFloat(type) ? '1f' : '1i';
         }
         else if(Array.isArray(values)){
             switch(values.length){
