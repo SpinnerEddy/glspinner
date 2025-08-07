@@ -23,7 +23,7 @@ export class Camera {
 
     constructor(cameraType: number = CameraType.Perspective, options: CameraOptions = {}, direction: CameraDirection = {}){
         this.cameraType = cameraType;
-        this.position = options.position ?? new Vector3(0.0, 0.0, 20.0);
+        this.position = options.position ?? new Vector3(0.0, 0.0, 30.0);
         this.rotation = options.rotation ?? new Quaternion(0.0, 0.0, 0.0, 1.0);
         this.near = options.near ?? 0.1;
         this.far = options.far ?? 100;

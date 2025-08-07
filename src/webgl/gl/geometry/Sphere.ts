@@ -18,8 +18,8 @@ export class Sphere extends BaseGeometry{
         const normals = [];
         for(let i = 0; i <= row; i++){
             const r = TrigonometricConstants.PI / row * i;
-            const rr = MathUtility.cos(r);
-            const ry = MathUtility.sin(r);
+            const ry = MathUtility.cos(r);
+            const rr = MathUtility.sin(r);
             for(let ii = 0; ii <= column; ii++){
                 const tr = TrigonometricConstants.PI * 2 / column * ii;
                 const tx = rr * radius * MathUtility.cos(tr);

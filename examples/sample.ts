@@ -4,7 +4,7 @@ class Sample extends GLSpinner.BaseApplication {
     private camera: GLSpinner.Camera;
     private backgroundColorStr: string;
     private meshNode: GLSpinner.MeshNode;
-    private pointLightNode: GLSpinner.PointLightNode;
+    private directionalLightNode: GLSpinner.DirectionalLightNode;
 
     async preload(): Promise<void> {
         await super.preload();
@@ -19,7 +19,7 @@ class Sample extends GLSpinner.BaseApplication {
         material.use(this.gl);
 
         // const torus = new GLSpinner.Torus(this.gl, 32, 32, 1, 2);
-        const sphere = new GLSpinner.Sphere(this.gl, 32, 32, 3, GLSpinner.ColorUtility.hexToColor01(GLSpinner.MyColorCode.COLOR_CHINA));
+        const sphere = new GLSpinner.Sphere(this.gl, 64, 64, 2, GLSpinner.ColorUtility.hexToColor01(GLSpinner.MyColorCode.COLOR_CHINA));
         const attributes = {
             aPosition: material.getAttribute(this.gl, 'aPosition'),
             aNormal: material.getAttribute(this.gl, 'aNormal'),
@@ -43,8 +43,8 @@ class Sample extends GLSpinner.BaseApplication {
             1.0);
         // const directionalLightNode = new GLSpinner.DirectionalLightNode(light);
         // GLSpinner.SceneGraphUtility.addChild(this.sceneGraph.getGraph(), directionalLightNode);
-        this.pointLightNode = new GLSpinner.PointLightNode(light);
-        GLSpinner.SceneGraphUtility.addChild(this.sceneGraph.getGraph(), this.pointLightNode);
+        this.directionalLightNode = new GLSpinner.DirectionalLightNode(light);
+        GLSpinner.SceneGraphUtility.addChild(this.sceneGraph.getGraph(), this.directionalLightNode);
 
         this.gl.enable(this.gl.DEPTH_TEST);
     	this.gl.depthFunc(this.gl.LEQUAL);
@@ -57,9 +57,10 @@ class Sample extends GLSpinner.BaseApplication {
     update(): void {
         // ロジック専用
         // this.meshNode.getTransform().setScale(new GLSpinner.Vector3(0.5, 0.5, 0.5));
-        this.meshNode.getTransform().setRotation(GLSpinner.QuaternionCalculator.createFromAxisAndRadians(GLSpinner.DefaultVectorConstants.AXIS2DX, GLSpinner.TrigonometricConstants.DEG_TO_RAD * 90.0));
-
-        this.pointLightNode.getTransform().setPosition(new GLSpinner.Vector3(0.0, 20.0 * GLSpinner.MathUtility.cos(this.scene.Clock.getElapsedTime()), 20.0 * GLSpinner.MathUtility.sin(this.scene.Clock.getElapsedTime())));
+        this.meshNode.getTransform().setRotation(GLSpinner.QuaternionCalculator.createFromAxisAndRadians(GLSpinner.DefaultVectorConstants.AXIS2DX, this.scene.Clock.getElapsedTime()));
+        this.meshNode.getTransform().setPosition(new GLSpinner.Vector3(0.0, 4.0, 0.0));
+        // this.pointLightNode.getTransform().setPosition(new GLSpinner.Vector3(0.0, 20.0 * GLSpinner.MathUtility.cos(this.scene.Clock.getElapsedTime()), 20.0 * GLSpinner.MathUtility.sin(this.scene.Clock.getElapsedTime())));
+        // this.directionalLightNode.getTransform().setPosition(new GLSpinner.Vector3(10.0, 20.0, 20.0));
         const lights: GLSpinner.LightParams[] = [];
         GLSpinner.SceneGraphUtility.traverse(this.sceneGraph.getGraph(), (node) => {
             if(node instanceof GLSpinner.LightNode){
