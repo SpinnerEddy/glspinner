@@ -25,23 +25,16 @@ export class MeshNode extends SceneNode{
         const modelMatrix = this.transform.getWorldMatrix();
         const viewMatrix = context.getCamera().getViewMatrix();
         const projectionMatrix = context.getCamera().getProjectionMatrix();
-
         const vpMatrix = projectionMatrix.multiply(viewMatrix);
         const mvpMatrix = vpMatrix.multiply(modelMatrix);
-        const invertMatrix = modelMatrix.inverse();
-
-        const eyeDirection = context.getCamera().calculateEyeDirection();
-
+        
         let uniforms = context.getGlobalUniform();
-        uniforms["modelMatrix"] = new ShaderUniformValue(modelMatrix);
         uniforms["mvpMatrix"] = new ShaderUniformValue(mvpMatrix);
-        uniforms["invMatrix"] = new ShaderUniformValue(invertMatrix);
-        uniforms["eyeDirection"] = new ShaderUniformValue(eyeDirection);
 
         this.mesh.updateUniforms(gl, uniforms);
     }
 
     private updateMaterialParams(gl: WebGL2RenderingContext, context: RendererContext): void {
-        this.mesh.updateMaterialParams(gl, context);
+        this.mesh.updateMaterialParams(gl, this.transform, context);
     }
 }

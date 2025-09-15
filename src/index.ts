@@ -84,6 +84,7 @@ export * from './scene/mesh/BaseMesh'
 export * from './scene/mesh/FullScreenQuadMesh'
 export * from './scene/mesh/MeshOperation'
 export * from './scene/mesh/SimpleMesh'
+export * from './scene/mesh/UnlitMesh'
 
 // Scene/Transform
 export * from './scene/transform/Transform'

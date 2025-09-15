@@ -4,6 +4,7 @@ import { Vector3 } from "../../math/vector/Vector3";
 import { ShaderLoader } from "../../webgl/gl/ShaderLoader";
 import { GouraudMaterial } from "../material/GouraudMaterial";
 import { PhongMaterial } from "../material/PhongMaterial";
+import { UnlitMaterial } from "../material/UnlitMaterial";
 
 export class MaterialFactory {
     private static shaderLoader: ShaderLoader;
@@ -12,9 +13,18 @@ export class MaterialFactory {
         this.shaderLoader = shaderLoader;
     }
 
+    static unlitMaterial(): UnlitMaterial {
+        if (!this.shaderLoader) {
+            throw new Error('MaterialFac†ory not initialized. Call init!!');
+        }
+
+        const shader = this.shaderLoader.getShaderProgram("unlit");
+        return new UnlitMaterial(shader);
+    } 
+
     static phongMaterial(): PhongMaterial {
         if (!this.shaderLoader) {
-            throw new Error('MaterialFac†øry not initialized. Call init!!');
+            throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
         const shader = this.shaderLoader.getShaderProgram("phongLighting");
@@ -23,7 +33,7 @@ export class MaterialFactory {
 
     static gouraudMaterial(lightDirection?: Vector3, eyeDirection?: Vector3, ambientColor?: Color): GouraudMaterial {
         if (!this.shaderLoader) {
-            throw new Error('MaterialFac†øry not initialized. Call init!!');
+            throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
         const shader = this.shaderLoader.getShaderProgram("gouraudLighting");
