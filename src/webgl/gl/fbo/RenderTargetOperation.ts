@@ -1,0 +1,6 @@
+export interface RenderTargetOperation {
+    drawToFrameBuffer(drawFunction: () => void): void;
+    getTexture(): WebGLTexture;
+    bind(index: number): void;
+    unbind(): void;
+}

@@ -1,8 +1,11 @@
 import { Color } from "../../color/Color";
 import { ColorUtility } from "../../color/ColorUtility";
 import { Vector3 } from "../../math/vector/Vector3";
+import { RenderTarget } from "../../webgl/gl/fbo/RenderTarget";
 import { ShaderLoader } from "../../webgl/gl/ShaderLoader";
+import { TextureFrameBuffer } from "../../webgl/gl/texture/TextureFrameBuffer";
 import { TextureLoader } from "../../webgl/gl/texture/TextureLoader";
+import { FrameBufferTexturedMaterial } from "../material/FrameBufferTexturedMaterial";
 import { GouraudMaterial } from "../material/GouraudMaterial";
 import { PhongMaterial } from "../material/PhongMaterial";
 import { TexturedMaterial } from "../material/TexturedMaterial";
@@ -26,6 +29,15 @@ export class MaterialFactory {
         const shader = this.shaderLoader.getShaderProgram("texture");
         const texture = this.textureLoader.getTexture(textureKey);
         return new TexturedMaterial(shader, texture, texIndex);
+    }
+
+    static frameBufferTextureMaterial(frameBuffer: TextureFrameBuffer, texIndex: number): FrameBufferTexturedMaterial {
+        if (!this.shaderLoader) {
+            throw new Error('MaterialFac†ory not initialized. Call init!!');
+        }
+
+        const shader = this.shaderLoader.getShaderProgram("texture");
+        return new FrameBufferTexturedMaterial(shader, frameBuffer, texIndex);
     }
 
     static unlitMaterial(): UnlitMaterial {

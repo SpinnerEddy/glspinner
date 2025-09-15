@@ -3,6 +3,7 @@ import * as GLSpinner from '../src/index.ts';
 class Sample extends GLSpinner.BaseApplication {
     private camera: GLSpinner.Camera;
     private backgroundColorStr: string;
+    private renderTarget: GLSpinner.RenderTargetOperation;
     private planeMeshNode: GLSpinner.MeshNode;
 
     async preload(): Promise<void> {
@@ -19,6 +20,9 @@ class Sample extends GLSpinner.BaseApplication {
         this.backgroundColorStr = "#000000";
         // const material = GLSpinner.MaterialFactory.unlitMaterial();
         const material = GLSpinner.MaterialFactory.texturedMaterial("testImage", 0);
+        // this.renderTarget = new GLSpinner.RenderTarget(this.gl, [400, 400]);
+        // const frameBuffer = new GLSpinner.TextureFrameBuffer(this.gl, this.renderTarget.getTexture());
+        // const material = GLSpinner.MaterialFactory.frameBufferTextureMaterial(frameBuffer, 0);
         material.use(this.gl);
 
         const plane = new GLSpinner.Plane(this.gl, 6, 6);

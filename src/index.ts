@@ -65,6 +65,12 @@ export * from './webgl/gl/geometry/GeometryOperation'
 export * from './webgl/gl/texture/Texture2D'
 export * from './webgl/gl/texture/TextureLoader'
 export * from './webgl/gl/texture/TextureOperation'
+export * from './webgl/gl/texture/TextureFrameBuffer'
+
+// FBO
+export * from './webgl/gl/fbo/RenderTarget'
+export * from './webgl/gl/fbo/RenderTargetOperation'
+export * from './webgl/gl/fbo/RenderTargetOption'
 
 // Scene/Camera
 export * from './scene/camera/Camera'
@@ -83,6 +89,8 @@ export * from './scene/material/FragmentCanvasMaterial'
 export * from './scene/material/UnlitMaterial'
 export * from './scene/material/GouraudMaterial'
 export * from './scene/material/PhongMaterial'
+export * from './scene/material/TexturedMaterial'
+export * from './scene/material/FrameBufferTexturedMaterial'
 
 // Scene/Mesh
 export * from './scene/mesh/BaseMesh'
