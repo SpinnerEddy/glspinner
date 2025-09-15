@@ -18,7 +18,7 @@ export abstract class BaseMaterial implements MaterialOperation {
         return this.shaderProgram.getAttribute(gl, name);
     }
 
-    onUpdateFinished(gl: WebGL2RenderingContext): void {}
+    cleanup(gl: WebGL2RenderingContext): void {}
     
     abstract setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
 }

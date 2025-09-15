@@ -23,5 +23,6 @@ export class UnlitMesh extends BaseMesh {
         this.geometry.bind();
         gl.drawElements(gl.TRIANGLES, this.geometry.getIndexCount(), gl.UNSIGNED_SHORT, 0);
         this.geometry.unbind();
+        this.material.cleanup(gl);
     }
 }

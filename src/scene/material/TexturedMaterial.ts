@@ -24,7 +24,7 @@ export class TexturedMaterial extends BaseMaterial {
         this.shaderProgram.setUniform(gl, "tex", new ShaderUniformValue(this.texIndex, 'int'));
     }
 
-    onUpdateFinished(gl: WebGL2RenderingContext): void {
+    cleanup(gl: WebGL2RenderingContext): void {
         this.texture.unbind();
     }
 }

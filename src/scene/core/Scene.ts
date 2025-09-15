@@ -75,13 +75,19 @@ export class Scene implements SceneOperation{
 
         this.clock.update();
 
-        if(this.clock.shouldDraw()){
-            this.updateObjects();
+        // if(this.clock.shouldDraw()){
+        //     this.updateObjects();
 
-            this.drawObjects();
+        //     this.drawObjects();
 
-            await this.additionalSupport();
-        }
+        //     await this.additionalSupport();
+        // }
+        
+        this.updateObjects();
+
+        this.drawObjects();
+
+        await this.additionalSupport();
 
         this.animationId = requestAnimationFrame(() => {
             this.run();
