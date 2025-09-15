@@ -3,6 +3,7 @@ import { SceneGraph } from "../scene/core/SceneGraph";
 import { MaterialFactory } from "../scene/factory/MaterialFactory";
 import { RendererContext } from "../scene/renderer/RendererContext";
 import { ShaderLoader } from "../webgl/gl/ShaderLoader";
+import { TextureLoader } from "../webgl/gl/texture/TextureLoader";
 import { WebGLUtility } from "../webgl/gl/WebGLUtility";
 import { ApplicationOperation } from "./ApplicationOperation";
 
@@ -11,6 +12,7 @@ export abstract class BaseApplication implements ApplicationOperation{
     protected webglUtility: WebGLUtility;
     protected gl: WebGL2RenderingContext;
     protected shaderLoader: ShaderLoader;
+    protected textureLoader: TextureLoader;
     protected scene: Scene;
     protected sceneGraph: SceneGraph;
     protected rendererContext: RendererContext;
@@ -20,6 +22,7 @@ export abstract class BaseApplication implements ApplicationOperation{
         this.webglUtility = new WebGLUtility(this.canvas);
         this.gl = this.webglUtility.getWebGL2RenderingContext();
         this.shaderLoader = new ShaderLoader(this.gl);
+        this.textureLoader = new TextureLoader(this.gl);
         this.scene = scene;
         this.rendererContext = new RendererContext();
         this.sceneGraph = new SceneGraph();
@@ -27,7 +30,7 @@ export abstract class BaseApplication implements ApplicationOperation{
 
     public async start(): Promise<void> {
         await this.preload();
-        MaterialFactory.init(this.shaderLoader);
+        MaterialFactory.init(this.shaderLoader, this.textureLoader);
         this.setup();
         this.scene.setUpdate(this.update.bind(this));
         this.scene.setDraw(this.draw.bind(this))

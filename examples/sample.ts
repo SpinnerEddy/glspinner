@@ -10,17 +10,22 @@ class Sample extends GLSpinner.BaseApplication {
         await this.shaderLoader.loadShaderFromPath(
             "shader/basic.vert",
             "shader/basic.frag");
+        await this.textureLoader.loadTextureFromPath(
+            "texture/testImage.png"
+        );
     }
 
     setup(): void {
         this.backgroundColorStr = "#000000";
-        const material = GLSpinner.MaterialFactory.unlitMaterial();
+        // const material = GLSpinner.MaterialFactory.unlitMaterial();
+        const material = GLSpinner.MaterialFactory.texturedMaterial("testImage", 0);
         material.use(this.gl);
 
-        const plane = new GLSpinner.Plane(this.gl, 2, 2, GLSpinner.ColorUtility.hexToColor01(GLSpinner.MyColorCode.COLOR_HARUKI));
+        const plane = new GLSpinner.Plane(this.gl, 6, 6);
         const planeAttributes = {
             aPosition: material.getAttribute(this.gl, 'aPosition'),
             aColor: material.getAttribute(this.gl, 'aColor'),
+            aUv: material.getAttribute(this.gl, "aUv")
         };
         plane.setUpBuffers(this.gl, planeAttributes);
 
@@ -45,7 +50,11 @@ class Sample extends GLSpinner.BaseApplication {
     }
 
     update(): void {
-        
+        this.planeMeshNode.getTransform().setRotation(GLSpinner.QuaternionCalculator.createFromAxisAndRadians(GLSpinner.DefaultVectorConstants.AXIS2DY, this.scene.Clock.getElapsedTime()));
+
+        GLSpinner.SceneGraphUtility.traverse(this.sceneGraph.getGraph(), (node) => {
+            node.update();
+        });
     }
 
     draw(): void {

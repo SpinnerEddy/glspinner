@@ -1,29 +1,34 @@
+import { TextureOperation } from "./TextureOperation";
 
-export class Texture2D{
+export class Texture2D implements TextureOperation {
+    private gl: WebGL2RenderingContext;
     private texture: WebGLTexture;
+    private image: HTMLImageElement;
 
-    constructor(gl: WebGL2RenderingContext, path: string){
-        const tex = gl.createTexture();
+    constructor(gl: WebGL2RenderingContext, source: string){
+        this.gl = gl;
+        this.texture = gl.createTexture();
+        this.image = new Image();
 
-        const image = new Image();
-
-        image.onload = function(){
-            gl.bindTexture(gl.TEXTURE_2D, tex);
+        this.image.onload = () => {
+            const { gl, image, texture } = this;
+            gl.bindTexture(gl.TEXTURE_2D, texture);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+            gl.generateMipmap(gl.TEXTURE_2D);
             gl.bindTexture(gl.TEXTURE_2D, null);
-        }
+        };
 
-        this.texture = tex;
+        this.image.src = source;
     }
 
-    bind(gl: WebGL2RenderingContext, index: number): void {
-        gl.activeTexture(gl.TEXTURE0 + index);
-        gl.bindTexture(gl.TEXTURE_2D, this.texture);
+    bind(index: number): void {
+        this.gl.activeTexture(this.gl.TEXTURE0 + index);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
     }
 
-    unbind(gl: WebGL2RenderingContext): void {
-        gl.bindTexture(gl.TEXTURE_2D, null);
+    unbind(): void {
+        this.gl.bindTexture(this.gl.TEXTURE_2D, null);
     }
 }

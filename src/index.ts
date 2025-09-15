@@ -61,6 +61,11 @@ export * from './webgl/gl/geometry/Sphere'
 export * from './webgl/gl/geometry/BaseGeometry'
 export * from './webgl/gl/geometry/GeometryOperation'
 
+// Texture
+export * from './webgl/gl/texture/Texture2D'
+export * from './webgl/gl/texture/TextureLoader'
+export * from './webgl/gl/texture/TextureOperation'
+
 // Scene/Camera
 export * from './scene/camera/Camera'
 export * from './scene/camera/CameraConstants'

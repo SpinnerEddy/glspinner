@@ -2,15 +2,30 @@ import { Color } from "../../color/Color";
 import { ColorUtility } from "../../color/ColorUtility";
 import { Vector3 } from "../../math/vector/Vector3";
 import { ShaderLoader } from "../../webgl/gl/ShaderLoader";
+import { TextureLoader } from "../../webgl/gl/texture/TextureLoader";
 import { GouraudMaterial } from "../material/GouraudMaterial";
 import { PhongMaterial } from "../material/PhongMaterial";
+import { TexturedMaterial } from "../material/TexturedMaterial";
 import { UnlitMaterial } from "../material/UnlitMaterial";
 
 export class MaterialFactory {
     private static shaderLoader: ShaderLoader;
+    private static textureLoader: TextureLoader;
+    
 
-    static init(shaderLoader: ShaderLoader): void {
+    static init(shaderLoader: ShaderLoader, textureLoader: TextureLoader): void {
         this.shaderLoader = shaderLoader;
+        this.textureLoader = textureLoader;
+    }
+
+    static texturedMaterial(textureKey: string, texIndex: number): TexturedMaterial {
+        if (!this.shaderLoader) {
+            throw new Error('MaterialFac†ory not initialized. Call init!!');
+        }
+
+        const shader = this.shaderLoader.getShaderProgram("texture");
+        const texture = this.textureLoader.getTexture(textureKey);
+        return new TexturedMaterial(shader, texture, texIndex);
     }
 
     static unlitMaterial(): UnlitMaterial {
