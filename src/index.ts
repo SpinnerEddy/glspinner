@@ -74,6 +74,8 @@ export * from './webgl/gl/fbo/RenderTargetOption'
 
 // Scene/Audio
 export * from './scene/audio/AudioOutput'
+export * from './scene/audio/ExternalFileAudioInput'
+export * from './scene/audio/AudioInputOperation'
 
 // Scene/Camera
 export * from './scene/camera/Camera'

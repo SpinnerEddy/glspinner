@@ -54,9 +54,11 @@ export class AudioOutput {
         this.pauseTime = 0;
     }
 
-    public async loadMp3(path: string): Promise<void> {
-        const response = await fetch(path);
-        const arrayBuffer = await response.arrayBuffer();
-        this.audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+    public setBuffer(audioBuffer: AudioBuffer){
+        this.audioBuffer = audioBuffer;
+    }
+
+    public getAudioContext(): AudioContext {
+        return this.audioContext;
     }
 }
