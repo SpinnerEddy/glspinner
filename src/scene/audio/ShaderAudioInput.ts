@@ -1,4 +1,3 @@
-import { TrigonometricConstants } from "../../math/ValueConstants";
 import { ShaderLoader } from "../../webgl/gl/ShaderLoader";
 import { ShaderUniformValue } from "../../webgl/gl/uniform/ShaderUniformValue";
 import { AudioInputOperation } from "./AudioInputOperation";
@@ -10,12 +9,13 @@ export class ShaderAudioInput implements AudioInputOperation {
     private shaderLoader: ShaderLoader;
 
     private sampleRate: number = 44100;
-    private duration: number = 1.0;
+    private duration: number = 2.0;
     private frequency: number = 440;
 
-    constructor(gl: WebGL2RenderingContext, shaderLoader: ShaderLoader) {
+    constructor(gl: WebGL2RenderingContext, shaderLoader: ShaderLoader, audioDuration: number = 2.0) {
         this.gl = gl;
         this.shaderLoader = shaderLoader;
+        this.duration = audioDuration;
     }
 
     async load(path: string, audioContext: AudioContext): Promise<void> {
@@ -25,7 +25,7 @@ export class ShaderAudioInput implements AudioInputOperation {
         const gl = this.gl;
         const buffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, sampleNums * 4, gl.DYNAMIC_COPY);
+        gl.bufferData(gl.ARRAY_BUFFER, sampleNums * 2 * 4, gl.DYNAMIC_COPY);
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
         gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, 0, buffer);
@@ -48,15 +48,22 @@ export class ShaderAudioInput implements AudioInputOperation {
         gl.disable(gl.RASTERIZER_DISCARD);
 
         // 4) Read back buffer into Float32Array
-        const samples = new Float32Array(sampleNums);
+        const samples = new Float32Array(sampleNums * 2);
         
         gl.bindBuffer(gl.TRANSFORM_FEEDBACK_BUFFER, buffer);
         gl.getBufferSubData(gl.TRANSFORM_FEEDBACK_BUFFER, 0, samples);
 
         // 5) Create AudioBuffer from samples
-        const audioBuf = audioContext.createBuffer(1, samples.length, this.sampleRate);
-        audioBuf.getChannelData(0).set(samples);
-        this.audioBuffer = audioBuf;
+        const audioBuffer = audioContext.createBuffer(2, samples.length, this.sampleRate);
+        // audioBuffer.getChannelData(0).set(samples);
+        const left = audioBuffer.getChannelData(0);
+        const right = audioBuffer.getChannelData(1);
+        for(let i = 0; i < sampleNums; i++){
+            left[i] = samples[i * 2 + 0];
+            right[i] = samples[i * 2 + 1];
+        }
+
+        this.audioBuffer = audioBuffer;
 
         // cleanup GL bindings (optional)
         gl.bindBufferBase(gl.TRANSFORM_FEEDBACK_BUFFER, 0, null);

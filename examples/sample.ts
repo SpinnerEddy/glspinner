@@ -20,7 +20,7 @@ class Sample extends GLSpinner.BaseApplication {
             "texture/testImage.png"
         );
 
-        this.shaderAudioInput = new GLSpinner.ShaderAudioInput(this.gl, this.shaderLoader);
+        this.shaderAudioInput = new GLSpinner.ShaderAudioInput(this.gl, this.shaderLoader, 100.0);
         await this.shaderAudioInput.load("audio", this.audioOutput.getAudioContext());
     }
 
