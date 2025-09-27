@@ -72,6 +72,9 @@ export * from './webgl/gl/fbo/RenderTarget'
 export * from './webgl/gl/fbo/RenderTargetOperation'
 export * from './webgl/gl/fbo/RenderTargetOption'
 
+// Scene/Audio
+export * from './scene/audio/AudioOutput'
+
 // Scene/Camera
 export * from './scene/camera/Camera'
 export * from './scene/camera/CameraConstants'

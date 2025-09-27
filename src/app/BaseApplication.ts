@@ -1,3 +1,4 @@
+import { AudioOutput } from "../scene/audio/AudioOutput";
 import { Scene } from "../scene/core/Scene";
 import { SceneGraph } from "../scene/core/SceneGraph";
 import { MaterialFactory } from "../scene/factory/MaterialFactory";
@@ -15,7 +16,8 @@ export abstract class BaseApplication implements ApplicationOperation{
     protected textureLoader: TextureLoader;
     protected scene: Scene;
     protected sceneGraph: SceneGraph;
-    protected rendererContext: RendererContext;
+    protected rendererContext: RendererContext; 
+    protected audioOutput: AudioOutput;
 
     constructor(scene: Scene){
         this.canvas = document.getElementById('webgl-canvas') as HTMLCanvasElement;
@@ -26,6 +28,7 @@ export abstract class BaseApplication implements ApplicationOperation{
         this.scene = scene;
         this.rendererContext = new RendererContext();
         this.sceneGraph = new SceneGraph();
+        this.audioOutput = new AudioOutput();
     }
 
     public async start(): Promise<void> {

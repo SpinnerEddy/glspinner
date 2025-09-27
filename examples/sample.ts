@@ -25,7 +25,7 @@ class Sample extends GLSpinner.BaseApplication {
         // const material = GLSpinner.MaterialFactory.frameBufferTextureMaterial(frameBuffer, 0);
         material.use(this.gl);
 
-        const plane = new GLSpinner.Plane(this.gl, 6, 6);
+        const plane = new GLSpinner.Plane(this.gl, 2, 2);
         const planeAttributes = {
             aPosition: material.getAttribute(this.gl, 'aPosition'),
             aColor: material.getAttribute(this.gl, 'aColor'),
