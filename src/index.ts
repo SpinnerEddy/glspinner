@@ -7,6 +7,7 @@ export * from './app/RecordingApplication'
 export * from './tools/gui/GuiUtility'
 export * from './tools/gui/RecordGuiController'
 export * from './tools/gui/LightGuiController'
+export * from './tools/gui/AudioGuiController'
 export * from './tools/Recorder'
 
 // Color
@@ -76,6 +77,7 @@ export * from './webgl/gl/fbo/RenderTargetOption'
 export * from './scene/audio/AudioOutput'
 export * from './scene/audio/ExternalFileAudioInput'
 export * from './scene/audio/AudioInputOperation'
+export * from './scene/audio/ShaderAudioInput'
 
 // Scene/Camera
 export * from './scene/camera/Camera'

@@ -1,19 +1,27 @@
 import * as GLSpinner from '../src/index.ts';
 
 class Sample extends GLSpinner.BaseApplication {
-    private camera: GLSpinner.Camera;
-    private backgroundColorStr: string;
-    private renderTarget: GLSpinner.RenderTargetOperation;
-    private planeMeshNode: GLSpinner.MeshNode;
+    private camera!: GLSpinner.Camera;
+    private backgroundColorStr!: string;
+    private renderTarget!: GLSpinner.RenderTargetOperation;
+    private planeMeshNode!: GLSpinner.MeshNode;
+    private shaderAudioInput!: GLSpinner.ShaderAudioInput;
 
     async preload(): Promise<void> {
         await super.preload();
         await this.shaderLoader.loadShaderFromPath(
             "shader/basic.vert",
             "shader/basic.frag");
+        await this.shaderLoader.loadShaderFromPath(
+            "shader/audio.vert",
+            "shader/audio.frag",
+            ['oSample']);
         await this.textureLoader.loadTextureFromPath(
             "texture/testImage.png"
         );
+
+        this.shaderAudioInput = new GLSpinner.ShaderAudioInput(this.gl, this.shaderLoader);
+        await this.shaderAudioInput.load("audio", this.audioOutput.getAudioContext());
     }
 
     setup(): void {
@@ -50,7 +58,12 @@ class Sample extends GLSpinner.BaseApplication {
 
         console.log(this.sceneGraph.getGraph());
 
-        GLSpinner.LightGuiController.initialize();
+        this.audioOutput.setInput(this.shaderAudioInput);
+        
+        GLSpinner.AudioGuiController.initialize(
+            () => this.audioOutput.playAudio(),
+            () => this.audioOutput.stopAudio()
+        );
     }
 
     update(): void {

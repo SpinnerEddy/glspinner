@@ -8,9 +8,10 @@ export class ShaderProgram{
     private fragmentShader: WebGLShader | undefined;
     private attributes: Map<string, ShaderAttribute> = new Map();
     private uniforms: Map<string, ShaderUniform> = new Map();
+    private varyings: string[] = [];
 
-    constructor(gl: WebGL2RenderingContext, vertShaderSource: string, fragShaderSource: string){
-        this.program = this.createProgram(gl, vertShaderSource, fragShaderSource);
+    constructor(gl: WebGL2RenderingContext, vertShaderSource: string, fragShaderSource: string, varyings: string[] = []){
+        this.program = this.createProgram(gl, vertShaderSource, fragShaderSource, varyings);
     }
 
     public use(gl: WebGL2RenderingContext): void {
@@ -39,13 +40,18 @@ export class ShaderProgram{
         this.getUniform(gl, name).setUniform(value.getUniformValues(), value.getUniformType())
     }
 
-    private createProgram(gl: WebGL2RenderingContext, vertexShaderSource: string, fragmentShaderSource: string): WebGLProgram {
+    private createProgram(gl: WebGL2RenderingContext, vertexShaderSource: string, fragmentShaderSource: string, varyings: string[] = []): WebGLProgram {
         const program = gl.createProgram();
 
         this.vertexShader = this.compileShader(gl, vertexShaderSource, 'vert');
         this.fragmentShader = this.compileShader(gl, fragmentShaderSource, 'frag');
+        this.varyings = varyings;
         gl.attachShader(program, this.vertexShader);
         gl.attachShader(program, this.fragmentShader);
+        if(varyings.length > 0){
+            gl.transformFeedbackVaryings(program, this.varyings, gl.SEPARATE_ATTRIBS);
+        }
+
         gl.linkProgram(program);
 
         if(gl.getProgramParameter(program, gl.LINK_STATUS)){

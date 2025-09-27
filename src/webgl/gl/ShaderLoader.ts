@@ -17,12 +17,12 @@ export class ShaderLoader{
         return this.shaderProgramCache.get(key)!;
     }
 
-    public async loadShaderFromPath(vertShaderPath: string, fragShaderPath: string): Promise<void> {
+    public async loadShaderFromPath(vertShaderPath: string, fragShaderPath: string, varyings: string[] = []): Promise<void> {
         const vertShaderSource = await this.loadShader(vertShaderPath);
         const fragShaderSource = await this.loadShader(fragShaderPath);
         let shaderKey = fragShaderPath.split('/').pop()?.split('.').shift() as string;
 
-        let program = new ShaderProgram(this.gl, vertShaderSource, fragShaderSource);
+        let program = new ShaderProgram(this.gl, vertShaderSource, fragShaderSource, varyings);
         this.shaderProgramCache.set(shaderKey, program);
         this.shaderProgramKey.add(shaderKey);
         

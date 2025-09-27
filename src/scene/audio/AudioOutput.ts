@@ -1,3 +1,5 @@
+import { AudioInputOperation } from "./AudioInputOperation";
+
 export class AudioOutput {
     private audioContext: AudioContext;
     private audioBuffer: AudioBuffer | undefined;
@@ -54,8 +56,8 @@ export class AudioOutput {
         this.pauseTime = 0;
     }
 
-    public setBuffer(audioBuffer: AudioBuffer){
-        this.audioBuffer = audioBuffer;
+    public setInput(audioInput: AudioInputOperation){
+        this.audioBuffer = audioInput.getBuffer();
     }
 
     public getAudioContext(): AudioContext {
