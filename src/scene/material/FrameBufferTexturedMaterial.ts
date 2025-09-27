@@ -24,7 +24,7 @@ export class FrameBufferTexturedMaterial extends BaseMaterial {
         this.shaderProgram.setUniform(gl, "tex", new ShaderUniformValue(this.texIndex, 'int'));
     }
 
-    cleanup(gl: WebGL2RenderingContext): void {
+    cleanup(): void {
         this.texture.unbind();
     }
 }

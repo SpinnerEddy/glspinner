@@ -14,7 +14,8 @@ export abstract class BaseMesh implements MeshOperation {
         this.material = material;
     }
 
-    abstract updateMaterialParams(gl: WebGL2RenderingContext, transform: Transform, context: RendererContext): void;
+    updateMaterialParams(_gl: WebGL2RenderingContext, _transform: Transform, _context: RendererContext): void{ }
+
     abstract updateUniforms(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
     abstract draw(gl: WebGL2RenderingContext): void;
 }

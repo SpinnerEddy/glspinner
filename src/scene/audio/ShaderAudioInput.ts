@@ -10,7 +10,6 @@ export class ShaderAudioInput implements AudioInputOperation {
 
     private sampleRate: number = 44100;
     private duration: number = 2.0;
-    private frequency: number = 440;
 
     constructor(gl: WebGL2RenderingContext, shaderLoader: ShaderLoader, audioDuration: number = 2.0) {
         this.gl = gl;

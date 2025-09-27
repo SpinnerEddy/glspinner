@@ -1,7 +1,6 @@
 import { Color } from "../../color/Color";
 import { ColorUtility } from "../../color/ColorUtility";
 import { Vector3 } from "../../math/vector/Vector3";
-import { RenderTarget } from "../../webgl/gl/fbo/RenderTarget";
 import { ShaderLoader } from "../../webgl/gl/ShaderLoader";
 import { TextureFrameBuffer } from "../../webgl/gl/texture/TextureFrameBuffer";
 import { TextureLoader } from "../../webgl/gl/texture/TextureLoader";
