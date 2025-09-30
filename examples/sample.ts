@@ -5,6 +5,7 @@ class Sample extends GLSpinner.BaseApplication {
     private backgroundColorStr!: string;
     private renderTarget!: GLSpinner.RenderTargetOperation;
     private planeMeshNode!: GLSpinner.MeshNode;
+    private planeMeshNode2!: GLSpinner.MeshNode;
     private shaderAudioInput!: GLSpinner.ShaderAudioInput;
 
     async preload(): Promise<void> {
@@ -27,13 +28,12 @@ class Sample extends GLSpinner.BaseApplication {
     setup(): void {
         this.backgroundColorStr = "#000000";
         // const material = GLSpinner.MaterialFactory.unlitMaterial();
-        const material = GLSpinner.MaterialFactory.texturedMaterial("testImage", 0);
-        // this.renderTarget = new GLSpinner.RenderTarget(this.gl, [400, 400]);
-        // const frameBuffer = new GLSpinner.TextureFrameBuffer(this.gl, this.renderTarget.getTexture());
-        // const material = GLSpinner.MaterialFactory.frameBufferTextureMaterial(frameBuffer, 0);
+        this.renderTarget = new GLSpinner.RenderTarget(this.gl, [800, 800]);
+        const frameBuffer = new GLSpinner.TextureFrameBuffer(this.gl, this.renderTarget.getTexture());
+        const material = GLSpinner.MaterialFactory.frameBufferTextureMaterial(frameBuffer, 0);
         material.use(this.gl);
 
-        const plane = new GLSpinner.Plane(this.gl, 2, 2);
+        const plane = new GLSpinner.Plane(this.gl, 5, 5);
         const planeAttributes = {
             aPosition: material.getAttribute(this.gl, 'aPosition'),
             aColor: material.getAttribute(this.gl, 'aColor'),
@@ -43,6 +43,18 @@ class Sample extends GLSpinner.BaseApplication {
 
         const planeMesh = new GLSpinner.UnlitMesh(plane, material);
         this.planeMeshNode = new GLSpinner.MeshNode(planeMesh);
+
+        const plane2 = new GLSpinner.Plane(this.gl, 25, 25);
+        const planeAttributes2 = {
+            aPosition: material.getAttribute(this.gl, 'aPosition'),
+            aColor: material.getAttribute(this.gl, 'aColor'),
+            aUv: material.getAttribute(this.gl, "aUv")
+        };
+        plane2.setUpBuffers(this.gl, planeAttributes2);
+
+        const textureMaterial = GLSpinner.MaterialFactory.texturedMaterial("testImage", 0);
+        const planeMesh2 = new GLSpinner.UnlitMesh(plane2, textureMaterial);
+        this.planeMeshNode2 = new GLSpinner.MeshNode(planeMesh2);
 
         this.camera = new GLSpinner.Camera(GLSpinner.CameraType.Perspective);
         this.rendererContext.setCamera(this.camera);
@@ -69,6 +81,9 @@ class Sample extends GLSpinner.BaseApplication {
     update(): void {
         this.planeMeshNode.getTransform().setRotation(GLSpinner.QuaternionCalculator.createFromAxisAndRadians(GLSpinner.DefaultVectorConstants.AXIS2DY, this.scene.Clock.getElapsedTime()));
 
+        this.planeMeshNode2.getTransform().setRotation(GLSpinner.QuaternionCalculator.createFromAxisAndRadians(GLSpinner.DefaultVectorConstants.AXIS2DY, this.scene.Clock.getElapsedTime()));
+        this.planeMeshNode2.update();
+
         GLSpinner.SceneGraphUtility.traverse(this.sceneGraph.getGraph(), (node) => {
             node.update();
         });
@@ -77,6 +92,11 @@ class Sample extends GLSpinner.BaseApplication {
     draw(): void {
         this.webglUtility.setViewport(this.canvas);
         this.webglUtility.clearColor(GLSpinner.ColorUtility.hexToColor01(this.backgroundColorStr));
+        
+        this.renderTarget.drawToFrameBuffer(() => {
+            this.planeMeshNode2.draw(this.gl, this.rendererContext);
+        });
+
         GLSpinner.SceneGraphUtility.traverse(this.sceneGraph.getGraph(), (node) => {
             node.draw(this.gl, this.rendererContext);
         });
