@@ -22,6 +22,8 @@ export class RenderTarget implements RenderTargetOperation {
         gl.clearDepth(1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+        gl.viewport(0, 0, this.width, this.height);
+
         drawFunction();
 
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -40,6 +42,28 @@ export class RenderTarget implements RenderTargetOperation {
         return this.texture!;
     }
 
+    resize(resolution: [number, number]): void {
+        if(this.width === resolution[0] && this.height === resolution[1]) return;
+
+        this.width = resolution[0];
+        this.height = resolution[1];
+    }
+
+    dispose(): void {
+        const gl = this.gl;
+        if (this.texture) {
+            gl.deleteTexture(this.texture);
+            this.texture = undefined;
+        }
+        if (this.rbo) {
+            gl.deleteRenderbuffer(this.rbo);
+            this.rbo = undefined;
+        }
+        if (this.fbo) {
+            gl.deleteFramebuffer(this.fbo);
+            this.fbo = undefined;
+        }
+    }
 
     private setUpFrameBuffer(): void {
         const gl = this.gl;

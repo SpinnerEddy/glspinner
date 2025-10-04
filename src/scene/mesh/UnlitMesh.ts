@@ -13,7 +13,6 @@ export class UnlitMesh extends BaseMesh {
     }
 
     draw(gl: WebGL2RenderingContext): void {
-        this.material.use(gl);
         this.geometry.bind();
         gl.drawElements(gl.TRIANGLES, this.geometry.getIndexCount(), gl.UNSIGNED_SHORT, 0);
         this.geometry.unbind();

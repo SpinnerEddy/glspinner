@@ -35,7 +35,7 @@ export class MaterialFactory {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
-        const shader = this.shaderLoader.getShaderProgram("texture");
+        const shader = this.shaderLoader.getShaderProgram("framebuffer");
         return new FrameBufferTexturedMaterial(shader, frameBuffer, texIndex);
     }
 

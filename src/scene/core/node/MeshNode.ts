@@ -16,6 +16,7 @@ export class MeshNode extends SceneNode{
     }
 
     public draw(gl: WebGL2RenderingContext, context: RendererContext): void {
+        this.mesh.useMaterial(gl, context);
         this.updateUniforms(gl, context);
         this.updateMaterialParams(gl, context);
         this.mesh.draw(gl);

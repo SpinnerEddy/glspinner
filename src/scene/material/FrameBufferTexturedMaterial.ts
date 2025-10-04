@@ -9,6 +9,7 @@ export class FrameBufferTexturedMaterial extends BaseMaterial {
     private texIndex: number;
 
     constructor(shaderProgram: ShaderProgram, texture: TextureOperation, index: number){
+        console.log(shaderProgram);
         super(shaderProgram);
         this.texture = texture;
         this.texIndex = index;

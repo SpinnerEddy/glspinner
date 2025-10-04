@@ -22,6 +22,10 @@ export class ShaderProgram{
         return this.program;
     }
 
+    public getFragmentShader(): WebGLShader{
+        return this.fragmentShader!;
+    }
+
     public getAttribute(gl: WebGL2RenderingContext, name: string): ShaderAttribute {
         if(!this.attributes.has(name)){
             this.attributes.set(name, new ShaderAttribute(gl, this.program, name));

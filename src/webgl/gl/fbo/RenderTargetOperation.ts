@@ -3,4 +3,6 @@ export interface RenderTargetOperation {
     getTexture(): WebGLTexture;
     bind(index: number): void;
     unbind(): void;
+    resize(resolution: [number, number]): void;
+    dispose(): void;
 }
