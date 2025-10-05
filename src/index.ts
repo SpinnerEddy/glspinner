@@ -69,6 +69,7 @@ export * from './webgl/gl/texture/TextureOperation'
 export * from './webgl/gl/texture/TextureFrameBuffer'
 
 // FBO
+export * from './webgl/gl/fbo/PingPongRenderTarget'
 export * from './webgl/gl/fbo/RenderTarget'
 export * from './webgl/gl/fbo/RenderTargetOperation'
 export * from './webgl/gl/fbo/RenderTargetOption'
@@ -98,6 +99,7 @@ export * from './scene/material/GouraudMaterial'
 export * from './scene/material/PhongMaterial'
 export * from './scene/material/TexturedMaterial'
 export * from './scene/material/FrameBufferTexturedMaterial'
+export * from './scene/material/GrayScaleMaterial'
 
 // Scene/Mesh
 export * from './scene/mesh/BaseMesh'

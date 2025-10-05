@@ -6,6 +6,7 @@ import { TextureFrameBuffer } from "../../webgl/gl/texture/TextureFrameBuffer";
 import { TextureLoader } from "../../webgl/gl/texture/TextureLoader";
 import { FrameBufferTexturedMaterial } from "../material/FrameBufferTexturedMaterial";
 import { GouraudMaterial } from "../material/GouraudMaterial";
+import { GrayScaleMaterial } from "../material/GrayScaleMaterial";
 import { PhongMaterial } from "../material/PhongMaterial";
 import { TexturedMaterial } from "../material/TexturedMaterial";
 import { UnlitMaterial } from "../material/UnlitMaterial";
@@ -37,6 +38,15 @@ export class MaterialFactory {
 
         const shader = this.shaderLoader.getShaderProgram("framebuffer");
         return new FrameBufferTexturedMaterial(shader, frameBuffer, texIndex);
+    }
+
+    static grayScaleMaterial(frameBuffer: TextureFrameBuffer, texIndex: number): GrayScaleMaterial {
+        if (!this.shaderLoader) {
+            throw new Error('MaterialFac†ory not initialized. Call init!!');
+        }
+
+        const shader = this.shaderLoader.getShaderProgram("grayScale");
+        return new GrayScaleMaterial(shader, frameBuffer, texIndex);
     }
 
     static unlitMaterial(): UnlitMaterial {
