@@ -14,7 +14,7 @@ export class StandardSceneRendererFlow extends BaseSceneRendererFlow {
         this.renderTarget = new RenderTarget(options.gl!, [options.resolution!.width, options.resolution!.height]);
     }
 
-    render(gl: WebGL2RenderingContext, context: RendererContext): RenderTargetOperation | undefined {
+    render(gl: WebGL2RenderingContext, context: RendererContext, _inputRenderTarget: RenderTargetOperation | undefined): RenderTargetOperation | undefined {
         if (this.renderTarget) {
             this.renderTarget.drawToFrameBuffer(() => {
                 this.drawScene(gl, context);

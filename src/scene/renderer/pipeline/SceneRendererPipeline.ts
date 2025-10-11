@@ -1,3 +1,4 @@
+import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
 import { BaseSceneRendererFlow } from "../flow/BaseSceneRendererFlow";
 import { RendererContext } from "../RendererContext";
 import { SceneRendererPipelineOperation } from "./SceneRendererPipelineOperation";
@@ -14,7 +15,11 @@ export class SceneRendererPipeline implements SceneRendererPipelineOperation {
     }
 
     render(gl: WebGL2RenderingContext, context: RendererContext): void {
-        this.rendererFlows.forEach(flow => flow.render(gl, context));
+        let inputRenderTarget: RenderTargetOperation | undefined = undefined;
+
+        for (const flow of this.rendererFlows) {
+            inputRenderTarget = flow.render(gl, context, inputRenderTarget);
+        }
     }
 
     dispose(): void {

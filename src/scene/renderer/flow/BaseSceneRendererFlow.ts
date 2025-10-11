@@ -13,7 +13,7 @@ export abstract class BaseSceneRendererFlow implements RendererFlowOperation {
         this.sceneGraphRoot = sceneGraphRoot;
     }
 
-    abstract render(gl: WebGL2RenderingContext, context: RendererContext): RenderTargetOperation | undefined;
+    abstract render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation | undefined): RenderTargetOperation | undefined;
     abstract dispose(): void
 
     protected drawScene(gl: WebGL2RenderingContext, context: RendererContext): void {

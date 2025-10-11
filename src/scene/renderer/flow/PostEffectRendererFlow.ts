@@ -4,7 +4,7 @@ import { BaseSceneRendererFlow } from "./BaseSceneRendererFlow";
 
 export class PostEffectRendererFlow extends BaseSceneRendererFlow {
     
-    render(gl: WebGL2RenderingContext, context: RendererContext): RenderTargetOperation | undefined {
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation | undefined): RenderTargetOperation | undefined {
         throw new Error("Method not implemented.");
     }
 
