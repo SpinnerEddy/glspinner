@@ -1,8 +1,8 @@
-import { BaseSceneRendererFlow } from "../flow/BaseSceneRendererFlow";
+import { RendererFlowOperation } from "../flow/RendererFlowOperation";
 import { RendererContext } from "../RendererContext";
 
 export interface SceneRendererPipelineOperation {
-    addFlow(rendererFlow: BaseSceneRendererFlow): void;
+    addFlow(rendererFlow: RendererFlowOperation): void;
     render(gl: WebGL2RenderingContext, context: RendererContext): void;
     dispose(): void;
 }

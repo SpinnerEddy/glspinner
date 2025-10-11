@@ -1,5 +1,5 @@
 export type RendererFlowOptions = {
     useFbo: boolean;
     gl?: WebGL2RenderingContext;
-    resolution?: { width: number; height: number };
+    resolution?: [number, number];
 }

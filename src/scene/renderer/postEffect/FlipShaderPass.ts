@@ -1,11 +1,11 @@
 import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
-import { GrayScaleMaterial } from "../../material/GrayScaleMaterial";
+import { FrameBufferTexturedMaterial } from "../../material/FrameBufferTexturedMaterial";
 import { RendererContext } from "../RendererContext";
 import { BaseShaderPass } from "./BaseShaderPass";
 
-export class GrayScalePass extends BaseShaderPass {
+export class FlipShaderPass extends BaseShaderPass {
 
-    constructor(gl: WebGL2RenderingContext, material: GrayScaleMaterial, resolution: [number, number]){
+    constructor(gl: WebGL2RenderingContext, material: FrameBufferTexturedMaterial, resolution: [number, number]){
         super(gl, material, resolution);
     }
 

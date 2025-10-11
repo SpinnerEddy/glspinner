@@ -2,16 +2,16 @@ import { BaseSceneRendererFlow } from "./BaseSceneRendererFlow";
 import { RendererContext } from "../RendererContext";
 import { EmptyNode } from "../../core/node/EmptyNode";
 import { RendererFlowOptions } from "./RendererFlowConstants";
-import { RenderTarget } from "../../../webgl/gl/fbo/RenderTarget";
 import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
+import { SceneGraphUtility } from "../../core/SceneGraphUtility";
 
 export class StandardSceneRendererFlow extends BaseSceneRendererFlow {
 
-    constructor(sceneGraphRoot: EmptyNode, options: RendererFlowOptions = { useFbo: false }) {
-        super(sceneGraphRoot);
-        if (!options.useFbo) return;
+    private sceneGraphRoot: EmptyNode;
 
-        this.renderTarget = new RenderTarget(options.gl!, [options.resolution!.width, options.resolution!.height]);
+    constructor(sceneGraphRoot: EmptyNode, options: RendererFlowOptions = { useFbo: false }) {
+        super(options);
+        this.sceneGraphRoot = sceneGraphRoot;
     }
 
     render(gl: WebGL2RenderingContext, context: RendererContext, _inputRenderTarget: RenderTargetOperation | undefined): RenderTargetOperation | undefined {
@@ -32,6 +32,12 @@ export class StandardSceneRendererFlow extends BaseSceneRendererFlow {
             this.renderTarget.dispose();
             this.renderTarget = undefined;
         }
+    }
+
+    private drawScene(gl: WebGL2RenderingContext, context: RendererContext): void {
+        SceneGraphUtility.traverse(this.sceneGraphRoot, (node) => {
+            node.draw(gl, context);
+        });
     }
 
 }

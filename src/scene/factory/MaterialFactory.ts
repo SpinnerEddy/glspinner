@@ -31,22 +31,22 @@ export class MaterialFactory {
         return new TexturedMaterial(shader, texture, texIndex);
     }
 
-    static frameBufferTextureMaterial(frameBuffer: TextureFrameBuffer, texIndex: number): FrameBufferTexturedMaterial {
+    static frameBufferTextureMaterial(texIndex: number): FrameBufferTexturedMaterial {
         if (!this.shaderLoader) {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
         const shader = this.shaderLoader.getShaderProgram("framebuffer");
-        return new FrameBufferTexturedMaterial(shader, frameBuffer, texIndex);
+        return new FrameBufferTexturedMaterial(shader, texIndex);
     }
 
-    static grayScaleMaterial(frameBuffer: TextureFrameBuffer, texIndex: number): GrayScaleMaterial {
+    static grayScaleMaterial(texIndex: number): GrayScaleMaterial {
         if (!this.shaderLoader) {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
         const shader = this.shaderLoader.getShaderProgram("grayScale");
-        return new GrayScaleMaterial(shader, frameBuffer, texIndex);
+        return new GrayScaleMaterial(shader, texIndex);
     }
 
     static unlitMaterial(): UnlitMaterial {

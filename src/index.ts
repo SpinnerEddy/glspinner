@@ -150,6 +150,7 @@ export * from './scene/renderer/pipeline/SceneRendererPipelineOperation'
 export * from './scene/renderer/postEffect/BaseShaderPass'
 export * from './scene/renderer/postEffect/GrayScalePass'
 export * from './scene/renderer/postEffect/ShaderPassOperation'
+export * from './scene/renderer/postEffect/FlipShaderPass'
 
 export function initializeLibrary() {
     console.log("ライブラリが初期化されました");

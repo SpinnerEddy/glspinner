@@ -40,8 +40,30 @@ class Sample extends GLSpinner.BaseApplication {
         const fboPlaneMeshNode = new GLSpinner.MeshNode(fboPlaneMesh);
         GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, fboPlaneMeshNode);
 
-        const standardRendererFlow = new GLSpinner.StandardSceneRendererFlow(this.baseSceneRoot);
+        const standardRendererFlow = new GLSpinner.StandardSceneRendererFlow(
+            this.baseSceneRoot,
+            { useFbo: true,
+              gl: this.gl,
+              resolution: [this.canvas.width, this.canvas.height]
+            });
         this.rendererFlowPipeline.addFlow(standardRendererFlow);
+
+        const grayScelePass = new GLSpinner.GrayScalePass(
+            this.gl, 
+            GLSpinner.MaterialFactory.grayScaleMaterial(0), 
+            [this.canvas.width, this.canvas.height]);
+        const frameBufferOutputPass = new GLSpinner.FlipShaderPass(
+            this.gl, 
+            GLSpinner.MaterialFactory.frameBufferTextureMaterial(0), 
+            [this.canvas.width, this.canvas.height]);
+        const postEffectRendererFlow = new GLSpinner.PostEffectRendererFlow(
+            [grayScelePass, frameBufferOutputPass],
+            { useFbo: true,
+              gl: this.gl,
+              resolution: [this.canvas.width, this.canvas.height]
+            });
+
+        this.rendererFlowPipeline.addFlow(postEffectRendererFlow);
 
         this.camera = new GLSpinner.Camera(GLSpinner.CameraType.Orthography);
         this.rendererContext.setCamera(this.camera);
@@ -61,13 +83,15 @@ class Sample extends GLSpinner.BaseApplication {
     }
 
     update(): void {
-        
+        // GLSpinner.SceneGraphUtility.traverse(this.baseSceneRoot, (node) => {
+        //     node.getTransform().setRotation(GLSpinner.QuaternionCalculator.createFromAxisAndRadians(GLSpinner.DefaultVectorConstants.AXIS2DY, this.scene.Clock.getElapsedTime()));
+        //     node.update();
+        // });
     }
 
     draw(): void {
         this.webglUtility.setViewport(this.canvas);
         this.webglUtility.clearColor(GLSpinner.ColorUtility.hexToColor01(this.backgroundColorStr));
-
         this.rendererFlowPipeline.render(this.gl, this.rendererContext);
     }
 }
