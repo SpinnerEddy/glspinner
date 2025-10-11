@@ -1,1 +1,3 @@
 node_modules/
+examples/shader/testAudio.frag
+examples/shader/testAudio.vert
