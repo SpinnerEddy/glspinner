@@ -13,10 +13,6 @@ export class SceneRendererPipeline implements SceneRendererPipelineOperation {
         this.rendererFlows.push(rendererFlow);
     }
 
-    init(gl: WebGL2RenderingContext, context: RendererContext): void {
-        this.rendererFlows.forEach(flow => flow.init(gl, context));
-    }
-
     render(gl: WebGL2RenderingContext, context: RendererContext): void {
         this.rendererFlows.forEach(flow => flow.render(gl, context));
     }

@@ -2,6 +2,8 @@ import { AudioOutput } from "../scene/audio/AudioOutput";
 import { Scene } from "../scene/core/Scene";
 import { SceneGraph } from "../scene/core/SceneGraph";
 import { MaterialFactory } from "../scene/factory/MaterialFactory";
+import { SceneRendererPipeline } from "../scene/renderer/pipeline/SceneRendererPipeline";
+import { SceneRendererPipelineOperation } from "../scene/renderer/pipeline/SceneRendererPipelineOperation";
 import { RendererContext } from "../scene/renderer/RendererContext";
 import { ShaderLoader } from "../webgl/gl/ShaderLoader";
 import { TextureLoader } from "../webgl/gl/texture/TextureLoader";
@@ -18,6 +20,7 @@ export abstract class BaseApplication implements ApplicationOperation{
     protected sceneGraph: SceneGraph;
     protected rendererContext: RendererContext; 
     protected audioOutput: AudioOutput;
+    protected rendererFlowPipeline: SceneRendererPipelineOperation;
 
     constructor(scene: Scene){
         this.canvas = document.getElementById('webgl-canvas') as HTMLCanvasElement;
@@ -29,6 +32,7 @@ export abstract class BaseApplication implements ApplicationOperation{
         this.rendererContext = new RendererContext();
         this.sceneGraph = new SceneGraph();
         this.audioOutput = new AudioOutput();
+        this.rendererFlowPipeline = new SceneRendererPipeline();
     }
 
     public async start(): Promise<void> {

@@ -1,18 +1,37 @@
 import { BaseSceneRendererFlow } from "./BaseSceneRendererFlow";
 import { RendererContext } from "../RendererContext";
+import { EmptyNode } from "../../core/node/EmptyNode";
+import { RendererFlowOptions } from "./RendererFlowConstants";
+import { RenderTarget } from "../../../webgl/gl/fbo/RenderTarget";
+import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
 
 export class StandardSceneRendererFlow extends BaseSceneRendererFlow {
-    
-    init(gl: WebGL2RenderingContext, context: RendererContext): void {
-        throw new Error("Method not implemented.");
+
+    constructor(sceneGraphRoot: EmptyNode, options: RendererFlowOptions = { useFbo: false }) {
+        super(sceneGraphRoot);
+        if (!options.useFbo) return;
+
+        this.renderTarget = new RenderTarget(options.gl!, [options.resolution!.width, options.resolution!.height]);
     }
 
-    render(gl: WebGL2RenderingContext, context: RendererContext): void {
-        throw new Error("Method not implemented.");
+    render(gl: WebGL2RenderingContext, context: RendererContext): RenderTargetOperation | undefined {
+        if (this.renderTarget) {
+            this.renderTarget.drawToFrameBuffer(() => {
+                this.drawScene(gl, context);
+            });
+        }
+        else {
+            this.drawScene(gl, context);
+        }
+
+        return this.renderTarget;
     }
 
     dispose(): void {
-        throw new Error("Method not implemented.");
+        if (this.renderTarget) {
+            this.renderTarget.dispose();
+            this.renderTarget = undefined;
+        }
     }
 
 }

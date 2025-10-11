@@ -1,7 +1,7 @@
+import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
 import { RendererContext } from "../RendererContext";
 
 export interface RendererFlowOperation {
-    init(gl: WebGL2RenderingContext, context: RendererContext): void;
-    render(gl: WebGL2RenderingContext, context: RendererContext): void;
+    render(gl: WebGL2RenderingContext, context: RendererContext): RenderTargetOperation | undefined;
     dispose(): void;
 }
