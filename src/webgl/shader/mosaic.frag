@@ -18,6 +18,7 @@ vec2 boxelUv(vec2 uv, float size){
 }
 
 void main(void){
-    vec4 texColor = texture(tex, boxelUv(vUv, mosaicSize));
+    vec2 uv = vec2(vUv.x, 1.0 - vUv.y);
+    vec4 texColor = texture(tex, boxelUv(uv, mosaicSize));
     outputColor = texColor;
 }

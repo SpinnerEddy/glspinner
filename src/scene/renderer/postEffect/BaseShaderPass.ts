@@ -12,6 +12,7 @@ export abstract class BaseShaderPass implements ShaderPassOperation {
     protected material: BaseMaterial;
     protected plane: MeshNode;
     protected writeRenderTarget: RenderTarget;
+    protected isEffectEnabled: boolean = true;
 
     constructor(gl: WebGL2RenderingContext, material: BaseMaterial, resolution: [number, number]) {
         this.writeRenderTarget = new RenderTarget(gl, resolution);
@@ -30,6 +31,14 @@ export abstract class BaseShaderPass implements ShaderPassOperation {
 
     abstract render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
 
+    setEffectEnabled(enabled: boolean): void {
+        this.isEffectEnabled = enabled;
+    }
+
+    getEffectEnabled(): boolean {
+        return this.isEffectEnabled;
+    }
+
     protected draw(gl: WebGL2RenderingContext, context: RendererContext, isBlit: boolean): void {
         if(isBlit){
             this.writeRenderTarget.drawToScreen(() => SceneGraphUtility.traverse(this.plane, (node) => node.draw(gl, context)));
@@ -38,5 +47,4 @@ export abstract class BaseShaderPass implements ShaderPassOperation {
             this.writeRenderTarget.drawToFrameBuffer(() => SceneGraphUtility.traverse(this.plane, (node) => node.draw(gl, context)));
         }
     }
-
 }

@@ -5,12 +5,17 @@ class Sample extends GLSpinner.BaseApplication {
     private backgroundColorStr!: string;
     private shaderAudioInput!: GLSpinner.ShaderAudioInput;
     private baseSceneRoot!: GLSpinner.EmptyNode;
+    private shaderPasses!: Map<string, GLSpinner.ShaderPassOperation>;
+    private shaderPassEnabledSwitch!: Map<string, boolean>;
 
     async preload(): Promise<void> {
         await super.preload();
         await this.shaderLoader.loadShaderFromPath(
             "shader/basic.vert",
             "shader/basic.frag");
+        await this.shaderLoader.loadShaderFromPath(
+            "shader/spinner.vert",
+            "shader/spinner.frag");
         await this.shaderLoader.loadShaderFromPath(
             "shader/testAudio.vert",
             "shader/testAudio.frag",
@@ -59,8 +64,18 @@ class Sample extends GLSpinner.BaseApplication {
             GLSpinner.MaterialFactory.frameBufferTextureMaterial(0), 
             [this.canvas.width, this.canvas.height]);
 
+        this.shaderPasses = new Map<string, GLSpinner.ShaderPassOperation>();        
+        this.shaderPasses.set("grayScale", graySceleShaderPass);
+        this.shaderPasses.set("mosaic", mosaicShaderPass);
+        this.shaderPasses.set("frameBufferOutput", frameBufferOutputPass);
+
+        this.shaderPassEnabledSwitch = new Map<string, boolean>();
+        this.shaderPassEnabledSwitch.set("grayScale", true);
+        this.shaderPassEnabledSwitch.set("mosaic", true);
+        this.shaderPassEnabledSwitch.set("frameBufferOutput", true);
+
         const postEffectRendererFlow = new GLSpinner.PostEffectRendererFlow(
-            [mosaicShaderPass, graySceleShaderPass, frameBufferOutputPass],
+            this.shaderPasses,
             { useFbo: true,
               gl: this.gl,
               resolution: [this.canvas.width, this.canvas.height]
@@ -79,10 +94,38 @@ class Sample extends GLSpinner.BaseApplication {
 
         this.audioOutput.setInput(this.shaderAudioInput);
         
-        GLSpinner.AudioGuiController.initialize(
-            () => this.audioOutput.playAudio(),
-            () => this.audioOutput.stopAudio()
+        // GLSpinner.AudioGuiController.initialize(
+        //     () => this.audioOutput.playAudio(),
+        //     () => this.audioOutput.stopAudio()
+        // );
+
+        GLSpinner.GuiUtility.initialize();
+        GLSpinner.GuiUtility.addFolder("Audio");
+        GLSpinner.GuiUtility.addAction(() => {
+            this.audioOutput.playAudio()
+        }, 
+        "AudioPlay");
+        GLSpinner.GuiUtility.addAction(() => {
+            this.audioOutput.stopAudio()
+        }, 
+        "AudioStop");
+        GLSpinner.GuiUtility.resetFolder();
+        GLSpinner.GuiUtility.addFolder("PostEffect");
+        GLSpinner.GuiUtility.addElement(
+            {grayScale: true}, 
+            "grayScale",
+            (value: boolean) => {
+                this.shaderPassEnabledSwitch.set("grayScale", value);
+            }
         );
+        GLSpinner.GuiUtility.addElement(
+            {mosaic: true}, 
+            "mosaic",
+            (value: boolean) => {
+                this.shaderPassEnabledSwitch.set("mosaic", value);
+            }
+        );
+        GLSpinner.GuiUtility.resetFolder();
     }
 
     update(): void {
@@ -93,7 +136,16 @@ class Sample extends GLSpinner.BaseApplication {
 
         this.rendererContext.updateGlobalUniform("time", new GLSpinner.ShaderUniformValue(this.scene.Clock.getElapsedTime()));
         this.rendererContext.updateGlobalUniform("resolution", new GLSpinner.ShaderUniformValue([this.canvas.width, this.canvas.height]));
-        this.rendererContext.updateGlobalUniform("mosaicSize", new GLSpinner.ShaderUniformValue(20.0));
+        this.rendererContext.updateGlobalUniform("mosaicSize", new GLSpinner.ShaderUniformValue(60.0));
+
+        this.shaderPasses.forEach((pass, key) => {
+            if(this.shaderPassEnabledSwitch.get(key)){
+                pass.setEffectEnabled(true);
+            }
+            else{
+                pass.setEffectEnabled(false);
+            }
+        });
     }
 
     draw(): void {
