@@ -2,8 +2,8 @@ import { Color } from "../../color/Color";
 import { ColorUtility } from "../../color/ColorUtility";
 import { Vector3 } from "../../math/vector/Vector3";
 import { ShaderLoader } from "../../webgl/gl/ShaderLoader";
-import { TextureFrameBuffer } from "../../webgl/gl/texture/TextureFrameBuffer";
 import { TextureLoader } from "../../webgl/gl/texture/TextureLoader";
+import { FragmentCanvasMaterial } from "../material/FragmentCanvasMaterial";
 import { FrameBufferTexturedMaterial } from "../material/FrameBufferTexturedMaterial";
 import { GouraudMaterial } from "../material/GouraudMaterial";
 import { GrayScaleMaterial } from "../material/GrayScaleMaterial";
@@ -15,10 +15,18 @@ export class MaterialFactory {
     private static shaderLoader: ShaderLoader;
     private static textureLoader: TextureLoader;
     
-
     static init(shaderLoader: ShaderLoader, textureLoader: TextureLoader): void {
         this.shaderLoader = shaderLoader;
         this.textureLoader = textureLoader;
+    }
+
+    static fragmentCanvasMaterial(programKey: string, resolution: [number, number]): FragmentCanvasMaterial {
+        if (!this.shaderLoader) {
+            throw new Error('MaterialFac†ory not initialized. Call init!!');
+        }
+
+        const shader = this.shaderLoader.getShaderProgram(programKey);
+        return new FragmentCanvasMaterial(shader, resolution);
     }
 
     static texturedMaterial(textureKey: string, texIndex: number): TexturedMaterial {

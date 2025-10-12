@@ -1,5 +1,3 @@
-import { RenderTarget } from "../../webgl/gl/fbo/RenderTarget";
-import { RenderTargetOperation } from "../../webgl/gl/fbo/RenderTargetOperation";
 import { ShaderProgram } from "../../webgl/gl/ShaderProgram";
 import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
 import { ShaderUniformValue } from "../../webgl/gl/uniform/ShaderUniformValue";
@@ -11,7 +9,6 @@ export class RendererContext {
     private lights: LightParams[] = [];
     private globalUniforms: UniformPairs = {};
     private currentShaderProgram: ShaderProgram | undefined = undefined;
-    private currentRenderTarget: RenderTargetOperation | undefined = undefined;
 
     public setCamera(camera: Camera): void {
         this.camera = camera;
@@ -37,14 +34,6 @@ export class RendererContext {
         if(this.currentShaderProgram === undefined) return false;
 
         return this.currentShaderProgram === program;
-    }
-
-    public setCurrentRenderTarget(renderTarget: RenderTargetOperation): void {
-        this.currentRenderTarget = renderTarget;
-    }
-
-    public getCurrentRenderTarget(): RenderTargetOperation | undefined {
-        return this.currentRenderTarget;
     }
 
     public setLights(lights: LightParams[]): void {

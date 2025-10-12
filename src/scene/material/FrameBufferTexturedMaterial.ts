@@ -12,10 +12,7 @@ export class FrameBufferTexturedMaterial extends BaseMaterial {
     }
 
     setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void {
-        for(const key in uniforms){
-            this.shaderProgram.setUniform(gl, key, uniforms[key]);
-        }
-
+        this.shaderProgram.setUniform(gl, "mvpMatrix", uniforms["mvpMatrix"]);
         this.shaderProgram.setUniform(gl, "tex", new ShaderUniformValue(this.texIndex, 'int'));
     }
 
