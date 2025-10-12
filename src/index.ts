@@ -100,6 +100,7 @@ export * from './scene/material/PhongMaterial'
 export * from './scene/material/TexturedMaterial'
 export * from './scene/material/FrameBufferTexturedMaterial'
 export * from './scene/material/GrayScaleMaterial'
+export * from './scene/material/MosaicMaterial'
 
 // Scene/Mesh
 export * from './scene/mesh/BaseMesh'
@@ -148,8 +149,9 @@ export * from './scene/renderer/pipeline/SceneRendererPipelineOperation'
 
 // Scene/Renderer/PostEffect
 export * from './scene/renderer/postEffect/BaseShaderPass'
-export * from './scene/renderer/postEffect/GrayScalePass'
+export * from './scene/renderer/postEffect/GrayScaleShaderPass'
 export * from './scene/renderer/postEffect/ShaderPassOperation'
+export * from './scene/renderer/postEffect/MosaicShaderPass'
 export * from './scene/renderer/postEffect/FlipShaderPass'
 
 export function initializeLibrary() {

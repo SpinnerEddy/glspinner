@@ -3,7 +3,7 @@ import { GrayScaleMaterial } from "../../material/GrayScaleMaterial";
 import { RendererContext } from "../RendererContext";
 import { BaseShaderPass } from "./BaseShaderPass";
 
-export class GrayScalePass extends BaseShaderPass {
+export class GrayScaleShaderPass extends BaseShaderPass {
 
     constructor(gl: WebGL2RenderingContext, material: GrayScaleMaterial, resolution: [number, number]){
         super(gl, material, resolution);

@@ -1,22 +1,16 @@
 import { ShaderProgram } from "../../webgl/gl/ShaderProgram";
 import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
-import { ShaderUniformValue } from "../../webgl/gl/uniform/ShaderUniformValue";
 import { BaseMaterial } from "./BaseMaterial";
 
 export class FragmentCanvasMaterial extends BaseMaterial {
-
-    private resolution: [number, number];
-
-    constructor(shaderProgram: ShaderProgram, resolution: [number, number]){
+    
+    constructor(shaderProgram: ShaderProgram){
         super(shaderProgram);
-        this.resolution = resolution;
     }
 
     setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void {
-        for(const key in uniforms){
-            this.shaderProgram.setUniform(gl, key, uniforms[key]);
-        }
-
-        this.shaderProgram.setUniform(gl, "resolution", new ShaderUniformValue(this.resolution));
+        this.shaderProgram.setUniform(gl, "mvpMatrix", uniforms["mvpMatrix"]);
+        this.shaderProgram.setUniform(gl, "time", uniforms["time"]);
+        this.shaderProgram.setUniform(gl, "resolution", uniforms["resolution"]);
     }
 }

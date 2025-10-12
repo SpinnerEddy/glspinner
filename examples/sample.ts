@@ -29,7 +29,7 @@ class Sample extends GLSpinner.BaseApplication {
         // 元々の描画内容
         this.baseSceneRoot = new GLSpinner.EmptyNode();
         const fboPlane = new GLSpinner.Plane(this.gl, 2, 2);
-        const fboMaterial = GLSpinner.MaterialFactory.fragmentCanvasMaterial("basic", [this.canvas.width, this.canvas.height]);
+        const fboMaterial = GLSpinner.MaterialFactory.fragmentCanvasMaterial("basic");
         const fboPlaneAttributes = {
             aPosition: fboMaterial.getAttribute(this.gl, 'aPosition'),
         };
@@ -46,9 +46,13 @@ class Sample extends GLSpinner.BaseApplication {
             });
         this.rendererFlowPipeline.addFlow(standardRendererFlow);
 
-        const grayScelePass = new GLSpinner.GrayScalePass(
+        const graySceleShaderPass = new GLSpinner.GrayScaleShaderPass(
             this.gl, 
             GLSpinner.MaterialFactory.grayScaleMaterial(0), 
+            [this.canvas.width, this.canvas.height]);
+        const mosaicShaderPass = new GLSpinner.MosaicShaderPass(
+            this.gl, 
+            GLSpinner.MaterialFactory.mosaicMaterial(0), 
             [this.canvas.width, this.canvas.height]);
         const frameBufferOutputPass = new GLSpinner.FlipShaderPass(
             this.gl, 
@@ -56,7 +60,7 @@ class Sample extends GLSpinner.BaseApplication {
             [this.canvas.width, this.canvas.height]);
 
         const postEffectRendererFlow = new GLSpinner.PostEffectRendererFlow(
-            [grayScelePass, frameBufferOutputPass],
+            [mosaicShaderPass, graySceleShaderPass, frameBufferOutputPass],
             { useFbo: true,
               gl: this.gl,
               resolution: [this.canvas.width, this.canvas.height]
@@ -88,6 +92,8 @@ class Sample extends GLSpinner.BaseApplication {
         // });
 
         this.rendererContext.updateGlobalUniform("time", new GLSpinner.ShaderUniformValue(this.scene.Clock.getElapsedTime()));
+        this.rendererContext.updateGlobalUniform("resolution", new GLSpinner.ShaderUniformValue([this.canvas.width, this.canvas.height]));
+        this.rendererContext.updateGlobalUniform("mosaicSize", new GLSpinner.ShaderUniformValue(20.0));
     }
 
     draw(): void {

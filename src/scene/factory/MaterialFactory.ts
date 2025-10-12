@@ -7,6 +7,7 @@ import { FragmentCanvasMaterial } from "../material/FragmentCanvasMaterial";
 import { FrameBufferTexturedMaterial } from "../material/FrameBufferTexturedMaterial";
 import { GouraudMaterial } from "../material/GouraudMaterial";
 import { GrayScaleMaterial } from "../material/GrayScaleMaterial";
+import { MosaicMaterial } from "../material/MosaicMaterial";
 import { PhongMaterial } from "../material/PhongMaterial";
 import { TexturedMaterial } from "../material/TexturedMaterial";
 import { UnlitMaterial } from "../material/UnlitMaterial";
@@ -20,13 +21,13 @@ export class MaterialFactory {
         this.textureLoader = textureLoader;
     }
 
-    static fragmentCanvasMaterial(programKey: string, resolution: [number, number]): FragmentCanvasMaterial {
+    static fragmentCanvasMaterial(programKey: string): FragmentCanvasMaterial {
         if (!this.shaderLoader) {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
         const shader = this.shaderLoader.getShaderProgram(programKey);
-        return new FragmentCanvasMaterial(shader, resolution);
+        return new FragmentCanvasMaterial(shader);
     }
 
     static texturedMaterial(textureKey: string, texIndex: number): TexturedMaterial {
@@ -55,6 +56,15 @@ export class MaterialFactory {
 
         const shader = this.shaderLoader.getShaderProgram("grayScale");
         return new GrayScaleMaterial(shader, texIndex);
+    }
+
+    static mosaicMaterial(texIndex: number): MosaicMaterial {
+        if (!this.shaderLoader) {
+            throw new Error('MaterialFac†ory not initialized. Call init!!');
+        }
+
+        const shader = this.shaderLoader.getShaderProgram("mosaic");
+        return new MosaicMaterial(shader, texIndex);
     }
 
     static unlitMaterial(): UnlitMaterial {
