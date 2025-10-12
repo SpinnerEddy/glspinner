@@ -51,11 +51,12 @@ class Sample extends GLSpinner.BaseApplication {
         const grayScelePass = new GLSpinner.GrayScalePass(
             this.gl, 
             GLSpinner.MaterialFactory.grayScaleMaterial(0), 
-            [this.canvas.width, this.canvas.height]);
+            [this.canvas.width/10, this.canvas.height/10]);
         const frameBufferOutputPass = new GLSpinner.FlipShaderPass(
             this.gl, 
             GLSpinner.MaterialFactory.frameBufferTextureMaterial(0), 
             [this.canvas.width, this.canvas.height]);
+
         const postEffectRendererFlow = new GLSpinner.PostEffectRendererFlow(
             [grayScelePass, frameBufferOutputPass],
             { useFbo: true,

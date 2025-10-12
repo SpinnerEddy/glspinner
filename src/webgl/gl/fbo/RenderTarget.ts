@@ -29,6 +29,13 @@ export class RenderTarget implements RenderTargetOperation {
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
 
+    drawToScreen(drawFunction: () => void): void {
+        const gl = this.gl;
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.viewport(0, 0, this.width, this.height);
+        drawFunction();
+    }
+
     bind(index: number): void {
         this.gl.activeTexture(this.gl.TEXTURE0 + index);
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture!);
