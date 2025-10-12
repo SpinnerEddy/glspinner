@@ -55,10 +55,13 @@ class Sample extends GLSpinner.BaseApplication {
             this.gl, 
             GLSpinner.MaterialFactory.grayScaleMaterial(0), 
             [this.canvas.width, this.canvas.height]);
+            
         const mosaicShaderPass = new GLSpinner.MosaicShaderPass(
             this.gl, 
             GLSpinner.MaterialFactory.mosaicMaterial(0), 
             [this.canvas.width, this.canvas.height]);
+        this.rendererContext.updateGlobalUniform("mosaicSize", new GLSpinner.ShaderUniformValue(60.0));
+
         const frameBufferOutputPass = new GLSpinner.FlipShaderPass(
             this.gl, 
             GLSpinner.MaterialFactory.frameBufferTextureMaterial(0), 
@@ -94,38 +97,16 @@ class Sample extends GLSpinner.BaseApplication {
 
         this.audioOutput.setInput(this.shaderAudioInput);
         
-        // GLSpinner.AudioGuiController.initialize(
-        //     () => this.audioOutput.playAudio(),
-        //     () => this.audioOutput.stopAudio()
-        // );
-
-        GLSpinner.GuiUtility.initialize();
-        GLSpinner.GuiUtility.addFolder("Audio");
-        GLSpinner.GuiUtility.addAction(() => {
-            this.audioOutput.playAudio()
-        }, 
-        "AudioPlay");
-        GLSpinner.GuiUtility.addAction(() => {
-            this.audioOutput.stopAudio()
-        }, 
-        "AudioStop");
-        GLSpinner.GuiUtility.resetFolder();
-        GLSpinner.GuiUtility.addFolder("PostEffect");
-        GLSpinner.GuiUtility.addElement(
-            {grayScale: true}, 
-            "grayScale",
-            (value: boolean) => {
-                this.shaderPassEnabledSwitch.set("grayScale", value);
+        GLSpinner.AudioGuiController.initialize(
+            () => this.audioOutput.playAudio(),
+            () => this.audioOutput.stopAudio()
+        );
+        GLSpinner.PostEffectGuiController.initialize(
+            this.shaderPasses,
+            (key: string, enabled: boolean) => {
+                this.shaderPassEnabledSwitch.set(key, enabled);
             }
         );
-        GLSpinner.GuiUtility.addElement(
-            {mosaic: true}, 
-            "mosaic",
-            (value: boolean) => {
-                this.shaderPassEnabledSwitch.set("mosaic", value);
-            }
-        );
-        GLSpinner.GuiUtility.resetFolder();
     }
 
     update(): void {
@@ -136,7 +117,6 @@ class Sample extends GLSpinner.BaseApplication {
 
         this.rendererContext.updateGlobalUniform("time", new GLSpinner.ShaderUniformValue(this.scene.Clock.getElapsedTime()));
         this.rendererContext.updateGlobalUniform("resolution", new GLSpinner.ShaderUniformValue([this.canvas.width, this.canvas.height]));
-        this.rendererContext.updateGlobalUniform("mosaicSize", new GLSpinner.ShaderUniformValue(60.0));
 
         this.shaderPasses.forEach((pass, key) => {
             if(this.shaderPassEnabledSwitch.get(key)){

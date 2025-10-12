@@ -1,6 +1,6 @@
 import { GuiUtility } from "./GuiUtility";
 
-export class AudioGuiController{
+export class AudioGuiController {
     private static onAudioPlay: () => void;
     private static onAudioStop: () => void;
 
