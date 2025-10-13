@@ -32,7 +32,7 @@ export abstract class BaseApplication implements ApplicationOperation{
         this.rendererContext = new RendererContext();
         this.sceneGraph = new SceneGraph();
         this.audioOutput = new AudioOutput();
-        this.rendererFlowPipeline = new SceneRendererPipeline();
+        this.rendererFlowPipeline = new SceneRendererPipeline(this.gl, [this.canvas.width, this.canvas.height]);
     }
 
     public async start(): Promise<void> {

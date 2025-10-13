@@ -9,6 +9,7 @@ export * from './tools/gui/RecordGuiController'
 export * from './tools/gui/LightGuiController'
 export * from './tools/gui/AudioGuiController'
 export * from './tools/gui/PostEffectGuiController'
+export * from './tools/gui/PlaySceneGuiController'
 export * from './tools/Recorder'
 
 // Color
@@ -68,6 +69,7 @@ export * from './webgl/gl/texture/Texture2D'
 export * from './webgl/gl/texture/TextureLoader'
 export * from './webgl/gl/texture/TextureOperation'
 export * from './webgl/gl/texture/TextureFrameBuffer'
+export * from './webgl/gl/texture/TextureConstants'
 
 // FBO
 export * from './webgl/gl/fbo/PingPongRenderTarget'
@@ -153,7 +155,7 @@ export * from './scene/renderer/postEffect/BaseShaderPass'
 export * from './scene/renderer/postEffect/GrayScaleShaderPass'
 export * from './scene/renderer/postEffect/ShaderPassOperation'
 export * from './scene/renderer/postEffect/MosaicShaderPass'
-export * from './scene/renderer/postEffect/FlipShaderPass'
+export * from './scene/renderer/postEffect/FinalBlitShaderPass'
 
 export function initializeLibrary() {
     console.log("ライブラリが初期化されました");

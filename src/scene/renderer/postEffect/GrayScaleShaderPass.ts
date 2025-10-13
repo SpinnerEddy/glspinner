@@ -1,4 +1,5 @@
 import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
+import { TextureSlot } from "../../../webgl/gl/texture/TextureConstants";
 import { GrayScaleMaterial } from "../../material/GrayScaleMaterial";
 import { RendererContext } from "../RendererContext";
 import { BaseShaderPass } from "./BaseShaderPass";
@@ -10,7 +11,7 @@ export class GrayScaleShaderPass extends BaseShaderPass {
     }
 
     render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation {
-        inputRenderTarget!.bind(0)
+        inputRenderTarget!.bind(TextureSlot.CURRENT_FRAME)
         this.draw(gl, context, isBlit);
         inputRenderTarget!.unbind();
 

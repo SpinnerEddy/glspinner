@@ -53,19 +53,20 @@ class Sample extends GLSpinner.BaseApplication {
 
         const graySceleShaderPass = new GLSpinner.GrayScaleShaderPass(
             this.gl, 
-            GLSpinner.MaterialFactory.grayScaleMaterial(0), 
+            GLSpinner.MaterialFactory.grayScaleMaterial(), 
             [this.canvas.width, this.canvas.height]);
             
         const mosaicShaderPass = new GLSpinner.MosaicShaderPass(
             this.gl, 
-            GLSpinner.MaterialFactory.mosaicMaterial(0), 
+            GLSpinner.MaterialFactory.mosaicMaterial(), 
             [this.canvas.width, this.canvas.height]);
         this.rendererContext.updateGlobalUniform("mosaicSize", new GLSpinner.ShaderUniformValue(60.0));
 
-        const frameBufferOutputPass = new GLSpinner.FlipShaderPass(
+        const frameBufferOutputPass = new GLSpinner.FinalBlitShaderPass(
             this.gl, 
-            GLSpinner.MaterialFactory.frameBufferTextureMaterial(0), 
-            [this.canvas.width, this.canvas.height]);
+            GLSpinner.MaterialFactory.frameBufferTextureMaterial(), 
+            [this.canvas.width, this.canvas.height], 
+            true);
 
         this.shaderPasses = new Map<string, GLSpinner.ShaderPassOperation>();        
         this.shaderPasses.set("grayScale", graySceleShaderPass);
@@ -106,6 +107,10 @@ class Sample extends GLSpinner.BaseApplication {
             (key: string, enabled: boolean) => {
                 this.shaderPassEnabledSwitch.set(key, enabled);
             }
+        );
+        GLSpinner.PlaySceneGuiController.initialize(
+            () => this.scene.start(),
+            () => this.scene.stop()
         );
     }
 
