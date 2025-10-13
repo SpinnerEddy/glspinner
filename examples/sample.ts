@@ -34,7 +34,7 @@ class Sample extends GLSpinner.BaseApplication {
         // 元々の描画内容
         this.baseSceneRoot = new GLSpinner.EmptyNode();
         const fboPlane = new GLSpinner.Plane(this.gl, 2, 2);
-        const fboMaterial = GLSpinner.MaterialFactory.fragmentCanvasMaterial("basic");
+        const fboMaterial = GLSpinner.MaterialFactory.fragmentCanvasMaterial("spinner");
         const fboPlaneAttributes = {
             aPosition: fboMaterial.getAttribute(this.gl, 'aPosition'),
         };
@@ -62,20 +62,28 @@ class Sample extends GLSpinner.BaseApplication {
             [this.canvas.width, this.canvas.height]);
         this.rendererContext.updateGlobalUniform("mosaicSize", new GLSpinner.ShaderUniformValue(60.0));
 
+        const rgbShiftShaderPass = new GLSpinner.MosaicShaderPass(
+            this.gl, 
+            GLSpinner.MaterialFactory.rgbShiftMaterial(), 
+            [this.canvas.width, this.canvas.height]);
+
         const frameBufferOutputPass = new GLSpinner.FinalBlitShaderPass(
             this.gl, 
             GLSpinner.MaterialFactory.frameBufferTextureMaterial(), 
             [this.canvas.width, this.canvas.height], 
             true);
+        this.rendererContext.updateGlobalUniform("shiftOffset", new GLSpinner.ShaderUniformValue(0.01));
 
         this.shaderPasses = new Map<string, GLSpinner.ShaderPassOperation>();        
         this.shaderPasses.set("grayScale", graySceleShaderPass);
         this.shaderPasses.set("mosaic", mosaicShaderPass);
+        this.shaderPasses.set("rgbShift", rgbShiftShaderPass);
         this.shaderPasses.set("frameBufferOutput", frameBufferOutputPass);
 
         this.shaderPassEnabledSwitch = new Map<string, boolean>();
-        this.shaderPassEnabledSwitch.set("grayScale", true);
-        this.shaderPassEnabledSwitch.set("mosaic", true);
+        this.shaderPassEnabledSwitch.set("grayScale", false);
+        this.shaderPassEnabledSwitch.set("mosaic", false);
+        this.shaderPassEnabledSwitch.set("rgbShift", true);
         this.shaderPassEnabledSwitch.set("frameBufferOutput", true);
 
         const postEffectRendererFlow = new GLSpinner.PostEffectRendererFlow(

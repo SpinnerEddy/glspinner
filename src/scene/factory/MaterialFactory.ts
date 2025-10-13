@@ -9,6 +9,7 @@ import { GouraudMaterial } from "../material/GouraudMaterial";
 import { GrayScaleMaterial } from "../material/GrayScaleMaterial";
 import { MosaicMaterial } from "../material/MosaicMaterial";
 import { PhongMaterial } from "../material/PhongMaterial";
+import { RGBShiftMaterial } from "../material/RGBShiftMaterial";
 import { TexturedMaterial } from "../material/TexturedMaterial";
 import { UnlitMaterial } from "../material/UnlitMaterial";
 
@@ -65,6 +66,15 @@ export class MaterialFactory {
 
         const shader = this.shaderLoader.getShaderProgram("mosaic");
         return new MosaicMaterial(shader);
+    }
+
+    static rgbShiftMaterial(): MosaicMaterial {
+        if (!this.shaderLoader) {
+            throw new Error('MaterialFac†ory not initialized. Call init!!');
+        }
+
+        const shader = this.shaderLoader.getShaderProgram("rgbShift");
+        return new RGBShiftMaterial(shader);
     }
 
     static unlitMaterial(): UnlitMaterial {
