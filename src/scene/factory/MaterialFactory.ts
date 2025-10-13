@@ -40,31 +40,31 @@ export class MaterialFactory {
         return new TexturedMaterial(shader, texture, texIndex);
     }
 
-    static frameBufferTextureMaterial(texIndex: number): FrameBufferTexturedMaterial {
+    static frameBufferTextureMaterial(): FrameBufferTexturedMaterial {
         if (!this.shaderLoader) {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
         const shader = this.shaderLoader.getShaderProgram("framebuffer");
-        return new FrameBufferTexturedMaterial(shader, texIndex);
+        return new FrameBufferTexturedMaterial(shader);
     }
 
-    static grayScaleMaterial(texIndex: number): GrayScaleMaterial {
+    static grayScaleMaterial(): GrayScaleMaterial {
         if (!this.shaderLoader) {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
         const shader = this.shaderLoader.getShaderProgram("grayScale");
-        return new GrayScaleMaterial(shader, texIndex);
+        return new GrayScaleMaterial(shader);
     }
 
-    static mosaicMaterial(texIndex: number): MosaicMaterial {
+    static mosaicMaterial(): MosaicMaterial {
         if (!this.shaderLoader) {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
         const shader = this.shaderLoader.getShaderProgram("mosaic");
-        return new MosaicMaterial(shader, texIndex);
+        return new MosaicMaterial(shader);
     }
 
     static unlitMaterial(): UnlitMaterial {
