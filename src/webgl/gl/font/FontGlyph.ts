@@ -31,4 +31,24 @@ export class FontGlyph {
         this.offset = [data.xoffset, data.yoffset];
         this.xAdvance = data.xadvance;
     }
+
+    getChar(): string {
+        return this.char;
+    }
+
+    getUv(): Float32Array {
+        return this.uv;
+    }
+
+    getResolution(): [number, number] {
+        return this.resolution;
+    }
+
+    getOffset(): [number, number] {
+        return this.offset;
+    }
+
+    getXAdvance(): number {
+        return this.xAdvance;
+    }
 }
