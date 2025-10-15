@@ -28,6 +28,8 @@ class Sample extends GLSpinner.BaseApplication {
             "font/OpenSans.json"
         );
 
+        this.textFontLoader.setCurrentUseFontName("OpenSans");
+
         this.shaderAudioInput = new GLSpinner.ShaderAudioInput(this.gl, this.shaderLoader, 100.0);
         await this.shaderAudioInput.load("testAudio", this.audioOutput.getAudioContext());
     }
@@ -46,6 +48,11 @@ class Sample extends GLSpinner.BaseApplication {
         const fboPlaneMesh = new GLSpinner.UnlitMesh(fboPlane, fboMaterial);
         const fboPlaneMeshNode = new GLSpinner.MeshNode(fboPlaneMesh);
         GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, fboPlaneMeshNode);
+
+        const text = "SpinnerEddy";
+        const glyphs = this.textFontLoader.getGlyphsFromText(text);
+        console.log(glyphs);
+        
 
         const standardRendererFlow = new GLSpinner.StandardSceneRendererFlow(
             this.baseSceneRoot,

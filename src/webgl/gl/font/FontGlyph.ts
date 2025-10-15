@@ -15,18 +15,19 @@ export interface FontGlyphData {
 
 export class FontGlyph {
     private char: string;
-    private uv: Float32Array;
+    private uv: {u0: number, v0: number, u1: number, v1: number};
     private resolution: [number, number];
     private offset: [number, number];
     private xAdvance: number;
 
     constructor(data: FontGlyphData, textureWidth: number, textureHeight: number) {
         this.char = data.char;
-        this.uv = new Float32Array([
-            data.x / textureWidth, 
-            data.y / textureHeight,
-            (data.x + data.width) / textureWidth, 
-            (data.y + data.height) / textureHeight]);
+        this.uv = {
+            u0: data.x / textureWidth, 
+            v0: data.y / textureHeight,
+            u1: (data.x + data.width) / textureWidth,
+            v1: (data.y + data.height) / textureHeight
+        };
         this.resolution = [data.width, data.height];
         this.offset = [data.xoffset, data.yoffset];
         this.xAdvance = data.xadvance;
@@ -36,7 +37,7 @@ export class FontGlyph {
         return this.char;
     }
 
-    getUv(): Float32Array {
+    getUv(): {u0: number, v0: number, u1: number, v1: number} {
         return this.uv;
     }
 
