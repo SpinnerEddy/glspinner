@@ -19,6 +19,14 @@ export class Texture2D implements TextureOperation {
         this.gl.bindTexture(this.gl.TEXTURE_2D, null);
     }
 
+    getTextureSize(): {width: number, height: number} {
+        if(this.image){
+            return {width: this.image.width, height: this.image.height};
+        }
+
+        return {width: 0, height: 0};
+    }
+
     private setUpTexture(source: string): void {
         this.texture = this.gl.createTexture();
         this.image = new Image();

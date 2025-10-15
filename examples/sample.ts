@@ -23,6 +23,10 @@ class Sample extends GLSpinner.BaseApplication {
         await this.textureLoader.loadTextureFromPath(
             "texture/testImage.png"
         );
+        await this.textFontLoader.loadTextFontFromPath(
+            "font/OpenSans.png",
+            "font/OpenSans.json"
+        );
 
         this.shaderAudioInput = new GLSpinner.ShaderAudioInput(this.gl, this.shaderLoader, 100.0);
         await this.shaderAudioInput.load("testAudio", this.audioOutput.getAudioContext());
@@ -145,6 +149,8 @@ class Sample extends GLSpinner.BaseApplication {
         this.webglUtility.setViewport(this.canvas);
         this.webglUtility.clearColor(GLSpinner.ColorUtility.hexToColor01(this.backgroundColorStr));
         this.rendererFlowPipeline.render(this.gl, this.rendererContext);
+
+        this.scene.stop();
     }
 }
 

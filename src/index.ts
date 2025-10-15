@@ -71,6 +71,10 @@ export * from './webgl/gl/texture/TextureOperation'
 export * from './webgl/gl/texture/TextureFrameBuffer'
 export * from './webgl/gl/texture/TextureConstants'
 
+// Font
+export * from './webgl/gl/font/FontGlyph'
+export * from './webgl/gl/font/TextFontLoader'
+
 // FBO
 export * from './webgl/gl/fbo/PingPongRenderTarget'
 export * from './webgl/gl/fbo/RenderTarget'

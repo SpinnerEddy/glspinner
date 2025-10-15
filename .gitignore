@@ -1,3 +1,5 @@
 node_modules/
 examples/shader/testAudio.frag
 examples/shader/testAudio.vert
+examples/font/OpenSans.json
+examples/font/OpenSans.png

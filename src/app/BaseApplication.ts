@@ -5,6 +5,7 @@ import { MaterialFactory } from "../scene/factory/MaterialFactory";
 import { SceneRendererPipeline } from "../scene/renderer/pipeline/SceneRendererPipeline";
 import { SceneRendererPipelineOperation } from "../scene/renderer/pipeline/SceneRendererPipelineOperation";
 import { RendererContext } from "../scene/renderer/RendererContext";
+import { TextFontLoader } from "../webgl/gl/font/TextFontLoader";
 import { ShaderLoader } from "../webgl/gl/ShaderLoader";
 import { TextureLoader } from "../webgl/gl/texture/TextureLoader";
 import { WebGLUtility } from "../webgl/gl/WebGLUtility";
@@ -16,6 +17,7 @@ export abstract class BaseApplication implements ApplicationOperation{
     protected gl: WebGL2RenderingContext;
     protected shaderLoader: ShaderLoader;
     protected textureLoader: TextureLoader;
+    protected textFontLoader: TextFontLoader;
     protected scene: Scene;
     protected sceneGraph: SceneGraph;
     protected rendererContext: RendererContext; 
@@ -28,11 +30,12 @@ export abstract class BaseApplication implements ApplicationOperation{
         this.gl = this.webglUtility.getWebGL2RenderingContext();
         this.shaderLoader = new ShaderLoader(this.gl);
         this.textureLoader = new TextureLoader(this.gl);
+        this.textFontLoader = new TextFontLoader(this.gl);
         this.scene = scene;
         this.rendererContext = new RendererContext();
         this.sceneGraph = new SceneGraph();
         this.audioOutput = new AudioOutput();
-        this.rendererFlowPipeline = new SceneRendererPipeline(this.gl, [this.canvas.width, this.canvas.height]);
+        this.rendererFlowPipeline = new SceneRendererPipeline();
     }
 
     public async start(): Promise<void> {
