@@ -10,9 +10,19 @@ export class TextFontLoader{
     private gl: WebGL2RenderingContext;
     private sdfFontTextureCache: Map<string, Texture2D> = new Map();
     private sdfFontGlyphCache: Map<string, Map<string, FontGlyph>> = new Map();
+    private currentUseFontName: string;
 
     constructor(gl: WebGL2RenderingContext){
         this.gl = gl;
+        this.currentUseFontName = "";
+    }
+
+    public setCurrentUseFontName(fontName: string): void {
+        if(!this.sdfFontGlyphCache.has(fontName)){
+            throw new Error(`Font with name ${fontName} not found`);
+        }
+
+        this.currentUseFontName = fontName;
     }
 
     public async loadTextFontFromPath(sdfFontTexturePath: string, sdfFontTextureReferenceJson: string): Promise<void> {
