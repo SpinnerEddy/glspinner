@@ -77,6 +77,12 @@ class Sample extends GLSpinner.BaseApplication {
             this.gl, 
             GLSpinner.MaterialFactory.rgbShiftMaterial(), 
             [this.canvas.width, this.canvas.height]);
+        
+        const glitchShaderPass = new GLSpinner.GlitchShaderPass(
+            this.gl, 
+            GLSpinner.MaterialFactory.glitchMaterial(), 
+            [this.canvas.width, this.canvas.height]);
+        this.rendererContext.updateGlobalUniform("glitchCoef", new GLSpinner.ShaderUniformValue(0.3));
 
         const frameBufferOutputPass = new GLSpinner.FinalBlitShaderPass(
             this.gl, 
@@ -89,12 +95,14 @@ class Sample extends GLSpinner.BaseApplication {
         this.shaderPasses.set("grayScale", graySceleShaderPass);
         this.shaderPasses.set("mosaic", mosaicShaderPass);
         this.shaderPasses.set("rgbShift", rgbShiftShaderPass);
+        this.shaderPasses.set("glitch", glitchShaderPass);
         this.shaderPasses.set("frameBufferOutput", frameBufferOutputPass);
 
         this.shaderPassEnabledSwitch = new Map<string, boolean>();
         this.shaderPassEnabledSwitch.set("grayScale", false);
         this.shaderPassEnabledSwitch.set("mosaic", false);
-        this.shaderPassEnabledSwitch.set("rgbShift", true);
+        this.shaderPassEnabledSwitch.set("rgbShift", false);
+        this.shaderPassEnabledSwitch.set("glitch", false);
         this.shaderPassEnabledSwitch.set("frameBufferOutput", true);
 
         const postEffectRendererFlow = new GLSpinner.PostEffectRendererFlow(
@@ -123,6 +131,7 @@ class Sample extends GLSpinner.BaseApplication {
         );
         GLSpinner.PostEffectGuiController.initialize(
             this.shaderPasses,
+            this.shaderPassEnabledSwitch,
             (key: string, enabled: boolean) => {
                 this.shaderPassEnabledSwitch.set(key, enabled);
             }

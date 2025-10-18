@@ -3,3 +3,7 @@ examples/shader/testAudio.frag
 examples/shader/testAudio.vert
 examples/font/OpenSans.json
 examples/font/OpenSans.png
+examples/font/GideonRoman.json
+examples/font/GideonRoman.png
+examples/font/Roboto.json
+examples/font/Roboto.png

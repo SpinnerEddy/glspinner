@@ -6,6 +6,7 @@ import { ShaderLoader } from "../../webgl/gl/ShaderLoader";
 import { TextureLoader } from "../../webgl/gl/texture/TextureLoader";
 import { FragmentCanvasMaterial } from "../material/FragmentCanvasMaterial";
 import { FrameBufferTexturedMaterial } from "../material/FrameBufferTexturedMaterial";
+import { GlitchMaterial } from "../material/GlitchMaterial";
 import { GouraudMaterial } from "../material/GouraudMaterial";
 import { GrayScaleMaterial } from "../material/GrayScaleMaterial";
 import { MosaicMaterial } from "../material/MosaicMaterial";
@@ -90,6 +91,16 @@ export class MaterialFactory {
 
         const shader = this.shaderLoader.getShaderProgram("rgbShift");
         return new RGBShiftMaterial(shader);
+    }
+
+    static glitchMaterial(): GlitchMaterial {
+        if (!this.shaderLoader) {
+            throw new Error('MaterialFac†ory not initialized. Call init!!');
+        }
+
+
+        const shader = this.shaderLoader.getShaderProgram("glitch");
+        return new GlitchMaterial(shader);
     }
 
     static unlitMaterial(): UnlitMaterial {

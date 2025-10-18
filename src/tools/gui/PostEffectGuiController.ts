@@ -2,7 +2,7 @@ import { ShaderPassOperation } from "../../scene/renderer/postEffect/ShaderPassO
 import { GuiUtility } from "./GuiUtility";
 
 export class PostEffectGuiController {
-    static initialize(shaderPasses: Map<string, ShaderPassOperation>, onSwitch: (key: string, enabled: boolean) => void): void {
+    static initialize(shaderPasses: Map<string, ShaderPassOperation>, shaderPassEnabledSwitch: Map<string, boolean>, onSwitch: (key: string, enabled: boolean) => void): void {
         GuiUtility.initialize();
 
         GuiUtility.addFolder("PostEffect");
@@ -13,7 +13,7 @@ export class PostEffectGuiController {
             if(index == shaderPasses.size) break;
             
             const keyString = key.toString();
-            const params = { [keyString]: true } as Record<string, boolean>;
+            const params = { [keyString]: shaderPassEnabledSwitch.get(keyString) } as Record<string, boolean>;
             GuiUtility.addElement(
                 params, 
                 keyString,
