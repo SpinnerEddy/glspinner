@@ -118,6 +118,7 @@ export * from './scene/mesh/FullScreenQuadMesh'
 export * from './scene/mesh/MeshOperation'
 export * from './scene/mesh/SimpleMesh'
 export * from './scene/mesh/UnlitMesh'
+export * from './scene/mesh/TextMesh'
 
 // Scene/Transform
 export * from './scene/transform/Transform'
@@ -142,6 +143,7 @@ export * from './scene/core/node/SceneNode'
 export * from './scene/core/node/LightNode'
 export * from './scene/core/node/PointLightNode'
 export * from './scene/core/node/DirectionalLightNode'
+export * from './scene/core/node/TextMeshNode'
 
 // Scene/Renderer
 export * from './scene/renderer/RendererContext'

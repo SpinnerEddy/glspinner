@@ -7,6 +7,7 @@ class Sample extends GLSpinner.BaseApplication {
     private baseSceneRoot!: GLSpinner.EmptyNode;
     private shaderPasses!: Map<string, GLSpinner.ShaderPassOperation>;
     private shaderPassEnabledSwitch!: Map<string, boolean>;
+    private textRoot!: GLSpinner.EmptyNode;
 
     async preload(): Promise<void> {
         await super.preload();
@@ -23,10 +24,10 @@ class Sample extends GLSpinner.BaseApplication {
         await this.textureLoader.loadTextureFromPath(
             "texture/testImage.png"
         );
-        await this.textFontLoader.loadTextFontFromPath(
-            "font/OpenSans.png",
-            "font/OpenSans.json"
-        );
+        // await this.textFontLoader.loadTextFontFromPath(
+        //     "font/OpenSans.png",
+        //     "font/OpenSans.json"
+        // );
         await this.textFontLoader.loadTextFontFromPath(
             "font/GideonRoman.png",
             "font/GideonRoman.json"
@@ -57,22 +58,22 @@ class Sample extends GLSpinner.BaseApplication {
         const fboPlaneMeshNode = new GLSpinner.MeshNode(fboPlaneMesh);
         GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, fboPlaneMeshNode);
 
-        const text = "S";
+        const text = "SPINNEREDDY";
+        this.textRoot = new GLSpinner.EmptyNode();
         const glyphs = this.textFontLoader.getGlyphsFromText(text);
-        console.log(glyphs);
-
-        // const textPlane = new GLSpinner.Plane(this.gl, 2, 2);
-        // const textMaterial = GLSpinner.MaterialFactory.texturedTextMaterial(
-        //     0.1,
-        //     GLSpinner.MyColorCode.COLOR_CHINA);
-        // const textPlaneAttributes = {
-        //     aPosition: textMaterial.getAttribute(this.gl, 'aPosition'),
-        //     aUv: textMaterial.getAttribute(this.gl, 'aUv'),
-        // }
-        // textPlane.setUpBuffers(this.gl, textPlaneAttributes);
-        // const textPlaneMesh = new GLSpinner.UnlitMesh(textPlane, textMaterial);
-        // const textPlaneMeshNode = new GLSpinner.MeshNode(textPlaneMesh);
-        // GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, textPlaneMeshNode);
+        const textPlane = new GLSpinner.TextQuad(this.gl, glyphs, this.textFontLoader.getTextureForCurrentFont()!);
+        const textMaterial = GLSpinner.MaterialFactory.texturedTextMaterial(
+            0.1,
+            GLSpinner.MyColorCode.COLOR_HARUKI);
+        const textPlaneAttributes = {
+            aPosition: textMaterial.getAttribute(this.gl, 'aPosition'),
+            aUv: textMaterial.getAttribute(this.gl, 'aUv'),
+        }
+        textPlane.setUpBuffers(this.gl, textPlaneAttributes);
+        const textPlaneMesh = new GLSpinner.TextMesh(textPlane, textMaterial);
+        const textPlaneMeshNode = new GLSpinner.TextMeshNode(textPlaneMesh);
+        GLSpinner.SceneGraphUtility.addChild(this.textRoot, textPlaneMeshNode);
+        GLSpinner.SceneGraphUtility.addChild(fboPlaneMeshNode, this.textRoot);
 
         const standardRendererFlow = new GLSpinner.StandardSceneRendererFlow(
             this.baseSceneRoot,
@@ -80,6 +81,9 @@ class Sample extends GLSpinner.BaseApplication {
               gl: this.gl,
               resolution: [this.canvas.width, this.canvas.height]
             });
+        // const standardRendererFlow = new GLSpinner.StandardSceneRendererFlow(
+        //     this.baseSceneRoot,
+        //     { useFbo: false});
         this.rendererFlowPipeline.addFlow(standardRendererFlow);
 
         const graySceleShaderPass = new GLSpinner.GrayScaleShaderPass(
@@ -137,13 +141,6 @@ class Sample extends GLSpinner.BaseApplication {
         this.camera = new GLSpinner.Camera(GLSpinner.CameraType.Orthography);
         this.rendererContext.setCamera(this.camera);
 
-        // this.gl.enable(this.gl.DEPTH_TEST);
-    	// this.gl.depthFunc(this.gl.LEQUAL);
-        // this.gl.disable(this.gl.CULL_FACE);
-        this.gl.enable(this.gl.BLEND);
-        this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
-        this.gl.disable(this.gl.DEPTH_TEST);
-
         console.log(this.sceneGraph.getGraph());
 
         this.audioOutput.setInput(this.shaderAudioInput);
@@ -166,10 +163,10 @@ class Sample extends GLSpinner.BaseApplication {
     }
 
     update(): void {
-        // GLSpinner.SceneGraphUtility.traverse(this.baseSceneRoot, (node) => {
-        //     node.getTransform().setRotation(GLSpinner.QuaternionCalculator.createFromAxisAndRadians(GLSpinner.DefaultVectorConstants.AXIS2DY, this.scene.Clock.getElapsedTime()));
-        //     node.update();
-        // });
+        GLSpinner.SceneGraphUtility.traverse(this.textRoot, (node) => {
+            node.getTransform().setPosition(new GLSpinner.Vector3(-0.45, 0.3, 0.0));
+            node.update();
+        });
 
         this.rendererContext.updateGlobalUniform("time", new GLSpinner.ShaderUniformValue(this.scene.Clock.getElapsedTime()));
         this.rendererContext.updateGlobalUniform("resolution", new GLSpinner.ShaderUniformValue([this.canvas.width, this.canvas.height]));

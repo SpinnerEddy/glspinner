@@ -9,6 +9,9 @@ import { BaseGeometry } from "./BaseGeometry";
 export class TextQuad extends BaseGeometry {
     protected uv: Float32Array;
 
+    private width: number = 0;
+    private height: number = 0;
+
     constructor(gl: WebGL2RenderingContext, text: Array<FontGlyph>, textTexture: Texture2D) {
         super(gl);
 
@@ -20,17 +23,26 @@ export class TextQuad extends BaseGeometry {
         let indices = [];
         let colors = [];
 
-        const scale = 1.0 / textTexture.getTextureSize().width;
+        const scaleW = 1.0 / textTexture.getTextureSize().width;
+        const scaleH = 1.0 / textTexture.getTextureSize().height; 
+
+        let maxY = 0;
+        let minY = 0;
 
         for (const glyph of text) {
 
             const offset = glyph.getOffset();
             const resolution = glyph.getResolution();
 
-            const x0 = (offset[0] + cursorX) * scale;
-            const y0 = (offset[1]) * scale;
-            const x1 = (x0 + resolution[0]) * scale;
-            const y1 = (y0 + resolution[1]) * scale;
+            const x0Px = (offset[0] + cursorX);
+            const y0Px = (offset[1]);
+            const x1Px = x0Px + resolution[0];
+            const y1Px = y0Px + resolution[1];
+
+            const x0 = x0Px * scaleW;
+            const y0 = y0Px * scaleH;
+            const x1 = x1Px * scaleW;
+            const y1 = y1Px * scaleH;
 
             vertices.push(
                 x0, y0, 0.0,
@@ -40,12 +52,13 @@ export class TextQuad extends BaseGeometry {
             );
 
             const uv = glyph.getUv();
+            console.log(uv);
 
             uvs.push(
-                uv.u0, uv.v0,
-                uv.u1, uv.v0,
                 uv.u0, uv.v1,
-                uv.u1, uv.v1
+                uv.u1, uv.v1,
+                uv.u0, uv.v0,
+                uv.u1, uv.v0
             );
 
             indices.push(
@@ -69,12 +82,19 @@ export class TextQuad extends BaseGeometry {
 
             indexOffset += 4;
             cursorX += glyph.getXAdvance();
+
+            maxY = Math.max(maxY, y1Px);
+            minY = Math.min(minY, y0Px);
         }
 
         this.vertices = new Float32Array(vertices);
         this.color = new Float32Array(colors);
         this.indices = new Int16Array(indices);
+        this.normal = new Float32Array(normals);
         this.uv = new Float32Array(uvs);
+
+        this.width = cursorX * scaleW;
+        this.height = (maxY - minY) * scaleH;
     }
 
     setUpBuffers(gl: WebGL2RenderingContext, attributes: Record<string, ShaderAttribute>): void {
@@ -86,25 +106,31 @@ export class TextQuad extends BaseGeometry {
         gb.setData();
         ib.setData();
 
-        const stride = (AttributeElementSize.aPosition + AttributeElementSize.aUv + AttributeElementSize.aColor) * Float32Array.BYTES_PER_ELEMENT;
+        const stride = (AttributeElementSize.aPosition + AttributeElementSize.aColor + AttributeElementSize.aNormal + AttributeElementSize.aUv) * Float32Array.BYTES_PER_ELEMENT;
         attributes["aPosition"].setAttributeBuffer(
             gl,
             AttributeElementSize.aPosition, 
             gl.FLOAT, 
             stride, 
             0);
-        attributes["aUv"].setAttributeBuffer(
-            gl,
-            AttributeElementSize.aUv,
-            gl.FLOAT, 
-            stride, 
-            AttributeElementSize.aPosition * Float32Array.BYTES_PER_ELEMENT);
         attributes["aColor"]?.setAttributeBuffer(
             gl,
             AttributeElementSize.aColor,
             gl.FLOAT, 
             stride, 
-            (AttributeElementSize.aPosition + AttributeElementSize.aUv) * Float32Array.BYTES_PER_ELEMENT);
+            AttributeElementSize.aPosition * Float32Array.BYTES_PER_ELEMENT);
+        attributes["aNormal"]?.setAttributeBuffer(
+            gl,
+            AttributeElementSize.aNormal,
+            gl.FLOAT, 
+            stride, 
+            (AttributeElementSize.aPosition + AttributeElementSize.aColor) * Float32Array.BYTES_PER_ELEMENT);
+        attributes["aUv"]?.setAttributeBuffer(
+            gl,
+            AttributeElementSize.aUv,
+            gl.FLOAT, 
+            stride, 
+            (AttributeElementSize.aPosition + AttributeElementSize.aColor + AttributeElementSize.aNormal) * Float32Array.BYTES_PER_ELEMENT);
 
         this.vao.addBuffer("geometry", gb);
         this.vao.addBuffer("index", ib);
@@ -113,5 +139,9 @@ export class TextQuad extends BaseGeometry {
         ib.unbind();
 
         this.vao.unbindVao();
+    }
+
+    get resolution(): [number, number] {
+        return [this.width, this.height];
     }
 }

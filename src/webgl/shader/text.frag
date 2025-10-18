@@ -19,6 +19,6 @@ void main(void){
     float textSdf = median(texColor.r, texColor.g, texColor.b);
 
     float width = fwidth(textSdf);
-    float alpha = smoothstep(0.5 - width, 0.5 + width, textSdf);
+    float alpha = smoothstep(0.5 - width - smoothness, 0.5 + width + smoothness, textSdf);
     outputColor = mix(vec4(0.0), fontColor, alpha);
 }
