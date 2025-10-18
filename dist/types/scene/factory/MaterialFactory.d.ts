@@ -1,0 +1,32 @@
+import { Color } from "../../color/Color";
+import { Vector3 } from "../../math/vector/Vector3";
+import { TextFontLoader } from "../../webgl/gl/font/TextFontLoader";
+import { ShaderLoader } from "../../webgl/gl/ShaderLoader";
+import { TextureLoader } from "../../webgl/gl/texture/TextureLoader";
+import { FragmentCanvasMaterial } from "../material/FragmentCanvasMaterial";
+import { FrameBufferTexturedMaterial } from "../material/FrameBufferTexturedMaterial";
+import { GlitchMaterial } from "../material/GlitchMaterial";
+import { GouraudMaterial } from "../material/GouraudMaterial";
+import { GrayScaleMaterial } from "../material/GrayScaleMaterial";
+import { MosaicMaterial } from "../material/MosaicMaterial";
+import { PhongMaterial } from "../material/PhongMaterial";
+import { TexturedMaterial } from "../material/TexturedMaterial";
+import { TexturedTextMaterial } from "../material/TexturedTextMaterial";
+import { UnlitMaterial } from "../material/UnlitMaterial";
+export declare class MaterialFactory {
+    private static shaderLoader;
+    private static textureLoader;
+    private static textFontLoader;
+    static init(shaderLoader: ShaderLoader, textureLoader: TextureLoader, textFontLoader: TextFontLoader): void;
+    static fragmentCanvasMaterial(programKey: string): FragmentCanvasMaterial;
+    static texturedMaterial(textureKey: string, texIndex: number): TexturedMaterial;
+    static texturedTextMaterial(smoothness: number, fontColorHex: string): TexturedTextMaterial;
+    static frameBufferTextureMaterial(): FrameBufferTexturedMaterial;
+    static grayScaleMaterial(): GrayScaleMaterial;
+    static mosaicMaterial(): MosaicMaterial;
+    static rgbShiftMaterial(): MosaicMaterial;
+    static glitchMaterial(): GlitchMaterial;
+    static unlitMaterial(): UnlitMaterial;
+    static phongMaterial(): PhongMaterial;
+    static gouraudMaterial(lightDirection?: Vector3, eyeDirection?: Vector3, ambientColor?: Color): GouraudMaterial;
+}

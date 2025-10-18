@@ -1,0 +1,31 @@
+import { Matrix } from "./matrix/Matrix";
+import { Matrix22 } from "./matrix/Matrix22";
+import { Matrix33 } from "./matrix/Matrix33";
+import { Matrix44 } from "./matrix/Matrix44";
+import { Quaternion } from "./quaternion/Quaternion";
+import { Vector2 } from "./vector/Vector2";
+import { Vector3 } from "./vector/Vector3";
+export declare class MatrixCalculator {
+    static identity22(): Matrix22;
+    static identity33(): Matrix33;
+    static identity44(): Matrix44;
+    static add<T extends Matrix<T>>(a: T, b: T): T;
+    static sub<T extends Matrix<T>>(a: T, b: T): T;
+    static multiply<T extends Matrix<T>>(a: T, b: T): T;
+    static multiply<T extends Matrix<T>>(a: T, b: number): T;
+    static div<T extends Matrix<T>>(a: T, b: number): T;
+    static translate2D(target: Matrix44, offset: Vector2): Matrix44;
+    static translate3D(target: Matrix44, offset: Vector3): Matrix44;
+    static rotate2D(target: Matrix44, angle: number): Matrix44;
+    static rotate3D(target: Matrix44, angle: number, axis: Vector3): Matrix44;
+    static rotateByQuaternion(target: Matrix44, rotation: Quaternion): Matrix44;
+    static scale2D(target: Matrix44, scaleX: number, scaleY: number): Matrix44;
+    static scale3D(target: Matrix44, scaleX: number, scaleY: number, scaleZ: number): Matrix44;
+    static transpose<T extends Matrix<T>>(baseMatrix: T): T;
+    static inverse<T extends Matrix<T>>(baseMatrix: T): T;
+    static orthographic(left: number, right: number, top: number, bottom: number, near: number, far: number): Matrix44;
+    static perspective(fovDegrees: number, width: number, height: number, near: number, far: number): Matrix44;
+    static lookAt(eyePos: Vector3, targetPos: Vector3, up: Vector3): Matrix44;
+    private static checkSizeEqual;
+    private static createMatrixInstance;
+}

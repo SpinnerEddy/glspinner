@@ -1,0 +1,30 @@
+import { Matrix44 } from "../../math/matrix/Matrix44";
+import { Quaternion } from "../../math/quaternion/Quaternion";
+import { Vector3 } from "../../math/vector/Vector3";
+import { CameraDirection, CameraOptions } from "./CameraConstants";
+export declare class Camera {
+    private cameraType;
+    private viewMatrix;
+    private projectionMatrix;
+    private position;
+    private rotation;
+    private near;
+    private far;
+    private fov;
+    private viewportWidth;
+    private viewportHeight;
+    private up;
+    private forward;
+    constructor(cameraType?: number, options?: CameraOptions, direction?: CameraDirection);
+    setPosition(position: Vector3): void;
+    setRotation(rotation: Quaternion): void;
+    setViewport(width: number, height: number): void;
+    setCameraType(type: number): void;
+    getViewMatrix(): Matrix44;
+    getProjectionMatrix(): Matrix44;
+    calculateEyeDirection(): Vector3;
+    private calculateViewMatrix;
+    private calculateProjectionMatrix;
+    private calculatePerspectiveMatrix;
+    private calculateOrthographicMatrix;
+}

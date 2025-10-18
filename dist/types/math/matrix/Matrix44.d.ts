@@ -1,0 +1,33 @@
+import { Quaternion } from "../quaternion/Quaternion";
+import { Vector2 } from "../vector/Vector2";
+import { Vector3 } from "../vector/Vector3";
+import { Matrix } from "./Matrix";
+export declare class Matrix44 extends Matrix<Matrix44> {
+    constructor(data?: Float32Array);
+    identity(): Matrix44;
+    add(other: Matrix44, out?: Matrix44): Matrix44;
+    sub(other: Matrix44, out?: Matrix44): Matrix44;
+    multiply(other: Matrix44, out?: Matrix44): Matrix44;
+    multiply(other: number, out?: Matrix44): Matrix44;
+    div(other: number, out?: Matrix44): Matrix44;
+    transpose(): Matrix44;
+    inverse(): Matrix44;
+    clone(): Matrix44;
+    fillNumber(value: number): void;
+    orthographic(left: number, right: number, top: number, bottom: number, near: number, far: number, out?: Matrix44): Matrix44;
+    perspective(fovDegrees: number, width: number, height: number, near: number, far: number, out?: Matrix44): Matrix44;
+    lookAt(eyePos: Vector3, targetPos: Vector3, up: Vector3, out?: Matrix44): Matrix44;
+    translate2D(offset: Vector2, out?: Matrix44): Matrix44;
+    translate3D(offset: Vector3, out?: Matrix44): Matrix44;
+    rotateX(angle: number, out?: Matrix44): Matrix44;
+    rotateY(angle: number, out?: Matrix44): Matrix44;
+    rotateZ(angle: number, out?: Matrix44): Matrix44;
+    rotate2D(angle: number, out?: Matrix44): Matrix44;
+    rotate3D(angle: number, axis: Vector3, out?: Matrix44): Matrix44;
+    rotateByQuaternion(rotation: Quaternion, out?: Matrix44): Matrix44;
+    scale2D(scaleX: number, scaleY: number, out?: Matrix44): Matrix44;
+    scale3D(scaleX: number, scaleY: number, scaleZ: number, out?: Matrix44): Matrix44;
+    private createRotateMatrix3D;
+    private createScaleMatrix2D;
+    private createScaleMatrix3D;
+}
