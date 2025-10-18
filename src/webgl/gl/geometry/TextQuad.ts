@@ -52,7 +52,6 @@ export class TextQuad extends BaseGeometry {
             );
 
             const uv = glyph.getUv();
-            console.log(uv);
 
             uvs.push(
                 uv.u0, uv.v1,
