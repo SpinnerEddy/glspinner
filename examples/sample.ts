@@ -27,8 +27,16 @@ class Sample extends GLSpinner.BaseApplication {
             "font/OpenSans.png",
             "font/OpenSans.json"
         );
+        await this.textFontLoader.loadTextFontFromPath(
+            "font/GideonRoman.png",
+            "font/GideonRoman.json"
+        );
+        await this.textFontLoader.loadTextFontFromPath(
+            "font/Roboto.png",
+            "font/Roboto.json"
+        );
 
-        this.textFontLoader.setCurrentUseFontName("OpenSans");
+        this.textFontLoader.setCurrentUseFontName("GideonRoman");
 
         this.shaderAudioInput = new GLSpinner.ShaderAudioInput(this.gl, this.shaderLoader, 100.0);
         await this.shaderAudioInput.load("testAudio", this.audioOutput.getAudioContext());
@@ -49,10 +57,22 @@ class Sample extends GLSpinner.BaseApplication {
         const fboPlaneMeshNode = new GLSpinner.MeshNode(fboPlaneMesh);
         GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, fboPlaneMeshNode);
 
-        const text = "SpinnerEddy";
+        const text = "S";
         const glyphs = this.textFontLoader.getGlyphsFromText(text);
         console.log(glyphs);
-        
+
+        // const textPlane = new GLSpinner.Plane(this.gl, 2, 2);
+        // const textMaterial = GLSpinner.MaterialFactory.texturedTextMaterial(
+        //     0.1,
+        //     GLSpinner.MyColorCode.COLOR_CHINA);
+        // const textPlaneAttributes = {
+        //     aPosition: textMaterial.getAttribute(this.gl, 'aPosition'),
+        //     aUv: textMaterial.getAttribute(this.gl, 'aUv'),
+        // }
+        // textPlane.setUpBuffers(this.gl, textPlaneAttributes);
+        // const textPlaneMesh = new GLSpinner.UnlitMesh(textPlane, textMaterial);
+        // const textPlaneMeshNode = new GLSpinner.MeshNode(textPlaneMesh);
+        // GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, textPlaneMeshNode);
 
         const standardRendererFlow = new GLSpinner.StandardSceneRendererFlow(
             this.baseSceneRoot,
@@ -117,9 +137,12 @@ class Sample extends GLSpinner.BaseApplication {
         this.camera = new GLSpinner.Camera(GLSpinner.CameraType.Orthography);
         this.rendererContext.setCamera(this.camera);
 
-        this.gl.enable(this.gl.DEPTH_TEST);
-    	this.gl.depthFunc(this.gl.LEQUAL);
-        this.gl.disable(this.gl.CULL_FACE);
+        // this.gl.enable(this.gl.DEPTH_TEST);
+    	// this.gl.depthFunc(this.gl.LEQUAL);
+        // this.gl.disable(this.gl.CULL_FACE);
+        this.gl.enable(this.gl.BLEND);
+        this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+        this.gl.disable(this.gl.DEPTH_TEST);
 
         console.log(this.sceneGraph.getGraph());
 

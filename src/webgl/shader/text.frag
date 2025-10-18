@@ -10,8 +10,15 @@ uniform float smoothness;
 
 out vec4 outputColor;
 
+float median(float r, float g, float b) {
+    return max(min(r, g), min(max(r, g), b));
+}
+
 void main(void){
-    float textSdf = texture(tex, vUv).r;
-    float alpha = smoothstep(0.5 - smoothness, 0.5 + smoothness, textSdf);
-    outputColor = vec4(fontColor.rgb,  fontColor.a * alpha);
+    vec3 texColor = texture(tex, vUv).rgb;
+    float textSdf = median(texColor.r, texColor.g, texColor.b);
+
+    float width = fwidth(textSdf);
+    float alpha = smoothstep(0.5 - width, 0.5 + width, textSdf);
+    outputColor = mix(vec4(0.0), fontColor, alpha);
 }
