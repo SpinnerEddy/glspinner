@@ -111,8 +111,7 @@ class Sample extends GLSpinner.BaseApplication {
         const frameBufferOutputPass = new GLSpinner.FinalBlitShaderPass(
             this.gl, 
             GLSpinner.MaterialFactory.frameBufferTextureMaterial(), 
-            [this.canvas.width, this.canvas.height], 
-            true);
+            [this.canvas.width, this.canvas.height]);
         this.rendererContext.updateGlobalUniform("shiftOffset", new GLSpinner.ShaderUniformValue(0.01));
 
         this.shaderPasses = new Map<string, GLSpinner.ShaderPassOperation>();        
