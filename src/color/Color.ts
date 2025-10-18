@@ -50,6 +50,11 @@ export class Color{
         return new Float32Array([this.r, this.g, this.b]);
     }
 
+    get toRGBAArray(): Float32Array
+    {
+        return new Float32Array([this.r, this.g, this.b, this.a]);
+    }
+
     public getRgbToVector3(): Vector3
     {
         return new Vector3(this.r, this.g, this.b);

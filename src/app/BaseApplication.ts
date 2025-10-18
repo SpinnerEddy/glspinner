@@ -40,7 +40,7 @@ export abstract class BaseApplication implements ApplicationOperation{
 
     public async start(): Promise<void> {
         await this.preload();
-        MaterialFactory.init(this.shaderLoader, this.textureLoader);
+        MaterialFactory.init(this.shaderLoader, this.textureLoader, this.textFontLoader);
         this.setup();
         this.scene.setUpdate(this.update.bind(this));
         this.scene.setDraw(this.draw.bind(this))

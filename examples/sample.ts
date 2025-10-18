@@ -156,8 +156,6 @@ class Sample extends GLSpinner.BaseApplication {
         this.webglUtility.setViewport(this.canvas);
         this.webglUtility.clearColor(GLSpinner.ColorUtility.hexToColor01(this.backgroundColorStr));
         this.rendererFlowPipeline.render(this.gl, this.rendererContext);
-
-        this.scene.stop();
     }
 }
 

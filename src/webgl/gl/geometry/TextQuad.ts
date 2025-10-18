@@ -1,33 +1,36 @@
-import { Color } from "../../../color/Color";
 import { ShaderAttribute } from "../attribute/ShaderAttribute";
 import { AttributeElementSize } from "../attribute/ShaderAttributeConstants";
 import { GeometryBuffer } from "../buffer/GeometryBuffer";
 import { IndexBuffer } from "../buffer/IndexBuffer";
 import { FontGlyph } from "../font/FontGlyph";
+import { Texture2D } from "../texture/Texture2D";
 import { BaseGeometry } from "./BaseGeometry";
 
 export class TextQuad extends BaseGeometry {
     protected uv: Float32Array;
 
-    constructor(gl: WebGL2RenderingContext, text: Array<FontGlyph>, color: Color = Color.empty()) {
+    constructor(gl: WebGL2RenderingContext, text: Array<FontGlyph>, textTexture: Texture2D) {
         super(gl);
 
         let cursorX = 0;
         let indexOffset = 0;
         let vertices = [];
         let uvs = [];
+        let normals = [];
         let indices = [];
         let colors = [];
+
+        const scale = 1.0 / textTexture.getTextureSize().width;
 
         for (const glyph of text) {
 
             const offset = glyph.getOffset();
             const resolution = glyph.getResolution();
 
-            const x0 = offset[0] + cursorX;
-            const y0 = offset[1];
-            const x1 = x0 + resolution[0];
-            const y1 = y0 + resolution[1];
+            const x0 = (offset[0] + cursorX) * scale;
+            const y0 = (offset[1]) * scale;
+            const x1 = (x0 + resolution[0]) * scale;
+            const y1 = (y0 + resolution[1]) * scale;
 
             vertices.push(
                 x0, y0, 0.0,
@@ -50,24 +53,19 @@ export class TextQuad extends BaseGeometry {
                 3 + indexOffset, 2 + indexOffset, 1 + indexOffset
             );
 
-            if(Color.isEmpty(color))
-            {
-                colors.push(
-                    1.0, 1.0, 1.0, 1.0,
-                    1.0, 1.0, 1.0, 1.0,
-                    1.0, 1.0, 1.0, 1.0,
-                    1.0, 1.0, 1.0, 1.0
-                );
-            }
-            else
-            {
-                colors.push(
-                    color.red, color.green, color.blue, color.alpha,
-                    color.red, color.green, color.blue, color.alpha,
-                    color.red, color.green, color.blue, color.alpha,
-                    color.red, color.green, color.blue, color.alpha,
-                );
-            }
+            colors.push(
+                1.0, 1.0, 1.0, 1.0,
+                1.0, 1.0, 1.0, 1.0,
+                1.0, 1.0, 1.0, 1.0,
+                1.0, 1.0, 1.0, 1.0
+            );
+
+            normals.push(
+                0.0, 0.0, 1.0,
+                0.0, 0.0, 1.0,
+                0.0, 0.0, 1.0,
+                0.0, 0.0, 1.0
+            );
 
             indexOffset += 4;
             cursorX += glyph.getXAdvance();
@@ -77,7 +75,6 @@ export class TextQuad extends BaseGeometry {
         this.color = new Float32Array(colors);
         this.indices = new Int16Array(indices);
         this.uv = new Float32Array(uvs);
-        this.normal = new Float32Array(this.vertices.length); // dummy
     }
 
     setUpBuffers(gl: WebGL2RenderingContext, attributes: Record<string, ShaderAttribute>): void {

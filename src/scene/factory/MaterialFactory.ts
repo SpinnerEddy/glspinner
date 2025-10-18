@@ -1,6 +1,7 @@
 import { Color } from "../../color/Color";
 import { ColorUtility } from "../../color/ColorUtility";
 import { Vector3 } from "../../math/vector/Vector3";
+import { TextFontLoader } from "../../webgl/gl/font/TextFontLoader";
 import { ShaderLoader } from "../../webgl/gl/ShaderLoader";
 import { TextureLoader } from "../../webgl/gl/texture/TextureLoader";
 import { FragmentCanvasMaterial } from "../material/FragmentCanvasMaterial";
@@ -11,15 +12,18 @@ import { MosaicMaterial } from "../material/MosaicMaterial";
 import { PhongMaterial } from "../material/PhongMaterial";
 import { RGBShiftMaterial } from "../material/RGBShiftMaterial";
 import { TexturedMaterial } from "../material/TexturedMaterial";
+import { TexturedTextMaterial } from "../material/TexturedTextMaterial";
 import { UnlitMaterial } from "../material/UnlitMaterial";
 
 export class MaterialFactory {
     private static shaderLoader: ShaderLoader;
     private static textureLoader: TextureLoader;
+    private static textFontLoader: TextFontLoader;
     
-    static init(shaderLoader: ShaderLoader, textureLoader: TextureLoader): void {
+    static init(shaderLoader: ShaderLoader, textureLoader: TextureLoader, textFontLoader: TextFontLoader): void {
         this.shaderLoader = shaderLoader;
         this.textureLoader = textureLoader;
+        this.textFontLoader = textFontLoader;
     }
 
     static fragmentCanvasMaterial(programKey: string): FragmentCanvasMaterial {
@@ -39,6 +43,17 @@ export class MaterialFactory {
         const shader = this.shaderLoader.getShaderProgram("texture");
         const texture = this.textureLoader.getTexture(textureKey);
         return new TexturedMaterial(shader, texture, texIndex);
+    }
+
+    static texturedTextMaterial(smoothness: number, fontColorHex: string): TexturedTextMaterial {
+        if (!this.shaderLoader) {
+            throw new Error('MaterialFac†ory not initialized. Call init!!');
+        }
+
+        const shader = this.shaderLoader.getShaderProgram("text");
+        const texture = this.textFontLoader.getTextureForCurrentFont();
+        const fontColor = ColorUtility.hexToColor01(fontColorHex).toRGBAArray;
+        return new TexturedTextMaterial(shader, texture, smoothness, fontColor);
     }
 
     static frameBufferTextureMaterial(): FrameBufferTexturedMaterial {
