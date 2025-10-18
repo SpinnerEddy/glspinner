@@ -6,11 +6,8 @@ import { BaseShaderPass } from "./BaseShaderPass";
 
 export class FinalBlitShaderPass extends BaseShaderPass {
 
-    private isUsePrevFrame: boolean;
-
-    constructor(gl: WebGL2RenderingContext, material: FrameBufferTexturedMaterial, resolution: [number, number], isUsePrevFrame: boolean = false){
+    constructor(gl: WebGL2RenderingContext, material: FrameBufferTexturedMaterial, resolution: [number, number]){
         super(gl, material, resolution);
-        this.isUsePrevFrame = isUsePrevFrame;
     }
 
     render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation {

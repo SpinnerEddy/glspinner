@@ -17,4 +17,8 @@ export class TextureFrameBuffer implements TextureOperation {
     unbind(): void {
         this.gl.bindTexture(this.gl.TEXTURE_2D, null);
     }
+
+    getTextureSize(): { width: number; height: number; } {
+        throw new Error("Method not implemented.");
+    }
 }
