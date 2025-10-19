@@ -19,7 +19,7 @@ export class SceneRendererPipeline implements SceneRendererPipelineOperation {
         let renderTargetA = context.getRenderTargetFromPool(RenderTargetSlot.RENDER_TARGET_A);
         let renderTargetB = context.getRenderTargetFromPool(RenderTargetSlot.RENDER_TARGET_B);
 
-        let readRT: RenderTargetOperation | undefined = undefined;
+        let readRT: RenderTargetOperation | undefined = renderTargetB;
         let writeRT: RenderTargetOperation | undefined = renderTargetA;
 
         for (const flow of this.rendererFlows) {

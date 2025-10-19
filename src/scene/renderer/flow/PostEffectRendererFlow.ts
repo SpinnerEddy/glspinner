@@ -16,7 +16,12 @@ export class PostEffectRendererFlow extends BaseSceneRendererFlow {
         if(!this.shaderPasses || this.shaderPasses.size === 0) return;
         if(!outputRenderTarget) return;
 
-        let currentRenderTarget: RenderTargetOperation | undefined = inputRenderTarget;
+        let renderTargetA: RenderTargetOperation | undefined = inputRenderTarget;
+        let renderTargetB: RenderTargetOperation | undefined = outputRenderTarget;
+
+        let readRT: RenderTargetOperation | undefined = renderTargetA;
+        let writeRT: RenderTargetOperation | undefined = renderTargetB;
+        let resultRT: RenderTargetOperation | undefined = undefined;
 
         let passIndex = 0;
         for (const pass of this.shaderPasses.values()) {
@@ -27,10 +32,14 @@ export class PostEffectRendererFlow extends BaseSceneRendererFlow {
             }
 
 
-            currentRenderTarget = pass.render(gl, context, currentRenderTarget!, outputRenderTarget!, passIndex === this.shaderPasses.size - 1);
+            resultRT = pass.render(gl, context, readRT!, writeRT!, passIndex === this.shaderPasses.size - 1);
+
+            readRT = resultRT;
+            writeRT = (writeRT === renderTargetA) ? renderTargetB : renderTargetA;;
+
             passIndex++;
         }
 
-        return currentRenderTarget;
+        return resultRT;
     }
 }
