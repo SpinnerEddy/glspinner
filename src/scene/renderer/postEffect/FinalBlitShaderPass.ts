@@ -6,20 +6,15 @@ import { BaseShaderPass } from "./BaseShaderPass";
 
 export class FinalBlitShaderPass extends BaseShaderPass {
 
-    constructor(gl: WebGL2RenderingContext, material: FrameBufferTexturedMaterial, resolution: [number, number]){
-        super(gl, material, resolution);
+    constructor(gl: WebGL2RenderingContext, material: FrameBufferTexturedMaterial){
+        super(gl, material);
     }
 
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation {
-        return this.drawCurrent(gl, context, inputRenderTarget, isBlit);
-    }
-
-    private drawCurrent(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation {
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation {
         inputRenderTarget!.bind(TextureSlot.CURRENT_FRAME);
-        this.draw(gl, context, isBlit);
+        outputRenderTarget = this.draw(gl, context, outputRenderTarget, isBlit);
         inputRenderTarget!.unbind();
 
-        return this.writeRenderTarget;
+        return outputRenderTarget;
     }
-
 }

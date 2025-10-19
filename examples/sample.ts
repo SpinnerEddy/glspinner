@@ -88,30 +88,25 @@ class Sample extends GLSpinner.BaseApplication {
 
         const graySceleShaderPass = new GLSpinner.GrayScaleShaderPass(
             this.gl, 
-            GLSpinner.MaterialFactory.grayScaleMaterial(), 
-            [this.canvas.width, this.canvas.height]);
+            GLSpinner.MaterialFactory.grayScaleMaterial());
             
         const mosaicShaderPass = new GLSpinner.MosaicShaderPass(
             this.gl, 
-            GLSpinner.MaterialFactory.mosaicMaterial(), 
-            [this.canvas.width, this.canvas.height]);
+            GLSpinner.MaterialFactory.mosaicMaterial());
         this.rendererContext.updateGlobalUniform("mosaicSize", new GLSpinner.ShaderUniformValue(60.0));
 
         const rgbShiftShaderPass = new GLSpinner.MosaicShaderPass(
             this.gl, 
-            GLSpinner.MaterialFactory.rgbShiftMaterial(), 
-            [this.canvas.width, this.canvas.height]);
+            GLSpinner.MaterialFactory.rgbShiftMaterial());
         
         const glitchShaderPass = new GLSpinner.GlitchShaderPass(
             this.gl, 
-            GLSpinner.MaterialFactory.glitchMaterial(), 
-            [this.canvas.width, this.canvas.height]);
+            GLSpinner.MaterialFactory.glitchMaterial());
         this.rendererContext.updateGlobalUniform("glitchCoef", new GLSpinner.ShaderUniformValue(0.3));
 
         const frameBufferOutputPass = new GLSpinner.FinalBlitShaderPass(
             this.gl, 
-            GLSpinner.MaterialFactory.frameBufferTextureMaterial(), 
-            [this.canvas.width, this.canvas.height]);
+            GLSpinner.MaterialFactory.frameBufferTextureMaterial());
         this.rendererContext.updateGlobalUniform("shiftOffset", new GLSpinner.ShaderUniformValue(0.01));
 
         this.shaderPasses = new Map<string, GLSpinner.ShaderPassOperation>();        
@@ -184,6 +179,8 @@ class Sample extends GLSpinner.BaseApplication {
         this.webglUtility.setViewport(this.canvas);
         this.webglUtility.clearColor(GLSpinner.ColorUtility.hexToColor01(this.backgroundColorStr));
         this.rendererFlowPipeline.render(this.gl, this.rendererContext);
+
+        // this.scene.stop();
     }
 }
 

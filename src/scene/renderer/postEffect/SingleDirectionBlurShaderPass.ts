@@ -1,12 +1,12 @@
 import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
 import { TextureSlot } from "../../../webgl/gl/texture/TextureConstants";
-import { RGBShiftMaterial } from "../../material/RGBShiftMaterial";
+import { BaseMaterial } from "../../material/BaseMaterial";
 import { RendererContext } from "../RendererContext";
 import { BaseShaderPass } from "./BaseShaderPass";
 
-export class RGBShiftShaderPass extends BaseShaderPass {
+export class SingleDirectionBlurShaderPass extends BaseShaderPass {
 
-    constructor(gl: WebGL2RenderingContext, material: RGBShiftMaterial){
+    constructor(gl: WebGL2RenderingContext, material: BaseMaterial){
         super(gl, material);
     }
 

@@ -6,16 +6,16 @@ import { BaseShaderPass } from "./BaseShaderPass";
 
 export class MosaicShaderPass extends BaseShaderPass {
 
-    constructor(gl: WebGL2RenderingContext, material: MosaicMaterial, resolution: [number, number]){
-        super(gl, material, resolution);
+    constructor(gl: WebGL2RenderingContext, material: MosaicMaterial){
+        super(gl, material);
     }
 
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation {
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation {
         inputRenderTarget!.bind(TextureSlot.CURRENT_FRAME);
-        this.draw(gl, context, isBlit);
+        outputRenderTarget = this.draw(gl, context, outputRenderTarget, isBlit);
         inputRenderTarget!.unbind();
 
-        return this.writeRenderTarget;
+        return outputRenderTarget;
     }
 
 }

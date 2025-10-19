@@ -44,10 +44,6 @@ void main() {
     int idx = gl_VertexID;
     float time = (float(idx) + uTimeOffset) / uSampleRate;
 
-    // float sine = sin(2.0 * 3.141592653589793 * 440.0 * t) * exp(-3.0 * t);
-    // oSample = vec2(sine);
-    // float vib = 0.2 * sine(time * 10.0);
-    // oSample = vec2(triangle(440.0 * time + vib) * exp(-3.0 * time));
     float freq = 440.0;
     float fm = 0.1 * sine(time * freq * 7.0);
     oSample = vec2(kick(time));

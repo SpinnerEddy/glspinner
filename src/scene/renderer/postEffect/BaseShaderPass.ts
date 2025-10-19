@@ -1,4 +1,3 @@
-import { RenderTarget } from "../../../webgl/gl/fbo/RenderTarget";
 import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
 import { Plane } from "../../../webgl/gl/geometry/Plane";
 import { MeshNode } from "../../core/node/MeshNode";
@@ -11,11 +10,9 @@ import { ShaderPassOperation } from "./ShaderPassOperation";
 export abstract class BaseShaderPass implements ShaderPassOperation {
     protected material: BaseMaterial;
     protected plane: MeshNode;
-    protected writeRenderTarget: RenderTarget;
     protected isEffectEnabled: boolean = true;
 
-    constructor(gl: WebGL2RenderingContext, material: BaseMaterial, resolution: [number, number]) {
-        this.writeRenderTarget = new RenderTarget(gl, resolution);
+    constructor(gl: WebGL2RenderingContext, material: BaseMaterial) {
         this.material = material;
         
         const planeGeometry = new Plane(gl, 2, 2);
@@ -29,7 +26,7 @@ export abstract class BaseShaderPass implements ShaderPassOperation {
         this.plane = new MeshNode(planeMesh);
     }
 
-    abstract render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    abstract render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
 
     setEffectEnabled(enabled: boolean): void {
         this.isEffectEnabled = enabled;
@@ -39,12 +36,14 @@ export abstract class BaseShaderPass implements ShaderPassOperation {
         return this.isEffectEnabled;
     }
 
-    protected draw(gl: WebGL2RenderingContext, context: RendererContext, isBlit: boolean): void {
+    protected draw(gl: WebGL2RenderingContext, context: RendererContext, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation {
         if(isBlit){
-            this.writeRenderTarget.drawToScreen(() => SceneGraphUtility.traverse(this.plane, (node) => node.draw(gl, context)));
+            outputRenderTarget.drawToScreen(() => SceneGraphUtility.traverse(this.plane, (node) => node.draw(gl, context)));
         }
         else{
-            this.writeRenderTarget.drawToFrameBuffer(() => SceneGraphUtility.traverse(this.plane, (node) => node.draw(gl, context)));
+            outputRenderTarget.drawToFrameBuffer(() => SceneGraphUtility.traverse(this.plane, (node) => node.draw(gl, context)));
         }
+
+        return outputRenderTarget;
     }
 }

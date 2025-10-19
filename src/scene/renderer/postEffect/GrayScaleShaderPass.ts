@@ -6,16 +6,16 @@ import { BaseShaderPass } from "./BaseShaderPass";
 
 export class GrayScaleShaderPass extends BaseShaderPass {
 
-    constructor(gl: WebGL2RenderingContext, material: GrayScaleMaterial, resolution: [number, number]){
-        super(gl, material, resolution);
+    constructor(gl: WebGL2RenderingContext, material: GrayScaleMaterial){
+        super(gl, material);
     }
 
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation {
-        inputRenderTarget!.bind(TextureSlot.CURRENT_FRAME)
-        this.draw(gl, context, isBlit);
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation {
+        inputRenderTarget!.bind(TextureSlot.CURRENT_FRAME);
+        outputRenderTarget = this.draw(gl, context, outputRenderTarget, isBlit);
         inputRenderTarget!.unbind();
 
-        return this.writeRenderTarget;
+        return outputRenderTarget;
     }
 
 }
