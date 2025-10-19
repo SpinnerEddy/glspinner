@@ -1,3 +1,5 @@
+import { RenderTargetSlotKey } from "../../webgl/gl/fbo/RenderTargetConstants";
+import { RenderTargetOperation } from "../../webgl/gl/fbo/RenderTargetOperation";
 import { ShaderProgram } from "../../webgl/gl/ShaderProgram";
 import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
 import { ShaderUniformValue } from "../../webgl/gl/uniform/ShaderUniformValue";
@@ -9,6 +11,19 @@ export class RendererContext {
     private lights: LightParams[] = [];
     private globalUniforms: UniformPairs = {};
     private currentShaderProgram: ShaderProgram | undefined = undefined;
+    private renderTargetPool: Map<RenderTargetSlotKey, RenderTargetOperation> = new Map();
+
+    public getRenderTargetFromPool(key: RenderTargetSlotKey): RenderTargetOperation | undefined {
+        if(!this.renderTargetPool.has(key)) {
+            return undefined;
+        }
+
+        return this.renderTargetPool.get(key);
+    }
+
+    public addRenderTargetToPool(key: RenderTargetSlotKey, renderTarget: RenderTargetOperation): void {
+        this.renderTargetPool.set(key, renderTarget);
+    }
 
     public setCamera(camera: Camera): void {
         this.camera = camera;
