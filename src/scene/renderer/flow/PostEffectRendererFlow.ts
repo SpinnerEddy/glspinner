@@ -26,7 +26,8 @@ export class PostEffectRendererFlow extends BaseSceneRendererFlow {
                 continue;
             }
 
-            currentRenderTarget = pass.render(gl, context, inputRenderTarget!, currentRenderTarget!, passIndex === this.shaderPasses.size - 1);
+
+            currentRenderTarget = pass.render(gl, context, currentRenderTarget!, this.renderTarget!, passIndex === this.shaderPasses.size - 1);
             passIndex++;
         }
 
