@@ -86,6 +86,14 @@ class Sample extends GLSpinner.BaseApplication {
             this.baseSceneRoot);
         this.rendererFlowPipeline.addFlow(standardRendererFlow);
 
+        const horizontalBlurShaderPass = new GLSpinner.SingleDirectionBlurShaderPass(
+            this.gl, 
+            GLSpinner.MaterialFactory.singleDirectionBlurMaterial(false, 10.0));
+        const verticalBlurShaderPass = new GLSpinner.SingleDirectionBlurShaderPass(
+            this.gl, 
+            GLSpinner.MaterialFactory.singleDirectionBlurMaterial(true, 10.0));
+        this.rendererContext.updateGlobalUniform("texResolution", new GLSpinner.ShaderUniformValue([this.canvas.width, this.canvas.height]));
+
         const graySceleShaderPass = new GLSpinner.GrayScaleShaderPass(
             this.gl, 
             GLSpinner.MaterialFactory.grayScaleMaterial());
@@ -110,6 +118,9 @@ class Sample extends GLSpinner.BaseApplication {
         this.rendererContext.updateGlobalUniform("shiftOffset", new GLSpinner.ShaderUniformValue(0.01));
 
         this.shaderPasses = new Map<string, GLSpinner.ShaderPassOperation>();        
+        this.shaderPasses.set("blur(horizontal)", horizontalBlurShaderPass);
+        this.shaderPasses.set("blur(vertical)", verticalBlurShaderPass);
+        this.shaderPasses.set("grayScale", graySceleShaderPass);
         this.shaderPasses.set("grayScale", graySceleShaderPass);
         this.shaderPasses.set("mosaic", mosaicShaderPass);
         this.shaderPasses.set("rgbShift", rgbShiftShaderPass);
@@ -117,6 +128,8 @@ class Sample extends GLSpinner.BaseApplication {
         this.shaderPasses.set("frameBufferOutput", frameBufferOutputPass);
 
         this.shaderPassEnabledSwitch = new Map<string, boolean>();
+        this.shaderPassEnabledSwitch.set("blur(horizontal)", false);
+        this.shaderPassEnabledSwitch.set("blur(vertical)", false);
         this.shaderPassEnabledSwitch.set("grayScale", false);
         this.shaderPassEnabledSwitch.set("mosaic", false);
         this.shaderPassEnabledSwitch.set("rgbShift", false);

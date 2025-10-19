@@ -112,6 +112,7 @@ export * from './scene/material/GrayScaleMaterial'
 export * from './scene/material/MosaicMaterial'
 export * from './scene/material/RGBShiftMaterial'
 export * from './scene/material/GlitchMaterial'
+export * from './scene/material/BlurMaterial'
 
 // Scene/Mesh
 export * from './scene/mesh/BaseMesh'
@@ -168,6 +169,8 @@ export * from './scene/renderer/postEffect/MosaicShaderPass'
 export * from './scene/renderer/postEffect/RGBShiftShaderPass'
 export * from './scene/renderer/postEffect/GlitchShaderPass'
 export * from './scene/renderer/postEffect/FinalBlitShaderPass'
+export * from './scene/renderer/postEffect/BlurShaderPass'
+export * from './scene/renderer/postEffect/SingleDirectionBlurShaderPass'
 
 export function initializeLibrary() {
     console.log("ライブラリが初期化されました");

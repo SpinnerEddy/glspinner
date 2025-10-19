@@ -4,6 +4,7 @@ import { Vector3 } from "../../math/vector/Vector3";
 import { TextFontLoader } from "../../webgl/gl/font/TextFontLoader";
 import { ShaderLoader } from "../../webgl/gl/ShaderLoader";
 import { TextureLoader } from "../../webgl/gl/texture/TextureLoader";
+import { BlurMaterial } from "../material/BlurMaterial";
 import { FragmentCanvasMaterial } from "../material/FragmentCanvasMaterial";
 import { FrameBufferTexturedMaterial } from "../material/FrameBufferTexturedMaterial";
 import { GlitchMaterial } from "../material/GlitchMaterial";
@@ -73,6 +74,15 @@ export class MaterialFactory {
 
         const shader = this.shaderLoader.getShaderProgram("grayScale");
         return new GrayScaleMaterial(shader);
+    }
+
+    static singleDirectionBlurMaterial(isVertical: boolean, blurRange: number): BlurMaterial {
+        if (!this.shaderLoader) {
+            throw new Error('MaterialFac†ory not initialized. Call init!!');
+        }
+
+        const shader = this.shaderLoader.getShaderProgram("blur");
+        return new BlurMaterial(shader, isVertical, blurRange);
     }
 
     static mosaicMaterial(): MosaicMaterial {

@@ -89,8 +89,6 @@ export class ShaderUniformValue{
         }
         else if(values instanceof Float32Array){
             switch(values.length){
-                case 1:
-                    return '1fv';
                 case 2:
                     return '2fv';
                 case 3:
@@ -98,13 +96,11 @@ export class ShaderUniformValue{
                 case 4:
                     return '4fv';
                 default:
-                    throw new Error('Invalid uniform values type');
+                    return '1fv';;
             }
         }
         else if(values instanceof Int32Array){
             switch(values.length){
-                case 1:
-                    return '1iv';
                 case 2:
                     return '2iv';
                 case 3:
@@ -112,7 +108,7 @@ export class ShaderUniformValue{
                 case 4:
                     return '4iv';
                 default:
-                    throw new Error('Invalid uniform values type');
+                    return '1iv';;
             }
         }
         else{
