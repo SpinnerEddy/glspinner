@@ -2,19 +2,19 @@ import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperati
 import { ShaderPassOperation } from "../postEffect/ShaderPassOperation";
 import { RendererContext } from "../RendererContext";
 import { BaseSceneRendererFlow } from "./BaseSceneRendererFlow";
-import { RendererFlowOptions } from "./RendererFlowConstants";
 
 export class PostEffectRendererFlow extends BaseSceneRendererFlow {
     
     private shaderPasses: Map<string, ShaderPassOperation>;
 
-    constructor(shaderPasses: Map<string, ShaderPassOperation>, options: RendererFlowOptions) {
-        super(options);
+    constructor(shaderPasses: Map<string, ShaderPassOperation>) {
+        super();
         this.shaderPasses = shaderPasses;
     }
 
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation | undefined): RenderTargetOperation | undefined {
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation | undefined, outputRenderTarget: RenderTargetOperation | undefined): RenderTargetOperation | undefined {
         if(!this.shaderPasses || this.shaderPasses.size === 0) return;
+        if(!outputRenderTarget) return;
 
         let currentRenderTarget: RenderTargetOperation | undefined = inputRenderTarget;
 
@@ -27,18 +27,10 @@ export class PostEffectRendererFlow extends BaseSceneRendererFlow {
             }
 
 
-            currentRenderTarget = pass.render(gl, context, currentRenderTarget!, this.renderTarget!, passIndex === this.shaderPasses.size - 1);
+            currentRenderTarget = pass.render(gl, context, currentRenderTarget!, outputRenderTarget!, passIndex === this.shaderPasses.size - 1);
             passIndex++;
         }
 
         return currentRenderTarget;
     }
-
-     dispose(): void {
-        if (this.renderTarget) {
-            this.renderTarget.dispose();
-            this.renderTarget = undefined;
-        }
-     }
-
 }

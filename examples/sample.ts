@@ -75,15 +75,15 @@ class Sample extends GLSpinner.BaseApplication {
         GLSpinner.SceneGraphUtility.addChild(this.textRoot, textPlaneMeshNode);
         GLSpinner.SceneGraphUtility.addChild(fboPlaneMeshNode, this.textRoot);
 
+        this.rendererContext.addRenderTargetToPool(
+            GLSpinner.RenderTargetSlot.RENDER_TARGET_A,
+            new GLSpinner.RenderTarget(this.gl, [this.canvas.width, this.canvas.height]));
+        this.rendererContext.addRenderTargetToPool(
+            GLSpinner.RenderTargetSlot.RENDER_TARGET_B,
+            new GLSpinner.RenderTarget(this.gl, [this.canvas.width, this.canvas.height]));
+
         const standardRendererFlow = new GLSpinner.StandardSceneRendererFlow(
-            this.baseSceneRoot,
-            { useFbo: true,
-              gl: this.gl,
-              resolution: [this.canvas.width, this.canvas.height]
-            });
-        // const standardRendererFlow = new GLSpinner.StandardSceneRendererFlow(
-        //     this.baseSceneRoot,
-        //     { useFbo: false});
+            this.baseSceneRoot);
         this.rendererFlowPipeline.addFlow(standardRendererFlow);
 
         const graySceleShaderPass = new GLSpinner.GrayScaleShaderPass(
@@ -124,11 +124,7 @@ class Sample extends GLSpinner.BaseApplication {
         this.shaderPassEnabledSwitch.set("frameBufferOutput", true);
 
         const postEffectRendererFlow = new GLSpinner.PostEffectRendererFlow(
-            this.shaderPasses,
-            { useFbo: true,
-              gl: this.gl,
-              resolution: [this.canvas.width, this.canvas.height]
-            });
+            this.shaderPasses);
 
         this.rendererFlowPipeline.addFlow(postEffectRendererFlow);
 
