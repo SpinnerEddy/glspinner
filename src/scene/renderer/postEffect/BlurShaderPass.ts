@@ -1,12 +1,12 @@
 import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
 import { TextureSlot } from "../../../webgl/gl/texture/TextureConstants";
-import { BaseMaterial } from "../../material/BaseMaterial";
+import { BlurMaterial } from "../../material/BlurMaterial";
 import { RendererContext } from "../RendererContext";
 import { BaseShaderPass } from "./BaseShaderPass";
 
 export class BlurShaderPass extends BaseShaderPass {
 
-    constructor(gl: WebGL2RenderingContext, material: BaseMaterial){
+    constructor(gl: WebGL2RenderingContext, material: BlurMaterial){
         super(gl, material);
     }
 

@@ -25,6 +25,7 @@ export class BlurMaterial extends BaseMaterial {
         this.shaderProgram.setUniform(gl, "mvpMatrix", uniforms["mvpMatrix"]);
         this.shaderProgram.setUniform(gl, "isVertial", new ShaderUniformValue(this.blurDirection.Vertical ? 1 : 0, 'int'));
         this.shaderProgram.setUniform(gl, "gCoefficients", new ShaderUniformValue(this.blurCoefficients));
+        this.shaderProgram.setUniform(gl, "texResolution", new ShaderUniformValue([800, 800]));
         this.shaderProgram.setUniform(gl, "tex", new ShaderUniformValue(TextureSlot.CURRENT_FRAME, 'int'));
     }
 }
