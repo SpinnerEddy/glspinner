@@ -88,7 +88,7 @@ class Sample extends GLSpinner.BaseApplication {
 
         const horizontalBlurShaderPass = new GLSpinner.SingleDirectionBlurShaderPass(
             this.gl, 
-            GLSpinner.MaterialFactory.singleDirectionBlurMaterial(false, 10.0));
+            GLSpinner.MaterialFactory.singleDirectionBlurMaterial(false, 0.001));
         const verticalBlurShaderPass = new GLSpinner.SingleDirectionBlurShaderPass(
             this.gl, 
             GLSpinner.MaterialFactory.singleDirectionBlurMaterial(true, 0.001));
@@ -96,6 +96,10 @@ class Sample extends GLSpinner.BaseApplication {
         const graySceleShaderPass = new GLSpinner.GrayScaleShaderPass(
             this.gl, 
             GLSpinner.MaterialFactory.grayScaleMaterial());
+
+        const brightShaderPass = new GLSpinner.BrightShaderPass(
+            this.gl,
+            GLSpinner.MaterialFactory.brightMaterial());
             
         const mosaicShaderPass = new GLSpinner.MosaicShaderPass(
             this.gl, 
@@ -116,10 +120,10 @@ class Sample extends GLSpinner.BaseApplication {
             GLSpinner.MaterialFactory.frameBufferTextureMaterial());
         this.rendererContext.updateGlobalUniform("shiftOffset", new GLSpinner.ShaderUniformValue(0.01));
 
-        this.shaderPasses = new Map<string, GLSpinner.ShaderPassOperation>();        
+        this.shaderPasses = new Map<string, GLSpinner.ShaderPassOperation>();
+        this.shaderPasses.set("bright", brightShaderPass);        
         this.shaderPasses.set("blur(horizontal)", horizontalBlurShaderPass);
         this.shaderPasses.set("blur(vertical)", verticalBlurShaderPass);
-        this.shaderPasses.set("grayScale", graySceleShaderPass);
         this.shaderPasses.set("grayScale", graySceleShaderPass);
         this.shaderPasses.set("mosaic", mosaicShaderPass);
         this.shaderPasses.set("rgbShift", rgbShiftShaderPass);
@@ -127,6 +131,7 @@ class Sample extends GLSpinner.BaseApplication {
         this.shaderPasses.set("frameBufferOutput", frameBufferOutputPass);
 
         this.shaderPassEnabledSwitch = new Map<string, boolean>();
+        this.shaderPassEnabledSwitch.set("bright", false);
         this.shaderPassEnabledSwitch.set("blur(horizontal)", true);
         this.shaderPassEnabledSwitch.set("blur(vertical)", true);
         this.shaderPassEnabledSwitch.set("grayScale", false);
@@ -174,6 +179,7 @@ class Sample extends GLSpinner.BaseApplication {
         this.rendererContext.updateGlobalUniform("resolution", new GLSpinner.ShaderUniformValue([this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
         // this.rendererContext.updateGlobalUniform("blurStrength", new GLSpinner.ShaderUniformValue(0.5 + 0.5 * GLSpinner.MathUtility.sin(this.scene.Clock.getElapsedTime())));
         this.rendererContext.updateGlobalUniform("blurStrength", new GLSpinner.ShaderUniformValue(1.0));
+        this.rendererContext.updateGlobalUniform("brightThreshold", new GLSpinner.ShaderUniformValue(0.9));
 
         this.shaderPasses.forEach((pass, key) => {
             if(this.shaderPassEnabledSwitch.get(key)){

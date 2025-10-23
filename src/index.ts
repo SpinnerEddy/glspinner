@@ -113,6 +113,7 @@ export * from './scene/material/MosaicMaterial'
 export * from './scene/material/RGBShiftMaterial'
 export * from './scene/material/GlitchMaterial'
 export * from './scene/material/BlurMaterial'
+export * from './scene/material/BrightMaterial'
 
 // Scene/Mesh
 export * from './scene/mesh/BaseMesh'
@@ -170,6 +171,7 @@ export * from './scene/renderer/postEffect/RGBShiftShaderPass'
 export * from './scene/renderer/postEffect/GlitchShaderPass'
 export * from './scene/renderer/postEffect/FinalBlitShaderPass'
 export * from './scene/renderer/postEffect/BlurShaderPass'
+export * from './scene/renderer/postEffect/BrightShaderPass'
 export * from './scene/renderer/postEffect/SingleDirectionBlurShaderPass'
 
 export function initializeLibrary() {

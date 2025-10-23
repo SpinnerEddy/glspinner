@@ -5,6 +5,7 @@ import { TextFontLoader } from "../../webgl/gl/font/TextFontLoader";
 import { ShaderLoader } from "../../webgl/gl/ShaderLoader";
 import { TextureLoader } from "../../webgl/gl/texture/TextureLoader";
 import { BlurMaterial } from "../material/BlurMaterial";
+import { BrightMaterial } from "../material/BrightMaterial";
 import { FragmentCanvasMaterial } from "../material/FragmentCanvasMaterial";
 import { FrameBufferTexturedMaterial } from "../material/FrameBufferTexturedMaterial";
 import { GlitchMaterial } from "../material/GlitchMaterial";
@@ -83,6 +84,15 @@ export class MaterialFactory {
 
         const shader = this.shaderLoader.getShaderProgram("blur");
         return new BlurMaterial(shader, isVertical, blurRange);
+    }
+
+    static brightMaterial(): BrightMaterial {
+        if (!this.shaderLoader) {
+            throw new Error('MaterialFac†ory not initialized. Call init!!');
+        }
+
+        const shader = this.shaderLoader.getShaderProgram("bright");
+        return new BrightMaterial(shader);
     }
 
     static mosaicMaterial(): MosaicMaterial {
