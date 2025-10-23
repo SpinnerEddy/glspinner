@@ -8,6 +8,7 @@ uniform sampler2D tex;
 uniform vec2 texResolution;
 uniform float gCoefficients[32];
 uniform int blurDirection;
+uniform float blurStrength;
 
 #define TABLE_SIZE 32
 
@@ -29,6 +30,7 @@ void main() {
 			offset.x = float(i) - float(TABLE_SIZE - 1) / 2.0;
 			offset.y = 0.0;
 		}
+		offset *= blurStrength;
 		vec2 inverseResolution = 1.0 / texResolution;
 		vec4 texColor = texture(tex, uv + offset * inverseResolution);
 		blurAppliedColor += texColor * gCoefficients[i];

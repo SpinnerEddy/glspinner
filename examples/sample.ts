@@ -91,9 +91,8 @@ class Sample extends GLSpinner.BaseApplication {
             GLSpinner.MaterialFactory.singleDirectionBlurMaterial(false, 10.0));
         const verticalBlurShaderPass = new GLSpinner.SingleDirectionBlurShaderPass(
             this.gl, 
-            GLSpinner.MaterialFactory.singleDirectionBlurMaterial(true, 10.0));
-        this.rendererContext.updateGlobalUniform("texResolution", new GLSpinner.ShaderUniformValue([this.canvas.width, this.canvas.height]));
-
+            GLSpinner.MaterialFactory.singleDirectionBlurMaterial(true, 0.001));
+        this.rendererContext.updateGlobalUniform("texResolution", new GLSpinner.ShaderUniformValue([this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
         const graySceleShaderPass = new GLSpinner.GrayScaleShaderPass(
             this.gl, 
             GLSpinner.MaterialFactory.grayScaleMaterial());
@@ -128,8 +127,8 @@ class Sample extends GLSpinner.BaseApplication {
         this.shaderPasses.set("frameBufferOutput", frameBufferOutputPass);
 
         this.shaderPassEnabledSwitch = new Map<string, boolean>();
-        this.shaderPassEnabledSwitch.set("blur(horizontal)", false);
-        this.shaderPassEnabledSwitch.set("blur(vertical)", false);
+        this.shaderPassEnabledSwitch.set("blur(horizontal)", true);
+        this.shaderPassEnabledSwitch.set("blur(vertical)", true);
         this.shaderPassEnabledSwitch.set("grayScale", false);
         this.shaderPassEnabledSwitch.set("mosaic", false);
         this.shaderPassEnabledSwitch.set("rgbShift", false);
@@ -172,7 +171,9 @@ class Sample extends GLSpinner.BaseApplication {
         });
 
         this.rendererContext.updateGlobalUniform("time", new GLSpinner.ShaderUniformValue(this.scene.Clock.getElapsedTime()));
-        this.rendererContext.updateGlobalUniform("resolution", new GLSpinner.ShaderUniformValue([this.canvas.width, this.canvas.height]));
+        this.rendererContext.updateGlobalUniform("resolution", new GLSpinner.ShaderUniformValue([this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
+        // this.rendererContext.updateGlobalUniform("blurStrength", new GLSpinner.ShaderUniformValue(0.5 + 0.5 * GLSpinner.MathUtility.sin(this.scene.Clock.getElapsedTime())));
+        this.rendererContext.updateGlobalUniform("blurStrength", new GLSpinner.ShaderUniformValue(1.0));
 
         this.shaderPasses.forEach((pass, key) => {
             if(this.shaderPassEnabledSwitch.get(key)){
