@@ -31,11 +31,10 @@ export class PostEffectRendererFlow extends BaseSceneRendererFlow {
                 continue;
             }
 
-
             resultRT = pass.render(gl, context, readRT!, writeRT!, passIndex === this.shaderPasses.size - 1);
 
             readRT = resultRT;
-            writeRT = (writeRT === renderTargetA) ? renderTargetB : renderTargetA;;
+            writeRT = (writeRT === renderTargetA) ? renderTargetB : renderTargetA;
 
             passIndex++;
         }

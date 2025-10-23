@@ -77,10 +77,22 @@ class Sample extends GLSpinner.BaseApplication {
 
         this.rendererContext.addRenderTargetToPool(
             GLSpinner.RenderTargetSlot.RENDER_TARGET_A,
-            new GLSpinner.RenderTarget(this.gl, [this.canvas.width, this.canvas.height]));
+            new GLSpinner.RenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
         this.rendererContext.addRenderTargetToPool(
             GLSpinner.RenderTargetSlot.RENDER_TARGET_B,
-            new GLSpinner.RenderTarget(this.gl, [this.canvas.width, this.canvas.height]));
+            new GLSpinner.RenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
+        this.rendererContext.addRenderTargetToPool(
+            GLSpinner.RenderTargetSlot.BLUR_RENDER_TARGET_HALF,
+            new GLSpinner.RenderTarget(this.gl, [this.gl.drawingBufferWidth * 0.5, this.gl.drawingBufferHeight * 0.5]));
+        this.rendererContext.addRenderTargetToPool(
+            GLSpinner.RenderTargetSlot.BLOOM_TEMP_RENDER_TARGET_BRIGHT,
+            new GLSpinner.RenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
+        this.rendererContext.addRenderTargetToPool(
+            GLSpinner.RenderTargetSlot.BLOOM_TEMP_RENDER_TARGET_BLUR_H,
+            new GLSpinner.RenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
+        this.rendererContext.addRenderTargetToPool(
+            GLSpinner.RenderTargetSlot.BLOOM_TEMP_RENDER_TARGET_BLUR_V,
+            new GLSpinner.RenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
 
         const standardRendererFlow = new GLSpinner.StandardSceneRendererFlow(
             this.baseSceneRoot);
@@ -100,6 +112,14 @@ class Sample extends GLSpinner.BaseApplication {
         const brightShaderPass = new GLSpinner.BrightShaderPass(
             this.gl,
             GLSpinner.MaterialFactory.brightMaterial());
+
+        const bloomShaderPass = new GLSpinner.BloomShaderPass(
+            this.gl,
+            GLSpinner.MaterialFactory.brightMaterial(),
+            GLSpinner.MaterialFactory.singleDirectionBlurMaterial(false, 0.001),
+            GLSpinner.MaterialFactory.singleDirectionBlurMaterial(true, 0.001),
+            GLSpinner.MaterialFactory.composeMaterial()
+        );
             
         const mosaicShaderPass = new GLSpinner.MosaicShaderPass(
             this.gl, 
@@ -121,6 +141,7 @@ class Sample extends GLSpinner.BaseApplication {
         this.rendererContext.updateGlobalUniform("shiftOffset", new GLSpinner.ShaderUniformValue(0.01));
 
         this.shaderPasses = new Map<string, GLSpinner.ShaderPassOperation>();
+        this.shaderPasses.set("bloom", bloomShaderPass);
         this.shaderPasses.set("bright", brightShaderPass);        
         this.shaderPasses.set("blur(horizontal)", horizontalBlurShaderPass);
         this.shaderPasses.set("blur(vertical)", verticalBlurShaderPass);
@@ -131,9 +152,10 @@ class Sample extends GLSpinner.BaseApplication {
         this.shaderPasses.set("frameBufferOutput", frameBufferOutputPass);
 
         this.shaderPassEnabledSwitch = new Map<string, boolean>();
+        this.shaderPassEnabledSwitch.set("bloom", false);
         this.shaderPassEnabledSwitch.set("bright", false);
-        this.shaderPassEnabledSwitch.set("blur(horizontal)", true);
-        this.shaderPassEnabledSwitch.set("blur(vertical)", true);
+        this.shaderPassEnabledSwitch.set("blur(horizontal)", false);
+        this.shaderPassEnabledSwitch.set("blur(vertical)", false);
         this.shaderPassEnabledSwitch.set("grayScale", false);
         this.shaderPassEnabledSwitch.set("mosaic", false);
         this.shaderPassEnabledSwitch.set("rgbShift", false);
@@ -180,6 +202,7 @@ class Sample extends GLSpinner.BaseApplication {
         // this.rendererContext.updateGlobalUniform("blurStrength", new GLSpinner.ShaderUniformValue(0.5 + 0.5 * GLSpinner.MathUtility.sin(this.scene.Clock.getElapsedTime())));
         this.rendererContext.updateGlobalUniform("blurStrength", new GLSpinner.ShaderUniformValue(1.0));
         this.rendererContext.updateGlobalUniform("brightThreshold", new GLSpinner.ShaderUniformValue(0.9));
+        this.rendererContext.updateGlobalUniform("bloomStrength", new GLSpinner.ShaderUniformValue(0.8));
 
         this.shaderPasses.forEach((pass, key) => {
             if(this.shaderPassEnabledSwitch.get(key)){

@@ -6,6 +6,7 @@ import { ShaderLoader } from "../../webgl/gl/ShaderLoader";
 import { TextureLoader } from "../../webgl/gl/texture/TextureLoader";
 import { BlurMaterial } from "../material/BlurMaterial";
 import { BrightMaterial } from "../material/BrightMaterial";
+import { ComposeMaterial } from "../material/ComposeMaterial";
 import { FragmentCanvasMaterial } from "../material/FragmentCanvasMaterial";
 import { FrameBufferTexturedMaterial } from "../material/FrameBufferTexturedMaterial";
 import { GlitchMaterial } from "../material/GlitchMaterial";
@@ -93,6 +94,15 @@ export class MaterialFactory {
 
         const shader = this.shaderLoader.getShaderProgram("bright");
         return new BrightMaterial(shader);
+    }
+
+    static composeMaterial(): ComposeMaterial {
+        if (!this.shaderLoader) {
+            throw new Error('MaterialFac†ory not initialized. Call init!!');
+        }
+
+        const shader = this.shaderLoader.getShaderProgram("compose");
+        return new ComposeMaterial(shader);
     }
 
     static mosaicMaterial(): MosaicMaterial {
