@@ -6,5 +6,4 @@ export declare class SceneRendererPipeline implements SceneRendererPipelineOpera
     constructor();
     addFlow(rendererFlow: RendererFlowOperation): void;
     render(gl: WebGL2RenderingContext, context: RendererContext): void;
-    dispose(): void;
 }

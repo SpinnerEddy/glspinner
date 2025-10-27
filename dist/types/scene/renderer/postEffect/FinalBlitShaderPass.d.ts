@@ -3,7 +3,6 @@ import { FrameBufferTexturedMaterial } from "../../material/FrameBufferTexturedM
 import { RendererContext } from "../RendererContext";
 import { BaseShaderPass } from "./BaseShaderPass";
 export declare class FinalBlitShaderPass extends BaseShaderPass {
-    constructor(gl: WebGL2RenderingContext, material: FrameBufferTexturedMaterial, resolution: [number, number]);
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
-    private drawCurrent;
+    constructor(gl: WebGL2RenderingContext, material: FrameBufferTexturedMaterial);
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
 }

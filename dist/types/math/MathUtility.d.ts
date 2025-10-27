@@ -6,7 +6,9 @@ export declare class MathUtility {
     static sin(angle: number): number;
     static cos(angle: number): number;
     static tan(angle: number): number;
+    static exp(value: number): number;
     static acos(angle: number): number;
     static atan2(y: number, x: number): number;
+    static calculateGaussianCoefficients(range: number, count: number): Float32Array;
     private static roundToZero;
 }

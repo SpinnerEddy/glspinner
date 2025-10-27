@@ -74,6 +74,29 @@ declare class Scene implements SceneOperation {
     private additionalSupport;
 }
 
+declare const RenderTargetSlot: {
+    readonly RENDER_TARGET_A: 0;
+    readonly RENDER_TARGET_B: 1;
+    readonly PREV_FRAME_RENDER_TARGET: 2;
+    readonly BLUR_RENDER_TARGET_HALF: 3;
+    readonly BLUR_RENDER_TARGET_QUARTER: 4;
+    readonly BLOOM_TEMP_RENDER_TARGET_BRIGHT: 5;
+    readonly BLOOM_TEMP_RENDER_TARGET_BLUR_H: 6;
+    readonly BLOOM_TEMP_RENDER_TARGET_BLUR_V: 7;
+    readonly BLOOM_RENDER_TARGET: 8;
+};
+type RenderTargetSlotKey = typeof RenderTargetSlot[keyof typeof RenderTargetSlot];
+
+interface RenderTargetOperation {
+    drawToFrameBuffer(drawFunction: () => void): void;
+    drawToScreen(drawFunction: () => void): void;
+    getTexture(): WebGLTexture;
+    bind(index: number): void;
+    unbind(): void;
+    resize(resolution: [number, number]): void;
+    dispose(): void;
+}
+
 declare class ShaderAttribute {
     private location;
     constructor(gl: WebGL2RenderingContext, program: WebGLProgram, attributeName: string);
@@ -454,6 +477,9 @@ declare class RendererContext {
     private lights;
     private globalUniforms;
     private currentShaderProgram;
+    private renderTargetPool;
+    getRenderTargetFromPool(key: RenderTargetSlotKey): RenderTargetOperation | undefined;
+    addRenderTargetToPool(key: RenderTargetSlotKey, renderTarget: RenderTargetOperation): void;
     setCamera(camera: Camera): void;
     getCamera(): Camera;
     updateGlobalUniform(key: string, value: ShaderUniformValue): void;
@@ -506,25 +532,13 @@ declare class SceneGraph {
     getGraph(): SceneNode;
 }
 
-interface RenderTargetOperation {
-    drawToFrameBuffer(drawFunction: () => void): void;
-    drawToScreen(drawFunction: () => void): void;
-    getTexture(): WebGLTexture;
-    bind(index: number): void;
-    unbind(): void;
-    resize(resolution: [number, number]): void;
-    dispose(): void;
-}
-
 interface RendererFlowOperation {
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation | undefined): RenderTargetOperation | undefined;
-    dispose(): void;
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation | undefined, outputRenderTarget: RenderTargetOperation | undefined): RenderTargetOperation | undefined;
 }
 
 interface SceneRendererPipelineOperation {
     addFlow(rendererFlow: RendererFlowOperation): void;
     render(gl: WebGL2RenderingContext, context: RendererContext): void;
-    dispose(): void;
 }
 
 interface TextureOperation {
@@ -741,7 +755,7 @@ declare class AudioGuiController {
 }
 
 interface ShaderPassOperation {
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
     setEffectEnabled(enabled: boolean): void;
     getEffectEnabled(): boolean;
 }
@@ -817,8 +831,10 @@ declare class MathUtility {
     static sin(angle: number): number;
     static cos(angle: number): number;
     static tan(angle: number): number;
+    static exp(value: number): number;
     static acos(angle: number): number;
     static atan2(y: number, x: number): number;
+    static calculateGaussianCoefficients(range: number, count: number): Float32Array;
     private static roundToZero;
 }
 
@@ -1025,6 +1041,7 @@ declare const TextureSlot: {
     CURRENT_FRAME: number;
     PREV_FRAME: number;
     FONT_ATLAS: number;
+    BLOOM_FRAME: number;
 };
 
 declare class RenderTarget implements RenderTargetOperation {
@@ -1187,6 +1204,23 @@ declare class GlitchMaterial extends BaseMaterial {
     setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
 }
 
+declare class BlurMaterial extends BaseMaterial {
+    private isVertical;
+    private blurCoefficients;
+    constructor(shaderProgram: ShaderProgram, isVertical: boolean, blueRange?: number);
+    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+}
+
+declare class BrightMaterial extends BaseMaterial {
+    constructor(shaderProgram: ShaderProgram);
+    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+}
+
+declare class ComposeMaterial extends BaseMaterial {
+    constructor(shaderProgram: ShaderProgram);
+    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+}
+
 interface MeshOperation {
     useMaterial(gl: WebGL2RenderingContext, context: RendererContext): void;
     updateMaterialParams(gl: WebGL2RenderingContext, transform: Transform, context: RendererContext): void;
@@ -1249,6 +1283,9 @@ declare class MaterialFactory {
     static texturedTextMaterial(smoothness: number, fontColorHex: string): TexturedTextMaterial;
     static frameBufferTextureMaterial(): FrameBufferTexturedMaterial;
     static grayScaleMaterial(): GrayScaleMaterial;
+    static singleDirectionBlurMaterial(isVertical: boolean, blurRange: number): BlurMaterial;
+    static brightMaterial(): BrightMaterial;
+    static composeMaterial(): ComposeMaterial;
     static mosaicMaterial(): MosaicMaterial;
     static rgbShiftMaterial(): MosaicMaterial;
     static glitchMaterial(): GlitchMaterial;
@@ -1334,81 +1371,105 @@ declare class TextMeshNode extends SceneNode {
     private updateMaterialParams;
 }
 
+declare abstract class BaseSceneRendererFlow implements RendererFlowOperation {
+    abstract render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation | undefined, outputRenderTarget: RenderTargetOperation | undefined): RenderTargetOperation | undefined;
+}
+
+declare class StandardSceneRendererFlow extends BaseSceneRendererFlow {
+    private sceneGraphRoot;
+    constructor(sceneGraphRoot: EmptyNode);
+    render(gl: WebGL2RenderingContext, context: RendererContext, _inputRenderTarget: RenderTargetOperation | undefined, outputRenderTarget: RenderTargetOperation | undefined): RenderTargetOperation | undefined;
+    private drawScene;
+}
+
+declare class PostEffectRendererFlow extends BaseSceneRendererFlow {
+    private shaderPasses;
+    constructor(shaderPasses: Map<string, ShaderPassOperation>);
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation | undefined, outputRenderTarget: RenderTargetOperation | undefined): RenderTargetOperation | undefined;
+}
+
 type RendererFlowOptions = {
     useFbo: boolean;
     gl?: WebGL2RenderingContext;
     resolution?: [number, number];
 };
 
-declare abstract class BaseSceneRendererFlow implements RendererFlowOperation {
-    protected renderTarget: RenderTargetOperation | undefined;
-    constructor(options?: RendererFlowOptions);
-    abstract render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation | undefined): RenderTargetOperation | undefined;
-    abstract dispose(): void;
-}
-
-declare class StandardSceneRendererFlow extends BaseSceneRendererFlow {
-    private sceneGraphRoot;
-    constructor(sceneGraphRoot: EmptyNode, options?: RendererFlowOptions);
-    render(gl: WebGL2RenderingContext, context: RendererContext, _inputRenderTarget: RenderTargetOperation | undefined): RenderTargetOperation | undefined;
-    dispose(): void;
-    private drawScene;
-}
-
-declare class PostEffectRendererFlow extends BaseSceneRendererFlow {
-    private shaderPasses;
-    constructor(shaderPasses: Map<string, ShaderPassOperation>, options: RendererFlowOptions);
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation | undefined): RenderTargetOperation | undefined;
-    dispose(): void;
-}
-
 declare class SceneRendererPipeline implements SceneRendererPipelineOperation {
     private rendererFlows;
     constructor();
     addFlow(rendererFlow: RendererFlowOperation): void;
     render(gl: WebGL2RenderingContext, context: RendererContext): void;
-    dispose(): void;
 }
 
 declare abstract class BaseShaderPass implements ShaderPassOperation {
     protected material: BaseMaterial;
     protected plane: MeshNode;
-    protected writeRenderTarget: RenderTarget;
     protected isEffectEnabled: boolean;
-    constructor(gl: WebGL2RenderingContext, material: BaseMaterial, resolution: [number, number]);
-    abstract render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    constructor(gl: WebGL2RenderingContext, material: BaseMaterial);
+    abstract render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
     setEffectEnabled(enabled: boolean): void;
     getEffectEnabled(): boolean;
-    protected draw(gl: WebGL2RenderingContext, context: RendererContext, isBlit: boolean): void;
+    protected draw(gl: WebGL2RenderingContext, context: RendererContext, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
 }
 
 declare class GrayScaleShaderPass extends BaseShaderPass {
-    constructor(gl: WebGL2RenderingContext, material: GrayScaleMaterial, resolution: [number, number]);
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    constructor(gl: WebGL2RenderingContext, material: GrayScaleMaterial);
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
 }
 
 declare class MosaicShaderPass extends BaseShaderPass {
-    constructor(gl: WebGL2RenderingContext, material: MosaicMaterial, resolution: [number, number]);
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    constructor(gl: WebGL2RenderingContext, material: MosaicMaterial);
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
 }
 
 declare class RGBShiftShaderPass extends BaseShaderPass {
-    constructor(gl: WebGL2RenderingContext, material: RGBShiftMaterial, resolution: [number, number]);
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    constructor(gl: WebGL2RenderingContext, material: RGBShiftMaterial);
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
 }
 
 declare class GlitchShaderPass extends BaseShaderPass {
-    constructor(gl: WebGL2RenderingContext, material: GlitchMaterial, resolution: [number, number]);
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    constructor(gl: WebGL2RenderingContext, material: GlitchMaterial);
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
 }
 
 declare class FinalBlitShaderPass extends BaseShaderPass {
-    constructor(gl: WebGL2RenderingContext, material: FrameBufferTexturedMaterial, resolution: [number, number]);
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
-    private drawCurrent;
+    constructor(gl: WebGL2RenderingContext, material: FrameBufferTexturedMaterial);
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+}
+
+declare class BlurShaderPass extends BaseShaderPass {
+    constructor(gl: WebGL2RenderingContext, material: BlurMaterial);
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+}
+
+declare class BrightShaderPass extends BaseShaderPass {
+    constructor(gl: WebGL2RenderingContext, material: BrightMaterial);
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+}
+
+declare class SingleDirectionBlurShaderPass extends BaseShaderPass {
+    constructor(gl: WebGL2RenderingContext, material: BlurMaterial);
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+}
+
+declare class ComposeShaderPass extends BaseShaderPass {
+    constructor(gl: WebGL2RenderingContext, material: ComposeMaterial);
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+}
+
+declare class BloomShaderPass implements ShaderPassOperation {
+    private brightShaderPass;
+    private horizontalBlurShaderPass;
+    private verticalBlurShaderPass;
+    private composeShaderPass;
+    private isEffectEnabled;
+    constructor(gl: WebGL2RenderingContext, brightMaterial: BrightMaterial, horizontalBlurMaterial: BlurMaterial, verticalBlurMaterial: BlurMaterial, composeMaterial: ComposeMaterial);
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    setEffectEnabled(enabled: boolean): void;
+    getEffectEnabled(): boolean;
 }
 
 declare function initializeLibrary(): void;
 
-export { AttributeElementSize, AudioGuiController, AudioOutput, BaseApplication, BaseBuffer, BaseGeometry, BaseMaterial, BaseMesh, BaseSceneRendererFlow, BaseShaderPass, Camera, CameraType, Clock, Color, Color255, ColorUtility, DefaultColorConstants, DefaultValueConstants, DefaultVectorConstants, DirectionalLightNode, EmptyNode, ExternalFileAudioInput, FinalBlitShaderPass, FixedTimeClock, FontGlyph, FragmentCanvasMaterial, FrameBufferTexturedMaterial, FullScreenQuadMesh, GeometryBuffer, GlitchMaterial, GlitchShaderPass, GouraudMaterial, GrayScaleMaterial, GrayScaleShaderPass, GroupNode, GuiUtility, IndexBuffer, Light, LightGuiController, LightNode, LightType, MaterialFactory, MathUtility, Matrix, Matrix22, Matrix33, Matrix44, MatrixCalculator, MatrixClassAndSizePair, MeshNode, MosaicMaterial, MosaicShaderPass, MyColorCode, MyColorConstants255, PhongMaterial, PingPongRenderTarget, Plane, PlaySceneGuiController, PointLightNode, PostEffectGuiController, PostEffectRendererFlow, Quaternion, QuaternionCalculator, RGBShiftMaterial, RGBShiftShaderPass, RealTimeClock, RecordGuiController, Recorder, RecordingApplication, Rectangle, RenderTarget, RendererContext, Scene, SceneGraphNodeIdGenerator, SceneGraphUtility, SceneNode, SceneRendererPipeline, ShaderAttribute, ShaderAudioInput, ShaderLoader, ShaderProgram, ShaderUniform, ShaderUniformValue, SimpleMesh, Sphere, StandardSceneRendererFlow, TextFontLoader, TextMesh, TextMeshNode, TextQuad, Texture2D, TextureFrameBuffer, TextureLoader, TextureSlot, TexturedMaterial, Torus, Transform, TrigonometricConstants, UnlitMaterial, UnlitMesh, Vector, Vector2, Vector3, Vector4, VectorCalculator, VectorClassAndSizePair, VertexArray, WebGLUtility, initializeLibrary };
-export type { ApplicationOperation, AudioInputOperation, BaseLightParams, BufferOperation, CameraDirection, CameraOptions, ClockOperation, ClockType, DirectionalLightParams, FontGlyphData, GeometryOperation, LightOperation, LightOptions, LightParams, MaterialOperation, MatrixOperation, MeshOperation, PointLightParams, RecordOptions, RecordType, RenderTargetOperation, RendererFlowOperation, RendererFlowOptions, SceneOperation, SceneRendererPipelineOperation, ShaderPassOperation, TextureOperation, UniformAvailableType, UniformPairs, UniformType, UniformValueType, VectorOperation };
+export { AttributeElementSize, AudioGuiController, AudioOutput, BaseApplication, BaseBuffer, BaseGeometry, BaseMaterial, BaseMesh, BaseSceneRendererFlow, BaseShaderPass, BloomShaderPass, BlurMaterial, BlurShaderPass, BrightMaterial, BrightShaderPass, Camera, CameraType, Clock, Color, Color255, ColorUtility, ComposeMaterial, ComposeShaderPass, DefaultColorConstants, DefaultValueConstants, DefaultVectorConstants, DirectionalLightNode, EmptyNode, ExternalFileAudioInput, FinalBlitShaderPass, FixedTimeClock, FontGlyph, FragmentCanvasMaterial, FrameBufferTexturedMaterial, FullScreenQuadMesh, GeometryBuffer, GlitchMaterial, GlitchShaderPass, GouraudMaterial, GrayScaleMaterial, GrayScaleShaderPass, GroupNode, GuiUtility, IndexBuffer, Light, LightGuiController, LightNode, LightType, MaterialFactory, MathUtility, Matrix, Matrix22, Matrix33, Matrix44, MatrixCalculator, MatrixClassAndSizePair, MeshNode, MosaicMaterial, MosaicShaderPass, MyColorCode, MyColorConstants255, PhongMaterial, PingPongRenderTarget, Plane, PlaySceneGuiController, PointLightNode, PostEffectGuiController, PostEffectRendererFlow, Quaternion, QuaternionCalculator, RGBShiftMaterial, RGBShiftShaderPass, RealTimeClock, RecordGuiController, Recorder, RecordingApplication, Rectangle, RenderTarget, RenderTargetSlot, RendererContext, Scene, SceneGraphNodeIdGenerator, SceneGraphUtility, SceneNode, SceneRendererPipeline, ShaderAttribute, ShaderAudioInput, ShaderLoader, ShaderProgram, ShaderUniform, ShaderUniformValue, SimpleMesh, SingleDirectionBlurShaderPass, Sphere, StandardSceneRendererFlow, TextFontLoader, TextMesh, TextMeshNode, TextQuad, Texture2D, TextureFrameBuffer, TextureLoader, TextureSlot, TexturedMaterial, Torus, Transform, TrigonometricConstants, UnlitMaterial, UnlitMesh, Vector, Vector2, Vector3, Vector4, VectorCalculator, VectorClassAndSizePair, VertexArray, WebGLUtility, initializeLibrary };
+export type { ApplicationOperation, AudioInputOperation, BaseLightParams, BufferOperation, CameraDirection, CameraOptions, ClockOperation, ClockType, DirectionalLightParams, FontGlyphData, GeometryOperation, LightOperation, LightOptions, LightParams, MaterialOperation, MatrixOperation, MeshOperation, PointLightParams, RecordOptions, RecordType, RenderTargetOperation, RenderTargetSlotKey, RendererFlowOperation, RendererFlowOptions, SceneOperation, SceneRendererPipelineOperation, ShaderPassOperation, TextureOperation, UniformAvailableType, UniformPairs, UniformType, UniformValueType, VectorOperation };
