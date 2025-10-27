@@ -89,10 +89,10 @@ class Sample extends GLSpinner.BaseApplication {
             new GLSpinner.RenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
         this.rendererContext.addRenderTargetToPool(
             GLSpinner.RenderTargetSlot.BLOOM_TEMP_RENDER_TARGET_BLUR_H,
-            new GLSpinner.RenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
+            new GLSpinner.RenderTarget(this.gl, [this.gl.drawingBufferWidth * 0.5, this.gl.drawingBufferHeight * 0.5]));
         this.rendererContext.addRenderTargetToPool(
             GLSpinner.RenderTargetSlot.BLOOM_TEMP_RENDER_TARGET_BLUR_V,
-            new GLSpinner.RenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
+            new GLSpinner.RenderTarget(this.gl, [this.gl.drawingBufferWidth * 0.5, this.gl.drawingBufferHeight * 0.5]));
 
         const standardRendererFlow = new GLSpinner.StandardSceneRendererFlow(
             this.baseSceneRoot);
@@ -201,8 +201,8 @@ class Sample extends GLSpinner.BaseApplication {
         this.rendererContext.updateGlobalUniform("resolution", new GLSpinner.ShaderUniformValue([this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
         // this.rendererContext.updateGlobalUniform("blurStrength", new GLSpinner.ShaderUniformValue(0.5 + 0.5 * GLSpinner.MathUtility.sin(this.scene.Clock.getElapsedTime())));
         this.rendererContext.updateGlobalUniform("blurStrength", new GLSpinner.ShaderUniformValue(1.0));
-        this.rendererContext.updateGlobalUniform("brightThreshold", new GLSpinner.ShaderUniformValue(0.9));
-        this.rendererContext.updateGlobalUniform("bloomStrength", new GLSpinner.ShaderUniformValue(0.8));
+        this.rendererContext.updateGlobalUniform("brightThreshold", new GLSpinner.ShaderUniformValue(0.85));
+        this.rendererContext.updateGlobalUniform("bloomStrength", new GLSpinner.ShaderUniformValue(10.0));
 
         this.shaderPasses.forEach((pass, key) => {
             if(this.shaderPassEnabledSwitch.get(key)){

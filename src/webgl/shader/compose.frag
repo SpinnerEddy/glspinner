@@ -10,11 +10,20 @@ uniform float bloomStrength;
 
 out vec4 outputColor;
 
+vec3 toLinear(vec3 c) {
+    return pow(c, vec3(2.2));
+}
+
+vec3 toGamma(vec3 c) {
+    return pow(c, vec3(1.0 / 2.2));
+}
+
 void main(void){
     vec2 uv = vec2(vUv.x, 1.0 - vUv.y);
-    vec4 texColor = texture(tex, uv);
-    vec4 bloomTexColor = texture(brightTex, uv);
-    vec4 addColor = texColor + pow(bloomTexColor, vec4(bloomStrength));
-    addColor = pow(addColor, vec4(0.4545));
-    outputColor = addColor;
+    vec3 texColor = toLinear(texture(tex, uv).rgb);
+    vec3 bloomTexColor = toLinear(texture(brightTex, uv).rgb);
+
+    vec3 color = texColor + bloomTexColor * bloomStrength;
+    color = toGamma(color);
+    outputColor = vec4(color, 1.0);
 }
