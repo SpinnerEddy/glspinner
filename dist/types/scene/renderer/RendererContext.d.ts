@@ -9,6 +9,7 @@ export declare class RendererContext {
     private camera;
     private lights;
     private globalUniforms;
+    private fragmentCanvasUniforms;
     private currentShaderProgram;
     private renderTargetPool;
     getRenderTargetFromPool(key: RenderTargetSlotKey): RenderTargetOperation | undefined;
@@ -17,6 +18,8 @@ export declare class RendererContext {
     getCamera(): Camera;
     updateGlobalUniform(key: string, value: ShaderUniformValue): void;
     getGlobalUniform(): UniformPairs;
+    updateFragmentCanvasUniform(key: string, value: ShaderUniformValue): void;
+    getFragmentCanvasUniform(): UniformPairs;
     setCurrentShaderProgram(program: ShaderProgram): void;
     isCurrentShaderProgramSame(program: ShaderProgram): boolean;
     setLights(lights: LightParams[]): void;

@@ -1,7 +1,7 @@
 import { Color } from "../../color/Color";
 import { Vector3 } from "../../math/vector/Vector3";
 import { ShaderProgram } from "../../webgl/gl/ShaderProgram";
-import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
+import { RendererContext } from "../renderer/RendererContext";
 import { BaseMaterial } from "./BaseMaterial";
 export declare class GouraudMaterial extends BaseMaterial {
     private lightDirection;
@@ -11,5 +11,5 @@ export declare class GouraudMaterial extends BaseMaterial {
     setLightDirection(lightDirection: Vector3): void;
     setEyeDirection(eyeDirection: Vector3): void;
     setAmbientColor(ambientColor: Color): void;
-    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void;
 }

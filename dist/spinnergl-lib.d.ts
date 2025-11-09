@@ -476,6 +476,7 @@ declare class RendererContext {
     private camera;
     private lights;
     private globalUniforms;
+    private fragmentCanvasUniforms;
     private currentShaderProgram;
     private renderTargetPool;
     getRenderTargetFromPool(key: RenderTargetSlotKey): RenderTargetOperation | undefined;
@@ -484,6 +485,8 @@ declare class RendererContext {
     getCamera(): Camera;
     updateGlobalUniform(key: string, value: ShaderUniformValue): void;
     getGlobalUniform(): UniformPairs;
+    updateFragmentCanvasUniform(key: string, value: ShaderUniformValue): void;
+    getFragmentCanvasUniform(): UniformPairs;
     setCurrentShaderProgram(program: ShaderProgram): void;
     isCurrentShaderProgramSame(program: ShaderProgram): boolean;
     setLights(lights: LightParams[]): void;
@@ -1131,7 +1134,7 @@ declare class RealTimeClock extends Clock {
 interface MaterialOperation {
     use(gl: WebGL2RenderingContext, context: RendererContext): void;
     getAttribute(gl: WebGL2RenderingContext, name: string): ShaderAttribute;
-    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void;
     cleanup(): void;
 }
 
@@ -1141,17 +1144,17 @@ declare abstract class BaseMaterial implements MaterialOperation {
     use(gl: WebGL2RenderingContext, context: RendererContext): void;
     getAttribute(gl: WebGL2RenderingContext, name: string): ShaderAttribute;
     cleanup(): void;
-    abstract setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    abstract setUniform(gl: WebGL2RenderingContext, context: RendererContext): void;
 }
 
 declare class FragmentCanvasMaterial extends BaseMaterial {
     constructor(shaderProgram: ShaderProgram);
-    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void;
 }
 
 declare class UnlitMaterial extends BaseMaterial {
     constructor(shaderProgram: ShaderProgram);
-    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void;
 }
 
 declare class GouraudMaterial extends BaseMaterial {
@@ -1162,12 +1165,12 @@ declare class GouraudMaterial extends BaseMaterial {
     setLightDirection(lightDirection: Vector3): void;
     setEyeDirection(eyeDirection: Vector3): void;
     setAmbientColor(ambientColor: Color): void;
-    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void;
 }
 
 declare class PhongMaterial extends BaseMaterial {
     constructor(shaderProgram: ShaderProgram);
-    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void;
     setLightUniform(gl: WebGL2RenderingContext, light: LightParams): void;
 }
 
@@ -1175,56 +1178,56 @@ declare class TexturedMaterial extends BaseMaterial {
     private texture;
     private texIndex;
     constructor(shaderProgram: ShaderProgram, texture: Texture2D, index: number);
-    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void;
     cleanup(): void;
 }
 
 declare class FrameBufferTexturedMaterial extends BaseMaterial {
     constructor(shaderProgram: ShaderProgram);
-    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void;
 }
 
 declare class GrayScaleMaterial extends BaseMaterial {
     constructor(shaderProgram: ShaderProgram);
-    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void;
 }
 
 declare class MosaicMaterial extends BaseMaterial {
     constructor(shaderProgram: ShaderProgram);
-    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void;
 }
 
 declare class RGBShiftMaterial extends BaseMaterial {
     constructor(shaderProgram: ShaderProgram);
-    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void;
 }
 
 declare class GlitchMaterial extends BaseMaterial {
     constructor(shaderProgram: ShaderProgram);
-    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void;
 }
 
 declare class BlurMaterial extends BaseMaterial {
     private isVertical;
     private blurCoefficients;
     constructor(shaderProgram: ShaderProgram, isVertical: boolean, blueRange?: number);
-    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void;
 }
 
 declare class BrightMaterial extends BaseMaterial {
     constructor(shaderProgram: ShaderProgram);
-    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void;
 }
 
 declare class ComposeMaterial extends BaseMaterial {
     constructor(shaderProgram: ShaderProgram);
-    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void;
 }
 
 interface MeshOperation {
     useMaterial(gl: WebGL2RenderingContext, context: RendererContext): void;
     updateMaterialParams(gl: WebGL2RenderingContext, transform: Transform, context: RendererContext): void;
-    updateUniforms(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    updateUniforms(gl: WebGL2RenderingContext, context: RendererContext): void;
     draw(gl: WebGL2RenderingContext): void;
 }
 
@@ -1234,33 +1237,33 @@ declare abstract class BaseMesh implements MeshOperation {
     constructor(geometry: BaseGeometry, material: BaseMaterial);
     useMaterial(gl: WebGL2RenderingContext, context: RendererContext): void;
     updateMaterialParams(_gl: WebGL2RenderingContext, _transform: Transform, _context: RendererContext): void;
-    abstract updateUniforms(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    abstract updateUniforms(gl: WebGL2RenderingContext, context: RendererContext): void;
     abstract draw(gl: WebGL2RenderingContext): void;
 }
 
 declare class FullScreenQuadMesh extends BaseMesh {
     constructor(geometry: Rectangle, material: BaseMaterial);
-    updateUniforms(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    updateUniforms(gl: WebGL2RenderingContext, context: RendererContext): void;
     draw(gl: WebGL2RenderingContext): void;
 }
 
 declare class SimpleMesh extends BaseMesh {
     constructor(geometry: BaseGeometry, material: BaseMaterial);
     updateMaterialParams(gl: WebGL2RenderingContext, transform: Transform, context: RendererContext): void;
-    updateUniforms(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    updateUniforms(gl: WebGL2RenderingContext, context: RendererContext): void;
     draw(gl: WebGL2RenderingContext): void;
 }
 
 declare class UnlitMesh extends BaseMesh {
     constructor(geometry: BaseGeometry, material: BaseMaterial);
-    updateUniforms(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    updateUniforms(gl: WebGL2RenderingContext, context: RendererContext): void;
     draw(gl: WebGL2RenderingContext): void;
 }
 
 declare class TextMesh extends BaseMesh {
     constructor(geometry: TextQuad, material: BaseMaterial);
     get resolution(): [number, number];
-    updateUniforms(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    updateUniforms(gl: WebGL2RenderingContext, context: RendererContext): void;
     draw(gl: WebGL2RenderingContext): void;
 }
 
@@ -1269,7 +1272,7 @@ declare class TexturedTextMaterial extends BaseMaterial {
     private smoothness;
     private fontColor;
     constructor(shaderProgram: ShaderProgram, fontTexture: Texture2D, smoothness: number, fontColor: Float32Array);
-    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void;
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void;
     cleanup(): void;
 }
 
