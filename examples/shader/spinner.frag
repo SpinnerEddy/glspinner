@@ -3,6 +3,7 @@ precision highp float;
 
 uniform float time;
 uniform vec2 resolution;
+uniform vec3 cameraPos;
 
 out vec4 outputColor;
 
@@ -293,7 +294,7 @@ vec3 background(vec3 rayDir){
 
 vec3 renderingFunc(vec2 uv){
     vec3 color = vec3(0.0);
-    vec3 camPos = vec3(0.0, 0.5, -2.5);
+    vec3 camPos = cameraPos;
     vec3 objectPos = vec3(0.0, 0.0, 0.0);
     vec3 forward = normalize(objectPos - camPos);
     vec3 up = vec3(0.0, 1.0, 0.0);

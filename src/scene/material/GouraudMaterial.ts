@@ -1,8 +1,8 @@
 import { Color } from "../../color/Color";
 import { Vector3 } from "../../math/vector/Vector3";
 import { ShaderProgram } from "../../webgl/gl/ShaderProgram";
-import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
 import { ShaderUniformValue } from "../../webgl/gl/uniform/ShaderUniformValue";
+import { RendererContext } from "../renderer/RendererContext";
 import { BaseMaterial } from "./BaseMaterial";
 
 export class GouraudMaterial extends BaseMaterial {
@@ -29,7 +29,8 @@ export class GouraudMaterial extends BaseMaterial {
         this.ambientColor = ambientColor;
     }
 
-    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void {
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void {
+        const uniforms = context.getGlobalUniform();
         for(const key in uniforms){
             this.shaderProgram.setUniform(gl, key, uniforms[key]);
         }

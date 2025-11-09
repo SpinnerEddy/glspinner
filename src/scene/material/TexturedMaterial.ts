@@ -1,8 +1,8 @@
 import { ShaderProgram } from "../../webgl/gl/ShaderProgram";
 import { Texture2D } from "../../webgl/gl/texture/Texture2D";
 import { TextureOperation } from "../../webgl/gl/texture/TextureOperation";
-import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
 import { ShaderUniformValue } from "../../webgl/gl/uniform/ShaderUniformValue";
+import { RendererContext } from "../renderer/RendererContext";
 import { BaseMaterial } from "./BaseMaterial";
 
 export class TexturedMaterial extends BaseMaterial {
@@ -15,7 +15,8 @@ export class TexturedMaterial extends BaseMaterial {
         this.texIndex = index;
     }
 
-    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void {
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void {
+        const uniforms = context.getGlobalUniform();
         for(const key in uniforms){
             this.shaderProgram.setUniform(gl, key, uniforms[key]);
         }

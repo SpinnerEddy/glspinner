@@ -1,7 +1,7 @@
 import { ShaderProgram } from "../../webgl/gl/ShaderProgram";
 import { TextureSlot } from "../../webgl/gl/texture/TextureConstants";
-import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
 import { ShaderUniformValue } from "../../webgl/gl/uniform/ShaderUniformValue";
+import { RendererContext } from "../renderer/RendererContext";
 import { BaseMaterial } from "./BaseMaterial";
 
 export class MosaicMaterial extends BaseMaterial {
@@ -10,7 +10,8 @@ export class MosaicMaterial extends BaseMaterial {
         super(shaderProgram);
     }
 
-    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void {
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void {
+        const uniforms = context.getGlobalUniform();
         this.shaderProgram.setUniform(gl, "mvpMatrix", uniforms["mvpMatrix"]);
         this.shaderProgram.setUniform(gl, "mosaicSize", uniforms["mosaicSize"]);
         this.shaderProgram.setUniform(gl, "tex", new ShaderUniformValue(TextureSlot.CURRENT_FRAME, 'int'));

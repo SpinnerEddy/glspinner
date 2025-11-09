@@ -10,6 +10,7 @@ export class RendererContext {
     private camera: Camera | undefined = undefined;
     private lights: LightParams[] = [];
     private globalUniforms: UniformPairs = {};
+    private fragmentCanvasUniforms: UniformPairs = {};
     private currentShaderProgram: ShaderProgram | undefined = undefined;
     private renderTargetPool: Map<RenderTargetSlotKey, RenderTargetOperation> = new Map();
 
@@ -39,6 +40,14 @@ export class RendererContext {
 
     public getGlobalUniform(): UniformPairs {
         return this.globalUniforms;
+    }
+
+    public updateFragmentCanvasUniform(key: string, value: ShaderUniformValue): void{
+        this.fragmentCanvasUniforms[key] = value;
+    }
+
+    public getFragmentCanvasUniform(): UniformPairs {
+        return this.fragmentCanvasUniforms;
     }
 
     public setCurrentShaderProgram(program: ShaderProgram): void {

@@ -1,5 +1,4 @@
 import { BaseGeometry } from "../../webgl/gl/geometry/BaseGeometry";
-import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
 import { ShaderUniformValue } from "../../webgl/gl/uniform/ShaderUniformValue";
 import { BaseMaterial } from "../material/BaseMaterial";
 import { PhongMaterial } from "../material/PhongMaterial";
@@ -30,8 +29,8 @@ export class SimpleMesh extends BaseMesh {
         phong.setLightUniform(gl, light);
     }
     
-    updateUniforms(gl: WebGL2RenderingContext, uniforms: UniformPairs): void {
-        this.material.setUniform(gl, uniforms);
+    updateUniforms(gl: WebGL2RenderingContext, context: RendererContext): void {
+        this.material.setUniform(gl, context);
     }
 
     draw(gl: WebGL2RenderingContext): void {

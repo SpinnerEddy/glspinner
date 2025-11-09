@@ -1,8 +1,8 @@
 import { MathUtility } from "../../math/MathUtility";
 import { ShaderProgram } from "../../webgl/gl/ShaderProgram";
 import { TextureSlot } from "../../webgl/gl/texture/TextureConstants";
-import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
 import { ShaderUniformValue } from "../../webgl/gl/uniform/ShaderUniformValue";
+import { RendererContext } from "../renderer/RendererContext";
 import { BaseMaterial } from "./BaseMaterial";
 
 export class BlurMaterial extends BaseMaterial {
@@ -16,7 +16,8 @@ export class BlurMaterial extends BaseMaterial {
         this.blurCoefficients = MathUtility.calculateGaussianCoefficients(blueRange, 32);
     }
 
-    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void {
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void {
+        const uniforms = context.getGlobalUniform();
         this.shaderProgram.setUniform(gl, "mvpMatrix", uniforms["mvpMatrix"]);
         this.shaderProgram.setUniform(gl, "blurDirection", new ShaderUniformValue(this.isVertical ? 1 : 0, 'int'));
         this.shaderProgram.setUniform(gl, "gCoefficients", new ShaderUniformValue(this.blurCoefficients));

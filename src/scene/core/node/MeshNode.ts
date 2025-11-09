@@ -29,10 +29,11 @@ export class MeshNode extends SceneNode{
         const vpMatrix = projectionMatrix.multiply(viewMatrix);
         const mvpMatrix = vpMatrix.multiply(modelMatrix);
         
-        let uniforms = context.getGlobalUniform();
-        uniforms["mvpMatrix"] = new ShaderUniformValue(mvpMatrix);
+        // let uniforms = context.getGlobalUniform();
+        // uniforms["mvpMatrix"] = new ShaderUniformValue(mvpMatrix);
+        context.updateGlobalUniform("mvpMatrix", new ShaderUniformValue(mvpMatrix));
 
-        this.mesh.updateUniforms(gl, uniforms);
+        this.mesh.updateUniforms(gl, context);
     }
 
     private updateMaterialParams(gl: WebGL2RenderingContext, context: RendererContext): void {

@@ -8,6 +8,7 @@ class Sample extends GLSpinner.BaseApplication {
     private shaderPasses!: Map<string, GLSpinner.ShaderPassOperation>;
     private shaderPassEnabledSwitch!: Map<string, boolean>;
     private textRoot!: GLSpinner.EmptyNode;
+    private cameraPos!: GLSpinner.Vector3;
 
     async preload(): Promise<void> {
         await super.preload();
@@ -57,6 +58,7 @@ class Sample extends GLSpinner.BaseApplication {
         const fboPlaneMesh = new GLSpinner.UnlitMesh(fboPlane, fboMaterial);
         const fboPlaneMeshNode = new GLSpinner.MeshNode(fboPlaneMesh);
         GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, fboPlaneMeshNode);
+        this.cameraPos = new GLSpinner.Vector3(0.0, 0.5, -2.5);
 
         const text = "SPINNEREDDY";
         this.textRoot = new GLSpinner.EmptyNode();
@@ -189,6 +191,35 @@ class Sample extends GLSpinner.BaseApplication {
             () => this.scene.start(),
             () => this.scene.stop()
         );
+
+        GLSpinner.GuiUtility.addFolder("Lighting");
+        GLSpinner.GuiUtility.addElementWithRange(
+            {cameraPosX: -0.5}, 
+            "cameraPosX",
+            -1.0,
+            1.0,
+            (value: number) => {
+                this.cameraPos.x = value;
+            }
+        );
+        GLSpinner.GuiUtility.addElementWithRange(
+            {cameraPosY: 0.5}, 
+            "cameraPosY",
+            0.0,
+            1.0,
+            (value: number) => {
+                this.cameraPos.y = value;
+            }
+        );
+        GLSpinner.GuiUtility.addElementWithRange(
+            {cameraPosZ: -2.5}, 
+            "cameraPosZ",
+            -2.5,
+            2.5,
+            (value: number) => {
+                this.cameraPos.z = value;
+            }
+        );
     }
 
     update(): void {
@@ -204,6 +235,8 @@ class Sample extends GLSpinner.BaseApplication {
         this.rendererContext.updateGlobalUniform("brightThreshold", new GLSpinner.ShaderUniformValue(0.85));
         this.rendererContext.updateGlobalUniform("bloomStrength", new GLSpinner.ShaderUniformValue(10.0));
 
+        this.rendererContext.updateFragmentCanvasUniform("cameraPos", new GLSpinner.ShaderUniformValue(this.cameraPos));
+
         this.shaderPasses.forEach((pass, key) => {
             if(this.shaderPassEnabledSwitch.get(key)){
                 pass.setEffectEnabled(true);
@@ -218,8 +251,6 @@ class Sample extends GLSpinner.BaseApplication {
         this.webglUtility.setViewport(this.canvas);
         this.webglUtility.clearColor(GLSpinner.ColorUtility.hexToColor01(this.backgroundColorStr));
         this.rendererFlowPipeline.render(this.gl, this.rendererContext);
-
-        // this.scene.stop();
     }
 }
 

@@ -1,6 +1,6 @@
 import { TextQuad } from "../../webgl/gl/geometry/TextQuad";
-import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
 import { BaseMaterial } from "../material/BaseMaterial";
+import { RendererContext } from "../renderer/RendererContext";
 import { BaseMesh } from "./BaseMesh";
 
 export class TextMesh extends BaseMesh {
@@ -12,8 +12,8 @@ export class TextMesh extends BaseMesh {
         return (this.geometry as TextQuad).resolution;
     }
     
-    updateUniforms(gl: WebGL2RenderingContext, uniforms: UniformPairs): void {
-        this.material.setUniform(gl, uniforms);
+    updateUniforms(gl: WebGL2RenderingContext, context: RendererContext): void {
+        this.material.setUniform(gl, context);
     }
 
     draw(gl: WebGL2RenderingContext): void {

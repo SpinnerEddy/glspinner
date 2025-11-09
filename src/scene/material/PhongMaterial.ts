@@ -1,7 +1,7 @@
 import { ShaderProgram } from "../../webgl/gl/ShaderProgram";
-import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
 import { ShaderUniformValue } from "../../webgl/gl/uniform/ShaderUniformValue";
 import { DirectionalLightParams, LightParams, LightType, PointLightParams } from "../light/LightConstants";
+import { RendererContext } from "../renderer/RendererContext";
 import { BaseMaterial } from "./BaseMaterial";
 
 export class PhongMaterial extends BaseMaterial {
@@ -10,7 +10,8 @@ export class PhongMaterial extends BaseMaterial {
         super(shaderProgram);
     }
 
-    setUniform(gl: WebGL2RenderingContext, uniforms: UniformPairs): void {
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void {
+        const uniforms = context.getGlobalUniform();
         for(const key in uniforms){
             this.shaderProgram.setUniform(gl, key, uniforms[key]);
         }
