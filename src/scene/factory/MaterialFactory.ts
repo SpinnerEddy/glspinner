@@ -12,6 +12,7 @@ import { FrameBufferTexturedMaterial } from "../material/FrameBufferTexturedMate
 import { GlitchMaterial } from "../material/GlitchMaterial";
 import { GouraudMaterial } from "../material/GouraudMaterial";
 import { GrayScaleMaterial } from "../material/GrayScaleMaterial";
+import { MaskMaterial } from "../material/MaskMaterial";
 import { MosaicMaterial } from "../material/MosaicMaterial";
 import { PhongMaterial } from "../material/PhongMaterial";
 import { RGBShiftMaterial } from "../material/RGBShiftMaterial";
@@ -94,6 +95,16 @@ export class MaterialFactory {
 
         const shader = this.shaderLoader.getShaderProgram("bright");
         return new BrightMaterial(shader);
+    }
+
+    static maskMaterial(shaderKey: string): MaskMaterial {
+        if (!this.shaderLoader) {
+            throw new Error('MaterialFac†ory not initialized. Call init!!');
+        }
+
+        const shader = this.shaderLoader.getShaderProgram(shaderKey);
+        return new MaskMaterial(shader);
+
     }
 
     static composeMaterial(): ComposeMaterial {

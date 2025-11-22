@@ -3,5 +3,6 @@ export const TextureSlot =
     CURRENT_FRAME: 0,
     PREV_FRAME: 1,
     FONT_ATLAS: 2,
-    BLOOM_FRAME: 3
+    BLOOM_FRAME: 3,
+    POST_EFFECTED: 4
 }

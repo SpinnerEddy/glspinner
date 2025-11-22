@@ -115,6 +115,7 @@ export * from './scene/material/GlitchMaterial'
 export * from './scene/material/BlurMaterial'
 export * from './scene/material/BrightMaterial'
 export * from './scene/material/ComposeMaterial'
+export * from './scene/material/MaskMaterial'
 
 // Scene/Mesh
 export * from './scene/mesh/BaseMesh'
@@ -176,6 +177,8 @@ export * from './scene/renderer/postEffect/BrightShaderPass'
 export * from './scene/renderer/postEffect/SingleDirectionBlurShaderPass'
 export * from './scene/renderer/postEffect/ComposeShaderPass'
 export * from './scene/renderer/postEffect/BloomShaderPass'
+export * from './scene/renderer/postEffect/MaskShaderPass'
+export * from './scene/renderer/postEffect/CustomMergeMaskShaderPass'
 
 export function initializeLibrary() {
     console.log("ライブラリが初期化されました");
