@@ -27,6 +27,12 @@ export class ShaderLoader{
         this.shaderProgramKey.add(shaderKey);
     }
 
+    public async loadShaderFromSource(shaderKey: string, vertShaderSource: string, fragShaderSource: string, varyings: string[] = []): Promise<void> {
+        let program = new ShaderProgram(this.gl, vertShaderSource, fragShaderSource, varyings);
+        this.shaderProgramCache.set(shaderKey, program);
+        this.shaderProgramKey.add(shaderKey);
+    }
+
     public async loadCommonShaders(): Promise<void> {
         const vertShaderFiles = import.meta.glob('@webgl/shader/*.vert', {query: '?raw', eager: true});
         const fragShaderFiles = import.meta.glob('@webgl/shader/*.frag', {query: '?raw', eager: true});

@@ -1,4 +1,8 @@
 import * as GLSpinner from '../src/index.ts';
+import spinnerShaderFrag from '../examples/shader/spinner.frag';
+import spinnerShaderVert from '../examples/shader/spinner.vert';
+import audioFrag from '../examples/shader/testAudio.frag';
+import audioVert from '../examples/shader/testAudio.vert';
 
 class Sample extends GLSpinner.BaseApplication {
     private camera!: GLSpinner.Camera;
@@ -15,13 +19,8 @@ class Sample extends GLSpinner.BaseApplication {
         await this.shaderLoader.loadShaderFromPath(
             "shader/basic.vert",
             "shader/basic.frag");
-        await this.shaderLoader.loadShaderFromPath(
-            "shader/spinner.vert",
-            "shader/spinner.frag");
-        await this.shaderLoader.loadShaderFromPath(
-            "shader/testAudio.vert",
-            "shader/testAudio.frag",
-            ['oSample']);
+        this.shaderLoader.loadShaderFromSource("spinner", spinnerShaderVert, spinnerShaderFrag);
+        this.shaderLoader.loadShaderFromSource("testAudio", audioVert, audioFrag, ['oSample']);
         await this.textureLoader.loadTextureFromPath(
             "texture/testImage.png"
         );
