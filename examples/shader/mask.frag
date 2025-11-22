@@ -7,7 +7,6 @@ in vec4 vColor;
 uniform float time;
 uniform vec2 resolution;
 uniform sampler2D tex;
-uniform sampler2D effectedTex;
 
 out vec4 outputColor;
 
@@ -16,6 +15,5 @@ void main(void){
     float mask = sin(time)*0.5+0.5;
     vec2 texUv = vec2(vUv.x, 1.0 - vUv.y);
     vec4 texColor = texture(tex, texUv);
-    vec4 effectedTexColor = texture(effectedTex, texUv);
-    outputColor = vec4(mix(texColor.rgb, effectedTexColor.rgb, mask), 1.0);
+    outputColor = vec4(mix(texColor.rgb, vec3(0.0), mask), 1.0);
 }

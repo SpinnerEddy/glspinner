@@ -16,7 +16,5 @@ export class MaskMaterial extends BaseMaterial {
         this.shaderProgram.setUniform(gl, "time", uniforms["time"]);
         this.shaderProgram.setUniform(gl, "resolution", uniforms["resolution"]);
         this.shaderProgram.setUniform(gl, "tex", new ShaderUniformValue(TextureSlot.CURRENT_FRAME, 'int'));
-        this.shaderProgram.setUniform(gl, "effectedTex", new ShaderUniformValue(TextureSlot.POST_EFFECTED, 'int'));
-        
     }
 }

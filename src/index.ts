@@ -178,7 +178,6 @@ export * from './scene/renderer/postEffect/SingleDirectionBlurShaderPass'
 export * from './scene/renderer/postEffect/ComposeShaderPass'
 export * from './scene/renderer/postEffect/BloomShaderPass'
 export * from './scene/renderer/postEffect/MaskShaderPass'
-export * from './scene/renderer/postEffect/CustomMergeMaskShaderPass'
 
 export function initializeLibrary() {
     console.log("ライブラリが初期化されました");
