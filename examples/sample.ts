@@ -3,6 +3,8 @@ import spinnerShaderFrag from '../examples/shader/spinner.frag';
 import spinnerShaderVert from '../examples/shader/spinner.vert';
 import audioFrag from '../examples/shader/testAudio.frag';
 import audioVert from '../examples/shader/testAudio.vert';
+import gideonRomanPng from '../examples/font/GideonRoman.png'
+import gideonRomanJson from '../examples/font/GideonRoman.json'
 
 class Sample extends GLSpinner.BaseApplication {
     private camera!: GLSpinner.Camera;
@@ -24,14 +26,7 @@ class Sample extends GLSpinner.BaseApplication {
         await this.textureLoader.loadTextureFromPath(
             "texture/testImage.png"
         );
-        // await this.textFontLoader.loadTextFontFromPath(
-        //     "font/OpenSans.png",
-        //     "font/OpenSans.json"
-        // );
-        await this.textFontLoader.loadTextFontFromPath(
-            "font/GideonRoman.png",
-            "font/GideonRoman.json"
-        );
+        this.textFontLoader.loadTextFontFromPathAndJsonText("GideonRoman", gideonRomanPng, gideonRomanJson);
         await this.textFontLoader.loadTextFontFromPath(
             "font/Roboto.png",
             "font/Roboto.json"

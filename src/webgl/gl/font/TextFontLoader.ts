@@ -49,14 +49,26 @@ export class TextFontLoader{
         return glyphs;
     }
 
-    public async loadTextFontFromPath(sdfFontTexturePath: string, sdfFontTextureReferenceJson: string): Promise<void> {
+    public loadTextFontFromPathAndJsonText(textureKey: string, sdfFontTexturePath: string, sdfFontTextureReferenceJsonData: FontGlyphJsonData): void {
+        const texture = new Texture2D(this.gl, sdfFontTexturePath);
+        this.sdfFontTextureCache.set(textureKey, texture);
+
+        const glyphMap: Map<string, FontGlyph> = new Map();
+        for(const glyphData of sdfFontTextureReferenceJsonData.chars){
+            const fontGlyph = new FontGlyph(glyphData, texture.getTextureSize().width, texture.getTextureSize().height);
+            glyphMap.set(glyphData.char, fontGlyph);
+        }
+        this.sdfFontGlyphCache.set(textureKey, glyphMap);
+    }
+
+    public async loadTextFontFromPath(sdfFontTexturePath: string, sdfFontTextureReferenceJsonPath: string): Promise<void> {
         const texture = new Texture2D(this.gl, sdfFontTexturePath);
 
-        let textureKey = sdfFontTexturePath.split('/').pop()?.split('.').shift() as string;;
+        let textureKey = sdfFontTexturePath.split('/').pop()?.split('.').shift() as string;
 
         this.sdfFontTextureCache.set(textureKey, texture);
         
-        const response = await fetch(sdfFontTextureReferenceJson);
+        const response = await fetch(sdfFontTextureReferenceJsonPath);
         const jsonData: FontGlyphJsonData = JSON.parse(await response.text());
 
         const glyphMap: Map<string, FontGlyph> = new Map();
