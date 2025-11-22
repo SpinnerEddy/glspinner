@@ -11,6 +11,7 @@ import { FrameBufferTexturedMaterial } from "../material/FrameBufferTexturedMate
 import { GlitchMaterial } from "../material/GlitchMaterial";
 import { GouraudMaterial } from "../material/GouraudMaterial";
 import { GrayScaleMaterial } from "../material/GrayScaleMaterial";
+import { MaskMaterial } from "../material/MaskMaterial";
 import { MosaicMaterial } from "../material/MosaicMaterial";
 import { PhongMaterial } from "../material/PhongMaterial";
 import { TexturedMaterial } from "../material/TexturedMaterial";
@@ -28,6 +29,7 @@ export declare class MaterialFactory {
     static grayScaleMaterial(): GrayScaleMaterial;
     static singleDirectionBlurMaterial(isVertical: boolean, blurRange: number): BlurMaterial;
     static brightMaterial(): BrightMaterial;
+    static maskMaterial(shaderKey: string): MaskMaterial;
     static composeMaterial(): ComposeMaterial;
     static mosaicMaterial(): MosaicMaterial;
     static rgbShiftMaterial(): MosaicMaterial;

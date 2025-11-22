@@ -1,5 +1,9 @@
 import { Texture2D } from "../texture/Texture2D";
-import { FontGlyph } from "./FontGlyph";
+import { FontGlyph, FontGlyphData } from "./FontGlyph";
+interface FontGlyphJsonData {
+    pages: string[];
+    chars: FontGlyphData[];
+}
 export declare class TextFontLoader {
     private gl;
     private sdfFontTextureCache;
@@ -9,5 +13,7 @@ export declare class TextFontLoader {
     setCurrentUseFontName(fontName: string): void;
     getTextureForCurrentFont(): Texture2D;
     getGlyphsFromText(text: string): Array<FontGlyph>;
-    loadTextFontFromPath(sdfFontTexturePath: string, sdfFontTextureReferenceJson: string): Promise<void>;
+    loadTextFontFromPathAndJsonText(textureKey: string, sdfFontTexturePath: string, sdfFontTextureReferenceJsonData: FontGlyphJsonData): void;
+    loadTextFontFromPath(sdfFontTexturePath: string, sdfFontTextureReferenceJsonPath: string): Promise<void>;
 }
+export {};

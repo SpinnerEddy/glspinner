@@ -8,5 +8,6 @@ export declare const RenderTargetSlot: {
     readonly BLOOM_TEMP_RENDER_TARGET_BLUR_H: 6;
     readonly BLOOM_TEMP_RENDER_TARGET_BLUR_V: 7;
     readonly BLOOM_RENDER_TARGET: 8;
+    readonly RENDER_TARGET_EFFECTED: 9;
 };
 export type RenderTargetSlotKey = typeof RenderTargetSlot[keyof typeof RenderTargetSlot];

@@ -84,6 +84,7 @@ declare const RenderTargetSlot: {
     readonly BLOOM_TEMP_RENDER_TARGET_BLUR_H: 6;
     readonly BLOOM_TEMP_RENDER_TARGET_BLUR_V: 7;
     readonly BLOOM_RENDER_TARGET: 8;
+    readonly RENDER_TARGET_EFFECTED: 9;
 };
 type RenderTargetSlotKey = typeof RenderTargetSlot[keyof typeof RenderTargetSlot];
 
@@ -600,6 +601,10 @@ declare class FontGlyph {
     getXAdvance(): number;
 }
 
+interface FontGlyphJsonData {
+    pages: string[];
+    chars: FontGlyphData[];
+}
 declare class TextFontLoader {
     private gl;
     private sdfFontTextureCache;
@@ -609,7 +614,8 @@ declare class TextFontLoader {
     setCurrentUseFontName(fontName: string): void;
     getTextureForCurrentFont(): Texture2D;
     getGlyphsFromText(text: string): Array<FontGlyph>;
-    loadTextFontFromPath(sdfFontTexturePath: string, sdfFontTextureReferenceJson: string): Promise<void>;
+    loadTextFontFromPathAndJsonText(textureKey: string, sdfFontTexturePath: string, sdfFontTextureReferenceJsonData: FontGlyphJsonData): void;
+    loadTextFontFromPath(sdfFontTexturePath: string, sdfFontTextureReferenceJsonPath: string): Promise<void>;
 }
 
 declare class ShaderLoader {
@@ -619,6 +625,7 @@ declare class ShaderLoader {
     constructor(gl: WebGL2RenderingContext);
     getShaderProgram(key: string): ShaderProgram;
     loadShaderFromPath(vertShaderPath: string, fragShaderPath: string, varyings?: string[]): Promise<void>;
+    loadShaderFromSource(shaderKey: string, vertShaderSource: string, fragShaderSource: string, varyings?: string[]): Promise<void>;
     loadCommonShaders(): Promise<void>;
     loadShader(path: string): Promise<string>;
 }
@@ -1045,6 +1052,7 @@ declare const TextureSlot: {
     PREV_FRAME: number;
     FONT_ATLAS: number;
     BLOOM_FRAME: number;
+    POST_EFFECTED: number;
 };
 
 declare class RenderTarget implements RenderTargetOperation {
@@ -1224,6 +1232,11 @@ declare class ComposeMaterial extends BaseMaterial {
     setUniform(gl: WebGL2RenderingContext, context: RendererContext): void;
 }
 
+declare class MaskMaterial extends BaseMaterial {
+    constructor(shaderProgram: ShaderProgram);
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void;
+}
+
 interface MeshOperation {
     useMaterial(gl: WebGL2RenderingContext, context: RendererContext): void;
     updateMaterialParams(gl: WebGL2RenderingContext, transform: Transform, context: RendererContext): void;
@@ -1288,6 +1301,7 @@ declare class MaterialFactory {
     static grayScaleMaterial(): GrayScaleMaterial;
     static singleDirectionBlurMaterial(isVertical: boolean, blurRange: number): BlurMaterial;
     static brightMaterial(): BrightMaterial;
+    static maskMaterial(shaderKey: string): MaskMaterial;
     static composeMaterial(): ComposeMaterial;
     static mosaicMaterial(): MosaicMaterial;
     static rgbShiftMaterial(): MosaicMaterial;
@@ -1472,7 +1486,12 @@ declare class BloomShaderPass implements ShaderPassOperation {
     getEffectEnabled(): boolean;
 }
 
+declare class MaskShaderPass extends BaseShaderPass {
+    constructor(gl: WebGL2RenderingContext, material: MaskMaterial);
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+}
+
 declare function initializeLibrary(): void;
 
-export { AttributeElementSize, AudioGuiController, AudioOutput, BaseApplication, BaseBuffer, BaseGeometry, BaseMaterial, BaseMesh, BaseSceneRendererFlow, BaseShaderPass, BloomShaderPass, BlurMaterial, BlurShaderPass, BrightMaterial, BrightShaderPass, Camera, CameraType, Clock, Color, Color255, ColorUtility, ComposeMaterial, ComposeShaderPass, DefaultColorConstants, DefaultValueConstants, DefaultVectorConstants, DirectionalLightNode, EmptyNode, ExternalFileAudioInput, FinalBlitShaderPass, FixedTimeClock, FontGlyph, FragmentCanvasMaterial, FrameBufferTexturedMaterial, FullScreenQuadMesh, GeometryBuffer, GlitchMaterial, GlitchShaderPass, GouraudMaterial, GrayScaleMaterial, GrayScaleShaderPass, GroupNode, GuiUtility, IndexBuffer, Light, LightGuiController, LightNode, LightType, MaterialFactory, MathUtility, Matrix, Matrix22, Matrix33, Matrix44, MatrixCalculator, MatrixClassAndSizePair, MeshNode, MosaicMaterial, MosaicShaderPass, MyColorCode, MyColorConstants255, PhongMaterial, PingPongRenderTarget, Plane, PlaySceneGuiController, PointLightNode, PostEffectGuiController, PostEffectRendererFlow, Quaternion, QuaternionCalculator, RGBShiftMaterial, RGBShiftShaderPass, RealTimeClock, RecordGuiController, Recorder, RecordingApplication, Rectangle, RenderTarget, RenderTargetSlot, RendererContext, Scene, SceneGraphNodeIdGenerator, SceneGraphUtility, SceneNode, SceneRendererPipeline, ShaderAttribute, ShaderAudioInput, ShaderLoader, ShaderProgram, ShaderUniform, ShaderUniformValue, SimpleMesh, SingleDirectionBlurShaderPass, Sphere, StandardSceneRendererFlow, TextFontLoader, TextMesh, TextMeshNode, TextQuad, Texture2D, TextureFrameBuffer, TextureLoader, TextureSlot, TexturedMaterial, Torus, Transform, TrigonometricConstants, UnlitMaterial, UnlitMesh, Vector, Vector2, Vector3, Vector4, VectorCalculator, VectorClassAndSizePair, VertexArray, WebGLUtility, initializeLibrary };
+export { AttributeElementSize, AudioGuiController, AudioOutput, BaseApplication, BaseBuffer, BaseGeometry, BaseMaterial, BaseMesh, BaseSceneRendererFlow, BaseShaderPass, BloomShaderPass, BlurMaterial, BlurShaderPass, BrightMaterial, BrightShaderPass, Camera, CameraType, Clock, Color, Color255, ColorUtility, ComposeMaterial, ComposeShaderPass, DefaultColorConstants, DefaultValueConstants, DefaultVectorConstants, DirectionalLightNode, EmptyNode, ExternalFileAudioInput, FinalBlitShaderPass, FixedTimeClock, FontGlyph, FragmentCanvasMaterial, FrameBufferTexturedMaterial, FullScreenQuadMesh, GeometryBuffer, GlitchMaterial, GlitchShaderPass, GouraudMaterial, GrayScaleMaterial, GrayScaleShaderPass, GroupNode, GuiUtility, IndexBuffer, Light, LightGuiController, LightNode, LightType, MaskMaterial, MaskShaderPass, MaterialFactory, MathUtility, Matrix, Matrix22, Matrix33, Matrix44, MatrixCalculator, MatrixClassAndSizePair, MeshNode, MosaicMaterial, MosaicShaderPass, MyColorCode, MyColorConstants255, PhongMaterial, PingPongRenderTarget, Plane, PlaySceneGuiController, PointLightNode, PostEffectGuiController, PostEffectRendererFlow, Quaternion, QuaternionCalculator, RGBShiftMaterial, RGBShiftShaderPass, RealTimeClock, RecordGuiController, Recorder, RecordingApplication, Rectangle, RenderTarget, RenderTargetSlot, RendererContext, Scene, SceneGraphNodeIdGenerator, SceneGraphUtility, SceneNode, SceneRendererPipeline, ShaderAttribute, ShaderAudioInput, ShaderLoader, ShaderProgram, ShaderUniform, ShaderUniformValue, SimpleMesh, SingleDirectionBlurShaderPass, Sphere, StandardSceneRendererFlow, TextFontLoader, TextMesh, TextMeshNode, TextQuad, Texture2D, TextureFrameBuffer, TextureLoader, TextureSlot, TexturedMaterial, Torus, Transform, TrigonometricConstants, UnlitMaterial, UnlitMesh, Vector, Vector2, Vector3, Vector4, VectorCalculator, VectorClassAndSizePair, VertexArray, WebGLUtility, initializeLibrary };
 export type { ApplicationOperation, AudioInputOperation, BaseLightParams, BufferOperation, CameraDirection, CameraOptions, ClockOperation, ClockType, DirectionalLightParams, FontGlyphData, GeometryOperation, LightOperation, LightOptions, LightParams, MaterialOperation, MatrixOperation, MeshOperation, PointLightParams, RecordOptions, RecordType, RenderTargetOperation, RenderTargetSlotKey, RendererFlowOperation, RendererFlowOptions, SceneOperation, SceneRendererPipelineOperation, ShaderPassOperation, TextureOperation, UniformAvailableType, UniformPairs, UniformType, UniformValueType, VectorOperation };

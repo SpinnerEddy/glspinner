@@ -3,4 +3,5 @@ export declare const TextureSlot: {
     PREV_FRAME: number;
     FONT_ATLAS: number;
     BLOOM_FRAME: number;
+    POST_EFFECTED: number;
 };

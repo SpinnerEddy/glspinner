@@ -6,6 +6,7 @@ export declare class ShaderLoader {
     constructor(gl: WebGL2RenderingContext);
     getShaderProgram(key: string): ShaderProgram;
     loadShaderFromPath(vertShaderPath: string, fragShaderPath: string, varyings?: string[]): Promise<void>;
+    loadShaderFromSource(shaderKey: string, vertShaderSource: string, fragShaderSource: string, varyings?: string[]): Promise<void>;
     loadCommonShaders(): Promise<void>;
     loadShader(path: string): Promise<string>;
 }
