@@ -93,7 +93,6 @@ export class GeometryBuffer extends BaseBuffer{
                 arrayIndex += AttributeElementSize.aUv;
             }
         }
-        console.log(interleavedArray);
         
         return interleavedArray;
     }

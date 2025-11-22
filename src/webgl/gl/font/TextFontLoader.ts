@@ -56,9 +56,6 @@ export class TextFontLoader{
 
         this.sdfFontTextureCache.set(textureKey, texture);
         
-        console.log("loadTextFontTextureFromPath done");
-        console.log(this.sdfFontTextureCache);
-
         const response = await fetch(sdfFontTextureReferenceJson);
         const jsonData: FontGlyphJsonData = JSON.parse(await response.text());
 
@@ -68,8 +65,5 @@ export class TextFontLoader{
             glyphMap.set(glyphData.char, fontGlyph);
         }
         this.sdfFontGlyphCache.set(textureKey, glyphMap);
-
-        console.log("loadTextFontDataFromPath done");
-        console.log(this.sdfFontGlyphCache);
     }
 }

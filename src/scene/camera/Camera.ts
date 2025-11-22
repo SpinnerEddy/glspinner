@@ -83,7 +83,6 @@ export class Camera {
 
         const target = this.position.add(calcForward);
         this.viewMatrix = MatrixCalculator.lookAt(this.position, target, calcUp);
-        console.log(this.viewMatrix);
     }
 
     private calculateProjectionMatrix(){

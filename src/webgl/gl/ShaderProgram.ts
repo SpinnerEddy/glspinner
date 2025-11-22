@@ -60,9 +60,6 @@ export class ShaderProgram{
 
         if(gl.getProgramParameter(program, gl.LINK_STATUS)){
             gl.useProgram(program);
-
-            console.log('Create program success!!');
-
             return program;
         }
         else{

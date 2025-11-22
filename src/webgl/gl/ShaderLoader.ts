@@ -25,9 +25,6 @@ export class ShaderLoader{
         let program = new ShaderProgram(this.gl, vertShaderSource, fragShaderSource, varyings);
         this.shaderProgramCache.set(shaderKey, program);
         this.shaderProgramKey.add(shaderKey);
-        
-        console.log("loadShaderFromPath done");
-        console.log(this.shaderProgramCache);
     }
 
     public async loadCommonShaders(): Promise<void> {
@@ -52,7 +49,6 @@ export class ShaderLoader{
         });
 
         for (const key of this.shaderProgramKey) {
-            console.log(key);
             let vertexShaderSource = vertexShaderCache.get(key) as string;
             let fragmentShaderSource = fragmentShaderCache.get(key) as string;
             if (!vertexShaderSource || !fragmentShaderSource) {
@@ -62,9 +58,6 @@ export class ShaderLoader{
             let program = new ShaderProgram(this.gl, vertexShaderSource, fragmentShaderSource);
             this.shaderProgramCache.set(key, program);
         }
-
-        console.log("loadCommonShaders done");
-        console.log(this.shaderProgramCache);
     }
 
     async loadShader(path: string): Promise<string> {

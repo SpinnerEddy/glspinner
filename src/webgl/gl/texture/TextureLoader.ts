@@ -24,8 +24,5 @@ export class TextureLoader{
         this.textureKeySet.add(textureKey);
 
         this.textureCache.set(textureKey, texture);
-        
-        console.log("loadTextureFromPath done");
-        console.log(this.textureCache);
     }
 }
