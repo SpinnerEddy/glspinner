@@ -1,7 +1,7 @@
-var Pe = Object.defineProperty;
-var Me = (F, t, e) => t in F ? Pe(F, t, { enumerable: !0, configurable: !0, writable: !0, value: e }) : F[t] = e;
-var A = (F, t, e) => Me(F, typeof t != "symbol" ? t + "" : t, e);
-class Ue {
+var Me = Object.defineProperty;
+var Ue = (F, t, e) => t in F ? Me(F, t, { enumerable: !0, configurable: !0, writable: !0, value: e }) : F[t] = e;
+var A = (F, t, e) => Ue(F, typeof t != "symbol" ? t + "" : t, e);
+class De {
   constructor() {
     A(this, "audioContext");
     A(this, "audioBuffer");
@@ -202,9 +202,9 @@ class St extends Ut {
     )).inverse();
   }
 }
-const De = {
+const Oe = {
   EPSILON: 1e-6
-}, jt = {
+}, $t = {
   PI: Math.PI,
   PI_2: Math.PI * 2,
   RAD_TO_DEG: 180 / Math.PI,
@@ -212,10 +212,10 @@ const De = {
 };
 class J {
   static degreesToRadians(t) {
-    return jt.DEG_TO_RAD * t;
+    return $t.DEG_TO_RAD * t;
   }
   static radiansToDegrees(t) {
-    return t * jt.RAD_TO_DEG;
+    return t * $t.RAD_TO_DEG;
   }
   static clamp(t, e, r) {
     return Math.max(Math.min(t, r), e);
@@ -258,10 +258,10 @@ class J {
     return new Float32Array(r);
   }
   static roundToZero(t) {
-    return Math.abs(t) < De.EPSILON ? 0 : t;
+    return Math.abs(t) < Oe.EPSILON ? 0 : t;
   }
 }
-class $t {
+class Gt {
   constructor(t) {
     A(this, "components");
     this.components = t;
@@ -276,7 +276,7 @@ class $t {
     return this.components[t];
   }
 }
-class te extends $t {
+class ee extends Gt {
   constructor(t, e) {
     super(new Float32Array([t, e]));
   }
@@ -293,7 +293,7 @@ class te extends $t {
     return this.components[1];
   }
   create(t = 0, e = 0) {
-    return new te(t, e);
+    return new ee(t, e);
   }
   min(t, e) {
     let r = e ?? this.create();
@@ -359,13 +359,13 @@ class te extends $t {
     return i = n.add(s, i), i;
   }
   clone() {
-    return new te(this.x, this.y);
+    return new ee(this.x, this.y);
   }
   heading2D() {
     return J.atan2(this.y, this.x);
   }
 }
-class ft extends $t {
+class ft extends Gt {
   constructor(t, e, r) {
     super(new Float32Array([t, e, r]));
   }
@@ -465,7 +465,7 @@ class ft extends $t {
     return [t, e];
   }
 }
-class Gt extends $t {
+class Vt extends Gt {
   constructor(t, e, r, i) {
     super(new Float32Array([t, e, r, i]));
   }
@@ -494,7 +494,7 @@ class Gt extends $t {
     return this.components[3];
   }
   create(t = 0, e = 0, r = 0, i = 0) {
-    return new Gt(t, e, r, i);
+    return new Vt(t, e, r, i);
   }
   min(t, e) {
     let r = e ?? this.create();
@@ -560,17 +560,17 @@ class Gt extends $t {
     return i = n.add(s, i), i;
   }
   clone() {
-    return new Gt(this.x, this.y, this.z, this.w);
+    return new Vt(this.x, this.y, this.z, this.w);
   }
 }
 const Ot = {
   AXIS2DX: new ft(1, 0, 0),
   AXIS2DY: new ft(0, 1, 0),
   AXIS2DZ: new ft(0, 0, 1)
-}, Oe = {
-  2: te,
+}, Be = {
+  2: ee,
   3: ft,
-  4: Gt
+  4: Vt
 };
 class at {
   static min(t, e) {
@@ -656,7 +656,7 @@ class at {
     return [e, r];
   }
   static convertVector(t, e) {
-    const r = Oe[t];
+    const r = Be[t];
     if (!r)
       throw new Error(`Unsupported vector size: ${t}`);
     return new r(...e);
@@ -810,7 +810,7 @@ class dt extends Ut {
     return i.set(0, 0, t), i.set(1, 1, e), i.set(2, 2, r), i;
   }
 }
-const Be = {
+const Le = {
   2: kt,
   3: St,
   4: dt
@@ -896,13 +896,13 @@ class At {
     return t.col != e.col || t.row != e.row ? (console.log(`col: ${t.col},${e.col}`), console.log(`row: ${t.row},${e.row}`), !1) : !0;
   }
   static createMatrixInstance(t) {
-    const e = Be[t];
+    const e = Le[t];
     if (!e)
       throw new Error("Unsupport matrix size");
     return new e();
   }
 }
-class ee {
+class re {
   constructor(t, e, r, i) {
     A(this, "components");
     this.components = new Float32Array([t, e, r, i]);
@@ -930,7 +930,7 @@ class ee {
 }
 class ht {
   static create(t, e, r, i) {
-    return new ee(t, e, r, i);
+    return new re(t, e, r, i);
   }
   static createFromEuler(t, e, r) {
     const i = ht.create(0, -J.sin(e * 0.5), 0, J.cos(e * 0.5)), n = ht.create(-J.sin(t * 0.5), 0, 0, J.cos(t * 0.5)), s = ht.create(0, 0, -J.sin(r * 0.5), J.cos(r * 0.5)), o = ht.multiply(i, n);
@@ -941,7 +941,7 @@ class ht {
     return ht.create(r.x * n, r.y * n, r.z * n, J.cos(i));
   }
   static identity() {
-    return new ee(0, 0, 0, 1);
+    return new re(0, 0, 0, 1);
   }
   static add(t, e) {
     const r = t.x + e.x, i = t.y + e.y, n = t.z + e.z, s = t.w + e.w;
@@ -999,7 +999,7 @@ class ht {
     return ht.create(t.x, t.y, t.z, 0);
   }
 }
-class Le {
+class Ie {
   constructor() {
     A(this, "position");
     A(this, "scale");
@@ -1038,22 +1038,22 @@ class Le {
     t === void 0 ? this.worldMatrix = this.localMatrix : this.worldMatrix = At.multiply(t, this.localMatrix);
   }
 }
-class Ae {
+class Ce {
   static generateId(t) {
     const e = t.substring(0, t.length - 4), r = this.counters.get(e) ?? 0;
     return this.counters.set(e, r + 1), `${e}_${r}`;
   }
 }
-A(Ae, "counters", /* @__PURE__ */ new Map());
-class Wt {
+A(Ce, "counters", /* @__PURE__ */ new Map());
+class Ht {
   constructor(t = "") {
     A(this, "id");
     A(this, "parent");
     A(this, "children");
     A(this, "transform");
-    this.transform = new Le(), this.children = [];
+    this.transform = new Ie(), this.children = [];
     const e = this.constructor;
-    this.id = t !== "" ? t : Ae.generateId(e.name);
+    this.id = t !== "" ? t : Ce.generateId(e.name);
   }
   addChild(t) {
     t !== this && t.setParent(this);
@@ -1080,7 +1080,7 @@ class Wt {
     }
   }
 }
-class Ie extends Wt {
+class Ne extends Ht {
   update() {
     var t;
     this.transform.updateMatrix((t = this.parent) == null ? void 0 : t.getTransform().getWorldMatrix());
@@ -1092,10 +1092,10 @@ class Ie extends Wt {
       r.draw(t, e);
   }
 }
-class Ne {
+class je {
   constructor() {
     A(this, "root");
-    this.root = new Ie();
+    this.root = new Ne();
   }
   update() {
     this.root.update();
@@ -1172,7 +1172,7 @@ class bt {
     return new ft(this.r, this.g, this.b);
   }
   toVector4() {
-    return new Gt(this.r, this.g, this.b, this.a);
+    return new Vt(this.r, this.g, this.b, this.a);
   }
   translateTo255() {
     const t = Math.round(this.r * 255), e = Math.round(this.g * 255), r = Math.round(this.b * 255), i = Math.round(this.a * 255);
@@ -1185,7 +1185,7 @@ const Ii = {
   BLUE: new bt(0, 0, 1),
   WHITE: new bt(1, 1, 1),
   BLACK: new bt(0, 0, 0)
-}, je = {
+}, $e = {
   COLOR_EMPTY: new Et(0, 0, 0, 0),
   COLOR_SUBARU: new Et(174, 180, 156, 255),
   COLOR_NOCTCHILL: new Et(56, 77, 152, 255),
@@ -1212,11 +1212,11 @@ const Ii = {
   COLOR_LILJA: "#eafdff",
   COLOR_SUMIKA: "#7cfc00"
 };
-class re {
+class Nt {
   static hexToColor255(t) {
     const r = /^#([0-9A-Fa-f]{6})$/.exec(t);
     if (!r)
-      return je.COLOR_EMPTY;
+      return $e.COLOR_EMPTY;
     let i = r[1];
     const n = parseInt(i.slice(0, 2), 16), s = parseInt(i.slice(2, 4), 16), o = parseInt(i.slice(4, 6), 16);
     return new Et(n, s, o);
@@ -1262,7 +1262,7 @@ class lt {
       return t;
     if (t instanceof Ut)
       return t.toArray();
-    if (t instanceof $t)
+    if (t instanceof Gt)
       return t.values;
     if (t instanceof Float32Array)
       return t;
@@ -1286,7 +1286,7 @@ class lt {
         default:
           throw new Error("Invalid uniform values type");
       }
-    else if (t instanceof $t)
+    else if (t instanceof Gt)
       switch (t.size) {
         case 1:
           return this.isFloat(e) ? "1fv" : "1iv";
@@ -1353,7 +1353,7 @@ class xt {
   cleanup() {
   }
 }
-class $e extends xt {
+class Ge extends xt {
   constructor(e, r, i = 10) {
     super(e);
     A(this, "isVertical");
@@ -1365,7 +1365,7 @@ class $e extends xt {
     this.shaderProgram.setUniform(e, "mvpMatrix", i.mvpMatrix), this.shaderProgram.setUniform(e, "blurDirection", new lt(this.isVertical ? 1 : 0, "int")), this.shaderProgram.setUniform(e, "gCoefficients", new lt(this.blurCoefficients)), this.shaderProgram.setUniform(e, "texResolution", i.texResolution), this.shaderProgram.setUniform(e, "blurStrength", i.blurStrength), this.shaderProgram.setUniform(e, "tex", new lt(pt.CURRENT_FRAME, "int"));
   }
 }
-class Ge extends xt {
+class Ve extends xt {
   constructor(t) {
     super(t);
   }
@@ -1374,7 +1374,7 @@ class Ge extends xt {
     this.shaderProgram.setUniform(t, "mvpMatrix", r.mvpMatrix), this.shaderProgram.setUniform(t, "brightThreshold", r.brightThreshold), this.shaderProgram.setUniform(t, "tex", new lt(pt.CURRENT_FRAME, "int"));
   }
 }
-class Ve extends xt {
+class We extends xt {
   constructor(t) {
     super(t);
   }
@@ -1383,7 +1383,7 @@ class Ve extends xt {
     this.shaderProgram.setUniform(t, "mvpMatrix", r.mvpMatrix), this.shaderProgram.setUniform(t, "bloomStrength", r.bloomStrength), this.shaderProgram.setUniform(t, "tex", new lt(pt.CURRENT_FRAME, "int")), this.shaderProgram.setUniform(t, "brightTex", new lt(pt.BLOOM_FRAME, "int"));
   }
 }
-class We extends xt {
+class He extends xt {
   constructor(t) {
     super(t);
   }
@@ -1395,7 +1395,7 @@ class We extends xt {
       this.shaderProgram.setUniform(t, n, i[n]);
   }
 }
-class He extends xt {
+class Ze extends xt {
   constructor(t) {
     super(t);
   }
@@ -1404,7 +1404,7 @@ class He extends xt {
     this.shaderProgram.setUniform(t, "mvpMatrix", r.mvpMatrix), this.shaderProgram.setUniform(t, "tex", new lt(pt.CURRENT_FRAME, "int"));
   }
 }
-class Ze extends xt {
+class Ye extends xt {
   constructor(t) {
     super(t);
   }
@@ -1413,7 +1413,7 @@ class Ze extends xt {
     this.shaderProgram.setUniform(t, "mvpMatrix", r.mvpMatrix), this.shaderProgram.setUniform(t, "time", r.time), this.shaderProgram.setUniform(t, "glitchCoef", r.glitchCoef), this.shaderProgram.setUniform(t, "tex", new lt(pt.CURRENT_FRAME, "int"));
   }
 }
-class Ye extends xt {
+class Xe extends xt {
   constructor(e, r, i, n) {
     super(e);
     A(this, "lightDirection");
@@ -1437,7 +1437,7 @@ class Ye extends xt {
     this.shaderProgram.setUniform(e, "lightDirection", new lt(this.lightDirection)), this.shaderProgram.setUniform(e, "eyeDirection", new lt(this.eyeDirection)), this.shaderProgram.setUniform(e, "ambientColor", new lt(this.ambientColor.toVector4()));
   }
 }
-class Xe extends xt {
+class Ke extends xt {
   constructor(t) {
     super(t);
   }
@@ -1446,7 +1446,7 @@ class Xe extends xt {
     this.shaderProgram.setUniform(t, "mvpMatrix", r.mvpMatrix), this.shaderProgram.setUniform(t, "tex", new lt(pt.CURRENT_FRAME, "int"));
   }
 }
-class Ke extends xt {
+class Je extends xt {
   constructor(t) {
     super(t);
   }
@@ -1455,7 +1455,7 @@ class Ke extends xt {
     this.shaderProgram.setUniform(t, "mvpMatrix", r.mvpMatrix), this.shaderProgram.setUniform(t, "time", r.time), this.shaderProgram.setUniform(t, "resolution", r.resolution), this.shaderProgram.setUniform(t, "tex", new lt(pt.CURRENT_FRAME, "int"));
   }
 }
-class Je extends xt {
+class qe extends xt {
   constructor(t) {
     super(t);
   }
@@ -1468,7 +1468,7 @@ const ie = {
   Directional: 1,
   Point: 2
 };
-class qe extends xt {
+class Qe extends xt {
   constructor(t) {
     super(t);
   }
@@ -1487,7 +1487,7 @@ class qe extends xt {
     }
   }
 }
-class Qe extends xt {
+class tr extends xt {
   constructor(t) {
     super(t);
   }
@@ -1496,7 +1496,7 @@ class Qe extends xt {
     this.shaderProgram.setUniform(t, "mvpMatrix", r.mvpMatrix), this.shaderProgram.setUniform(t, "shiftOffset", r.shiftOffset), this.shaderProgram.setUniform(t, "tex", new lt(pt.CURRENT_FRAME, "int"));
   }
 }
-class tr extends xt {
+class er extends xt {
   constructor(e, r, i) {
     super(e);
     A(this, "texture");
@@ -1513,7 +1513,7 @@ class tr extends xt {
     this.texture.unbind();
   }
 }
-class er extends xt {
+class me extends xt {
   constructor(e, r, i, n) {
     super(e);
     A(this, "fontTexture");
@@ -1539,7 +1539,7 @@ class rr extends xt {
       this.shaderProgram.setUniform(t, i, r[i]);
   }
 }
-class Qt {
+class te {
   static init(t, e, r) {
     this.shaderLoader = t, this.textureLoader = e, this.textFontLoader = r;
   }
@@ -1547,73 +1547,79 @@ class Qt {
     if (!this.shaderLoader)
       throw new Error("MaterialFac†ory not initialized. Call init!!");
     const e = this.shaderLoader.getShaderProgram(t);
-    return new We(e);
+    return new He(e);
   }
   static texturedMaterial(t, e) {
     if (!this.shaderLoader)
       throw new Error("MaterialFac†ory not initialized. Call init!!");
     const r = this.shaderLoader.getShaderProgram("texture"), i = this.textureLoader.getTexture(t);
-    return new tr(r, i, e);
+    return new er(r, i, e);
   }
   static texturedTextMaterial(t, e) {
     if (!this.shaderLoader)
       throw new Error("MaterialFac†ory not initialized. Call init!!");
-    const r = this.shaderLoader.getShaderProgram("text"), i = this.textFontLoader.getTextureForCurrentFont(), n = re.hexToColor01(e).toRGBAArray;
-    return new er(r, i, t, n);
+    const r = this.shaderLoader.getShaderProgram("text"), i = this.textFontLoader.getTextureForCurrentFont(), n = Nt.hexToColor01(e).toRGBAArray;
+    return new me(r, i, t, n);
+  }
+  static customTexturedTextMaterial(t, e, r) {
+    if (!this.shaderLoader)
+      throw new Error("MaterialFac†ory not initialized. Call init!!");
+    const i = this.shaderLoader.getShaderProgram(t), n = this.textFontLoader.getTextureForCurrentFont(), s = Nt.hexToColor01(r).toRGBAArray;
+    return new me(i, n, e, s);
   }
   static frameBufferTextureMaterial() {
     if (!this.shaderLoader)
       throw new Error("MaterialFac†ory not initialized. Call init!!");
     const t = this.shaderLoader.getShaderProgram("framebuffer");
-    return new He(t);
+    return new Ze(t);
   }
   static grayScaleMaterial() {
     if (!this.shaderLoader)
       throw new Error("MaterialFac†ory not initialized. Call init!!");
     const t = this.shaderLoader.getShaderProgram("grayScale");
-    return new Xe(t);
+    return new Ke(t);
   }
   static singleDirectionBlurMaterial(t, e) {
     if (!this.shaderLoader)
       throw new Error("MaterialFac†ory not initialized. Call init!!");
     const r = this.shaderLoader.getShaderProgram("blur");
-    return new $e(r, t, e);
+    return new Ge(r, t, e);
   }
   static brightMaterial() {
     if (!this.shaderLoader)
       throw new Error("MaterialFac†ory not initialized. Call init!!");
     const t = this.shaderLoader.getShaderProgram("bright");
-    return new Ge(t);
+    return new Ve(t);
   }
   static maskMaterial(t) {
     if (!this.shaderLoader)
       throw new Error("MaterialFac†ory not initialized. Call init!!");
     const e = this.shaderLoader.getShaderProgram(t);
-    return new Ke(e);
+    return new Je(e);
   }
   static composeMaterial() {
     if (!this.shaderLoader)
       throw new Error("MaterialFac†ory not initialized. Call init!!");
     const t = this.shaderLoader.getShaderProgram("compose");
-    return new Ve(t);
+    return new We(t);
   }
   static mosaicMaterial() {
     if (!this.shaderLoader)
       throw new Error("MaterialFac†ory not initialized. Call init!!");
     const t = this.shaderLoader.getShaderProgram("mosaic");
-    return new Je(t);
+    return new qe(t);
   }
-  static rgbShiftMaterial() {
+  static rgbShiftMaterial(t = "") {
     if (!this.shaderLoader)
       throw new Error("MaterialFac†ory not initialized. Call init!!");
-    const t = this.shaderLoader.getShaderProgram("rgbShift");
-    return new Qe(t);
+    const e = t == "" ? "rgbShift" : t, r = this.shaderLoader.getShaderProgram(e);
+    return new tr(r);
   }
-  static glitchMaterial() {
+  static glitchMaterial(t = "") {
     if (!this.shaderLoader)
       throw new Error("MaterialFac†ory not initialized. Call init!!");
-    const t = this.shaderLoader.getShaderProgram("glitch");
-    return new Ze(t);
+    const e = t == "" ? "glitch" : t, r = this.shaderLoader.getShaderProgram(e);
+    return new Ye(r);
   }
   static unlitMaterial() {
     if (!this.shaderLoader)
@@ -1625,17 +1631,17 @@ class Qt {
     if (!this.shaderLoader)
       throw new Error("MaterialFac†ory not initialized. Call init!!");
     const t = this.shaderLoader.getShaderProgram("phongLighting");
-    return new qe(t);
+    return new Qe(t);
   }
   static gouraudMaterial(t, e, r) {
     if (!this.shaderLoader)
       throw new Error("MaterialFac†ory not initialized. Call init!!");
-    const i = this.shaderLoader.getShaderProgram("gouraudLighting"), n = t ?? new ft(-0.5, 0.5, 0.5), s = e ?? new ft(0, 0, 20), o = r ?? re.hexToColor01("#000000");
-    return new Ye(i, n, s, o);
+    const i = this.shaderLoader.getShaderProgram("gouraudLighting"), n = t ?? new ft(-0.5, 0.5, 0.5), s = e ?? new ft(0, 0, 20), o = r ?? Nt.hexToColor01("#000000");
+    return new Xe(i, n, s, o);
   }
 }
-A(Qt, "shaderLoader"), A(Qt, "textureLoader"), A(Qt, "textFontLoader");
-const Nt = {
+A(te, "shaderLoader"), A(te, "textureLoader"), A(te, "textFontLoader");
+const jt = {
   RENDER_TARGET_A: 0,
   RENDER_TARGET_B: 1,
   PREV_FRAME_RENDER_TARGET: 2,
@@ -1656,7 +1662,7 @@ class ir {
     this.rendererFlows.push(t);
   }
   render(t, e) {
-    let r = e.getRenderTargetFromPool(Nt.RENDER_TARGET_A), i = e.getRenderTargetFromPool(Nt.RENDER_TARGET_B), n = i, s = r;
+    let r = e.getRenderTargetFromPool(jt.RENDER_TARGET_A), i = e.getRenderTargetFromPool(jt.RENDER_TARGET_B), n = i, s = r;
     for (const o of this.rendererFlows)
       n = o.render(t, e, n, s), s = s === r ? i : r;
   }
@@ -1731,7 +1737,7 @@ class ce {
     }, this.image.src = t;
   }
 }
-class me {
+class ge {
   constructor(t, e, r) {
     A(this, "char");
     A(this, "uv");
@@ -1794,7 +1800,7 @@ class sr {
     this.sdfFontTextureCache.set(t, i);
     const n = /* @__PURE__ */ new Map();
     for (const s of r.chars) {
-      const o = new me(s, i.getTextureSize().width, i.getTextureSize().height);
+      const o = new ge(s, i.getTextureSize().width, i.getTextureSize().height);
       n.set(s.char, o);
     }
     this.sdfFontGlyphCache.set(t, n);
@@ -1806,7 +1812,7 @@ class sr {
     this.sdfFontTextureCache.set(i, r);
     const n = await fetch(e), s = JSON.parse(await n.text()), o = /* @__PURE__ */ new Map();
     for (const p of s.chars) {
-      const b = new me(p, r.getTextureSize().width, r.getTextureSize().height);
+      const b = new ge(p, r.getTextureSize().width, r.getTextureSize().height);
       o.set(p.char, b);
     }
     this.sdfFontGlyphCache.set(i, o);
@@ -2561,10 +2567,8 @@ class ci {
     });
     for (const n of this.shaderProgramKey) {
       let s = r.get(n), o = i.get(n);
-      if (!s || !o) {
-        console.warn(`Shader pair incomplete for key: ${n}`);
+      if (!s || !o)
         continue;
-      }
       let l = new ae(this.gl, s, o);
       this.shaderProgramCache.set(n, l);
     }
@@ -2608,8 +2612,8 @@ class di {
     this.gl.clearColor(t.red, t.green, t.blue, t.alpha), this.gl.clearDepth(1), this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
   }
   resizeCanvasToDisplaySize(t) {
-    const e = t.clientWidth, r = t.clientHeight, i = t.width !== e || t.height !== r;
-    return i && (t.width = e, t.height = r), i;
+    const e = window.devicePixelRatio || 1, r = Math.floor(t.clientWidth * e), i = Math.floor(t.clientHeight * e), n = t.width !== r || t.height !== i;
+    return n && (t.width = r, t.height = i), n;
   }
   setViewport(t) {
     this.resizeCanvasToDisplaySize(t), this.gl.viewport(0, 0, t.width, t.height);
@@ -2634,13 +2638,13 @@ class fi {
     A(this, "rendererContext");
     A(this, "audioOutput");
     A(this, "rendererFlowPipeline");
-    this.canvas = document.getElementById("webgl-canvas"), this.webglUtility = new di(this.canvas), this.gl = this.webglUtility.getWebGL2RenderingContext(), this.shaderLoader = new ci(this.gl), this.textureLoader = new ui(this.gl), this.textFontLoader = new sr(this.gl), this.scene = t, this.rendererContext = new nr(), this.sceneGraph = new Ne(), this.audioOutput = new Ue(), this.rendererFlowPipeline = new ir();
+    this.canvas = document.getElementById("webgl-canvas"), this.webglUtility = new di(this.canvas), this.gl = this.webglUtility.getWebGL2RenderingContext(), this.shaderLoader = new ci(this.gl), this.textureLoader = new ui(this.gl), this.textFontLoader = new sr(this.gl), this.scene = t, this.rendererContext = new nr(), this.sceneGraph = new je(), this.audioOutput = new De(), this.rendererFlowPipeline = new ir();
   }
   async start() {
-    await this.preload(), Qt.init(this.shaderLoader, this.textureLoader, this.textFontLoader), this.setup(), this.scene.setUpdate(this.update.bind(this)), this.scene.setDraw(this.draw.bind(this)), this.scene.start();
+    await this.preload(), this.setup(), this.scene.setUpdate(this.update.bind(this)), this.scene.setDraw(this.draw.bind(this)), this.scene.start();
   }
   async preload() {
-    await this.shaderLoader.loadCommonShaders();
+    await this.shaderLoader.loadCommonShaders(), te.init(this.shaderLoader, this.textureLoader, this.textFontLoader);
   }
 }
 /**
@@ -2895,7 +2899,7 @@ const mi = {
   match: (F) => typeof F == "string",
   fromHexString: ue,
   toHexString: ue
-}, Vt = {
+}, Wt = {
   isPrimitive: !0,
   match: (F) => typeof F == "number",
   fromHexString: (F) => parseInt(F.substring(1), 16),
@@ -2906,27 +2910,27 @@ const mi = {
   // See https://esbuild.github.io/api/#tree-shaking
   match: (F) => Array.isArray(F),
   fromHexString(F, t, e = 1) {
-    const r = Vt.fromHexString(F);
+    const r = Wt.fromHexString(F);
     t[0] = (r >> 16 & 255) / 255 * e, t[1] = (r >> 8 & 255) / 255 * e, t[2] = (r & 255) / 255 * e;
   },
   toHexString([F, t, e], r = 1) {
     r = 255 / r;
     const i = F * r << 16 ^ t * r << 8 ^ e * r << 0;
-    return Vt.toHexString(i);
+    return Wt.toHexString(i);
   }
 }, vi = {
   isPrimitive: !1,
   match: (F) => Object(F) === F,
   fromHexString(F, t, e = 1) {
-    const r = Vt.fromHexString(F);
+    const r = Wt.fromHexString(F);
     t.r = (r >> 16 & 255) / 255 * e, t.g = (r >> 8 & 255) / 255 * e, t.b = (r & 255) / 255 * e;
   },
   toHexString({ r: F, g: t, b: e }, r = 1) {
     r = 255 / r;
     const i = F * r << 16 ^ t * r << 8 ^ e * r << 0;
-    return Vt.toHexString(i);
+    return Wt.toHexString(i);
   }
-}, _i = [mi, Vt, gi, vi];
+}, _i = [mi, Wt, gi, vi];
 function wi(F) {
   return _i.find((t) => t.match(F));
 }
@@ -3572,7 +3576,7 @@ function Ci(F) {
   const e = document.querySelector("head link[rel=stylesheet], head style");
   e ? document.head.insertBefore(t, e) : document.head.appendChild(t);
 }
-let ge = !1;
+let ve = !1;
 class ne {
   /**
    * Creates a panel that holds controllers.
@@ -3622,7 +3626,7 @@ class ne {
       this.parent.children.push(this), this.parent.folders.push(this), this.parent.$children.appendChild(this.domElement);
       return;
     }
-    this.domElement.classList.add("root"), l && this.domElement.classList.add("allow-touch-styles"), !ge && o && (Ci(Ai), ge = !0), r ? r.appendChild(this.domElement) : e && (this.domElement.classList.add("autoPlace"), document.body.appendChild(this.domElement)), i && this.domElement.style.setProperty("--width", i + "px"), this._closeFolders = s;
+    this.domElement.classList.add("root"), l && this.domElement.classList.add("allow-touch-styles"), !ve && o && (Ci(Ai), ve = !0), r ? r.appendChild(this.domElement) : e && (this.domElement.classList.add("autoPlace"), document.body.appendChild(this.domElement)), i && this.domElement.style.setProperty("--width", i + "px"), this._closeFolders = s;
   }
   /**
    * Adds a controller to the GUI, inferring controller type using the `typeof` operator.
@@ -4021,11 +4025,11 @@ class yt {
   }
 }
 A(yt, "recordType", "SequencialFrames"), A(yt, "clockType", "RealTime"), A(yt, "fps", 60), A(yt, "fixedFrameInterval", 60), A(yt, "frameNum", 300), A(yt, "width", 800), A(yt, "height", 800), A(yt, "saveName", "test"), A(yt, "onRecordStart"), A(yt, "onRecordEnd"), A(yt, "onChangeClockType");
-var Jt = typeof globalThis < "u" ? globalThis : typeof window < "u" ? window : typeof global < "u" ? global : typeof self < "u" ? self : {};
+var qt = typeof globalThis < "u" ? globalThis : typeof window < "u" ? window : typeof global < "u" ? global : typeof self < "u" ? self : {};
 function Si(F) {
   return F && F.__esModule && Object.prototype.hasOwnProperty.call(F, "default") ? F.default : F;
 }
-function qt(F) {
+function Qt(F) {
   throw new Error('Could not dynamically require "' + F + '". Please configure the dynamicRequireTargets or/and ignoreDynamicRequires option of @rollup/plugin-commonjs appropriately for this require call to work.');
 }
 var he = { exports: {} };
@@ -4040,9 +4044,9 @@ Dual licenced under the MIT license or GPLv3. See https://raw.github.com/Stuk/js
 JSZip uses the library pako released under the MIT license :
 https://github.com/nodeca/pako/blob/main/LICENSE
 */
-var ve;
+var _e;
 function Ti() {
-  return ve || (ve = 1, function(F, t) {
+  return _e || (_e = 1, function(F, t) {
     (function(e) {
       F.exports = e();
     })(function() {
@@ -4050,7 +4054,7 @@ function Ti() {
         function s(p, b) {
           if (!i[p]) {
             if (!r[p]) {
-              var f = typeof qt == "function" && qt;
+              var f = typeof Qt == "function" && Qt;
               if (!b && f) return f(p, !0);
               if (o) return o(p, !0);
               var _ = new Error("Cannot find module '" + p + "'");
@@ -4064,7 +4068,7 @@ function Ti() {
           }
           return i[p].exports;
         }
-        for (var o = typeof qt == "function" && qt, l = 0; l < n.length; l++) s(n[l]);
+        for (var o = typeof Qt == "function" && Qt, l = 0; l < n.length; l++) s(n[l]);
         return s;
       }({ 1: [function(e, r, i) {
         var n = e("./utils"), s = e("./support"), o = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
@@ -5099,7 +5103,7 @@ function Ti() {
           r.exports = function(u) {
             c.push(u) !== 1 || o || s();
           };
-        }).call(this, typeof Jt < "u" ? Jt : typeof self < "u" ? self : typeof window < "u" ? window : {});
+        }).call(this, typeof qt < "u" ? qt : typeof self < "u" ? self : typeof window < "u" ? window : {});
       }, {}], 37: [function(e, r, i) {
         var n = e("immediate");
         function s() {
@@ -6190,14 +6194,14 @@ function Ti() {
           for (C.max_code = ut, I = w.heap_len >> 1; 1 <= I; I--) gt(w, W, I);
           for (k = Q; I = w.heap[1], w.heap[1] = w.heap[w.heap_len--], gt(w, W, 1), N = w.heap[1], w.heap[--w.heap_max] = I, w.heap[--w.heap_max] = N, W[2 * k] = W[2 * I] + W[2 * N], w.depth[k] = (w.depth[I] >= w.depth[N] ? w.depth[I] : w.depth[N]) + 1, W[2 * I + 1] = W[2 * N + 1] = k, w.heap[1] = k++, gt(w, W, 1), 2 <= w.heap_len; ) ;
           w.heap[--w.heap_max] = w.heap[1], function(ot, Ct) {
-            var Bt, Rt, Lt, vt, Xt, oe, Mt = Ct.dyn_tree, fe = Ct.max_code, Fe = Ct.stat_desc.static_tree, Re = Ct.stat_desc.has_stree, ze = Ct.stat_desc.extra_bits, pe = Ct.stat_desc.extra_base, It = Ct.stat_desc.max_length, Kt = 0;
+            var Bt, Rt, Lt, vt, Kt, oe, Mt = Ct.dyn_tree, fe = Ct.max_code, Re = Ct.stat_desc.static_tree, ze = Ct.stat_desc.has_stree, Pe = Ct.stat_desc.extra_bits, pe = Ct.stat_desc.extra_base, It = Ct.stat_desc.max_length, Jt = 0;
             for (vt = 0; vt <= m; vt++) ot.bl_count[vt] = 0;
-            for (Mt[2 * ot.heap[ot.heap_max] + 1] = 0, Bt = ot.heap_max + 1; Bt < u; Bt++) It < (vt = Mt[2 * Mt[2 * (Rt = ot.heap[Bt]) + 1] + 1] + 1) && (vt = It, Kt++), Mt[2 * Rt + 1] = vt, fe < Rt || (ot.bl_count[vt]++, Xt = 0, pe <= Rt && (Xt = ze[Rt - pe]), oe = Mt[2 * Rt], ot.opt_len += oe * (vt + Xt), Re && (ot.static_len += oe * (Fe[2 * Rt + 1] + Xt)));
-            if (Kt !== 0) {
+            for (Mt[2 * ot.heap[ot.heap_max] + 1] = 0, Bt = ot.heap_max + 1; Bt < u; Bt++) It < (vt = Mt[2 * Mt[2 * (Rt = ot.heap[Bt]) + 1] + 1] + 1) && (vt = It, Jt++), Mt[2 * Rt + 1] = vt, fe < Rt || (ot.bl_count[vt]++, Kt = 0, pe <= Rt && (Kt = Pe[Rt - pe]), oe = Mt[2 * Rt], ot.opt_len += oe * (vt + Kt), ze && (ot.static_len += oe * (Re[2 * Rt + 1] + Kt)));
+            if (Jt !== 0) {
               do {
                 for (vt = It - 1; ot.bl_count[vt] === 0; ) vt--;
-                ot.bl_count[vt]--, ot.bl_count[vt + 1] += 2, ot.bl_count[It]--, Kt -= 2;
-              } while (0 < Kt);
+                ot.bl_count[vt]--, ot.bl_count[vt + 1] += 2, ot.bl_count[It]--, Jt -= 2;
+              } while (0 < Jt);
               for (vt = It; vt !== 0; vt--) for (Rt = ot.bl_count[vt]; Rt !== 0; ) fe < (Lt = ot.heap[--Bt]) || (Mt[2 * Lt + 1] !== vt && (ot.opt_len += (vt - Mt[2 * Lt + 1]) * Mt[2 * Lt], Mt[2 * Lt + 1] = vt), Rt--);
             }
           }(w, C), wt(W, ut, w.bl_count);
@@ -6338,7 +6342,7 @@ function Ti() {
               T.source === s && typeof T.data == "string" && T.data.indexOf(f) === 0 && g(+T.data.slice(f.length));
             }
           })(typeof self > "u" ? n === void 0 ? this : n : self);
-        }).call(this, typeof Jt < "u" ? Jt : typeof self < "u" ? self : typeof window < "u" ? window : {});
+        }).call(this, typeof qt < "u" ? qt : typeof self < "u" ? self : typeof window < "u" ? window : {});
       }, {}] }, {}, [10])(10);
     });
   }(he)), he.exports;
@@ -6494,7 +6498,7 @@ class Dt {
   }
 }
 A(Dt, "ambientColor", "#00000000"), A(Dt, "lightDirectionX", -0.5), A(Dt, "lightDirectionY", 0.5), A(Dt, "lightDirectionZ", 0.5), A(Dt, "eyeDirectionX", 0), A(Dt, "eyeDirectionY", 0), A(Dt, "eyeDirectionZ", 20);
-class _e {
+class we {
   static initialize(t, e) {
     this.onAudioPlay = t, this.onAudioStop = e, it.initialize(), it.addFolder("Audio"), it.addAction(
       () => {
@@ -6511,7 +6515,7 @@ class _e {
     ), it.resetFolder();
   }
 }
-A(_e, "onAudioPlay"), A(_e, "onAudioStop");
+A(we, "onAudioPlay"), A(we, "onAudioStop");
 class $i {
   static initialize(t, e, r) {
     it.initialize(), it.addFolder("PostEffect");
@@ -6530,7 +6534,7 @@ class $i {
     it.resetFolder();
   }
 }
-class we {
+class be {
   static initialize(t, e) {
     this.onPlayScene = t, this.onStopScene = e, it.initialize(), it.addFolder("Scene"), it.addAction(
       () => {
@@ -6547,7 +6551,7 @@ class we {
     ), it.resetFolder();
   }
 }
-A(we, "onPlayScene"), A(we, "onStopScene");
+A(be, "onPlayScene"), A(be, "onStopScene");
 const Y = {
   aPosition: 3,
   aColor: 4,
@@ -6586,7 +6590,7 @@ class zi {
     this.vao && (this.gl.deleteVertexArray(this.vao), this.vao = null);
   }
 }
-class Ce {
+class Se {
   constructor(t) {
     A(this, "gl");
     A(this, "buffer", null);
@@ -6596,7 +6600,7 @@ class Ce {
     return this.gl.ARRAY_BUFFER;
   }
 }
-class Ht extends Ce {
+class Zt extends Se {
   constructor(e, r, i, n, s = new Float32Array()) {
     super(e);
     A(this, "interleavedArray");
@@ -6662,7 +6666,7 @@ class Ht extends Ce {
     return s;
   }
 }
-class Zt extends Ce {
+class Yt extends Se {
   constructor(e, r) {
     super(e);
     A(this, "indices");
@@ -6684,7 +6688,7 @@ class Zt extends Ce {
     this.buffer && (this.gl.deleteBuffer(this.buffer), this.buffer = null);
   }
 }
-class Yt {
+class Xt {
   constructor(t) {
     A(this, "vao");
     A(this, "vertices");
@@ -6706,7 +6710,7 @@ class Yt {
     this.vao.dispose();
   }
 }
-class Gi extends Yt {
+class Gi extends Xt {
   constructor(e, r = 1, i = 1) {
     super(e);
     A(this, "uv");
@@ -6761,7 +6765,7 @@ class Gi extends Yt {
   setUpBuffers(e, r) {
     var o, l;
     this.vao.bindVao();
-    const i = new Ht(e, this.vertices, this.color, this.uv), n = new Zt(e, this.indices);
+    const i = new Zt(e, this.vertices, this.color, this.uv), n = new Yt(e, this.indices);
     i.setData(), n.setData();
     const s = (Y.aPosition + Y.aColor + Y.aUv) * Float32Array.BYTES_PER_ELEMENT;
     r.aPosition.setAttributeBuffer(
@@ -6785,7 +6789,7 @@ class Gi extends Yt {
     ), this.vao.addBuffer("geometry", i), this.vao.addBuffer("index", n), i.unbind(), n.unbind(), this.vao.unbindVao();
   }
 }
-class Pi extends Yt {
+class Pi extends Xt {
   constructor(e, r = 2, i = 2, n = bt.empty()) {
     super(e);
     A(this, "uv");
@@ -6870,7 +6874,7 @@ class Pi extends Yt {
   setUpBuffers(e, r) {
     var o, l, p;
     this.vao.bindVao();
-    const i = new Ht(e, this.vertices, this.color, this.normal, this.uv), n = new Zt(e, this.indices);
+    const i = new Zt(e, this.vertices, this.color, this.normal, this.uv), n = new Yt(e, this.indices);
     i.setData(), n.setData();
     const s = (Y.aPosition + Y.aColor + Y.aNormal + Y.aUv) * Float32Array.BYTES_PER_ELEMENT;
     r.aPosition.setAttributeBuffer(
@@ -6900,16 +6904,16 @@ class Pi extends Yt {
     ), this.vao.addBuffer("geometry", i), this.vao.addBuffer("index", n), i.unbind(), n.unbind(), this.vao.unbindVao();
   }
 }
-class Vi extends Yt {
+class Vi extends Xt {
   constructor(t, e, r, i, n, s = bt.empty()) {
     super(t);
     const o = [], l = [], p = [], b = [];
     for (let f = 0; f <= e; f++) {
-      const _ = jt.PI * 2 / e * f, c = J.cos(_), v = J.sin(_);
+      const _ = $t.PI * 2 / e * f, c = J.cos(_), v = J.sin(_);
       for (let u = 0; u <= r; u++) {
         const m = Math.PI * 2 / r * u, d = (c * i + n) * J.cos(m), g = v * i, x = (c * i + n) * J.sin(m), T = c * J.cos(m), S = c * J.sin(m);
         if (o.push(d, g, x), b.push(T, v, S), bt.isEmpty(s)) {
-          const O = re.hsvToRgb(360 / r * u, 1, 1, 1);
+          const O = Nt.hsvToRgb(360 / r * u, 1, 1, 1);
           l.push(O.red, O.green, O.blue, O.alpha);
         } else
           l.push(s.red, s.green, s.blue, s.alpha);
@@ -6925,7 +6929,7 @@ class Vi extends Yt {
   setUpBuffers(t, e) {
     var s, o;
     this.vao.bindVao();
-    const r = new Ht(t, this.vertices, this.color, this.normal), i = new Zt(t, this.indices);
+    const r = new Zt(t, this.vertices, this.color, this.normal), i = new Yt(t, this.indices);
     r.setData(), i.setData();
     const n = (Y.aPosition + Y.aColor + Y.aNormal) * Float32Array.BYTES_PER_ELEMENT;
     e.aPosition.setAttributeBuffer(
@@ -6949,16 +6953,16 @@ class Vi extends Yt {
     ), this.vao.addBuffer("geometry", r), this.vao.addBuffer("index", i), r.unbind(), i.unbind(), this.vao.unbindVao();
   }
 }
-class Wi extends Yt {
+class Wi extends Xt {
   constructor(t, e, r, i, n = bt.empty()) {
     super(t);
     const s = [], o = [], l = [], p = [];
     for (let b = 0; b <= e; b++) {
-      const f = jt.PI / e * b, _ = J.cos(f), c = J.sin(f);
+      const f = $t.PI / e * b, _ = J.cos(f), c = J.sin(f);
       for (let v = 0; v <= r; v++) {
-        const u = jt.PI * 2 / r * v, m = c * i * J.cos(u), d = _ * i, g = c * i * J.sin(u), x = c * J.cos(u), T = c * J.sin(u);
+        const u = $t.PI * 2 / r * v, m = c * i * J.cos(u), d = _ * i, g = c * i * J.sin(u), x = c * J.cos(u), T = c * J.sin(u);
         if (s.push(m, d, g), p.push(x, _, T), bt.isEmpty(n)) {
-          const S = re.hsvToRgb(360 / r * v, 1, 1, 1);
+          const S = Nt.hsvToRgb(360 / r * v, 1, 1, 1);
           o.push(S.red, S.green, S.blue, S.alpha);
         } else
           o.push(n.red, n.green, n.blue, n.alpha);
@@ -6974,7 +6978,7 @@ class Wi extends Yt {
   setUpBuffers(t, e) {
     var s, o;
     this.vao.bindVao();
-    const r = new Ht(t, this.vertices, this.color, this.normal), i = new Zt(t, this.indices);
+    const r = new Zt(t, this.vertices, this.color, this.normal), i = new Yt(t, this.indices);
     r.setData(), i.setData();
     const n = (Y.aPosition + Y.aColor + Y.aNormal) * Float32Array.BYTES_PER_ELEMENT;
     e.aPosition.setAttributeBuffer(
@@ -6998,7 +7002,7 @@ class Wi extends Yt {
     ), this.vao.addBuffer("geometry", r), this.vao.addBuffer("index", i), r.unbind(), i.unbind(), this.vao.unbindVao();
   }
 }
-class Hi extends Yt {
+class Hi extends Xt {
   constructor(e, r, i) {
     super(e);
     A(this, "uv");
@@ -7077,7 +7081,7 @@ class Hi extends Yt {
   setUpBuffers(e, r) {
     var o, l, p;
     this.vao.bindVao();
-    const i = new Ht(e, this.vertices, this.color, this.normal, this.uv), n = new Zt(e, this.indices);
+    const i = new Zt(e, this.vertices, this.color, this.normal, this.uv), n = new Yt(e, this.indices);
     i.setData(), n.setData();
     const s = (Y.aPosition + Y.aColor + Y.aNormal + Y.aUv) * Float32Array.BYTES_PER_ELEMENT;
     r.aPosition.setAttributeBuffer(
@@ -7126,7 +7130,7 @@ class Zi {
     throw new Error("Method not implemented.");
   }
 }
-class be {
+class ye {
   constructor(t, e) {
     A(this, "gl");
     A(this, "fbo");
@@ -7170,8 +7174,8 @@ class Yi {
     A(this, "targets");
     A(this, "readIndex", 0);
     this.targets = [
-      new be(t, e),
-      new be(t, e)
+      new ye(t, e),
+      new ye(t, e)
     ], this.readIndex = 0;
   }
   get read() {
@@ -7225,17 +7229,17 @@ class Ki {
     return this.audioBuffer;
   }
 }
-const ye = {
+const xe = {
   Perspective: 0,
   Orthography: 1
 };
 class Ji {
-  constructor(t = ye.Perspective, e = {}, r = {}) {
+  constructor(t = xe.Perspective, e = {}, r = {}) {
     A(this, "cameraType");
     A(this, "viewMatrix", At.identity44());
     A(this, "projectionMatrix", At.identity44());
     A(this, "position", new ft(0, 0, 0));
-    A(this, "rotation", new ee(0, 0, 0, 0));
+    A(this, "rotation", new re(0, 0, 0, 0));
     A(this, "near", 1);
     A(this, "far", 1);
     A(this, "fov", 1);
@@ -7243,7 +7247,7 @@ class Ji {
     A(this, "viewportHeight", 1);
     A(this, "up");
     A(this, "forward");
-    this.cameraType = t, this.position = e.position ?? new ft(0, 0, 30), this.rotation = e.rotation ?? new ee(0, 0, 0, 1), this.near = e.near ?? 0.1, this.far = e.far ?? 100, this.fov = e.fov ?? 45, this.viewportWidth = e.viewportWidth ?? 800, this.viewportHeight = e.viewportHeight ?? 800, this.up = r.up ?? new ft(0, 1, 0), this.forward = r.forward ?? new ft(0, 0, -1), this.calculateProjectionMatrix(), this.calculateViewMatrix();
+    this.cameraType = t, this.position = e.position ?? new ft(0, 0, 30), this.rotation = e.rotation ?? new re(0, 0, 0, 1), this.near = e.near ?? 0.1, this.far = e.far ?? 100, this.fov = e.fov ?? 45, this.viewportWidth = e.viewportWidth ?? 800, this.viewportHeight = e.viewportHeight ?? 800, this.up = r.up ?? new ft(0, 1, 0), this.forward = r.forward ?? new ft(0, 0, -1), this.calculateProjectionMatrix(), this.calculateViewMatrix();
   }
   setPosition(t) {
     this.position = t, this.calculateViewMatrix();
@@ -7274,7 +7278,7 @@ class Ji {
     this.viewMatrix = At.lookAt(this.position, r, t);
   }
   calculateProjectionMatrix() {
-    this.cameraType == ye.Perspective ? this.calculatePerspectiveMatrix() : this.calculateOrthographicMatrix();
+    this.cameraType == xe.Perspective ? this.calculatePerspectiveMatrix() : this.calculateOrthographicMatrix();
   }
   calculatePerspectiveMatrix() {
     this.projectionMatrix = At.perspective(
@@ -7299,7 +7303,7 @@ class Ji {
     );
   }
 }
-class Se {
+class Te {
   constructor() {
     A(this, "startTime");
     A(this, "elapsedTime");
@@ -7336,7 +7340,7 @@ class Se {
     this.startTime = performance.now(), this.elapsedTime = 0, this.timeScale = 1, this.frameCount = 0, this.deltaTime = 0;
   }
 }
-class Mi extends Se {
+class Mi extends Te {
   constructor() {
     super();
   }
@@ -7350,7 +7354,7 @@ class Mi extends Se {
     super.reset();
   }
 }
-class xe extends Se {
+class Ee extends Te {
   constructor() {
     super();
     A(this, "lastTime");
@@ -7462,7 +7466,7 @@ class rn {
     A(this, "drawFunction");
     A(this, "additionalSupportFunctionAsync");
     A(this, "animationId");
-    this.clock = new xe(), this.clock.reset(), this.clock.setFps(60), this.isRunning = !1, this.updateFunction = () => {
+    this.clock = new Ee(), this.clock.reset(), this.clock.setFps(60), this.isRunning = !1, this.updateFunction = () => {
     }, this.drawFunction = () => {
     }, this.additionalSupportFunctionAsync = () => {
     }, this.animationId = 0;
@@ -7486,7 +7490,7 @@ class rn {
     this.additionalSupportFunctionAsync = t;
   }
   setRealTimeClock(t) {
-    this.clock = new xe(), this.clock.reset(), this.clock.setFps(t);
+    this.clock = new Ee(), this.clock.reset(), this.clock.setFps(t);
   }
   setFixedTimeClock(t, e) {
     this.clock = new Mi(), this.clock.reset(), this.clock.setFps(t), this.clock.setFrameInterval(e);
@@ -7534,7 +7538,7 @@ class de {
       this.traverse(r, e);
   }
 }
-class nn extends Wt {
+class nn extends Ht {
   update() {
     var t;
     this.transform.updateMatrix((t = this.parent) == null ? void 0 : t.getTransform().getWorldMatrix());
@@ -7546,7 +7550,7 @@ class nn extends Wt {
       r.draw(t, e);
   }
 }
-class Di extends Wt {
+class Di extends Ht {
   constructor(e, r = "") {
     super(r);
     A(this, "mesh");
@@ -7567,7 +7571,7 @@ class Di extends Wt {
     this.mesh.updateMaterialParams(e, this.transform, r);
   }
 }
-class Te extends Wt {
+class ke extends Ht {
   constructor(e) {
     super();
     A(this, "light");
@@ -7584,7 +7588,7 @@ class Te extends Wt {
       i.draw(e, r);
   }
 }
-class sn extends Te {
+class sn extends ke {
   constructor(t) {
     super(t);
   }
@@ -7597,7 +7601,7 @@ class sn extends Te {
     };
   }
 }
-class on extends Te {
+class on extends ke {
   constructor(e, r = new ft(-0.5, 0.5, 0.5)) {
     super(e);
     A(this, "lightDirection");
@@ -7615,7 +7619,7 @@ class on extends Te {
     };
   }
 }
-class an extends Wt {
+class an extends Ht {
   constructor(e, r = "") {
     super(r);
     A(this, "mesh");
@@ -7636,9 +7640,9 @@ class an extends Wt {
     this.mesh.updateMaterialParams(e, this.transform, r);
   }
 }
-class ke {
+class Fe {
 }
-class ln extends ke {
+class ln extends Fe {
   constructor(e) {
     super();
     A(this, "sceneGraphRoot");
@@ -7655,7 +7659,7 @@ class ln extends ke {
     });
   }
 }
-class hn extends ke {
+class hn extends Fe {
   constructor(e) {
     super();
     A(this, "shaderPasses");
@@ -7755,7 +7759,7 @@ class Oi extends Pt {
     return r.bind(pt.CURRENT_FRAME), i = this.draw(t, e, i, n), r.unbind(), i;
   }
 }
-class Ee extends Pt {
+class Ae extends Pt {
   constructor(t, e) {
     super(t, e);
   }
@@ -7778,13 +7782,13 @@ class gn {
     A(this, "verticalBlurShaderPass");
     A(this, "composeShaderPass");
     A(this, "isEffectEnabled", !0);
-    this.brightShaderPass = new Oi(t, e), this.horizontalBlurShaderPass = new Ee(t, r), this.verticalBlurShaderPass = new Ee(t, i), this.composeShaderPass = new Bi(t, n);
+    this.brightShaderPass = new Oi(t, e), this.horizontalBlurShaderPass = new Ae(t, r), this.verticalBlurShaderPass = new Ae(t, i), this.composeShaderPass = new Bi(t, n);
   }
   render(t, e, r, i, n) {
-    let s, o = e.getRenderTargetFromPool(Nt.BLOOM_TEMP_RENDER_TARGET_BRIGHT);
+    let s, o = e.getRenderTargetFromPool(jt.BLOOM_TEMP_RENDER_TARGET_BRIGHT);
     s = this.brightShaderPass.render(t, e, r, o, !1);
     let l = s;
-    return o = e.getRenderTargetFromPool(Nt.BLOOM_TEMP_RENDER_TARGET_BLUR_H), s = this.horizontalBlurShaderPass.render(t, e, l, o, !1), l = s, o = e.getRenderTargetFromPool(Nt.BLOOM_TEMP_RENDER_TARGET_BLUR_V), s = this.verticalBlurShaderPass.render(t, e, l, o, !1), l = s, o.bind(pt.BLOOM_FRAME), s = this.composeShaderPass.render(t, e, r, i, n), o.unbind(), s;
+    return o = e.getRenderTargetFromPool(jt.BLOOM_TEMP_RENDER_TARGET_BLUR_H), s = this.horizontalBlurShaderPass.render(t, e, l, o, !1), l = s, o = e.getRenderTargetFromPool(jt.BLOOM_TEMP_RENDER_TARGET_BLUR_V), s = this.verticalBlurShaderPass.render(t, e, l, o, !1), l = s, o.bind(pt.BLOOM_FRAME), s = this.composeShaderPass.render(t, e, r, i, n), o.unbind(), s;
   }
   setEffectEnabled(t) {
     this.isEffectEnabled = t, this.brightShaderPass.setEffectEnabled(t), this.horizontalBlurShaderPass.setEffectEnabled(t), this.verticalBlurShaderPass.setEffectEnabled(t), this.composeShaderPass.setEffectEnabled(t);
@@ -7806,91 +7810,91 @@ function _n() {
 }
 export {
   Y as AttributeElementSize,
-  _e as AudioGuiController,
-  Ue as AudioOutput,
+  we as AudioGuiController,
+  De as AudioOutput,
   fi as BaseApplication,
-  Ce as BaseBuffer,
-  Yt as BaseGeometry,
+  Se as BaseBuffer,
+  Xt as BaseGeometry,
   xt as BaseMaterial,
   se as BaseMesh,
-  ke as BaseSceneRendererFlow,
+  Fe as BaseSceneRendererFlow,
   Pt as BaseShaderPass,
   gn as BloomShaderPass,
-  $e as BlurMaterial,
+  Ge as BlurMaterial,
   mn as BlurShaderPass,
-  Ge as BrightMaterial,
+  Ve as BrightMaterial,
   Oi as BrightShaderPass,
   Ji as Camera,
-  ye as CameraType,
-  Se as Clock,
+  xe as CameraType,
+  Te as Clock,
   bt as Color,
   Et as Color255,
-  re as ColorUtility,
-  Ve as ComposeMaterial,
+  Nt as ColorUtility,
+  We as ComposeMaterial,
   Bi as ComposeShaderPass,
   Ii as DefaultColorConstants,
-  De as DefaultValueConstants,
+  Oe as DefaultValueConstants,
   Ot as DefaultVectorConstants,
   on as DirectionalLightNode,
-  Ie as EmptyNode,
+  Ne as EmptyNode,
   Xi as ExternalFileAudioInput,
   pn as FinalBlitShaderPass,
   Mi as FixedTimeClock,
-  me as FontGlyph,
-  We as FragmentCanvasMaterial,
-  He as FrameBufferTexturedMaterial,
+  ge as FontGlyph,
+  He as FragmentCanvasMaterial,
+  Ze as FrameBufferTexturedMaterial,
   qi as FullScreenQuadMesh,
-  Ht as GeometryBuffer,
-  Ze as GlitchMaterial,
+  Zt as GeometryBuffer,
+  Ye as GlitchMaterial,
   fn as GlitchShaderPass,
-  Ye as GouraudMaterial,
-  Xe as GrayScaleMaterial,
+  Xe as GouraudMaterial,
+  Ke as GrayScaleMaterial,
   cn as GrayScaleShaderPass,
   nn as GroupNode,
   it as GuiUtility,
-  Zt as IndexBuffer,
+  Yt as IndexBuffer,
   en as Light,
   Dt as LightGuiController,
-  Te as LightNode,
+  ke as LightNode,
   ie as LightType,
-  Ke as MaskMaterial,
+  Je as MaskMaterial,
   vn as MaskShaderPass,
-  Qt as MaterialFactory,
+  te as MaterialFactory,
   J as MathUtility,
   Ut as Matrix,
   kt as Matrix22,
   St as Matrix33,
   dt as Matrix44,
   At as MatrixCalculator,
-  Be as MatrixClassAndSizePair,
+  Le as MatrixClassAndSizePair,
   Di as MeshNode,
-  Je as MosaicMaterial,
+  qe as MosaicMaterial,
   un as MosaicShaderPass,
   Ni as MyColorCode,
-  je as MyColorConstants255,
-  qe as PhongMaterial,
+  $e as MyColorConstants255,
+  Qe as PhongMaterial,
   Yi as PingPongRenderTarget,
   Pi as Plane,
-  we as PlaySceneGuiController,
+  be as PlaySceneGuiController,
   sn as PointLightNode,
   $i as PostEffectGuiController,
   hn as PostEffectRendererFlow,
-  ee as Quaternion,
+  re as Quaternion,
   ht as QuaternionCalculator,
-  Qe as RGBShiftMaterial,
+  tr as RGBShiftMaterial,
   dn as RGBShiftShaderPass,
-  xe as RealTimeClock,
+  Ee as RealTimeClock,
   yt as RecordGuiController,
   Ri as Recorder,
   ji as RecordingApplication,
   Gi as Rectangle,
-  be as RenderTarget,
-  Nt as RenderTargetSlot,
+  ye as RenderTarget,
+  jt as RenderTargetSlot,
   nr as RendererContext,
   rn as Scene,
-  Ae as SceneGraphNodeIdGenerator,
+  Ce as SceneGraphNodeIdGenerator,
   de as SceneGraphUtility,
-  Wt as SceneNode,
+  Ht as SceneNode,
   ir as SceneRendererPipeline,
   li as ShaderAttribute,
   Ki as ShaderAudioInput,
@@ -7899,7 +7903,7 @@ export {
   hi as ShaderUniform,
   lt as ShaderUniformValue,
   Qi as SimpleMesh,
-  Ee as SingleDirectionBlurShaderPass,
+  Ae as SingleDirectionBlurShaderPass,
   Wi as Sphere,
   ln as StandardSceneRendererFlow,
   sr as TextFontLoader,
@@ -7910,18 +7914,18 @@ export {
   Zi as TextureFrameBuffer,
   ui as TextureLoader,
   pt as TextureSlot,
-  tr as TexturedMaterial,
+  er as TexturedMaterial,
   Vi as Torus,
-  Le as Transform,
-  jt as TrigonometricConstants,
+  Ie as Transform,
+  $t as TrigonometricConstants,
   rr as UnlitMaterial,
   Ui as UnlitMesh,
-  $t as Vector,
-  te as Vector2,
+  Gt as Vector,
+  ee as Vector2,
   ft as Vector3,
-  Gt as Vector4,
+  Vt as Vector4,
   at as VectorCalculator,
-  Oe as VectorClassAndSizePair,
+  Be as VectorClassAndSizePair,
   zi as VertexArray,
   di as WebGLUtility,
   _n as initializeLibrary

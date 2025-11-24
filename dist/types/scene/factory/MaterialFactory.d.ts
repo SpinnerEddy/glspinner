@@ -25,6 +25,7 @@ export declare class MaterialFactory {
     static fragmentCanvasMaterial(programKey: string): FragmentCanvasMaterial;
     static texturedMaterial(textureKey: string, texIndex: number): TexturedMaterial;
     static texturedTextMaterial(smoothness: number, fontColorHex: string): TexturedTextMaterial;
+    static customTexturedTextMaterial(shaderKey: string, smoothness: number, fontColorHex: string): TexturedTextMaterial;
     static frameBufferTextureMaterial(): FrameBufferTexturedMaterial;
     static grayScaleMaterial(): GrayScaleMaterial;
     static singleDirectionBlurMaterial(isVertical: boolean, blurRange: number): BlurMaterial;
@@ -32,8 +33,8 @@ export declare class MaterialFactory {
     static maskMaterial(shaderKey: string): MaskMaterial;
     static composeMaterial(): ComposeMaterial;
     static mosaicMaterial(): MosaicMaterial;
-    static rgbShiftMaterial(): MosaicMaterial;
-    static glitchMaterial(): GlitchMaterial;
+    static rgbShiftMaterial(shaderKey?: string): MosaicMaterial;
+    static glitchMaterial(shaderKey?: string): GlitchMaterial;
     static unlitMaterial(): UnlitMaterial;
     static phongMaterial(): PhongMaterial;
     static gouraudMaterial(lightDirection?: Vector3, eyeDirection?: Vector3, ambientColor?: Color): GouraudMaterial;
