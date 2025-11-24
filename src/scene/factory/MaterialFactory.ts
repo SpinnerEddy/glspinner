@@ -61,6 +61,17 @@ export class MaterialFactory {
         return new TexturedTextMaterial(shader, texture, smoothness, fontColor);
     }
 
+    static customTexturedTextMaterial(shaderKey: string, smoothness: number, fontColorHex: string): TexturedTextMaterial {
+        if (!this.shaderLoader) {
+            throw new Error('MaterialFac†ory not initialized. Call init!!');
+        }
+
+        const shader = this.shaderLoader.getShaderProgram(shaderKey);
+        const texture = this.textFontLoader.getTextureForCurrentFont();
+        const fontColor = ColorUtility.hexToColor01(fontColorHex).toRGBAArray;
+        return new TexturedTextMaterial(shader, texture, smoothness, fontColor);
+    }
+
     static frameBufferTextureMaterial(): FrameBufferTexturedMaterial {
         if (!this.shaderLoader) {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
@@ -125,22 +136,23 @@ export class MaterialFactory {
         return new MosaicMaterial(shader);
     }
 
-    static rgbShiftMaterial(): MosaicMaterial {
+    static rgbShiftMaterial(shaderKey: string = ""): MosaicMaterial {
         if (!this.shaderLoader) {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
-        const shader = this.shaderLoader.getShaderProgram("rgbShift");
+        const key = shaderKey == "" ? "rgbShift" : shaderKey;
+        const shader = this.shaderLoader.getShaderProgram(key);
         return new RGBShiftMaterial(shader);
     }
 
-    static glitchMaterial(): GlitchMaterial {
+    static glitchMaterial(shaderKey: string = ""): GlitchMaterial {
         if (!this.shaderLoader) {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
-
-        const shader = this.shaderLoader.getShaderProgram("glitch");
+        const key = shaderKey == "" ? "glitch" : shaderKey;
+        const shader = this.shaderLoader.getShaderProgram(key);
         return new GlitchMaterial(shader);
     }
 

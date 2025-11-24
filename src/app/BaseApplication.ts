@@ -40,7 +40,6 @@ export abstract class BaseApplication implements ApplicationOperation{
 
     public async start(): Promise<void> {
         await this.preload();
-        MaterialFactory.init(this.shaderLoader, this.textureLoader, this.textFontLoader);
         this.setup();
         this.scene.setUpdate(this.update.bind(this));
         this.scene.setDraw(this.draw.bind(this))
@@ -49,6 +48,7 @@ export abstract class BaseApplication implements ApplicationOperation{
 
     async preload(): Promise<void> {
         await this.shaderLoader.loadCommonShaders();
+        MaterialFactory.init(this.shaderLoader, this.textureLoader, this.textFontLoader);
     }
 
     abstract setup(): void;

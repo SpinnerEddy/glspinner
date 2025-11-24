@@ -39,6 +39,22 @@ class Sample extends GLSpinner.BaseApplication {
 
         this.shaderAudioInput = new GLSpinner.ShaderAudioInput(this.gl, this.shaderLoader, 100.0);
         await this.shaderAudioInput.load("testAudio", this.audioOutput.getAudioContext());
+
+        const text = "SPINNEREDDY";
+        this.textRoot = new GLSpinner.EmptyNode();
+        const glyphs = this.textFontLoader.getGlyphsFromText(text);
+        const textPlane = new GLSpinner.TextQuad(this.gl, glyphs, this.textFontLoader.getTextureForCurrentFont()!);
+        const textMaterial = GLSpinner.MaterialFactory.texturedTextMaterial(
+            0.1,
+            GLSpinner.MyColorCode.COLOR_CHINA);
+        const textPlaneAttributes = {
+            aPosition: textMaterial.getAttribute(this.gl, 'aPosition'),
+            aUv: textMaterial.getAttribute(this.gl, 'aUv'),
+        }
+        textPlane.setUpBuffers(this.gl, textPlaneAttributes);
+        const textPlaneMesh = new GLSpinner.TextMesh(textPlane, textMaterial);
+        const textPlaneMeshNode = new GLSpinner.TextMeshNode(textPlaneMesh);
+        GLSpinner.SceneGraphUtility.addChild(this.textRoot, textPlaneMeshNode);
     }
 
     setup(): void {
@@ -57,21 +73,6 @@ class Sample extends GLSpinner.BaseApplication {
         GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, fboPlaneMeshNode);
         this.cameraPos = new GLSpinner.Vector3(0.0, 0.5, -2.5);
 
-        const text = "SPINNEREDDY";
-        this.textRoot = new GLSpinner.EmptyNode();
-        const glyphs = this.textFontLoader.getGlyphsFromText(text);
-        const textPlane = new GLSpinner.TextQuad(this.gl, glyphs, this.textFontLoader.getTextureForCurrentFont()!);
-        const textMaterial = GLSpinner.MaterialFactory.texturedTextMaterial(
-            0.1,
-            GLSpinner.MyColorCode.COLOR_HARUKI);
-        const textPlaneAttributes = {
-            aPosition: textMaterial.getAttribute(this.gl, 'aPosition'),
-            aUv: textMaterial.getAttribute(this.gl, 'aUv'),
-        }
-        textPlane.setUpBuffers(this.gl, textPlaneAttributes);
-        const textPlaneMesh = new GLSpinner.TextMesh(textPlane, textMaterial);
-        const textPlaneMeshNode = new GLSpinner.TextMeshNode(textPlaneMesh);
-        GLSpinner.SceneGraphUtility.addChild(this.textRoot, textPlaneMeshNode);
         GLSpinner.SceneGraphUtility.addChild(fboPlaneMeshNode, this.textRoot);
 
         this.rendererContext.addRenderTargetToPool(
@@ -255,6 +256,7 @@ class Sample extends GLSpinner.BaseApplication {
 
     draw(): void {
         this.webglUtility.setViewport(this.canvas);
+        
         this.webglUtility.clearColor(GLSpinner.ColorUtility.hexToColor01(this.backgroundColorStr));
         this.rendererFlowPipeline.render(this.gl, this.rendererContext);
     }

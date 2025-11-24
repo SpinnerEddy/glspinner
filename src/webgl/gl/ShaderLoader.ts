@@ -58,7 +58,6 @@ export class ShaderLoader{
             let vertexShaderSource = vertexShaderCache.get(key) as string;
             let fragmentShaderSource = fragmentShaderCache.get(key) as string;
             if (!vertexShaderSource || !fragmentShaderSource) {
-                console.warn(`Shader pair incomplete for key: ${key}`);
                 continue;
             }
             let program = new ShaderProgram(this.gl, vertexShaderSource, fragmentShaderSource);
