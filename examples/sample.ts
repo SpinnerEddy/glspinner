@@ -1,12 +1,8 @@
 import * as GLSpinner from '../src/index.ts';
 import spinnerShaderFrag from '../examples/shader/spinner.frag';
 import spinnerShaderVert from '../examples/shader/spinner.vert';
-import audioFrag from '../examples/shader/testAudio.frag';
-import audioVert from '../examples/shader/testAudio.vert';
 import gideonRomanPng from '../examples/font/GideonRoman.png'
 import gideonRomanJson from '../examples/font/GideonRoman.json'
-import maskShaderFrag from '../examples/shader/mask.frag';
-import maskShaderVert from '../examples/shader/mask.vert';
 
 class Sample extends GLSpinner.BaseApplication {
     private camera!: GLSpinner.Camera;
@@ -20,12 +16,7 @@ class Sample extends GLSpinner.BaseApplication {
 
     async preload(): Promise<void> {
         await super.preload();
-        await this.shaderLoader.loadShaderFromPath(
-            "shader/basic.vert",
-            "shader/basic.frag");
         this.shaderLoader.loadShaderFromSource("spinner", spinnerShaderVert, spinnerShaderFrag);
-        this.shaderLoader.loadShaderFromSource("mask", maskShaderVert, maskShaderFrag);
-        this.shaderLoader.loadShaderFromSource("testAudio", audioVert, audioFrag, ['oSample']);
         await this.textureLoader.loadTextureFromPath(
             "texture/testImage.png"
         );
@@ -38,7 +29,7 @@ class Sample extends GLSpinner.BaseApplication {
         this.textFontLoader.setCurrentUseFontName("GideonRoman");
 
         this.shaderAudioInput = new GLSpinner.ShaderAudioInput(this.gl, this.shaderLoader, 100.0);
-        await this.shaderAudioInput.load("testAudio", this.audioOutput.getAudioContext());
+        // await this.shaderAudioInput.load("testAudio", this.audioOutput.getAudioContext());
 
         const text = "SPINNEREDDY";
         this.textRoot = new GLSpinner.EmptyNode();
@@ -123,10 +114,6 @@ class Sample extends GLSpinner.BaseApplication {
             GLSpinner.MaterialFactory.singleDirectionBlurMaterial(true, 0.001),
             GLSpinner.MaterialFactory.composeMaterial()
         );
-        const maskShaderPass = new GLSpinner.MaskShaderPass(
-            this.gl,
-            GLSpinner.MaterialFactory.maskMaterial("mask")
-        );
             
         const mosaicShaderPass = new GLSpinner.MosaicShaderPass(
             this.gl, 
@@ -156,7 +143,6 @@ class Sample extends GLSpinner.BaseApplication {
         this.shaderPasses.set("mosaic", mosaicShaderPass);
         this.shaderPasses.set("rgbShift", rgbShiftShaderPass);
         this.shaderPasses.set("glitch", glitchShaderPass);
-        this.shaderPasses.set("mask", maskShaderPass);
         this.shaderPasses.set("frameBufferOutput", frameBufferOutputPass);
 
         this.shaderPassEnabledSwitch = new Map<string, boolean>();
@@ -168,7 +154,6 @@ class Sample extends GLSpinner.BaseApplication {
         this.shaderPassEnabledSwitch.set("mosaic", false);
         this.shaderPassEnabledSwitch.set("rgbShift", false);
         this.shaderPassEnabledSwitch.set("glitch", false);
-        this.shaderPassEnabledSwitch.set("mask", false);
         this.shaderPassEnabledSwitch.set("frameBufferOutput", true);
 
         const postEffectRendererFlow = new GLSpinner.PostEffectRendererFlow(

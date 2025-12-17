@@ -20,7 +20,7 @@ export class TextMesh extends BaseMesh {
         
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-        gl.disable(gl.DEPTH_TEST);
+        gl.disable(gl.DEPTH_TEST); 
 
         this.geometry.bind();
         gl.drawElements(gl.TRIANGLES, this.geometry.getIndexCount(), gl.UNSIGNED_SHORT, 0);

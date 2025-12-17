@@ -47,6 +47,22 @@ export class MathUtility{
         return MathUtility.roundToZero(value);
     }
 
+    static fract(value: number): number {
+        return value - Math.floor(value);
+    }
+
+    static linearStep(start: number, end: number, t: number): number {
+        return MathUtility.clamp((t - start) / (end - start), 0, 1);
+    }
+
+    static timeToBeat(time: number, bpm: number): number {
+        return (time / 60.0) * bpm;
+    }
+
+    static beatToTime(beat: number, bpm: number): number {
+        return (beat * 60.0) / bpm;
+    }
+
     static calculateGaussianCoefficients(range: number, count: number): Float32Array {
         let gCoefficients: number[] = [];
         let totalRange = range * 2.0;
