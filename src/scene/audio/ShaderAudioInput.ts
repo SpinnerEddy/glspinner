@@ -53,7 +53,7 @@ export class ShaderAudioInput implements AudioInputOperation {
         gl.getBufferSubData(gl.TRANSFORM_FEEDBACK_BUFFER, 0, samples);
 
         // 5) Create AudioBuffer from samples
-        const audioBuffer = audioContext.createBuffer(2, samples.length, this.sampleRate);
+        const audioBuffer = audioContext.createBuffer(2, sampleNums, this.sampleRate);
         // audioBuffer.getChannelData(0).set(samples);
         const left = audioBuffer.getChannelData(0);
         const right = audioBuffer.getChannelData(1);
@@ -81,5 +81,53 @@ export class ShaderAudioInput implements AudioInputOperation {
 
     getBuffer(): AudioBuffer {
         return this.audioBuffer!;
+    }
+
+    saveToWav(): void {
+        if(this.audioBuffer == undefined) throw new Error("Invalid AudioBuffer");
+
+        const numCh = this.audioBuffer.numberOfChannels;
+        const sampleRate = this.audioBuffer.sampleRate;
+        const length = this.audioBuffer.length * numCh * 2;
+        const ab = new ArrayBuffer(44 + length);
+        const view = new DataView(ab);
+
+        let pos = 0;
+        const write = (s: string) => {
+            for (let i = 0; i < s.length; i++) {
+                view.setUint8(pos++, s.charCodeAt(i));
+            }
+        };
+
+        write("RIFF");
+        view.setUint32(pos, 36 + length, true); pos += 4;
+        write("WAVEfmt ");
+        view.setUint32(pos, 16, true); pos += 4;
+        view.setUint16(pos, 1, true); pos += 2;
+        view.setUint16(pos, numCh, true); pos += 2;
+        view.setUint32(pos, sampleRate, true); pos += 4;
+        view.setUint32(pos, sampleRate * numCh * 2, true); pos += 4;
+        view.setUint16(pos, numCh * 2, true); pos += 2;
+        view.setUint16(pos, 16, true); pos += 2;
+        write("data");
+        view.setUint32(pos, length, true); pos += 4;
+
+        for (let i = 0; i < this.audioBuffer.length; i++) {
+            for (let ch = 0; ch < numCh; ch++) {
+                const s = Math.max(-1, Math.min(1, this.audioBuffer.getChannelData(ch)[i]));
+                view.setInt16(pos, s * 0x7fff, true);
+                pos += 2;
+            }
+        }
+
+        console.log("saveToWav");
+        const blob = new Blob([view], { type: "audio/wav" });
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "shader_audio.wav";
+        a.click();
+        URL.revokeObjectURL(url);
     }
 }

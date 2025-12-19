@@ -80,7 +80,9 @@ class Sessions extends GLSpinner.BaseApplication {
         this.lightPos = new GLSpinner.Vector3(0.0, 10.0, 0.0);
         this.boxSize = new GLSpinner.Vector3(12.0, 9.0, 12.0);
 
-        this.audioOutput.playAudio();
+        this.shaderAudioInput.saveToWav();
+
+        // this.audioOutput.playAudio();
         //this.canvas.requestPointerLock();
     }
 
