@@ -138,6 +138,7 @@ export * from './scene/light/LightOperation'
 
 // Scene/Node
 export * from './scene/core/Scene'
+export * from './scene/core/RecordScene'
 export * from './scene/core/SceneOperation'
 export * from './scene/core/SceneGraphUtility'
 export * from './scene/core/SceneGraphNodeIdGenerator'

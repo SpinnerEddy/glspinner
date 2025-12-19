@@ -247,6 +247,18 @@ class J {
     const r = Math.atan2(t, e);
     return J.roundToZero(r);
   }
+  static fract(t) {
+    return t - Math.floor(t);
+  }
+  static linearStep(t, e, r) {
+    return J.clamp((r - t) / (e - t), 0, 1);
+  }
+  static timeToBeat(t, e) {
+    return t / 60 * e;
+  }
+  static beatToTime(t, e) {
+    return t * 60 / e;
+  }
   static calculateGaussianCoefficients(t, e) {
     let r = [], i = t * 2, n = -t, s = i / e, o = 0;
     for (let l = n; l <= t; l += s) {

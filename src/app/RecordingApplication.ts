@@ -1,13 +1,13 @@
-import { Scene } from "../scene/core/Scene";
+import { RecordScene } from "../scene/core/RecordScene";
 import { ClockType, RecordGuiController } from "../tools/gui/RecordGuiController";
 import { Recorder } from "../tools/Recorder";
 import { BaseApplication } from "./BaseApplication";
 
-export abstract class RecordingApplication extends BaseApplication{
+export abstract class RecordingApplication extends BaseApplication {
     protected recorder: Recorder;
     private isRecording: boolean;
 
-    constructor(scene: Scene){
+    constructor(scene: RecordScene){
         super(scene);
         this.recorder = new Recorder(this.canvas);
         this.isRecording = false;
@@ -61,11 +61,13 @@ export abstract class RecordingApplication extends BaseApplication{
 
     async additionalSupport(): Promise<void> {
         if(this.isRecording){
-            await this.recorder.saveSequentialFrames();
+            const frameCount = this.scene.getClock().getFrameCount();
+            const name = `frame_${String(frameCount + 1).padStart(5, '0')}.png`
+            await this.recorder.saveFrameWithName(name);
 
-            if(this.recorder.endRecordingAuto()){
-                this.endRecording();
-            }
+            // if(this.recorder.endRecordingAuto()){
+            //     this.endRecording();
+            // }
         }
     } 
 

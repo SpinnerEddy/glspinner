@@ -3,7 +3,7 @@ import { FixedTimeClock } from "../clock/FixedTimeClock";
 import { RealTimeClock } from "../clock/RealTimeClock";
 import { SceneOperation } from "./SceneOperation";
 
-export class Scene implements SceneOperation{
+export class RecordScene implements SceneOperation {
     private clock: ClockOperation;
     private isRunning: boolean;
     private updateFunction: Function;
@@ -27,7 +27,7 @@ export class Scene implements SceneOperation{
 
         this.isRunning = true;
         this.clock.reset();
-        this.run();
+        this.record(60, 6000);
     }
 
     public stop(): void {
@@ -79,24 +79,26 @@ export class Scene implements SceneOperation{
 
         this.clock.update();
 
-        // if(this.clock.shouldDraw()){
-        //     this.updateObjects();
-
-        //     this.drawObjects();
-
-        //     await this.additionalSupport();
-        // }
-        
         this.updateObjects();
 
         this.drawObjects();
 
         await this.additionalSupport();
+    }
 
-        this.animationId = requestAnimationFrame(() => {
-            this.run();
-        });
+    public async record(fps: number, frameNum: number): Promise<void> {
+        this.clock.setFps(fps);
+        for(let i = 450; i < frameNum; i++){
+            this.clock.setFrameNum(i);
 
+            this.updateObjects();
+
+            this.drawObjects();
+
+            await this.additionalSupport();
+
+            await this.delay(700);
+        }
     }
 
     private updateObjects(): void {
@@ -110,4 +112,10 @@ export class Scene implements SceneOperation{
     private async additionalSupport(): Promise<void>{
         await this.additionalSupportFunctionAsync();
     }
+
+    private delay(ms: number) {
+        return new Promise((resolve) => {
+            setTimeout(resolve, ms)
+    });
+}
 }

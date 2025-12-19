@@ -9,6 +9,10 @@ export declare class MathUtility {
     static exp(value: number): number;
     static acos(angle: number): number;
     static atan2(y: number, x: number): number;
+    static fract(value: number): number;
+    static linearStep(start: number, end: number, t: number): number;
+    static timeToBeat(time: number, bpm: number): number;
+    static beatToTime(beat: number, bpm: number): number;
     static calculateGaussianCoefficients(range: number, count: number): Float32Array;
     private static roundToZero;
 }

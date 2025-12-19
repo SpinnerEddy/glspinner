@@ -8,7 +8,7 @@ export class RecordGuiController{
     private static clockType: ClockType = 'RealTime';
     private static fps: number = 60;
     private static fixedFrameInterval: number = 60;
-    private static frameNum: number = 300;
+    private static frameNum: number = 6000;
     private static width: number = 800;
     private static height: number = 800;
     private static saveName: string = "test";

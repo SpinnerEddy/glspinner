@@ -34,6 +34,11 @@ export abstract class Clock implements ClockOperation{
         this.timeScale = timeScale;
     }
 
+    public setFrameNum(frame: number): void {
+        this.frameCount = frame;
+        this.elapsedTime = this.frameInterval * this.frameCount;
+    }
+
     public getElapsedTime(): number {
         return this.elapsedTime;
     }

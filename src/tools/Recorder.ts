@@ -24,7 +24,7 @@ export class Recorder{
 
     constructor(canvas: HTMLCanvasElement){
         this.canvas = canvas;
-        this.currentFrameCount = 0;
+        this.currentFrameCount = 450;
     }
 
     public resetRecord(): void {
@@ -58,6 +58,22 @@ export class Recorder{
 
                 this.currentFrameCount++;
                 console.log(this.currentFrameCount);
+                resolve();
+            }, 'image/png');
+        });
+    }
+
+    public async saveFrameWithName(name: string): Promise<void> {
+        if(this.options == undefined) return;
+
+        await new Promise<void>((resolve) => {
+            this.canvas.toBlob((blob) => {
+                if(blob == null){
+                    resolve();
+                    return;
+                }
+
+                this.save(blob, name);
                 resolve();
             }, 'image/png');
         });

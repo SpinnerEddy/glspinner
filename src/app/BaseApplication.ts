@@ -1,6 +1,6 @@
 import { AudioOutput } from "../scene/audio/AudioOutput";
-import { Scene } from "../scene/core/Scene";
 import { SceneGraph } from "../scene/core/SceneGraph";
+import { SceneOperation } from "../scene/core/SceneOperation";
 import { MaterialFactory } from "../scene/factory/MaterialFactory";
 import { SceneRendererPipeline } from "../scene/renderer/pipeline/SceneRendererPipeline";
 import { SceneRendererPipelineOperation } from "../scene/renderer/pipeline/SceneRendererPipelineOperation";
@@ -18,13 +18,13 @@ export abstract class BaseApplication implements ApplicationOperation{
     protected shaderLoader: ShaderLoader;
     protected textureLoader: TextureLoader;
     protected textFontLoader: TextFontLoader;
-    protected scene: Scene;
+    protected scene: SceneOperation;
     protected sceneGraph: SceneGraph;
     protected rendererContext: RendererContext; 
     protected audioOutput: AudioOutput;
     protected rendererFlowPipeline: SceneRendererPipelineOperation;
 
-    constructor(scene: Scene){
+    constructor(scene: SceneOperation){
         this.canvas = document.getElementById('webgl-canvas') as HTMLCanvasElement;
         this.webglUtility = new WebGLUtility(this.canvas);
         this.gl = this.webglUtility.getWebGL2RenderingContext();
