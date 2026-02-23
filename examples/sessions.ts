@@ -269,17 +269,17 @@ class Sessions extends GLSpinner.BaseApplication {
     }
 
     updateUniformByBpm(currentTime: number): void {
-        const beat = this.timeToBeat(currentTime);
+        const beat = GLSpinner.MathUtility.timeToBeat(currentTime, this.bpm);
         const wholeBeat = beat;
         const block = Math.floor(wholeBeat / 8.0);
-        const fTime = this.fract(wholeBeat / 8.0);
+        const fTime = GLSpinner.MathUtility.fract(wholeBeat / 8.0);
         this.currentBlock = Math.floor(wholeBeat);
 
         // 全部で24ブロック(1ブロック8ビート)
         let cameraPosOffset = new GLSpinner.Vector3(0.0, 0.0, 0.0);
         let cameraLookPosOffset = new GLSpinner.Vector3(0.0, 0.0, 0.0);
 
-        let kickTime = this.beatToTime(beat % 2);
+        let kickTime = GLSpinner.MathUtility.beatToTime(beat % 2, this.bpm);
         this.rgbShiftValue = 0.0;
         cameraPosOffset.x = Math.cos(currentTime*0.4)*5.0;
         cameraPosOffset.z = Math.sin(currentTime*0.4)*5.0;
@@ -299,7 +299,7 @@ class Sessions extends GLSpinner.BaseApplication {
                 cameraLookPosOffset.x = fTime * 6.0 - 3.0;
                 cameraLookPosOffset.y = fTime * 6.0 - 3.0;
                 cameraLookPosOffset.z = 0.0;
-                this.blurStrength = 2.0 - this.linearStep(0.0, 1.0, fTime);
+                this.blurStrength = 2.0 - GLSpinner.MathUtility.linearStep(0.0, 1.0, fTime);
                 break;
             case 1:
                 // マスク + カメラ制御
@@ -309,8 +309,8 @@ class Sessions extends GLSpinner.BaseApplication {
                 cameraLookPosOffset.x = fTime * 6.0 - 3.0;
                 cameraLookPosOffset.y = 0.0;
                 cameraLookPosOffset.z = 0.0;
-                this.blurStrength = this.linearStep(0.9, 1.0, fTime) * 20.0;
-                this.blurStrength = 1.0 - this.linearStep(0.0, 1.0, fTime);
+                this.blurStrength = GLSpinner.MathUtility.linearStep(0.9, 1.0, fTime) * 20.0;
+                this.blurStrength = 1.0 - GLSpinner.MathUtility.linearStep(0.0, 1.0, fTime);
                 break;
             case 2:
                 // マスク + カメラ制御 + タイトル表示
@@ -344,7 +344,7 @@ class Sessions extends GLSpinner.BaseApplication {
                 this.greetingTextScale.x = 1.8;
                 this.greetingTextScale.y = 2.2;
                 this.greetingTextScale.z = 1.0;
-                this.glitchCoef = this.linearStep(0.9, 1.0, fTime) * 40.0;
+                this.glitchCoef = GLSpinner.MathUtility.linearStep(0.9, 1.0, fTime) * 40.0;
                 break;
             case 4:
                 // グリッチでイン
@@ -398,7 +398,7 @@ class Sessions extends GLSpinner.BaseApplication {
                 // カメラ制御
                 // フラッシュ
                 // 次の場面転換でグリッチ
-                this.blurStrength = this.linearStep(0.9, 1.0, fTime) * 20.0;
+                this.blurStrength = GLSpinner.MathUtility.linearStep(0.9, 1.0, fTime) * 20.0;
                 break;
             case 12:
                 // カメラ制御
@@ -472,7 +472,7 @@ class Sessions extends GLSpinner.BaseApplication {
             case 19:
                 this.rgbShiftValue = Math.exp(-8.0 * kickTime) * 0.012;
                 // 次の場面転換でグリッチ
-                this.glitchCoef = this.linearStep(0.9, 1.0, fTime) * 40.0;
+                this.glitchCoef = GLSpinner.MathUtility.linearStep(0.9, 1.0, fTime) * 40.0;
 
                 // カメラ制御
                 cameraPosOffset.y = 3.0;
@@ -506,7 +506,7 @@ class Sessions extends GLSpinner.BaseApplication {
                 cameraPosOffset.x -= this.baseCameraPos.x;
                 cameraPosOffset.y -= this.baseCameraPos.y;
                 cameraPosOffset.z -= this.baseCameraPos.z;
-                this.blurStrength = this.linearStep(0.0, 1.0, fTime) * 2.0;
+                this.blurStrength = GLSpinner.MathUtility.linearStep(0.0, 1.0, fTime) * 2.0;
                 break;
             case 23:
                 // マスクがかかって終了
@@ -517,7 +517,7 @@ class Sessions extends GLSpinner.BaseApplication {
                 cameraPosOffset.x -= this.baseCameraPos.x;
                 cameraPosOffset.y -= this.baseCameraPos.y;
                 cameraPosOffset.z -= this.baseCameraPos.z;
-                this.blurStrength = 2.0 + this.linearStep(0.0, 1.0, fTime) * 2.0;
+                this.blurStrength = 2.0 + GLSpinner.MathUtility.linearStep(0.0, 1.0, fTime) * 2.0;
                 break;
             case 24:
                 // 音と映像 : 名前 表示
@@ -547,22 +547,6 @@ class Sessions extends GLSpinner.BaseApplication {
         
         this.cameraPos = this.baseCameraPos.add(cameraPosOffset, this.cameraPos);
         this.cameraLookAtPos = this.baseCameraLookAtPos.add(cameraLookPosOffset, this.cameraLookAtPos);
-    }
-
-    timeToBeat(time: number): number {
-        return (time / 60.0) * this.bpm;
-    }
-
-    beatToTime(beat: number): number {
-        return (beat * 60.0) / this.bpm;
-    }
-
-    fract(value: number): number {
-        return value - Math.floor(value);
-    }
-
-    linearStep(start: number, end: number, t: number): number {
-        return GLSpinner.MathUtility.clamp((t - start) / (end - start), 0.0, 1.0);
     }
 
     resizeRenderTarget(): void {
