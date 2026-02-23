@@ -79,6 +79,7 @@ export * from './webgl/gl/font/TextFontLoader'
 // FBO
 export * from './webgl/gl/fbo/PingPongRenderTarget'
 export * from './webgl/gl/fbo/RenderTarget'
+export * from './webgl/gl/fbo/ScreenRenderTarget'
 export * from './webgl/gl/fbo/RenderTargetOperation'
 export * from './webgl/gl/fbo/RenderTargetOption'
 export * from './webgl/gl/fbo/RenderTargetConstants'

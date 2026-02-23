@@ -13,23 +13,10 @@ export class StandardSceneRendererFlow extends BaseSceneRendererFlow {
         this.sceneGraphRoot = sceneGraphRoot;
     }
 
-    render(gl: WebGL2RenderingContext, context: RendererContext, _inputRenderTarget: RenderTargetOperation | undefined, outputRenderTarget: RenderTargetOperation | undefined): RenderTargetOperation | undefined {
-        if (outputRenderTarget) {
-            outputRenderTarget.drawToFrameBuffer(() => {
-                this.drawScene(gl, context);
-            });
-        }
-        else {
-            this.drawScene(gl, context);
-        }
-
-        return outputRenderTarget;
-    }
-
-    private drawScene(gl: WebGL2RenderingContext, context: RendererContext): void {
+    render(gl: WebGL2RenderingContext, context: RendererContext, _inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void {
+        outputRenderTarget.bindAsDrawTarget();
         SceneGraphUtility.traverse(this.sceneGraphRoot, (node) => {
             node.draw(gl, context);
-        });
+        });   
     }
-
 }

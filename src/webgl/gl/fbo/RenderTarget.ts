@@ -1,52 +1,40 @@
 import { RenderTargetOperation } from "./RenderTargetOperation";
+import { RenderTargetOption } from "./RenderTargetOption";
 
 export class RenderTarget implements RenderTargetOperation {
     private gl: WebGL2RenderingContext;
-    private fbo: WebGLFramebuffer | undefined;
-    private rbo: WebGLRenderbuffer | undefined;
-    private texture: WebGLTexture | undefined;
+    
+    private framebuffer!: WebGLFramebuffer;
+    private colorTextures!: WebGLTexture[];
+    private depthRenderbuffer: WebGLRenderbuffer | undefined;
+    
     private width: number;
     private height: number;
 
-    constructor(gl: WebGL2RenderingContext, resolution: [number, number]) {
+    private option: RenderTargetOption;
+
+    constructor(gl: WebGL2RenderingContext, resolution: [number, number], option: RenderTargetOption = {}) {
         this.gl = gl;
         this.width = resolution[0];
         this.height = resolution[1];
-        this.setUpFrameBuffer();
+
+        this.framebuffer = gl.createFramebuffer();
+        this.colorTextures = [];
+        this.option = option;
+
+        this.initialize(option);
     }
 
-    drawToFrameBuffer(drawFunction: () => void): void {
-        const gl = this.gl;
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo!);
-        gl.clearColor(0.0, 0.0, 1.0, 1.0);
-        gl.clearDepth(1.0);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-        gl.viewport(0, 0, this.width, this.height);
-
-        drawFunction();
-
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    bindAsDrawTarget(): void {
+        this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.framebuffer!);
+        this.gl.viewport(0, 0, this.width, this.height);
     }
 
-    drawToScreen(drawFunction: () => void): void {
-        const gl = this.gl;
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.viewport(0, 0, this.width, this.height);
-        drawFunction();
-    }
-
-    bind(index: number): void {
-        this.gl.activeTexture(this.gl.TEXTURE0 + index);
-        this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture!);
-    }
-
-    unbind(): void {
-        this.gl.bindTexture(this.gl.TEXTURE_2D, null);
-    }
-
-    getTexture(): WebGLTexture {
-        return this.texture!;
+    getColorTexture(index: number = 0): WebGLTexture {
+        if(index !== 0){
+            throw new Error("Only single color attachment supported!");
+        }
+        return this.colorTextures?.at(index)!;
     }
 
     resize(resolution: [number, number]): void {
@@ -54,46 +42,63 @@ export class RenderTarget implements RenderTargetOperation {
 
         this.width = resolution[0];
         this.height = resolution[1];
+
+        this.dispose();
+
+        this.framebuffer = this.gl.createFramebuffer();
+        this.colorTextures = [];
+
+        this.initialize(this.option);
     }
 
     dispose(): void {
         const gl = this.gl;
-        if (this.texture) {
-            gl.deleteTexture(this.texture);
-            this.texture = undefined;
+
+        if (this.colorTextures) {
+            this.colorTextures.forEach(element => {
+                gl.deleteTexture(element);
+            });
         }
-        if (this.rbo) {
-            gl.deleteRenderbuffer(this.rbo);
-            this.rbo = undefined;
+        if (this.depthRenderbuffer) {
+            gl.deleteRenderbuffer(this.depthRenderbuffer);
         }
-        if (this.fbo) {
-            gl.deleteFramebuffer(this.fbo);
-            this.fbo = undefined;
+        if (this.framebuffer) {
+            gl.deleteFramebuffer(this.framebuffer);
         }
     }
 
-    private setUpFrameBuffer(): void {
+    private initialize(option: RenderTargetOption): void {
         const gl = this.gl;
 
-        this.texture = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, this.texture);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        const colorTextureCount = option.colorTextureCount ?? 1;
+        const useDepth = option.useDepth ?? false;
 
-        this.rbo = gl.createRenderbuffer();
-        gl.bindRenderbuffer(gl.RENDERBUFFER, this.rbo);
-        gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, this.width, this.height);
+        this.colorTextures = [];
 
-        this.fbo = gl.createFramebuffer();
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo);
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.texture, 0);
-        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this.rbo);
+        // フレームバッファ
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
 
-        gl.bindTexture(gl.TEXTURE_2D, null);
-        gl.bindRenderbuffer(gl.RENDERBUFFER, null);
+        // カラーテクスチャ
+        for(let i = 0; i < colorTextureCount; i++){
+            const colorTexture = gl.createTexture();
+            gl.bindTexture(gl.TEXTURE_2D, colorTexture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0 + i, gl.TEXTURE_2D, colorTexture, 0);
+            this.colorTextures?.push(colorTexture);
+        }
+
+        // depth
+        if(useDepth){
+            this.depthRenderbuffer = gl.createRenderbuffer();
+            gl.bindRenderbuffer(gl.RENDERBUFFER, this.depthRenderbuffer);
+            gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, this.width, this.height);
+            gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this.depthRenderbuffer);
+        }
+
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
 }

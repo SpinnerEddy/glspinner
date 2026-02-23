@@ -87,6 +87,10 @@ class Sample extends GLSpinner.BaseApplication {
         this.rendererContext.addRenderTargetToPool(
             GLSpinner.RenderTargetSlot.RENDER_TARGET_EFFECTED,
             new GLSpinner.RenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
+        
+        this.rendererContext.setScreenRenderTarget(
+            new GLSpinner.ScreenRenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight])
+        );
 
         const standardRendererFlow = new GLSpinner.StandardSceneRendererFlow(
             this.baseSceneRoot);
@@ -220,7 +224,7 @@ class Sample extends GLSpinner.BaseApplication {
             node.update();
         });
 
-        this.rendererContext.updateGlobalUniform("time", new GLSpinner.ShaderUniformValue(this.scene.Clock.getElapsedTime()));
+        this.rendererContext.updateGlobalUniform("time", new GLSpinner.ShaderUniformValue(this.scene.getClock().getElapsedTime()));
         this.rendererContext.updateGlobalUniform("resolution", new GLSpinner.ShaderUniformValue([this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
         // this.rendererContext.updateGlobalUniform("blurStrength", new GLSpinner.ShaderUniformValue(0.5 + 0.5 * GLSpinner.MathUtility.sin(this.scene.Clock.getElapsedTime())));
         this.rendererContext.updateGlobalUniform("blurStrength", new GLSpinner.ShaderUniformValue(1.0));

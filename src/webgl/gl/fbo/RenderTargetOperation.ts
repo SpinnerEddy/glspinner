@@ -1,9 +1,6 @@
 export interface RenderTargetOperation {
-    drawToFrameBuffer(drawFunction: () => void): void;
-    drawToScreen(drawFunction: () => void): void;
-    getTexture(): WebGLTexture;
-    bind(index: number): void;
-    unbind(): void;
+    bindAsDrawTarget(): void;
+    getColorTexture(index: number): WebGLTexture;
     resize(resolution: [number, number]): void;
     dispose(): void;
 }

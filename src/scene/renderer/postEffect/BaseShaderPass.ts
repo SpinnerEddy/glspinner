@@ -26,7 +26,7 @@ export abstract class BaseShaderPass implements ShaderPassOperation {
         this.plane = new MeshNode(planeMesh);
     }
 
-    abstract render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    abstract render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
 
     setEffectEnabled(enabled: boolean): void {
         this.isEffectEnabled = enabled;
@@ -36,14 +36,15 @@ export abstract class BaseShaderPass implements ShaderPassOperation {
         return this.isEffectEnabled;
     }
 
-    protected draw(gl: WebGL2RenderingContext, context: RendererContext, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation {
-        if(isBlit){
-            outputRenderTarget.drawToScreen(() => SceneGraphUtility.traverse(this.plane, (node) => node.draw(gl, context)));
-        }
-        else{
-            outputRenderTarget.drawToFrameBuffer(() => SceneGraphUtility.traverse(this.plane, (node) => node.draw(gl, context)));
-        }
+    protected draw(gl: WebGL2RenderingContext, context: RendererContext, outputRenderTarget: RenderTargetOperation): void {
+        // if(isBlit){
+        //     outputRenderTarget.drawToScreen(() => SceneGraphUtility.traverse(this.plane, (node) => node.draw(gl, context)));
+        // }
+        // else{
+        //     outputRenderTarget.drawToFrameBuffer(() => SceneGraphUtility.traverse(this.plane, (node) => node.draw(gl, context)));
+        // }
+        outputRenderTarget.bindAsDrawTarget();
 
-        return outputRenderTarget;
+        SceneGraphUtility.traverse(this.plane, (node) => node.draw(gl, context));
     }
 }

@@ -10,12 +10,15 @@ export class GlitchShaderPass extends BaseShaderPass {
         super(gl, material);
     }
 
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation {
-        inputRenderTarget!.bind(TextureSlot.CURRENT_FRAME);
-        outputRenderTarget = this.draw(gl, context, outputRenderTarget, isBlit);
-        inputRenderTarget!.unbind();
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void {
+        const texture = inputRenderTarget.getColorTexture(0);
 
-        return outputRenderTarget;
+        gl.activeTexture(gl.TEXTURE0 + TextureSlot.CURRENT_FRAME);
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+
+        this.draw(gl, context, outputRenderTarget);
+
+        gl.bindTexture(gl.TEXTURE_2D, null);
     }
 
 }

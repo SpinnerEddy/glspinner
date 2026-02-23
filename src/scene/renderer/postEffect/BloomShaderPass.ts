@@ -1,6 +1,5 @@
 import { RenderTargetSlot } from "../../../webgl/gl/fbo/RenderTargetConstants";
 import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
-import { TextureSlot } from "../../../webgl/gl/texture/TextureConstants";
 import { BlurMaterial } from "../../material/BlurMaterial";
 import { BrightMaterial } from "../../material/BrightMaterial";
 import { ComposeMaterial } from "../../material/ComposeMaterial";
@@ -32,31 +31,25 @@ export class BloomShaderPass implements ShaderPassOperation {
         this.composeShaderPass = new ComposeShaderPass(gl, composeMaterial);
     }
 
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation {
-
-        let resultRT: RenderTargetOperation | undefined = undefined;
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void {
 
         let writeTempRT = context.getRenderTargetFromPool(RenderTargetSlot.BLOOM_TEMP_RENDER_TARGET_BRIGHT)!;
 
-        resultRT = this.brightShaderPass.render(gl, context, inputRenderTarget, writeTempRT, false);
+        this.brightShaderPass.render(gl, context, inputRenderTarget, writeTempRT);
 
-        let readTempRT = resultRT;
+        let readTempRT = writeTempRT;
         writeTempRT = context.getRenderTargetFromPool(RenderTargetSlot.BLOOM_TEMP_RENDER_TARGET_BLUR_H)!;
 
-        resultRT = this.horizontalBlurShaderPass.render(gl, context, readTempRT, writeTempRT, false);
+        this.horizontalBlurShaderPass.render(gl, context, readTempRT, writeTempRT);
 
-        readTempRT = resultRT;
+        readTempRT = writeTempRT;
         writeTempRT = context.getRenderTargetFromPool(RenderTargetSlot.BLOOM_TEMP_RENDER_TARGET_BLUR_V)!;
 
-        resultRT = this.verticalBlurShaderPass.render(gl, context, readTempRT, writeTempRT, false);
+        this.verticalBlurShaderPass.render(gl, context, readTempRT, writeTempRT);
 
-        readTempRT = resultRT;
+        readTempRT = writeTempRT;
 
-        writeTempRT.bind(TextureSlot.BLOOM_FRAME);
-        resultRT = this.composeShaderPass.render(gl, context, inputRenderTarget, outputRenderTarget, isBlit);
-        writeTempRT.unbind();
-
-        return resultRT;
+        this.composeShaderPass.render(gl, context, readTempRT, outputRenderTarget);
     }
 
     setEffectEnabled(enabled: boolean): void {

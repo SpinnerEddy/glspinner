@@ -12,33 +12,27 @@ export class PostEffectRendererFlow extends BaseSceneRendererFlow {
         this.shaderPasses = shaderPasses;
     }
 
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation | undefined, outputRenderTarget: RenderTargetOperation | undefined): RenderTargetOperation | undefined {
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void {
         if(!this.shaderPasses || this.shaderPasses.size === 0) return;
         if(!outputRenderTarget) return;
 
-        let renderTargetA: RenderTargetOperation | undefined = inputRenderTarget;
-        let renderTargetB: RenderTargetOperation | undefined = outputRenderTarget;
+        let readRT: RenderTargetOperation = inputRenderTarget;
+        let writeRT: RenderTargetOperation = outputRenderTarget;
 
-        let readRT: RenderTargetOperation | undefined = renderTargetA;
-        let writeRT: RenderTargetOperation | undefined = renderTargetB;
-        let resultRT: RenderTargetOperation | undefined = undefined;
+        const passes = Array.from(this.shaderPasses.values()).filter(pass => pass.getEffectEnabled());
 
-        let passIndex = 0;
-        for (const pass of this.shaderPasses.values()) {
-            
-            if(!pass.getEffectEnabled()) {
-                passIndex++;
-                continue;
+        for (let i = 0; i < passes.length; i++) {
+            const isLast = i === (passes.length - 1);
+
+            const target = isLast ? outputRenderTarget : writeRT;
+
+            passes[i].render(gl, context, readRT, target);
+
+            if (!isLast){
+                const temp = readRT;
+                readRT = writeRT;
+                writeRT = temp;
             }
-
-            resultRT = pass.render(gl, context, readRT!, writeRT!, passIndex === this.shaderPasses.size - 1);
-
-            readRT = resultRT;
-            writeRT = (writeRT === renderTargetA) ? renderTargetB : renderTargetA;
-
-            passIndex++;
         }
-
-        return resultRT;
     }
 }

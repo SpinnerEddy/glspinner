@@ -1,5 +1,6 @@
 import { RenderTargetSlotKey } from "../../webgl/gl/fbo/RenderTargetConstants";
 import { RenderTargetOperation } from "../../webgl/gl/fbo/RenderTargetOperation";
+import { ScreenRenderTarget } from "../../webgl/gl/fbo/ScreenRenderTarget";
 import { ShaderProgram } from "../../webgl/gl/ShaderProgram";
 import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
 import { ShaderUniformValue } from "../../webgl/gl/uniform/ShaderUniformValue";
@@ -13,6 +14,7 @@ export class RendererContext {
     private fragmentCanvasUniforms: UniformPairs = {};
     private currentShaderProgram: ShaderProgram | undefined = undefined;
     private renderTargetPool: Map<RenderTargetSlotKey, RenderTargetOperation> = new Map();
+    private screenRenderTarget : ScreenRenderTarget | undefined = undefined;
 
     public getRenderTargetFromPool(key: RenderTargetSlotKey): RenderTargetOperation | undefined {
         if(!this.renderTargetPool.has(key)) {
@@ -66,5 +68,13 @@ export class RendererContext {
 
     public getLights(): LightParams[] {
         return this.lights;
+    }
+
+    public setScreenRenderTarget(renderTarget: ScreenRenderTarget) {
+        this.screenRenderTarget = renderTarget;
+    }
+
+    public getScreenRenderTarget(): ScreenRenderTarget {
+        return this.screenRenderTarget!;
     }
 }

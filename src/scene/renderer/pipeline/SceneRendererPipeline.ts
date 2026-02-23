@@ -19,14 +19,21 @@ export class SceneRendererPipeline implements SceneRendererPipelineOperation {
         let renderTargetA = context.getRenderTargetFromPool(RenderTargetSlot.RENDER_TARGET_A);
         let renderTargetB = context.getRenderTargetFromPool(RenderTargetSlot.RENDER_TARGET_B);
 
-        let readRT: RenderTargetOperation | undefined = renderTargetB;
-        let writeRT: RenderTargetOperation | undefined = renderTargetA;
+        let readRT: RenderTargetOperation = renderTargetB!;
+        let writeRT: RenderTargetOperation = renderTargetA!;
 
-        for (const flow of this.rendererFlows) {
-            const result = flow.render(gl, context, readRT, writeRT);
+        for (let i = 0; i < this.rendererFlows.length; i++) {
+            const isLast = i === (this.rendererFlows.length - 1);
 
-            readRT = result;
-            writeRT = (writeRT === renderTargetA) ? renderTargetB : renderTargetA;
+            const outputRT = isLast ? context.getScreenRenderTarget() : writeRT;
+
+            this.rendererFlows[i].render(gl, context, readRT, outputRT);
+
+            if (!isLast){
+                const temp = readRT;
+                readRT = writeRT;
+                writeRT = temp;
+            }
         }
     }
 } 
