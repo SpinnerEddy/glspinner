@@ -25,7 +25,7 @@ export class SceneRendererPipeline implements SceneRendererPipelineOperation {
         for (let i = 0; i < this.rendererFlows.length; i++) {
             const isLast = i === (this.rendererFlows.length - 1);
 
-            const outputRT = isLast ? context.getScreenRenderTarget() : writeRT;
+            const outputRT =  writeRT;
 
             this.rendererFlows[i].render(gl, context, readRT, outputRT);
 

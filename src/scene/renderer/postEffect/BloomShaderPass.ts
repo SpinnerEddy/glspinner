@@ -48,8 +48,9 @@ export class BloomShaderPass implements ShaderPassOperation {
         this.verticalBlurShaderPass.render(gl, context, readTempRT, writeTempRT);
 
         readTempRT = writeTempRT;
+        writeTempRT = outputRenderTarget;
 
-        this.composeShaderPass.render(gl, context, readTempRT, outputRenderTarget);
+        this.composeShaderPass.render(gl, context, readTempRT, writeTempRT);
     }
 
     setEffectEnabled(enabled: boolean): void {

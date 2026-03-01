@@ -18,13 +18,14 @@ export class PostEffectRendererFlow extends BaseSceneRendererFlow {
 
         let readRT: RenderTargetOperation = inputRenderTarget;
         let writeRT: RenderTargetOperation = outputRenderTarget;
+        let finalRT: RenderTargetOperation = context.getScreenRenderTarget();
 
         const passes = Array.from(this.shaderPasses.values()).filter(pass => pass.getEffectEnabled());
 
         for (let i = 0; i < passes.length; i++) {
             const isLast = i === (passes.length - 1);
 
-            const target = isLast ? outputRenderTarget : writeRT;
+            const target = isLast ? finalRT : writeRT;
 
             passes[i].render(gl, context, readRT, target);
 

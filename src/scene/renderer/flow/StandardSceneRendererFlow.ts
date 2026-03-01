@@ -17,6 +17,6 @@ export class StandardSceneRendererFlow extends BaseSceneRendererFlow {
         outputRenderTarget.bindAsDrawTarget();
         SceneGraphUtility.traverse(this.sceneGraphRoot, (node) => {
             node.draw(gl, context);
-        });   
+        });
     }
 }
