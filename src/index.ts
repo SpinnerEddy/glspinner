@@ -160,6 +160,7 @@ export * from './scene/renderer/flow/RendererFlowOperation'
 export * from './scene/renderer/flow/BaseSceneRendererFlow'
 export * from './scene/renderer/flow/StandardSceneRendererFlow'
 export * from './scene/renderer/flow/PostEffectRendererFlow'
+export * from './scene/renderer/flow/FinalBlitRenderFlow'
 export * from './scene/renderer/flow/RendererFlowConstants'
 
 // Scene/Renderer/Pipeline

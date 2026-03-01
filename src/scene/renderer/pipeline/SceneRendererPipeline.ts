@@ -21,19 +21,16 @@ export class SceneRendererPipeline implements SceneRendererPipelineOperation {
 
         let readRT: RenderTargetOperation = renderTargetB!;
         let writeRT: RenderTargetOperation = renderTargetA!;
+        
+        for (let i = 0; i < this.rendererFlows.length - 1; i++) {
+            this.rendererFlows[i].render(gl, context, readRT, writeRT);
 
-        for (let i = 0; i < this.rendererFlows.length; i++) {
-            const isLast = i === (this.rendererFlows.length - 1);
-
-            const outputRT =  writeRT;
-
-            this.rendererFlows[i].render(gl, context, readRT, outputRT);
-
-            if (!isLast){
-                const temp = readRT;
-                readRT = writeRT;
-                writeRT = temp;
-            }
+            const temp = readRT;
+            readRT = writeRT;
+            writeRT = temp;
         }
+
+        let screenTarget = context.getScreenRenderTarget();
+        this.rendererFlows.at(-1)?.render(gl, context, readRT, screenTarget);
     }
 } 
