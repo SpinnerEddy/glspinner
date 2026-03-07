@@ -30,11 +30,19 @@ export class RenderTarget implements RenderTargetOperation {
         this.gl.viewport(0, 0, this.width, this.height);
     }
 
+    getFrameBuffer(): WebGLFramebuffer {
+        return this.framebuffer;    
+    }
+
     getColorTexture(index: number = 0): WebGLTexture {
         if(index !== 0){
             throw new Error("Only single color attachment supported!");
         }
         return this.colorTextures?.at(index)!;
+    }
+
+    getSize(): [number, number] {
+        return [this.width, this.height];
     }
 
     resize(resolution: [number, number]): void {

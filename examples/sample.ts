@@ -134,30 +134,24 @@ class Sample extends GLSpinner.BaseApplication {
         this.rendererContext.updateGlobalUniform("glitchCoef", new GLSpinner.ShaderUniformValue(0.3));
         this.rendererContext.updateGlobalUniform("shiftOffset", new GLSpinner.ShaderUniformValue(0.01));
 
-        this.shaderPasses = new Map<string, GLSpinner.ShaderPassOperation>();
-        this.shaderPasses.set("bloom", bloomShaderPass);
-        this.shaderPasses.set("bright", brightShaderPass);        
-        this.shaderPasses.set("blur(horizontal)", horizontalBlurShaderPass);
-        this.shaderPasses.set("blur(vertical)", verticalBlurShaderPass);
-        this.shaderPasses.set("grayScale", graySceleShaderPass);
-        this.shaderPasses.set("mosaic", mosaicShaderPass);
-        this.shaderPasses.set("rgbShift", rgbShiftShaderPass);
-        this.shaderPasses.set("glitch", glitchShaderPass);
+        // this.rendererFlowPipeline.addFlow(new GLSpinner.PostEffectRendererFlow(bloomShaderPass));
+        // this.rendererFlowPipeline.addFlow(new GLSpinner.PostEffectRendererFlow(brightShaderPass));
+        this.rendererFlowPipeline.addFlow(new GLSpinner.PostEffectRendererFlow(horizontalBlurShaderPass));
+        this.rendererFlowPipeline.addFlow(new GLSpinner.PostEffectRendererFlow(verticalBlurShaderPass));
+        // this.rendererFlowPipeline.addFlow(new GLSpinner.PostEffectRendererFlow(graySceleShaderPass));
+        // this.rendererFlowPipeline.addFlow(new GLSpinner.PostEffectRendererFlow(mosaicShaderPass));
+        this.rendererFlowPipeline.addFlow(new GLSpinner.PostEffectRendererFlow(rgbShiftShaderPass));
+        // this.rendererFlowPipeline.addFlow(new GLSpinner.PostEffectRendererFlow(glitchShaderPass));
 
-        this.shaderPassEnabledSwitch = new Map<string, boolean>();
-        this.shaderPassEnabledSwitch.set("bloom", false);
-        this.shaderPassEnabledSwitch.set("bright", false);
-        this.shaderPassEnabledSwitch.set("blur(horizontal)", false);
-        this.shaderPassEnabledSwitch.set("blur(vertical)", false);
-        this.shaderPassEnabledSwitch.set("grayScale", false);
-        this.shaderPassEnabledSwitch.set("mosaic", false);
-        this.shaderPassEnabledSwitch.set("rgbShift", false);
-        this.shaderPassEnabledSwitch.set("glitch", false);
-
-        const postEffectRendererFlow = new GLSpinner.PostEffectRendererFlow(
-            this.shaderPasses);
-
-        this.rendererFlowPipeline.addFlow(postEffectRendererFlow);
+        // this.shaderPassEnabledSwitch = new Map<string, boolean>();
+        // this.shaderPassEnabledSwitch.set("bloom", false);
+        // this.shaderPassEnabledSwitch.set("bright", false);
+        // this.shaderPassEnabledSwitch.set("blur(horizontal)", false);
+        // this.shaderPassEnabledSwitch.set("blur(vertical)", false);
+        // this.shaderPassEnabledSwitch.set("grayScale", false);
+        // this.shaderPassEnabledSwitch.set("mosaic", false);
+        // this.shaderPassEnabledSwitch.set("rgbShift", false);
+        // this.shaderPassEnabledSwitch.set("glitch", false);
 
         const frameBufferOutputPass = new GLSpinner.FinalBlitShaderPass(
             this.gl, 
@@ -176,13 +170,13 @@ class Sample extends GLSpinner.BaseApplication {
             () => this.audioOutput.playAudio(),
             () => this.audioOutput.stopAudio()
         );
-        GLSpinner.PostEffectGuiController.initialize(
-            this.shaderPasses,
-            this.shaderPassEnabledSwitch,
-            (key: string, enabled: boolean) => {
-                this.shaderPassEnabledSwitch.set(key, enabled);
-            }
-        );
+        // GLSpinner.PostEffectGuiController.initialize(
+        //     this.shaderPasses,
+        //     this.shaderPassEnabledSwitch,
+        //     (key: string, enabled: boolean) => {
+        //         this.shaderPassEnabledSwitch.set(key, enabled);
+        //     }
+        // );
         GLSpinner.PlaySceneGuiController.initialize(
             () => this.scene.start(),
             () => this.scene.stop()
@@ -233,14 +227,14 @@ class Sample extends GLSpinner.BaseApplication {
 
         this.rendererContext.updateFragmentCanvasUniform("cameraPos", new GLSpinner.ShaderUniformValue(this.cameraPos));
 
-        this.shaderPasses.forEach((pass, key) => {
-            if(this.shaderPassEnabledSwitch.get(key)){
-                pass.setEffectEnabled(true);
-            }
-            else{
-                pass.setEffectEnabled(false);
-            }
-        });
+        // this.shaderPasses.forEach((pass, key) => {
+        //     if(this.shaderPassEnabledSwitch.get(key)){
+        //         pass.setEffectEnabled(true);
+        //     }
+        //     else{
+        //         pass.setEffectEnabled(false);
+        //     }
+        // });
     }
 
     draw(): void {
