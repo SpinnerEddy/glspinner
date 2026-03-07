@@ -134,13 +134,13 @@ class Sample extends GLSpinner.BaseApplication {
         this.rendererContext.updateGlobalUniform("glitchCoef", new GLSpinner.ShaderUniformValue(0.3));
         this.rendererContext.updateGlobalUniform("shiftOffset", new GLSpinner.ShaderUniformValue(0.01));
 
-        // this.rendererFlowPipeline.addFlow(new GLSpinner.PostEffectRendererFlow(bloomShaderPass));
+        this.rendererFlowPipeline.addFlow(new GLSpinner.PostEffectRendererFlow(bloomShaderPass));
         // this.rendererFlowPipeline.addFlow(new GLSpinner.PostEffectRendererFlow(brightShaderPass));
-        this.rendererFlowPipeline.addFlow(new GLSpinner.PostEffectRendererFlow(horizontalBlurShaderPass));
-        this.rendererFlowPipeline.addFlow(new GLSpinner.PostEffectRendererFlow(verticalBlurShaderPass));
+        // this.rendererFlowPipeline.addFlow(new GLSpinner.PostEffectRendererFlow(horizontalBlurShaderPass));
+        // this.rendererFlowPipeline.addFlow(new GLSpinner.PostEffectRendererFlow(verticalBlurShaderPass));
         // this.rendererFlowPipeline.addFlow(new GLSpinner.PostEffectRendererFlow(graySceleShaderPass));
         // this.rendererFlowPipeline.addFlow(new GLSpinner.PostEffectRendererFlow(mosaicShaderPass));
-        this.rendererFlowPipeline.addFlow(new GLSpinner.PostEffectRendererFlow(rgbShiftShaderPass));
+        // this.rendererFlowPipeline.addFlow(new GLSpinner.PostEffectRendererFlow(rgbShiftShaderPass));
         // this.rendererFlowPipeline.addFlow(new GLSpinner.PostEffectRendererFlow(glitchShaderPass));
 
         // this.shaderPassEnabledSwitch = new Map<string, boolean>();

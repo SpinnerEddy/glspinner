@@ -1,5 +1,6 @@
 import { RenderTargetSlot } from "../../../webgl/gl/fbo/RenderTargetConstants";
 import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
+import { TextureSlot } from "../../../webgl/gl/texture/TextureConstants";
 import { BlurMaterial } from "../../material/BlurMaterial";
 import { BrightMaterial } from "../../material/BrightMaterial";
 import { ComposeMaterial } from "../../material/ComposeMaterial";
@@ -46,11 +47,9 @@ export class BloomShaderPass implements ShaderPassOperation {
         writeTempRT = context.getRenderTargetFromPool(RenderTargetSlot.BLOOM_TEMP_RENDER_TARGET_BLUR_V)!;
 
         this.verticalBlurShaderPass.render(gl, context, readTempRT, writeTempRT);
-
-        readTempRT = writeTempRT;
-        writeTempRT = outputRenderTarget;
-
-        this.composeShaderPass.render(gl, context, readTempRT, writeTempRT);
+        
+        this.composeShaderPass.setBloomTexture(writeTempRT);
+        this.composeShaderPass.render(gl, context, inputRenderTarget, outputRenderTarget);
     }
 
     setEffectEnabled(enabled: boolean): void {
