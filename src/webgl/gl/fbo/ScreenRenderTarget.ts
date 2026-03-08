@@ -21,6 +21,14 @@ export class ScreenRenderTarget implements RenderTargetOperation {
         throw new Error("ScreenRenderTarget does not have a color texture!");
     }
 
+    getFrameBuffer(): WebGLFramebuffer {
+        throw new Error("ScreenRenderTarget does not have a Framebuffer!");
+    }
+
+    getSize(): [number, number] {
+        return [this.width, this.height];
+    }
+
     resize(resolution: [number, number]): void {
         if(this.width === resolution[0] && this.height === resolution[1]) return;
 
