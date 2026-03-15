@@ -1,6 +1,5 @@
 import { RenderTargetSlot } from "../../../webgl/gl/fbo/RenderTargetConstants";
 import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
-import { TextureSlot } from "../../../webgl/gl/texture/TextureConstants";
 import { BlurMaterial } from "../../material/BlurMaterial";
 import { BrightMaterial } from "../../material/BrightMaterial";
 import { ComposeMaterial } from "../../material/ComposeMaterial";

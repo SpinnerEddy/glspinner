@@ -6,12 +6,7 @@ export class PostEffectGuiController {
         GuiUtility.initialize();
 
         GuiUtility.addFolder("PostEffect");
-        let index = 0;
         for (const key of shaderPasses.keys()) {
-            // 末尾は出力用なのでスキップ
-            index++;
-            if(index == shaderPasses.size) break;
-            
             const keyString = key.toString();
             const params = { [keyString]: shaderPassEnabledSwitch.get(keyString) } as Record<string, boolean>;
             GuiUtility.addElement(
