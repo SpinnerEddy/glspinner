@@ -9,8 +9,14 @@ export enum AttachmentType {
     DEPTH_STENCIL
 }
 
+export type AttachmentConfig = {
+    type: AttachmentType;
+    minFilter?: number;
+    magFilter?: number;
+}
+
 export type CustomRenderTargetOption = {
-    attachments: AttachmentType[]
+    attachments: AttachmentConfig[]
 }
 
 export type RenderTargetOption = {

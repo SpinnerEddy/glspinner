@@ -1,12 +1,12 @@
 import { RenderTargetOperation } from "./RenderTargetOperation";
-import { AttachmentType, CustomRenderTargetOption } from "./RenderTargetOption";
+import { AttachmentConfig, AttachmentType, CustomRenderTargetOption } from "./RenderTargetOption";
 
 export class CustomRenderTarget implements RenderTargetOperation {
     private gl: WebGL2RenderingContext;
     
     private framebuffer!: WebGLFramebuffer;
     private colorTextures!: WebGLTexture[];
-
+    private depthTexture!: WebGLTexture | undefined;
     private depthRenderbuffer: WebGLRenderbuffer | undefined;
     
     private width: number;
@@ -16,7 +16,7 @@ export class CustomRenderTarget implements RenderTargetOperation {
     private colorTextureCount: number;
     private drawBufferAttachmentPoints: number[];
 
-    constructor(gl: WebGL2RenderingContext, resolution: [number, number], option: CustomRenderTargetOption = { attachments: [AttachmentType.COLOR]}) {
+    constructor(gl: WebGL2RenderingContext, resolution: [number, number], option: CustomRenderTargetOption = { attachments: [{ type: AttachmentType.COLOR }]}) {
         this.gl = gl;
         this.width = resolution[0];
         this.height = resolution[1];
@@ -44,6 +44,10 @@ export class CustomRenderTarget implements RenderTargetOperation {
             throw new Error("Only single color attachment supported!");
         }
         return this.colorTextures?.at(index)!;
+    }
+
+    getDepthTexture(): WebGLTexture {
+        return this.depthTexture!;
     }
 
     getSize(): [number, number] {
@@ -74,6 +78,9 @@ export class CustomRenderTarget implements RenderTargetOperation {
         if (this.depthRenderbuffer) {
             gl.deleteRenderbuffer(this.depthRenderbuffer);
         }
+        if (this.depthTexture) {
+            gl.deleteTexture(this.depthTexture);
+        }
         if (this.framebuffer) {
             gl.deleteFramebuffer(this.framebuffer);
         }
@@ -89,8 +96,8 @@ export class CustomRenderTarget implements RenderTargetOperation {
         // フレームバッファ
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
 
-        option.attachments.forEach((type) => {
-            this.setUpAttachment(gl, type);
+        option.attachments.forEach((config) => {
+            this.setUpAttachment(gl, config);
         });
 
         if (this.drawBufferAttachmentPoints.length > 0) {
@@ -100,37 +107,38 @@ export class CustomRenderTarget implements RenderTargetOperation {
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
 
-    private setUpAttachment(gl: WebGL2RenderingContext, type: AttachmentType): void {
-        switch (type){
+    private setUpAttachment(gl: WebGL2RenderingContext, config: AttachmentConfig): void {
+        const filterSetting = this.getTextureFilters(gl, config); 
+        switch (config.type){
             case AttachmentType.DEPTH:
             case AttachmentType.STENCIL:
             case AttachmentType.DEPTH_STENCIL:
                 this.depthRenderbuffer = gl.createRenderbuffer();
                 gl.bindRenderbuffer(gl.RENDERBUFFER, this.depthRenderbuffer);
                 
-                const renderbufferSetting = this.getRenderbufferSettingByAttachmentType(gl, type);
+                const renderbufferSetting = this.getRenderbufferSettingByAttachmentType(gl, config.type);
                 gl.renderbufferStorage(gl.RENDERBUFFER, renderbufferSetting.internalFormat, this.width, this.height);
                 gl.framebufferRenderbuffer(gl.FRAMEBUFFER, renderbufferSetting.attachmentPoint, gl.RENDERBUFFER, this.depthRenderbuffer);
                 break;
             case AttachmentType.DEPTH_TEXTURE:
-                const depthTex = gl.createTexture();
-                gl.bindTexture(gl.TEXTURE_2D, depthTex);
+                this.depthTexture = gl.createTexture();
+                gl.bindTexture(gl.TEXTURE_2D, this.depthTexture);
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT24, this.width, this.height, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_INT, null);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-                gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, depthTex, 0);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filterSetting.minFilter);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filterSetting.magFilter);
+                gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.depthTexture, 0);
                 break;
             default:
                 const colorTexture = gl.createTexture();
                 gl.bindTexture(gl.TEXTURE_2D, colorTexture);
 
-                const textureSetting = this.getColorTextureSettingByAttachmentType(gl, type);
+                const textureSetting = this.getColorTextureSettingByAttachmentType(gl, config.type);
                 gl.texImage2D(gl.TEXTURE_2D, 0, textureSetting.internalFormat, 
                     this.width, this.height, 0, textureSetting.format, 
                     textureSetting.texNumberType, null);
 
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filterSetting.minFilter);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filterSetting.magFilter);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
@@ -192,5 +200,16 @@ export class CustomRenderTarget implements RenderTargetOperation {
         }
 
         return {internalFormat, attachmentPoint};
+    }
+
+    private getTextureFilters(gl: WebGL2RenderingContext, config: AttachmentConfig): {minFilter: number, magFilter: number} {
+        const defaultFilter = (config.type === AttachmentType.ID || config.type === AttachmentType.DEPTH_TEXTURE)
+        ? gl.NEAREST 
+        : gl.LINEAR;
+
+        return {
+            minFilter: config.minFilter ?? defaultFilter,
+            magFilter: config.magFilter ?? defaultFilter
+        }
     }
 }
