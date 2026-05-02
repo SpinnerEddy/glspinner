@@ -1,22 +1,19 @@
-import { RenderTarget } from "./RenderTarget";
+import { RenderTargetOperation } from "./RenderTargetOperation";
 
 export class PingPongRenderTarget {
-    private targets: [RenderTarget, RenderTarget];
+    private targets: [RenderTargetOperation, RenderTargetOperation];
     private readIndex: number = 0;
 
-    constructor(gl: WebGL2RenderingContext, resolution: [number, number]) {
-        this.targets = [
-            new RenderTarget(gl, resolution),
-            new RenderTarget(gl, resolution)
-        ];
+    constructor(targetA: RenderTargetOperation, targetB: RenderTargetOperation) {
+        this.targets = [targetA, targetB];
         this.readIndex = 0;
     }
 
-    get read(): RenderTarget {
+    get read(): RenderTargetOperation {
         return this.targets[this.readIndex];
     }
 
-    get write(): RenderTarget {
+    get write(): RenderTargetOperation {
         return this.targets[1 - this.readIndex];
     }
 
@@ -34,4 +31,11 @@ export class PingPongRenderTarget {
         this.targets[1].dispose();
     }
 
+    getColorTexture(index: number): WebGLTexture {
+        return this.read.getColorTexture(index);
+    }
+
+    getDepthTexture(): WebGLTexture {
+        return this.read.getDepthTexture();
+    }
 }

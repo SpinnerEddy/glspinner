@@ -79,15 +79,16 @@ class Sample extends GLSpinner.BaseApplication {
             GLSpinner.RenderTargetSlot.BLOOM_TEMP_RENDER_TARGET_BRIGHT,
             new GLSpinner.CustomRenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
         this.rendererContext.addRenderTargetToPool(
-            GLSpinner.RenderTargetSlot.BLOOM_TEMP_RENDER_TARGET_BLUR_H,
-            new GLSpinner.CustomRenderTarget(this.gl, [this.gl.drawingBufferWidth * 0.5, this.gl.drawingBufferHeight * 0.5]));
-        this.rendererContext.addRenderTargetToPool(
-            GLSpinner.RenderTargetSlot.BLOOM_TEMP_RENDER_TARGET_BLUR_V,
-            new GLSpinner.CustomRenderTarget(this.gl, [this.gl.drawingBufferWidth * 0.5, this.gl.drawingBufferHeight * 0.5]));
-        this.rendererContext.addRenderTargetToPool(
             GLSpinner.RenderTargetSlot.RENDER_TARGET_EFFECTED,
             new GLSpinner.CustomRenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
         
+        this.rendererContext.addPingPongRenderTargetToPool(
+            GLSpinner.RenderTargetSlot.BLOOM_TEMP_PP_RENDER_TARGET_BLUR,
+            new GLSpinner.PingPongRenderTarget(
+                new GLSpinner.CustomRenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]), 
+                new GLSpinner.CustomRenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight])
+            ));
+
         this.rendererContext.setScreenRenderTarget(
             new GLSpinner.ScreenRenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight])
         );

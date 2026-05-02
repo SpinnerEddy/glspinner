@@ -33,21 +33,17 @@ export class BloomShaderPass implements ShaderPassOperation {
 
     render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void {
 
-        let writeTempRT = context.getRenderTargetFromPool(RenderTargetSlot.BLOOM_TEMP_RENDER_TARGET_BRIGHT)!;
+        let brightTempRT = context.getRenderTargetFromPool(RenderTargetSlot.BLOOM_TEMP_RENDER_TARGET_BRIGHT)!;
 
-        this.brightShaderPass.render(gl, context, inputRenderTarget, writeTempRT);
+        this.brightShaderPass.render(gl, context, inputRenderTarget, brightTempRT);
 
-        let readTempRT = writeTempRT;
-        writeTempRT = context.getRenderTargetFromPool(RenderTargetSlot.BLOOM_TEMP_RENDER_TARGET_BLUR_H)!;
+        let tempPPRT = context.getPingPongRenderTargetFromPool(RenderTargetSlot.BLOOM_TEMP_PP_RENDER_TARGET_BLUR)!; 
 
-        this.horizontalBlurShaderPass.render(gl, context, readTempRT, writeTempRT);
-
-        readTempRT = writeTempRT;
-        writeTempRT = context.getRenderTargetFromPool(RenderTargetSlot.BLOOM_TEMP_RENDER_TARGET_BLUR_V)!;
-
-        this.verticalBlurShaderPass.render(gl, context, readTempRT, writeTempRT);
+        this.horizontalBlurShaderPass.render(gl, context, brightTempRT, tempPPRT.write);
+        tempPPRT.swap();
+        this.verticalBlurShaderPass.render(gl, context, tempPPRT.read, tempPPRT.write);
         
-        this.composeShaderPass.setBloomTexture(writeTempRT);
+        this.composeShaderPass.setBloomTexture(tempPPRT.write);
         this.composeShaderPass.render(gl, context, inputRenderTarget, outputRenderTarget);
     }
 

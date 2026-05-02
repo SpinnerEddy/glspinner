@@ -1,3 +1,4 @@
+import { PingPongRenderTarget } from "../../webgl/gl/fbo/PingPongRenderTarget";
 import { RenderTargetSlotKey } from "../../webgl/gl/fbo/RenderTargetConstants";
 import { RenderTargetOperation } from "../../webgl/gl/fbo/RenderTargetOperation";
 import { ScreenRenderTarget } from "../../webgl/gl/fbo/ScreenRenderTarget";
@@ -15,6 +16,7 @@ export class RendererContext {
     private currentShaderProgram: ShaderProgram | undefined = undefined;
     private renderTargetPool: Map<RenderTargetSlotKey, RenderTargetOperation> = new Map();
     private screenRenderTarget : ScreenRenderTarget | undefined = undefined;
+    private pingPongRenderTargetPool: Map<RenderTargetSlotKey, PingPongRenderTarget> = new Map();
 
     public getRenderTargetFromPool(key: RenderTargetSlotKey): RenderTargetOperation | undefined {
         if(!this.renderTargetPool.has(key)) {
@@ -26,6 +28,18 @@ export class RendererContext {
 
     public addRenderTargetToPool(key: RenderTargetSlotKey, renderTarget: RenderTargetOperation): void {
         this.renderTargetPool.set(key, renderTarget);
+    }
+
+    public getPingPongRenderTargetFromPool(key: RenderTargetSlotKey): PingPongRenderTarget | undefined {
+        if(!this.pingPongRenderTargetPool.has(key)) {
+            return undefined;
+        }
+
+        return this.pingPongRenderTargetPool.get(key);
+    }
+
+    public addPingPongRenderTargetToPool(key: RenderTargetSlotKey, pingPongRenderTarget: PingPongRenderTarget): void {
+        this.pingPongRenderTargetPool.set(key, pingPongRenderTarget);
     }
 
     public setCamera(camera: Camera): void {
