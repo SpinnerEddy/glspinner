@@ -33,11 +33,11 @@ export class BloomShaderPass implements ShaderPassOperation {
 
     render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void {
 
-        let brightTempRT = context.getRenderTargetFromPool(RenderTargetSlot.BLOOM_TEMP_RENDER_TARGET_BRIGHT)!;
+        let brightTempRT = context.getRenderTargetFromPool(RenderTargetSlot.BRIGHT_PASS_BUFFER)!;
 
         this.brightShaderPass.render(gl, context, inputRenderTarget, brightTempRT);
 
-        let tempPPRT = context.getPingPongRenderTargetFromPool(RenderTargetSlot.BLOOM_TEMP_PP_RENDER_TARGET_BLUR)!; 
+        let tempPPRT = context.getPingPongRenderTargetFromPool(RenderTargetSlot.PINGPONG_TEMP_BUFFER)!; 
 
         this.horizontalBlurShaderPass.render(gl, context, brightTempRT, tempPPRT.write);
         tempPPRT.swap();

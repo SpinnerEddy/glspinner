@@ -67,23 +67,20 @@ class Sample extends GLSpinner.BaseApplication {
         GLSpinner.SceneGraphUtility.addChild(fboPlaneMeshNode, this.textRoot);
 
         this.rendererContext.addRenderTargetToPool(
-            GLSpinner.RenderTargetSlot.RENDER_TARGET_A,
+            GLSpinner.RenderTargetSlot.CURRENT_FRAME,
             new GLSpinner.CustomRenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
         this.rendererContext.addRenderTargetToPool(
-            GLSpinner.RenderTargetSlot.RENDER_TARGET_B,
+            GLSpinner.RenderTargetSlot.TEMP_FRAME_BUFFER,
             new GLSpinner.CustomRenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
         this.rendererContext.addRenderTargetToPool(
-            GLSpinner.RenderTargetSlot.BLUR_RENDER_TARGET_HALF,
+            GLSpinner.RenderTargetSlot.HALF_RES_BUFFER,
             new GLSpinner.CustomRenderTarget(this.gl, [this.gl.drawingBufferWidth * 0.5, this.gl.drawingBufferHeight * 0.5]));
         this.rendererContext.addRenderTargetToPool(
-            GLSpinner.RenderTargetSlot.BLOOM_TEMP_RENDER_TARGET_BRIGHT,
-            new GLSpinner.CustomRenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
-        this.rendererContext.addRenderTargetToPool(
-            GLSpinner.RenderTargetSlot.RENDER_TARGET_EFFECTED,
+            GLSpinner.RenderTargetSlot.BRIGHT_PASS_BUFFER,
             new GLSpinner.CustomRenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
         
         this.rendererContext.addPingPongRenderTargetToPool(
-            GLSpinner.RenderTargetSlot.BLOOM_TEMP_PP_RENDER_TARGET_BLUR,
+            GLSpinner.RenderTargetSlot.PINGPONG_TEMP_BUFFER,
             new GLSpinner.PingPongRenderTarget(
                 new GLSpinner.CustomRenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]), 
                 new GLSpinner.CustomRenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight])

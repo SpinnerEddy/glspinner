@@ -16,8 +16,8 @@ export class SceneRendererPipeline implements SceneRendererPipelineOperation {
     }
 
     render(gl: WebGL2RenderingContext, context: RendererContext): void {
-        let renderTargetA = context.getRenderTargetFromPool(RenderTargetSlot.RENDER_TARGET_A);
-        let renderTargetB = context.getRenderTargetFromPool(RenderTargetSlot.RENDER_TARGET_B);
+        let renderTargetA = context.getRenderTargetFromPool(RenderTargetSlot.CURRENT_FRAME);
+        let renderTargetB = context.getRenderTargetFromPool(RenderTargetSlot.TEMP_FRAME_BUFFER);
 
         let readRT: RenderTargetOperation = renderTargetB!;
         let writeRT: RenderTargetOperation = renderTargetA!;

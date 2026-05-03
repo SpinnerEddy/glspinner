@@ -37,12 +37,6 @@ export abstract class BaseShaderPass implements ShaderPassOperation {
     }
 
     protected draw(gl: WebGL2RenderingContext, context: RendererContext, outputRenderTarget: RenderTargetOperation): void {
-        // if(isBlit){
-        //     outputRenderTarget.drawToScreen(() => SceneGraphUtility.traverse(this.plane, (node) => node.draw(gl, context)));
-        // }
-        // else{
-        //     outputRenderTarget.drawToFrameBuffer(() => SceneGraphUtility.traverse(this.plane, (node) => node.draw(gl, context)));
-        // }
         outputRenderTarget.bindAsDrawTarget();
 
         SceneGraphUtility.traverse(this.plane, (node) => node.draw(gl, context));

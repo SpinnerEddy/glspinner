@@ -21,6 +21,10 @@ export class ScreenRenderTarget implements RenderTargetOperation {
         throw new Error("ScreenRenderTarget does not have a color texture!");
     }
 
+    getDepthTexture(): WebGLTexture {
+        throw new Error("ScreenRenderTarget does not have a depth texture!");
+    }
+
     getFrameBuffer(): WebGLFramebuffer {
         throw new Error("ScreenRenderTarget does not have a Framebuffer!");
     }
