@@ -1,7 +1,3 @@
-import { PingPongRenderTarget } from "../../webgl/gl/fbo/PingPongRenderTarget";
-import { RenderTargetSlotKey } from "../../webgl/gl/fbo/RenderTargetConstants";
-import { RenderTargetOperation } from "../../webgl/gl/fbo/RenderTargetOperation";
-import { ScreenRenderTarget } from "../../webgl/gl/fbo/ScreenRenderTarget";
 import { ShaderProgram } from "../../webgl/gl/ShaderProgram";
 import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
 import { ShaderUniformValue } from "../../webgl/gl/uniform/ShaderUniformValue";
@@ -22,28 +18,8 @@ export class RendererContext {
         this.renderTargetRegistry = new RenderTargetRegistry();
     }
 
-    public getRenderTargetFromPool(slot: RenderTargetSlotKey): RenderTargetOperation | undefined {
-        return this.renderTargetRegistry.getRenderTargetFromPool(slot);
-    }
-
-    public addRenderTargetToPool(slot: RenderTargetSlotKey, renderTarget: RenderTargetOperation): void {
-        this.renderTargetRegistry.addRenderTargetToPool(slot, renderTarget);
-    }
-
-    public getPingPongRenderTargetFromPool(slot: RenderTargetSlotKey): PingPongRenderTarget | undefined {
-        return this.renderTargetRegistry.getPingPongRenderTargetFromPool(slot);
-    }
-
-    public addPingPongRenderTargetToPool(slot: RenderTargetSlotKey, pingPongRenderTarget: PingPongRenderTarget): void {
-        this.renderTargetRegistry.addPingPongRenderTargetToPool(slot, pingPongRenderTarget);
-    }
-
-    public setScreenRenderTarget(renderTarget: ScreenRenderTarget) {
-        this.renderTargetRegistry.setScreenRenderTarget(renderTarget);
-    }
-
-    public getScreenRenderTarget(): ScreenRenderTarget {
-        return this.renderTargetRegistry.getScreenRenderTarget();
+    public getRenderTargetRegistry(): RenderTargetRegistryOperation {
+        return this.renderTargetRegistry;
     }
 
     public setCamera(camera: Camera): void {

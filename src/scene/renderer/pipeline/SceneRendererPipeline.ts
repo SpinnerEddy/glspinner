@@ -16,15 +16,16 @@ export class SceneRendererPipeline implements SceneRendererPipelineOperation {
     }
 
     render(gl: WebGL2RenderingContext, context: RendererContext): void {
-        let renderTargetA = context.getRenderTargetFromPool(RenderTargetSlot.CURRENT_FRAME);
-        let renderTargetB = context.getRenderTargetFromPool(RenderTargetSlot.TEMP_FRAME_BUFFER);
+        const rtRegistry = context.getRenderTargetRegistry();
+        let renderTargetA = rtRegistry.getRenderTargetFromPool(RenderTargetSlot.CURRENT_FRAME);
+        let renderTargetB = rtRegistry.getRenderTargetFromPool(RenderTargetSlot.TEMP_FRAME_BUFFER);
 
         let readRT: RenderTargetOperation = renderTargetB!;
         let writeRT: RenderTargetOperation = renderTargetA!;
         
         for (let i = 0; i < this.rendererFlows.length; i++) {
             const isLast = i === this.rendererFlows.length - 1;
-            const screenTarget = isLast ? context.getScreenRenderTarget() : writeRT;
+            const screenTarget = isLast ? rtRegistry.getScreenRenderTarget() : writeRT;
 
             this.rendererFlows[i].render(gl, context, readRT, screenTarget);
 
