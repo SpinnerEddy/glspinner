@@ -51,6 +51,10 @@ export class MathUtility{
         return value - Math.floor(value);
     }
 
+    static ceil(value: number): number {
+        return Math.ceil(value);
+    }
+
     static linearStep(start: number, end: number, t: number): number {
         return MathUtility.clamp((t - start) / (end - start), 0, 1);
     }

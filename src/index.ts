@@ -55,6 +55,7 @@ export * from './webgl/gl/buffer/BufferOperation';
 export * from './webgl/gl/buffer/BaseBuffer';
 export * from './webgl/gl/buffer/GeometryBuffer';
 export * from './webgl/gl/buffer/IndexBuffer';
+export * from './webgl/gl/buffer/ShaderUniformBuffer'
 
 // Geometry
 export * from './webgl/gl/geometry/Rectangle'

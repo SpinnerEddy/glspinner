@@ -1,7 +1,7 @@
 import { AttributeElementSize } from "../attribute/ShaderAttributeConstants";
 import { BaseBuffer } from "./BaseBuffer";
 
-export class GeometryBuffer extends BaseBuffer{
+export class GeometryBuffer extends BaseBuffer {
     private interleavedArray: Float32Array;
 
     constructor(

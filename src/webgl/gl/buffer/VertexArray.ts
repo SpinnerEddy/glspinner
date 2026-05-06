@@ -1,6 +1,6 @@
 import { BaseBuffer } from "./BaseBuffer";
 
-export class VertexArray{
+export class VertexArray {
     private gl: WebGL2RenderingContext;
     private vao: WebGLVertexArrayObject | null = null;
     private buffers: Map<string, BaseBuffer>;

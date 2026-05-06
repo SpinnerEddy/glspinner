@@ -1,6 +1,6 @@
 import { BaseBuffer } from "./BaseBuffer";
 
-export class IndexBuffer extends BaseBuffer{
+export class IndexBuffer extends BaseBuffer {
     private indices: Int16Array;
 
     constructor(gl: WebGL2RenderingContext, indices: Int16Array){
