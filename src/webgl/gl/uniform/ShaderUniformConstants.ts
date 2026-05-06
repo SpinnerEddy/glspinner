@@ -19,3 +19,5 @@ export type UniformAvailableType = number | number[] | Float32Array | Int32Array
 export type UniformValueType = 'float' | 'int'
 
 export type UniformPairs = Record<string, ShaderUniformValue>;
+
+export const NumberByte = 4;
