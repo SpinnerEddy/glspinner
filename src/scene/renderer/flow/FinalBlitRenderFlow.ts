@@ -21,4 +21,8 @@ export class FinalBlitRendererFlow extends BaseSceneRendererFlow {
 
         this.finalBlitShaderPass.render(gl, context, readRT, writeRT);
     }
+
+    isEnabled(): boolean {
+        return true;
+    }
 }

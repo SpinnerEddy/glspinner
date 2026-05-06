@@ -4,4 +4,5 @@ import { RendererFlowOperation } from "./RendererFlowOperation";
 
 export abstract class BaseSceneRendererFlow implements RendererFlowOperation {
     abstract render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
+    abstract isEnabled(): boolean;
 }

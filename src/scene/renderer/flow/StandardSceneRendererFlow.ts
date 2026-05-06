@@ -21,4 +21,8 @@ export class StandardSceneRendererFlow extends BaseSceneRendererFlow {
             node.draw(gl, context);
         });
     }
+
+    isEnabled(): boolean {
+        return true;
+    }
 }

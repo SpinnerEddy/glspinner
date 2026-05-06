@@ -31,4 +31,8 @@ export class PostEffectRendererFlow extends BaseSceneRendererFlow {
 
         this.shaderPass.render(gl, context, readRT, writeRT);
     }
+
+    isEnabled(): boolean {
+        return this.shaderPass.getEffectEnabled();
+    }
 }
