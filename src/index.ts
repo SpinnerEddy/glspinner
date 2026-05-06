@@ -182,6 +182,9 @@ export * from './scene/renderer/postEffect/ComposeShaderPass'
 export * from './scene/renderer/postEffect/BloomShaderPass'
 export * from './scene/renderer/postEffect/MaskShaderPass'
 
+// Scene/Renderer/Definition
+export * from './scene/renderer/definition/RenderTag'
+
 export function initializeLibrary() {
     console.log("ライブラリが初期化されました");
 }

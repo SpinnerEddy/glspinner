@@ -16,6 +16,8 @@ export class StandardSceneRendererFlow extends BaseSceneRendererFlow {
     render(gl: WebGL2RenderingContext, context: RendererContext, _inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void {
         outputRenderTarget.bindAsDrawTarget();
         SceneGraphUtility.traverse(this.sceneGraphRoot, (node) => {
+            if (!node.shouldDraw(context)) return;
+            
             node.draw(gl, context);
         });
     }

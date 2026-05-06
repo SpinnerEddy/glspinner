@@ -41,6 +41,10 @@ export class RenderTarget implements RenderTargetOperation {
         return this.colorTextures?.at(index)!;
     }
 
+    getDepthTexture(): WebGLTexture {
+        throw new Error("Method not implemented.");
+    }
+
     getSize(): [number, number] {
         return [this.width, this.height];
     }

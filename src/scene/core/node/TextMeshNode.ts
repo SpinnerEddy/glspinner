@@ -1,5 +1,6 @@
 import { ShaderUniformValue } from "../../../webgl/gl/uniform/ShaderUniformValue";
 import { TextMesh } from "../../mesh/TextMesh";
+import { RenderTagConstants } from "../../renderer/definition/RenderTag";
 import { RendererContext } from "../../renderer/RendererContext";
 import { SceneNode } from "./SceneNode";
 
@@ -9,6 +10,7 @@ export class TextMeshNode extends SceneNode {
     constructor(mesh: TextMesh, id: string = ""){
         super(id);
         this.mesh = mesh;
+        this.renderTag = RenderTagConstants.OVERLAY;
     }
 
     public update(): void {

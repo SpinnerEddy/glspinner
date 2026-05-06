@@ -5,6 +5,7 @@ import { Camera } from "../camera/Camera";
 import { LightParams } from "../light/LightConstants";
 import { RenderTargetRegistry } from "./context/RenderTargetRegistry";
 import { RenderTargetRegistryOperation } from "./context/RenderTargetRegistryOperation";
+import { RenderTag, RenderTagConstants } from "./definition/RenderTag";
 
 export class RendererContext {
     private camera: Camera | undefined = undefined;
@@ -13,6 +14,7 @@ export class RendererContext {
     private fragmentCanvasUniforms: UniformPairs = {};
     private currentShaderProgram: ShaderProgram | undefined = undefined;
     private renderTargetRegistry: RenderTargetRegistryOperation; 
+    private activateRenderTag: RenderTag = RenderTagConstants.ALL;
 
     constructor() {
         this.renderTargetRegistry = new RenderTargetRegistry();
@@ -20,6 +22,14 @@ export class RendererContext {
 
     public getRenderTargetRegistry(): RenderTargetRegistryOperation {
         return this.renderTargetRegistry;
+    }
+
+    public setActivateRenderTag(renderTag: RenderTag): void {
+        this.activateRenderTag = renderTag;
+    }
+
+    public getActivateRenderTag(): RenderTag {
+        return this.activateRenderTag;
     }
 
     public setCamera(camera: Camera): void {

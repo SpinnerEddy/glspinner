@@ -1,7 +1,7 @@
 import { RendererContext } from "../../renderer/RendererContext";
 import { SceneNode } from "./SceneNode";
 
-export class GroupNode extends SceneNode{
+export class GroupNode extends SceneNode {
     public update(): void {
         this.transform.updateMatrix(this.parent?.getTransform().getWorldMatrix());
 

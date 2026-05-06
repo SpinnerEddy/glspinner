@@ -1,14 +1,16 @@
 import { ShaderUniformValue } from "../../../webgl/gl/uniform/ShaderUniformValue";
 import { BaseMesh } from "../../mesh/BaseMesh";
+import { RenderTagConstants } from "../../renderer/definition/RenderTag";
 import { RendererContext } from "../../renderer/RendererContext";
 import { SceneNode } from "./SceneNode";
 
-export class MeshNode extends SceneNode{
+export class MeshNode extends SceneNode {
     private mesh: BaseMesh;
 
     constructor(mesh: BaseMesh, id: string = ""){
         super(id);
         this.mesh = mesh;
+        this.renderTag = RenderTagConstants.OPAQUE;
     }
 
     public update(): void {

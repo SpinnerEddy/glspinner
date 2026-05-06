@@ -3,7 +3,7 @@ import { LightParams } from "../../light/LightConstants";
 import { RendererContext } from "../../renderer/RendererContext";
 import { SceneNode } from "./SceneNode";
 
-export abstract class LightNode extends SceneNode{
+export abstract class LightNode extends SceneNode {
     protected light: Light;
 
     constructor(light: Light){

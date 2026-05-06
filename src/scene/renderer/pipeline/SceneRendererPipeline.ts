@@ -1,5 +1,6 @@
 import { RenderTargetSlot } from "../../../webgl/gl/fbo/RenderTargetConstants";
 import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
+import { RenderTagConstants } from "../definition/RenderTag";
 import { RendererFlowOperation } from "../flow/RendererFlowOperation";
 import { RendererContext } from "../RendererContext";
 import { SceneRendererPipelineOperation } from "./SceneRendererPipelineOperation";
@@ -27,6 +28,10 @@ export class SceneRendererPipeline implements SceneRendererPipelineOperation {
             const isLast = i === this.rendererFlows.length - 1;
             const screenTarget = isLast ? rtRegistry.getScreenRenderTarget() : writeRT;
 
+            context.setActivateRenderTag(RenderTagConstants.OPAQUE);
+            this.rendererFlows[i].render(gl, context, readRT, screenTarget);
+
+            context.setActivateRenderTag(RenderTagConstants.OVERLAY);
             this.rendererFlows[i].render(gl, context, readRT, screenTarget);
 
             if (!isLast){
