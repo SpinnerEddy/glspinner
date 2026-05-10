@@ -68,7 +68,14 @@ export class ShaderUniformBuffer extends BaseBuffer {
     transferUniform(): void {
         if (!this.shouldTransfer) return;
 
+        // console.log("Global UBO Total Size (bytes):", this.cpuBuffer);
+
         this.gl.bindBuffer(this.BufferType, this.buffer);
+
+        // const actualGpuSize = this.gl.getBufferParameter(this.BufferType, this.gl.BUFFER_SIZE);
+        // console.log("GPU Buffer Size (Actual):", actualGpuSize);
+        // console.log("CPU Buffer Size (Attempting):", this.cpuBuffer.byteLength);
+
         this.gl.bufferSubData(this.BufferType, 0, this.cpuBuffer);
         this.shouldTransfer = false;
     }

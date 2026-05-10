@@ -236,6 +236,9 @@ class Sample extends GLSpinner.BaseApplication {
 
         this.rendererContext.updateFragmentCanvasUniform("cameraPos", new GLSpinner.ShaderUniformValue(this.cameraPos));
 
+        // this.rendererContext.updateGlobalUniformValues(this.scene.getClock().getElapsedTime());
+        // this.rendererContext.bindGlobalUniforms();
+
         this.shaderPasses.forEach((pass, key) => {
             if(this.shaderPassEnabledSwitch.get(key)){
                 pass.setEffectEnabled(true);

@@ -21,3 +21,23 @@ export type UniformValueType = 'float' | 'int'
 export type UniformPairs = Record<string, ShaderUniformValue>;
 
 export const NumberByte = 4;
+
+export const UniformBindingPoint = 
+{ 
+    GLOBAL: 0,
+    MATERIAL: 1,
+    OBJECT: 2,
+    LIGHT: 3,
+    DEBUG: 10
+} as const;
+
+export type UniformBindingPointKey = typeof UniformBindingPoint[keyof typeof UniformBindingPoint];
+
+export const GlobalUniformKey = 
+{
+    VIEW_MATRIX: "viewMatrix",
+    PROJECTION_MATRIX: "projectionMatrix",
+    TIME: "time",
+} as const;
+
+export type GlobalUniformKeyValue = typeof GlobalUniformKey[keyof typeof GlobalUniformKey];

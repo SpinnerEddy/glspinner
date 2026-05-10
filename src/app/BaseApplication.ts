@@ -32,7 +32,7 @@ export abstract class BaseApplication implements ApplicationOperation{
         this.textureLoader = new TextureLoader(this.gl);
         this.textFontLoader = new TextFontLoader(this.gl);
         this.scene = scene;
-        this.rendererContext = new RendererContext();
+        this.rendererContext = new RendererContext(this.gl);
         this.sceneGraph = new SceneGraph();
         this.audioOutput = new AudioOutput();
         this.rendererFlowPipeline = new SceneRendererPipeline();

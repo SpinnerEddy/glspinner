@@ -1,5 +1,7 @@
+import { MatrixCalculator } from "../../math/MatrixCalculator";
+import { ShaderUniformBuffer } from "../../webgl/gl/buffer/ShaderUniformBuffer";
 import { ShaderProgram } from "../../webgl/gl/ShaderProgram";
-import { UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
+import { GlobalUniformKey, UniformBindingPoint, UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
 import { ShaderUniformValue } from "../../webgl/gl/uniform/ShaderUniformValue";
 import { Camera } from "../camera/Camera";
 import { LightParams } from "../light/LightConstants";
@@ -16,8 +18,18 @@ export class RendererContext {
     private renderTargetRegistry: RenderTargetRegistryOperation; 
     private activateRenderTag: RenderTag = RenderTagConstants.ALL;
 
-    constructor() {
+    private globalUniformBuffer: ShaderUniformBuffer;
+
+    constructor(gl: WebGL2RenderingContext) {
         this.renderTargetRegistry = new RenderTargetRegistry();
+        
+        const globalUniformPairs = {
+            [GlobalUniformKey.VIEW_MATRIX] : new ShaderUniformValue(MatrixCalculator.identity44()),
+            [GlobalUniformKey.PROJECTION_MATRIX] : new ShaderUniformValue(MatrixCalculator.identity44()),
+            [GlobalUniformKey.TIME] : new ShaderUniformValue(0)
+        };
+        this.globalUniformBuffer = new ShaderUniformBuffer(gl, globalUniformPairs);
+        this.globalUniformBuffer.setData();
     }
 
     public getRenderTargetRegistry(): RenderTargetRegistryOperation {
@@ -40,15 +52,28 @@ export class RendererContext {
         return this.camera!;
     }
 
-    public updateGlobalUniform(key: string, value: ShaderUniformValue): void{
+    public updateGlobalUniform(key: string, value: ShaderUniformValue): void {
         this.globalUniforms[key] = value;
     }
 
     public getGlobalUniform(): UniformPairs {
         return this.globalUniforms;
     }
+    
+    public updateGlobalUniformValues(time: number): void {
+        this.globalUniformBuffer.updateUniformValue(GlobalUniformKey.TIME, new ShaderUniformValue(time));
+        
+        if (this.camera === undefined) return;
+        this.globalUniformBuffer.updateUniformValue(GlobalUniformKey.VIEW_MATRIX, new ShaderUniformValue(this.camera.getViewMatrix()));
+        this.globalUniformBuffer.updateUniformValue(GlobalUniformKey.PROJECTION_MATRIX, new ShaderUniformValue(this.camera.getProjectionMatrix()));
+    }
 
-    public updateFragmentCanvasUniform(key: string, value: ShaderUniformValue): void{
+    public bindGlobalUniforms(): void {
+        this.globalUniformBuffer.transferUniform();
+        this.globalUniformBuffer.bind(UniformBindingPoint.GLOBAL);
+    }
+
+    public updateFragmentCanvasUniform(key: string, value: ShaderUniformValue): void {
         this.fragmentCanvasUniforms[key] = value;
     }
 

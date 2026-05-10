@@ -11,7 +11,7 @@ export abstract class BaseMaterial implements MaterialOperation {
     }
 
     use(gl: WebGL2RenderingContext, context: RendererContext): void {
-        if(context.isCurrentShaderProgramSame(this.shaderProgram)) {
+        if (context.isCurrentShaderProgramSame(this.shaderProgram)) {
             return;
         }
 
