@@ -6,17 +6,16 @@ export class FragmentCanvasMaterial extends BaseMaterial {
     
     constructor(shaderProgram: ShaderProgram){
         super(shaderProgram);
+        shaderProgram.getFragmentShader();
     }
 
     setUniform(gl: WebGL2RenderingContext, context: RendererContext): void {
         const uniforms = context.getGlobalUniform();
-        this.shaderProgram.setUniform(gl, "mvpMatrix", uniforms["mvpMatrix"]);
-        this.shaderProgram.setUniform(gl, "time", uniforms["time"]);
-        this.shaderProgram.setUniform(gl, "resolution", uniforms["resolution"]);
+        this.shaderProgram.setUniform(gl, "modelMatrix", uniforms["modelMatrix"]);
 
-        const fragmentUniforms = context.getFragmentCanvasUniform();
-        for(const key in fragmentUniforms){
-            this.shaderProgram.setUniform(gl, key, fragmentUniforms[key]);
-        }
+        // const fragmentUniforms = context.getFragmentCanvasUniform();
+        // for(const key in fragmentUniforms){
+        //     this.shaderProgram.setUniform(gl, key, fragmentUniforms[key]);
+        // }
     }
 }

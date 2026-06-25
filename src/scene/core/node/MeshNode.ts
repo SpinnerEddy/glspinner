@@ -34,6 +34,7 @@ export class MeshNode extends SceneNode {
         // let uniforms = context.getGlobalUniform();
         // uniforms["mvpMatrix"] = new ShaderUniformValue(mvpMatrix);
         context.updateGlobalUniform("mvpMatrix", new ShaderUniformValue(mvpMatrix));
+        context.updateGlobalUniform("modelMatrix", new ShaderUniformValue(modelMatrix));
 
         this.mesh.updateUniforms(gl, context);
     }

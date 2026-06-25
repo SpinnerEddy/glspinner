@@ -1,5 +1,6 @@
 import { ShaderAttribute } from "./attribute/ShaderAttribute";
 import { ShaderUniform } from "./uniform/ShaderUniform";
+import { UniformBindingPoint } from "./uniform/ShaderUniformConstants";
 import { ShaderUniformValue } from "./uniform/ShaderUniformValue";
 
 export class ShaderProgram{
@@ -22,7 +23,7 @@ export class ShaderProgram{
         return this.program;
     }
 
-    public getFragmentShader(): WebGLShader{
+    public getFragmentShader(): WebGLShader {
         return this.fragmentShader!;
     }
 
@@ -58,14 +59,18 @@ export class ShaderProgram{
 
         gl.linkProgram(program);
 
-        if(gl.getProgramParameter(program, gl.LINK_STATUS)){
-            gl.useProgram(program);
-            return program;
-        }
-        else{
+        if(!gl.getProgramParameter(program, gl.LINK_STATUS)){
             alert(gl.getProgramInfoLog(program));
-            throw new Error('Cannot create program!!');
+            throw new Error('Cannot create program!!');   
         }
+
+        const blockIndex = gl.getUniformBlockIndex(program, "GlobalUniforms");
+        if (blockIndex !== gl.INVALID_INDEX) {
+            gl.uniformBlockBinding(program, blockIndex, UniformBindingPoint.GLOBAL);
+        }
+
+        gl.useProgram(program);
+        return program;
     }
 
     private compileShader(gl: WebGL2RenderingContext, shaderSourceStr: string, type: 'vert' | 'frag'): WebGLShader {

@@ -1,6 +1,8 @@
 import * as GLSpinner from '../src/index.ts';
 import spinnerShaderFrag from '../examples/shader/spinner.frag';
 import spinnerShaderVert from '../examples/shader/spinner.vert';
+import uboTestShaderFrag from '../examples/shader/uboTest.frag';
+import uboTestShaderVert from '../examples/shader/uboTest.vert';
 import gideonRomanPng from '../examples/font/GideonRoman.png'
 import gideonRomanJson from '../examples/font/GideonRoman.json'
 
@@ -16,7 +18,7 @@ class Sample extends GLSpinner.BaseApplication {
 
     async preload(): Promise<void> {
         await super.preload();
-        this.shaderLoader.loadShaderFromSource("spinner", spinnerShaderVert, spinnerShaderFrag);
+        this.shaderLoader.loadShaderFromSource("uboTest", uboTestShaderVert, uboTestShaderFrag);
         await this.textureLoader.loadTextureFromPath(
             "texture/testImage.png"
         );
@@ -54,7 +56,7 @@ class Sample extends GLSpinner.BaseApplication {
         // 元々の描画内容
         this.baseSceneRoot = new GLSpinner.EmptyNode();
         const fboPlane = new GLSpinner.Plane(this.gl, 2, 2);
-        const fboMaterial = GLSpinner.MaterialFactory.fragmentCanvasMaterial("spinner");
+        const fboMaterial = GLSpinner.MaterialFactory.fragmentCanvasMaterial("uboTest");
         const fboPlaneAttributes = {
             aPosition: fboMaterial.getAttribute(this.gl, 'aPosition'),
         };
@@ -227,17 +229,17 @@ class Sample extends GLSpinner.BaseApplication {
             node.update();
         });
 
-        this.rendererContext.updateGlobalUniform("time", new GLSpinner.ShaderUniformValue(this.scene.getClock().getElapsedTime()));
-        this.rendererContext.updateGlobalUniform("resolution", new GLSpinner.ShaderUniformValue([this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
+        // this.rendererContext.updateGlobalUniform("time", new GLSpinner.ShaderUniformValue(this.scene.getClock().getElapsedTime()));
+        // this.rendererContext.updateGlobalUniform("resolution", new GLSpinner.ShaderUniformValue([this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
         // this.rendererContext.updateGlobalUniform("blurStrength", new GLSpinner.ShaderUniformValue(0.5 + 0.5 * GLSpinner.MathUtility.sin(this.scene.Clock.getElapsedTime())));
-        this.rendererContext.updateGlobalUniform("blurStrength", new GLSpinner.ShaderUniformValue(1.0));
-        this.rendererContext.updateGlobalUniform("brightThreshold", new GLSpinner.ShaderUniformValue(0.85));
-        this.rendererContext.updateGlobalUniform("bloomStrength", new GLSpinner.ShaderUniformValue(10.0));
+        // this.rendererContext.updateGlobalUniform("blurStrength", new GLSpinner.ShaderUniformValue(1.0));
+        // this.rendererContext.updateGlobalUniform("brightThreshold", new GLSpinner.ShaderUniformValue(0.85));
+        // this.rendererContext.updateGlobalUniform("bloomStrength", new GLSpinner.ShaderUniformValue(10.0));
 
-        this.rendererContext.updateFragmentCanvasUniform("cameraPos", new GLSpinner.ShaderUniformValue(this.cameraPos));
+        // this.rendererContext.updateFragmentCanvasUniform("cameraPos", new GLSpinner.ShaderUniformValue(this.cameraPos));
 
-        // this.rendererContext.updateGlobalUniformValues(this.scene.getClock().getElapsedTime());
-        // this.rendererContext.bindGlobalUniforms();
+        this.rendererContext.updateGlobalUniformValues(this.scene.getClock().getElapsedTime());
+        this.rendererContext.bindGlobalUniforms();
 
         this.shaderPasses.forEach((pass, key) => {
             if(this.shaderPassEnabledSwitch.get(key)){

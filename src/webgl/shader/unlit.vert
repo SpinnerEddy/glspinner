@@ -6,6 +6,7 @@ in vec4 aColor;
 out vec4 vColor;
 
 uniform mat4 mvpMatrix;
+uniform mat4 modelMatrix;
 
 void main(void){
     vColor = aColor;

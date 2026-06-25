@@ -8,6 +8,7 @@ out vec4 vColor;
 out vec2 vUv;
 
 uniform mat4 mvpMatrix;
+uniform mat4 modelMatrix;
 
 void main(void){
     vColor = aColor;

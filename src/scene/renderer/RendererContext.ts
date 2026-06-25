@@ -1,4 +1,5 @@
 import { MatrixCalculator } from "../../math/MatrixCalculator";
+import { Vector2 } from "../../math/vector/Vector2";
 import { ShaderUniformBuffer } from "../../webgl/gl/buffer/ShaderUniformBuffer";
 import { ShaderProgram } from "../../webgl/gl/ShaderProgram";
 import { GlobalUniformKey, UniformBindingPoint, UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
@@ -26,7 +27,8 @@ export class RendererContext {
         const globalUniformPairs = {
             [GlobalUniformKey.VIEW_MATRIX] : new ShaderUniformValue(MatrixCalculator.identity44()),
             [GlobalUniformKey.PROJECTION_MATRIX] : new ShaderUniformValue(MatrixCalculator.identity44()),
-            [GlobalUniformKey.TIME] : new ShaderUniformValue(0)
+            [GlobalUniformKey.TIME] : new ShaderUniformValue(0),
+            [GlobalUniformKey.RESOLUTION] : new ShaderUniformValue(new Vector2(gl.drawingBufferWidth, gl.drawingBufferHeight))
         };
         this.globalUniformBuffer = new ShaderUniformBuffer(gl, globalUniformPairs);
         this.globalUniformBuffer.setData();
