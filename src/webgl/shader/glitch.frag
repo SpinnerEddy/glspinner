@@ -4,8 +4,14 @@ precision highp float;
 in vec4 vColor;
 in vec2 vUv;
 
+layout(std140) uniform GlobalUniforms { // binding = 0 を削除
+    mat4 viewMatrix;
+    mat4 projectionMatrix;
+    float time;
+    vec2 resolution;
+};
+
 uniform sampler2D tex;
-uniform float time;
 uniform float glitchCoef;
 
 out vec4 outputColor;

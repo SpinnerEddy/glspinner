@@ -26,12 +26,8 @@ export class TextMeshNode extends SceneNode {
 
     private updateUniforms(gl: WebGL2RenderingContext, context: RendererContext): void {
         const modelMatrix = this.transform.getWorldMatrix();
-        const viewMatrix = context.getCamera().getViewMatrix();
-        const projectionMatrix = context.getCamera().getProjectionMatrix();
-        const vpMatrix = projectionMatrix.multiply(viewMatrix);
-        const mvpMatrix = vpMatrix.multiply(modelMatrix);
         
-        context.updateGlobalUniform("mvpMatrix", new ShaderUniformValue(mvpMatrix));
+        context.updateGlobalUniform("modelMatrix", new ShaderUniformValue(modelMatrix));
 
         this.mesh.updateUniforms(gl, context);
     }

@@ -18,7 +18,7 @@ export class BlurMaterial extends BaseMaterial {
 
     setUniform(gl: WebGL2RenderingContext, context: RendererContext): void {
         const uniforms = context.getGlobalUniform();
-        this.shaderProgram.setUniform(gl, "mvpMatrix", uniforms["mvpMatrix"]);
+        this.shaderProgram.setUniform(gl, "modelMatrix", uniforms["modelMatrix"]);
         this.shaderProgram.setUniform(gl, "blurDirection", new ShaderUniformValue(this.isVertical ? 1 : 0, 'int'));
         this.shaderProgram.setUniform(gl, "gCoefficients", new ShaderUniformValue(this.blurCoefficients));
         this.shaderProgram.setUniform(gl, "texResolution", uniforms["texResolution"]);
