@@ -224,19 +224,20 @@ class Sample extends GLSpinner.BaseApplication {
     }
 
     update(): void {
+        this.inputHub.update();
+        
         GLSpinner.SceneGraphUtility.traverse(this.textRoot, (node) => {
             node.getTransform().setPosition(new GLSpinner.Vector3(-0.45, 0.3, 0.0));
             node.update();
         });
 
-        // this.rendererContext.updateGlobalUniform("time", new GLSpinner.ShaderUniformValue(this.scene.getClock().getElapsedTime()));
-        // this.rendererContext.updateGlobalUniform("resolution", new GLSpinner.ShaderUniformValue([this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
-        // this.rendererContext.updateGlobalUniform("blurStrength", new GLSpinner.ShaderUniformValue(0.5 + 0.5 * GLSpinner.MathUtility.sin(this.scene.Clock.getElapsedTime())));
-        // this.rendererContext.updateGlobalUniform("blurStrength", new GLSpinner.ShaderUniformValue(1.0));
-        // this.rendererContext.updateGlobalUniform("brightThreshold", new GLSpinner.ShaderUniformValue(0.85));
-        // this.rendererContext.updateGlobalUniform("bloomStrength", new GLSpinner.ShaderUniformValue(10.0));
+        this.rendererContext.updateGlobalUniform("time", new GLSpinner.ShaderUniformValue(this.scene.getClock().getElapsedTime()));
+        this.rendererContext.updateGlobalUniform("resolution", new GLSpinner.ShaderUniformValue([this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
+        this.rendererContext.updateGlobalUniform("blurStrength", new GLSpinner.ShaderUniformValue(1.0));
+        this.rendererContext.updateGlobalUniform("brightThreshold", new GLSpinner.ShaderUniformValue(0.85));
+        this.rendererContext.updateGlobalUniform("bloomStrength", new GLSpinner.ShaderUniformValue(10.0));
 
-        // this.rendererContext.updateFragmentCanvasUniform("cameraPos", new GLSpinner.ShaderUniformValue(this.cameraPos));
+        this.rendererContext.updateFragmentCanvasUniform("cameraPos", new GLSpinner.ShaderUniformValue(this.cameraPos));
 
         this.rendererContext.updateGlobalUniformValues(this.scene.getClock().getElapsedTime());
         this.rendererContext.bindGlobalUniforms();
