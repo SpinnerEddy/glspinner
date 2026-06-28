@@ -6,6 +6,7 @@ SpinnerEddy's tool made for practicing WebGL
     - マウス
     - キーボード
     - MIDIコントローラー
+- isDown、isReleased、isPressedが動いてないので修正する(2026/6/29)
 
 # その後
 - 立方体など描けるジオメトリの種類を増やす
