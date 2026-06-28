@@ -1,25 +1,39 @@
-import { InputInfoPairs } from "../InputConstants";
+import { KeyboardCodeType, MouseButtonType } from "../InputConstants";
+import { BaseDevice } from "./BaseDevice";
 
-export class KeyboardDevice {
-
-    private currentInput: InputInfoPairs;
-    private prevInput: InputInfoPairs;
+export class KeyboardDevice extends BaseDevice {
 
     constructor() {
-        this.currentInput = {};
-        this.prevInput = {};
+        super();
 
         window.addEventListener('keydown', (event) => {
             this.currentInput[event.key] = true;
-            console.log("key : " + event.key + " Press");
         });
+        
         window.addEventListener('keyup', (event) => {
             this.currentInput[event.key] = false;
-            console.log("key : " + event.key + " Up");
         });
     }
 
     update(): void {
         this.prevInput = { ...this.currentInput };
+    }
+
+    isDown(type: MouseButtonType | KeyboardCodeType): boolean {
+        return this.currentInput[type] ?? false;
+    }
+
+    isPressed(type: MouseButtonType | KeyboardCodeType): boolean {
+        const prev = this.prevInput[type] ?? false;
+        const current = this.currentInput[type] ?? false;
+
+        return !prev && current;
+    }
+
+    isReleased(type: MouseButtonType | KeyboardCodeType): boolean {
+        const prev = this.prevInput[type] ?? false;
+        const current = this.currentInput[type] ?? false;
+
+        return prev && !current;
     }
 }

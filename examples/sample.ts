@@ -5,6 +5,7 @@ import uboTestShaderFrag from '../examples/shader/uboTest.frag';
 import uboTestShaderVert from '../examples/shader/uboTest.vert';
 import gideonRomanPng from '../examples/font/GideonRoman.png'
 import gideonRomanJson from '../examples/font/GideonRoman.json'
+import { DeviceName, KeyboardCode } from '../src/input/InputConstants.ts';
 
 class Sample extends GLSpinner.BaseApplication {
     private camera!: GLSpinner.Camera;
@@ -224,8 +225,6 @@ class Sample extends GLSpinner.BaseApplication {
     }
 
     update(): void {
-        this.inputHub.update();
-        
         GLSpinner.SceneGraphUtility.traverse(this.textRoot, (node) => {
             node.getTransform().setPosition(new GLSpinner.Vector3(-0.45, 0.3, 0.0));
             node.update();
@@ -250,6 +249,8 @@ class Sample extends GLSpinner.BaseApplication {
                 pass.setEffectEnabled(false);
             }
         });
+        
+        this.inputHub.update();
     }
 
     draw(): void {
