@@ -7,11 +7,11 @@ export class KeyboardDevice extends BaseDevice {
         super();
 
         window.addEventListener('keydown', (event) => {
-            this.currentInput[event.key] = true;
+            this.currentInput[event.code] = true;
         });
         
         window.addEventListener('keyup', (event) => {
-            this.currentInput[event.key] = false;
+            this.currentInput[event.code] = false;
         });
     }
 

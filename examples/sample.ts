@@ -5,7 +5,7 @@ import uboTestShaderFrag from '../examples/shader/uboTest.frag';
 import uboTestShaderVert from '../examples/shader/uboTest.vert';
 import gideonRomanPng from '../examples/font/GideonRoman.png'
 import gideonRomanJson from '../examples/font/GideonRoman.json'
-import { DeviceName, KeyboardCode } from '../src/input/InputConstants.ts';
+import { DeviceName, KeyboardCode, MouseButton } from '../src/input/InputConstants.ts';
 
 class Sample extends GLSpinner.BaseApplication {
     private camera!: GLSpinner.Camera;
@@ -249,6 +249,14 @@ class Sample extends GLSpinner.BaseApplication {
                 pass.setEffectEnabled(false);
             }
         });
+
+        if (this.inputHub.isDown({device: DeviceName.Keyboard, type: KeyboardCode.B})){
+            console.log("IsDown : B");
+        }
+
+        if (this.inputHub.isDown({device: DeviceName.Mouse, type: MouseButton.LEFT})){
+            console.log("IsDown : Left");
+        }
         
         this.inputHub.update();
     }
