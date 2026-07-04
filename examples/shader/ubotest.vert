@@ -5,6 +5,7 @@ layout(std140) uniform GlobalUniforms { // binding = 0 を削除
     mat4 projectionMatrix;
     float time;
     vec2 resolution;
+    vec2 mouse;
 };
 
 in vec3 aPosition;

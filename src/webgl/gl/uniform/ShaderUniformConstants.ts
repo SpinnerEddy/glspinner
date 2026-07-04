@@ -38,7 +38,8 @@ export const GlobalUniformKey =
     VIEW_MATRIX: "viewMatrix",
     PROJECTION_MATRIX: "projectionMatrix",
     TIME: "time",
-    RESOLUTION: "resolution"
+    RESOLUTION: "resolution",
+    MOUSE: 'mouse'
 } as const;
 
 export type GlobalUniformKeyValue = typeof GlobalUniformKey[keyof typeof GlobalUniformKey];

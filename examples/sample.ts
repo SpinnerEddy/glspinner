@@ -238,7 +238,7 @@ class Sample extends GLSpinner.BaseApplication {
 
         this.rendererContext.updateFragmentCanvasUniform("cameraPos", new GLSpinner.ShaderUniformValue(this.cameraPos));
 
-        this.rendererContext.updateGlobalUniformValues(this.scene.getClock().getElapsedTime());
+        this.rendererContext.updateGlobalUniformValues(this.scene.getClock().getElapsedTime(), this.inputHub.getMousePosition());
         this.rendererContext.bindGlobalUniforms();
 
         this.shaderPasses.forEach((pass, key) => {
@@ -250,13 +250,10 @@ class Sample extends GLSpinner.BaseApplication {
             }
         });
 
-        if (this.inputHub.isDown({device: DeviceName.Keyboard, type: KeyboardCode.B})){
-            console.log("IsDown : B");
-        }
 
-        if (this.inputHub.isDown({device: DeviceName.Mouse, type: MouseButton.LEFT})){
-            console.log("IsDown : Left");
-        }
+        this.shaderPassEnabledSwitch.set("grayScale", this.inputHub.isDown({device: DeviceName.Keyboard, type: KeyboardCode.B}));
+        this.shaderPassEnabledSwitch.set("glitch", this.inputHub.isDown({device: DeviceName.Mouse, type: MouseButton.LEFT}));
+
         
         this.inputHub.update();
     }

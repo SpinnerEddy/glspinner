@@ -28,7 +28,8 @@ export class RendererContext {
             [GlobalUniformKey.VIEW_MATRIX] : new ShaderUniformValue(MatrixCalculator.identity44()),
             [GlobalUniformKey.PROJECTION_MATRIX] : new ShaderUniformValue(MatrixCalculator.identity44()),
             [GlobalUniformKey.TIME] : new ShaderUniformValue(0),
-            [GlobalUniformKey.RESOLUTION] : new ShaderUniformValue(new Vector2(gl.drawingBufferWidth, gl.drawingBufferHeight))
+            [GlobalUniformKey.RESOLUTION] : new ShaderUniformValue(new Vector2(gl.drawingBufferWidth, gl.drawingBufferHeight)),
+            [GlobalUniformKey.MOUSE] : new ShaderUniformValue(new Vector2(0.0, 0.0))
         };
         this.globalUniformBuffer = new ShaderUniformBuffer(gl, globalUniformPairs);
         this.globalUniformBuffer.setData();
@@ -62,8 +63,9 @@ export class RendererContext {
         return this.globalUniforms;
     }
     
-    public updateGlobalUniformValues(time: number): void {
+    public updateGlobalUniformValues(time: number, mousePos: Vector2): void {
         this.globalUniformBuffer.updateUniformValue(GlobalUniformKey.TIME, new ShaderUniformValue(time));
+        this.globalUniformBuffer.updateUniformValue(GlobalUniformKey.MOUSE, new ShaderUniformValue(mousePos));
         
         if (this.camera === undefined) return;
         this.globalUniformBuffer.updateUniformValue(GlobalUniformKey.VIEW_MATRIX, new ShaderUniformValue(this.camera.getViewMatrix()));
