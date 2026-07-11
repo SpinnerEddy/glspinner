@@ -1,11 +1,11 @@
 import { Rectangle } from "../../webgl/gl/geometry/Rectangle";
-import { BaseMaterial } from "../material/BaseMaterial";
+import { MaterialOperation } from "../material/MaterialOperation";
 import { RendererContext } from "../renderer/RendererContext";
 import { BaseMesh } from "./BaseMesh";
 
 export class FullScreenQuadMesh extends BaseMesh {
 
-    constructor(geometry: Rectangle, material: BaseMaterial){
+    constructor(geometry: Rectangle, material: MaterialOperation) {
         super(geometry, material);
     }
 

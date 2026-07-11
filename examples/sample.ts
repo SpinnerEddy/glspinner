@@ -178,50 +178,11 @@ class Sample extends GLSpinner.BaseApplication {
 
         this.audioOutput.setInput(this.shaderAudioInput);
         
-        GLSpinner.AudioGuiController.initialize(
-            () => this.audioOutput.playAudio(),
-            () => this.audioOutput.stopAudio()
-        );
-        GLSpinner.PostEffectGuiController.initialize(
-            this.shaderPasses,
-            this.shaderPassEnabledSwitch,
-            (key: string, enabled: boolean) => {
-                this.shaderPassEnabledSwitch.set(key, enabled);
-            }
-        );
         GLSpinner.PlaySceneGuiController.initialize(
             () => this.scene.start(),
             () => this.scene.stop()
         );
 
-        GLSpinner.GuiUtility.addFolder("Lighting");
-        GLSpinner.GuiUtility.addElementWithRange(
-            {cameraPosX: -0.5}, 
-            "cameraPosX",
-            -1.0,
-            1.0,
-            (value: number) => {
-                this.cameraPos.x = value;
-            }
-        );
-        GLSpinner.GuiUtility.addElementWithRange(
-            {cameraPosY: 0.5}, 
-            "cameraPosY",
-            0.0,
-            1.0,
-            (value: number) => {
-                this.cameraPos.y = value;
-            }
-        );
-        GLSpinner.GuiUtility.addElementWithRange(
-            {cameraPosZ: -2.5}, 
-            "cameraPosZ",
-            -2.5,
-            2.5,
-            (value: number) => {
-                this.cameraPos.z = value;
-            }
-        );
     }
 
     update(): void {

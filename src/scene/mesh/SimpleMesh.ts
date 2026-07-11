@@ -1,13 +1,13 @@
-import { BaseGeometry } from "../../webgl/gl/geometry/BaseGeometry";
+import { GeometryOperation } from "../../webgl/gl/geometry/GeometryOperation";
 import { ShaderUniformValue } from "../../webgl/gl/uniform/ShaderUniformValue";
-import { BaseMaterial } from "../material/BaseMaterial";
+import { MaterialOperation } from "../material/MaterialOperation";
 import { PhongMaterial } from "../material/PhongMaterial";
 import { RendererContext } from "../renderer/RendererContext";
 import { Transform } from "../transform/Transform";
 import { BaseMesh } from "./BaseMesh";
 
 export class SimpleMesh extends BaseMesh {
-    constructor(geometry: BaseGeometry, material: BaseMaterial){
+    constructor(geometry: GeometryOperation, material: MaterialOperation) {
         super(geometry, material);
     }
 

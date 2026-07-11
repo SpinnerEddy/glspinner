@@ -1,14 +1,14 @@
-import { BaseGeometry } from "../../webgl/gl/geometry/BaseGeometry";
-import { BaseMaterial } from "../material/BaseMaterial";
+import { GeometryOperation } from "../../webgl/gl/geometry/GeometryOperation";
+import { MaterialOperation } from "../material/MaterialOperation";
 import { RendererContext } from "../renderer/RendererContext";
 import { Transform } from "../transform/Transform";
 import { MeshOperation } from "./MeshOperation";
 
 export abstract class BaseMesh implements MeshOperation {
-    protected geometry: BaseGeometry;
-    protected material: BaseMaterial;
+    protected geometry: GeometryOperation;
+    protected material: MaterialOperation;
     
-    constructor(geometry: BaseGeometry, material: BaseMaterial){
+    constructor(geometry: GeometryOperation, material: MaterialOperation) {
         this.geometry = geometry;
         this.material = material;
     }
