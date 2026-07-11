@@ -1,6 +1,7 @@
 import { Vector2 } from "../math/vector/Vector2";
 import { DeviceOperation } from "./device/DeviceOperation";
 import { KeyboardDevice } from "./device/KeyboardDevice";
+// import { MidiDevice } from "./device/MidiDevice";
 import { MouseDevice } from "./device/MouseDevice";
 import { DefaultDevices, DeviceName, DeviceType, InputOption } from "./InputConstants";
 
@@ -11,12 +12,13 @@ export class InputHub<TDevices extends Record<string, DeviceOperation> = Record<
     constructor() { 
         this.devices = {
             [DeviceName.Mouse]: new MouseDevice(),
-            [DeviceName.Keyboard]: new KeyboardDevice()
+            [DeviceName.Keyboard]: new KeyboardDevice(),
+            // [DeviceName.Midi]: new MidiDevice()
         } as DefaultDevices & TDevices;
     }
 
     update(): void {
-       for (const device of Object.values(this.devices)) {
+        for (const device of Object.values(this.devices)) {
             device.update();
         }
     }

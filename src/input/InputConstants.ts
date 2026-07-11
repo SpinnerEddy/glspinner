@@ -1,4 +1,5 @@
 import { KeyboardDevice } from "./device/KeyboardDevice";
+import { MidiDevice } from "./device/MidiDevice";
 import { MouseDevice } from "./device/MouseDevice";
 
 export type InputInfoPairs = Record<string, boolean>;
@@ -6,7 +7,8 @@ export type InputInfoPairs = Record<string, boolean>;
 export const DeviceName =
 {
     Mouse: 'Mouse',
-    Keyboard: 'Keyboard'
+    Keyboard: 'Keyboard',
+    Midi: 'Midi'
 } as const;
 
 export type DeviceType = typeof DeviceName[keyof typeof DeviceName];
@@ -96,4 +98,5 @@ export type InputOption =
 export type DefaultDevices = {
     [DeviceName.Mouse]: MouseDevice;
     [DeviceName.Keyboard]: KeyboardDevice;
+    [DeviceName.Midi]: MidiDevice;
 };
