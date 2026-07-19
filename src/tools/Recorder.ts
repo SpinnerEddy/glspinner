@@ -3,26 +3,26 @@ import JSZip from 'jszip';
 export type RecordType = 'Frame' | 'SequencialFrames' | 'StartAndStop';
 
 export type RecordOptions = {
-    type: RecordType,
-    fps: number,
-    fixedFrameInterval: number,
-    resolution: [number, number],
-    saveName: string,
-    frameNum?: number,
-}
+    type: RecordType;
+    fps: number;
+    fixedFrameInterval: number;
+    resolution: [number, number];
+    saveName: string;
+    frameNum?: number;
+};
 
 type FrameData = {
-    blob: Blob,
-    frameName: string
-}
+    blob: Blob;
+    frameName: string;
+};
 
-export class Recorder{
+export class Recorder {
     private canvas: HTMLCanvasElement;
     private options: RecordOptions | undefined;
     private frames: FrameData[] = [];
     private currentFrameCount: number;
 
-    constructor(canvas: HTMLCanvasElement){
+    constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
         this.currentFrameCount = 450;
     }
@@ -37,23 +37,22 @@ export class Recorder{
     }
 
     public async saveSequentialFrames(): Promise<void> {
-        if(this.options == undefined) return;
+        if (this.options == undefined) return;
 
         await new Promise<void>((resolve) => {
             this.canvas.toBlob((blob) => {
-                if(blob == null){
+                if (blob == null) {
                     resolve();
                     return;
                 }
 
-                if(this.options?.type == 'Frame'){
+                if (this.options?.type == 'Frame') {
                     this.save(blob, this.options?.saveName);
-                }
-                else{
+                } else {
                     this.frames.push({
                         blob: blob,
-                        frameName: `${this.options?.saveName}/frame_${String(this.currentFrameCount + 1).padStart(5, '0')}.png`
-                    })
+                        frameName: `${this.options?.saveName}/frame_${String(this.currentFrameCount + 1).padStart(5, '0')}.png`,
+                    });
                 }
 
                 this.currentFrameCount++;
@@ -64,11 +63,11 @@ export class Recorder{
     }
 
     public async saveFrameWithName(name: string): Promise<void> {
-        if(this.options == undefined) return;
+        if (this.options == undefined) return;
 
         await new Promise<void>((resolve) => {
             this.canvas.toBlob((blob) => {
-                if(blob == null){
+                if (blob == null) {
                     resolve();
                     return;
                 }
@@ -80,26 +79,26 @@ export class Recorder{
     }
 
     public endRecordingAuto(): boolean {
-        if(this.options == undefined) {
-            return true
-        };
-        if(this.options.type == 'StartAndStop') return false;
+        if (this.options == undefined) {
+            return true;
+        }
+        if (this.options.type == 'StartAndStop') return false;
 
-        const saveFrameNum = ((this.options.type == 'Frame') ? 1 : this.options.frameNum) ?? 0;
+        const saveFrameNum = (this.options.type == 'Frame' ? 1 : this.options.frameNum) ?? 0;
         const isEnd = this.currentFrameCount >= saveFrameNum;
         return isEnd;
     }
 
     public async saveFramesAsZip(zipName: string = 'record.zip'): Promise<void> {
-        if(this.frames.length == 0) return;
+        if (this.frames.length == 0) return;
 
         const zip = new JSZip();
-        for(let i = 0; i < this.frames.length; i++){
+        for (let i = 0; i < this.frames.length; i++) {
             const frame = this.frames[i];
             zip.file(frame.frameName, frame.blob);
         }
 
-        const data = await zip.generateAsync({type: 'blob'});
+        const data = await zip.generateAsync({ type: 'blob' });
         this.save(data, zipName);
     }
 

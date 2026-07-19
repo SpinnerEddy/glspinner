@@ -1,19 +1,19 @@
-import { ShaderProgram } from "./ShaderProgram";
+import { ShaderProgram } from './ShaderProgram';
 
-export class ShaderLoader{
+export class ShaderLoader {
     private gl: WebGL2RenderingContext;
     private shaderProgramCache: Map<string, ShaderProgram> = new Map();
     private shaderProgramKey: Set<string> = new Set();
 
-    constructor(gl: WebGL2RenderingContext){
+    constructor(gl: WebGL2RenderingContext) {
         this.gl = gl;
     }
 
     public getShaderProgram(key: string): ShaderProgram {
-        if(!this.shaderProgramKey.has(key)){
+        if (!this.shaderProgramKey.has(key)) {
             throw new Error(`Common program with key ${key} not found`);
         }
-        
+
         return this.shaderProgramCache.get(key)!;
     }
 
@@ -34,8 +34,8 @@ export class ShaderLoader{
     }
 
     public async loadCommonShaders(): Promise<void> {
-        const vertShaderFiles = import.meta.glob('@webgl/shader/*.vert', {query: '?raw', eager: true});
-        const fragShaderFiles = import.meta.glob('@webgl/shader/*.frag', {query: '?raw', eager: true});
+        const vertShaderFiles = import.meta.glob('@webgl/shader/*.vert', { query: '?raw', eager: true });
+        const fragShaderFiles = import.meta.glob('@webgl/shader/*.frag', { query: '?raw', eager: true });
 
         const vertexShaderCache: Map<string, string> = new Map();
         const fragmentShaderCache: Map<string, string> = new Map();
@@ -46,7 +46,7 @@ export class ShaderLoader{
             vertexShaderCache.set(shaderKey, content as string);
             this.shaderProgramKey.add(shaderKey);
         });
-        
+
         Object.entries(fragShaderFiles).forEach(([filePath, module]) => {
             const content = (module as { default: string }).default;
             const shaderKey = filePath.split('/').pop()?.split('.').shift()!;

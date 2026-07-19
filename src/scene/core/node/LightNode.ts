@@ -1,12 +1,12 @@
-import { Light } from "../../light/Light";
-import { LightParams } from "../../light/LightConstants";
-import { RendererContext } from "../../renderer/RendererContext";
-import { SceneNode } from "./SceneNode";
+import { Light } from '../../light/Light';
+import { LightParams } from '../../light/LightConstants';
+import { RendererContext } from '../../renderer/RendererContext';
+import { SceneNode } from './SceneNode';
 
 export abstract class LightNode extends SceneNode {
     protected light: Light;
 
-    constructor(light: Light){
+    constructor(light: Light) {
         super();
         this.light = light;
     }
@@ -26,5 +26,4 @@ export abstract class LightNode extends SceneNode {
             child.draw(gl, context);
         }
     }
-
 }

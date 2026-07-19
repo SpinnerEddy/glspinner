@@ -18,10 +18,7 @@ export default tseslint.config(
             // エディタのESLint表示にも出したいので併せて有効化する。
             // "_"始まりの引数は、DeviceOperation等インターフェース契約上必須だが
             // 実装内で未使用な引数を示す既存の書き方(MidiDevice.ts等)を許可する。
-            '@typescript-eslint/no-unused-vars': [
-                'warn',
-                { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
-            ],
+            '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
 
             // .claude/rules/general.mdの命名規則を反映。
             // ここで明示的に定義したselector以外(通常の変数・enumメンバー等)は
@@ -44,5 +41,5 @@ export default tseslint.config(
             ],
         },
     },
-    eslintConfigPrettier,
+    eslintConfigPrettier
 );

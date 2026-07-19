@@ -1,10 +1,9 @@
-import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
-import { ShaderPassOperation } from "../postEffect/ShaderPassOperation";
-import { RendererContext } from "../RendererContext";
-import { BaseSceneRendererFlow } from "./BaseSceneRendererFlow";
+import { RenderTargetOperation } from '../../../webgl/gl/fbo/RenderTargetOperation';
+import { ShaderPassOperation } from '../postEffect/ShaderPassOperation';
+import { RendererContext } from '../RendererContext';
+import { BaseSceneRendererFlow } from './BaseSceneRendererFlow';
 
 export class PostEffectRendererFlow extends BaseSceneRendererFlow {
-    
     private shaderPass: ShaderPassOperation;
 
     constructor(shaderPass: ShaderPassOperation) {
@@ -18,9 +17,17 @@ export class PostEffectRendererFlow extends BaseSceneRendererFlow {
             gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, outputRenderTarget.getFrameBuffer());
 
             gl.blitFramebuffer(
-                0, 0, inputRenderTarget.getSize()[0], inputRenderTarget.getSize()[1],
-                0, 0, outputRenderTarget.getSize()[0], outputRenderTarget.getSize()[1],
-                gl.COLOR_BUFFER_BIT, gl.NEAREST);
+                0,
+                0,
+                inputRenderTarget.getSize()[0],
+                inputRenderTarget.getSize()[1],
+                0,
+                0,
+                outputRenderTarget.getSize()[0],
+                outputRenderTarget.getSize()[1],
+                gl.COLOR_BUFFER_BIT,
+                gl.NEAREST
+            );
 
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             return;

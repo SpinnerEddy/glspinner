@@ -1,4 +1,4 @@
-export class SceneGraphNodeIdGenerator{
+export class SceneGraphNodeIdGenerator {
     private static counters: Map<string, number> = new Map();
 
     public static generateId(className: string): string {

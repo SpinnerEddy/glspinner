@@ -1,6 +1,6 @@
-import { VertexArray } from "../buffer/VertexArray";
-import { ShaderAttribute } from "../attribute/ShaderAttribute";
-import { GeometryOperation } from "./GeometryOperation";
+import { VertexArray } from '../buffer/VertexArray';
+import { ShaderAttribute } from '../attribute/ShaderAttribute';
+import { GeometryOperation } from './GeometryOperation';
 
 export abstract class BaseGeometry implements GeometryOperation {
     protected vao: VertexArray;
@@ -12,10 +12,10 @@ export abstract class BaseGeometry implements GeometryOperation {
     constructor(gl: WebGL2RenderingContext) {
         this.vao = new VertexArray(gl);
 
-        this.vertices = new Float32Array;
-        this.color = new Float32Array;
-        this.normal = new Float32Array;
-        this.indices = new Int16Array;
+        this.vertices = new Float32Array();
+        this.color = new Float32Array();
+        this.normal = new Float32Array();
+        this.indices = new Int16Array();
     }
 
     abstract setUpBuffers(gl: WebGL2RenderingContext, attributes: Record<string, ShaderAttribute>): void;

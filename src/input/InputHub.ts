@@ -1,15 +1,14 @@
-import { Vector2 } from "../math/vector/Vector2";
-import { DeviceOperation } from "./device/DeviceOperation";
-import { KeyboardDevice } from "./device/KeyboardDevice";
+import { Vector2 } from '../math/vector/Vector2';
+import { DeviceOperation } from './device/DeviceOperation';
+import { KeyboardDevice } from './device/KeyboardDevice';
 // import { MidiDevice } from "./device/MidiDevice";
-import { MouseDevice } from "./device/MouseDevice";
-import { DefaultDevices, DeviceName, DeviceType, InputOption } from "./InputConstants";
+import { MouseDevice } from './device/MouseDevice';
+import { DefaultDevices, DeviceName, DeviceType, InputOption } from './InputConstants';
 
 export class InputHub<TDevices extends Record<string, DeviceOperation> = Record<string, DeviceOperation>> {
-
     private devices: TDevices;
 
-    constructor() { 
+    constructor() {
         this.devices = {
             [DeviceName.Mouse]: new MouseDevice(),
             [DeviceName.Keyboard]: new KeyboardDevice(),

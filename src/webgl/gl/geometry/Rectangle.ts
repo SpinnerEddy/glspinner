@@ -1,39 +1,22 @@
-import { GeometryBuffer } from "../buffer/GeometryBuffer";
-import { IndexBuffer } from "../buffer/IndexBuffer";
-import { ShaderAttribute } from "../attribute/ShaderAttribute";
-import { BaseGeometry } from "./BaseGeometry";
-import { AttributeElementSize } from "../attribute/ShaderAttributeConstants";
+import { GeometryBuffer } from '../buffer/GeometryBuffer';
+import { IndexBuffer } from '../buffer/IndexBuffer';
+import { ShaderAttribute } from '../attribute/ShaderAttribute';
+import { BaseGeometry } from './BaseGeometry';
+import { AttributeElementSize } from '../attribute/ShaderAttributeConstants';
 
-export class Rectangle extends BaseGeometry{
+export class Rectangle extends BaseGeometry {
     protected uv: Float32Array;
 
     constructor(gl: WebGL2RenderingContext, width: number = 1, height: number = 1) {
         super(gl);
 
-        this.vertices = new Float32Array([
-            -width*0.5, -height*0.5, 0.0,
-             width*0.5, -height*0.5, 0.0,
-             width*0.5,  height*0.5, 0.0,
-            -width*0.5,  height*0.5, 0.0,
-        ]);
+        this.vertices = new Float32Array([-width * 0.5, -height * 0.5, 0.0, width * 0.5, -height * 0.5, 0.0, width * 0.5, height * 0.5, 0.0, -width * 0.5, height * 0.5, 0.0]);
 
-        this.color = new Float32Array([
-            1.0, 0.0, 0.0, 1.0,
-            0.0, 1.0, 0.0, 1.0,
-            0.0, 0.0, 1.0, 1.0,
-            1.0, 1.0, 1.0, 1.0
-        ]);
+        this.color = new Float32Array([1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]);
 
-        this.uv = new Float32Array([
-            0.0, 0.0, 
-            1.0, 0.0,
-            1.0, 1.0,
-            0.0, 1.0
-        ]);
+        this.uv = new Float32Array([0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0]);
 
-        this.indices = new Int16Array([
-            0, 1, 2, 0, 2, 3
-        ]);
+        this.indices = new Int16Array([0, 1, 2, 0, 2, 3]);
     }
 
     setUpBuffers(gl: WebGL2RenderingContext, attributes: Record<string, ShaderAttribute>): void {
@@ -46,27 +29,12 @@ export class Rectangle extends BaseGeometry{
         ib.setData();
 
         const stride = (AttributeElementSize.aPosition + AttributeElementSize.aColor + AttributeElementSize.aUv) * Float32Array.BYTES_PER_ELEMENT;
-        attributes["aPosition"].setAttributeBuffer(
-            gl,
-            AttributeElementSize.aPosition, 
-            gl.FLOAT, 
-            stride, 
-            0);
-        attributes["aColor"]?.setAttributeBuffer(
-            gl,
-            AttributeElementSize.aColor,
-            gl.FLOAT, 
-            stride, 
-            AttributeElementSize.aPosition * Float32Array.BYTES_PER_ELEMENT);
-        attributes["aUv"]?.setAttributeBuffer(
-            gl,
-            AttributeElementSize.aUv,
-            gl.FLOAT, 
-            stride, 
-            (AttributeElementSize.aPosition + AttributeElementSize.aColor) * Float32Array.BYTES_PER_ELEMENT);
+        attributes['aPosition'].setAttributeBuffer(gl, AttributeElementSize.aPosition, gl.FLOAT, stride, 0);
+        attributes['aColor']?.setAttributeBuffer(gl, AttributeElementSize.aColor, gl.FLOAT, stride, AttributeElementSize.aPosition * Float32Array.BYTES_PER_ELEMENT);
+        attributes['aUv']?.setAttributeBuffer(gl, AttributeElementSize.aUv, gl.FLOAT, stride, (AttributeElementSize.aPosition + AttributeElementSize.aColor) * Float32Array.BYTES_PER_ELEMENT);
 
-        this.vao.addBuffer("geometry", gb);
-        this.vao.addBuffer("index", ib);
+        this.vao.addBuffer('geometry', gb);
+        this.vao.addBuffer('index', ib);
 
         gb.unbind();
         ib.unbind();

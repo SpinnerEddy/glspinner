@@ -1,23 +1,21 @@
-import { GuiUtility } from "./GuiUtility";
+import { GuiUtility } from './GuiUtility';
 
 export class AudioGuiController {
     private static onAudioPlay: () => void;
     private static onAudioStop: () => void;
 
-    static initialize(onAudioPlay: () => void,  onAudioStop: () => void): void {
+    static initialize(onAudioPlay: () => void, onAudioStop: () => void): void {
         this.onAudioPlay = onAudioPlay;
         this.onAudioStop = onAudioStop;
 
         GuiUtility.initialize();
-        GuiUtility.addFolder("Audio");
+        GuiUtility.addFolder('Audio');
         GuiUtility.addAction(() => {
             this.onAudioPlay?.();
-        }, 
-        "AudioPlay");
+        }, 'AudioPlay');
         GuiUtility.addAction(() => {
             this.onAudioStop?.();
-        }, 
-        "AudioStop");
+        }, 'AudioStop');
         GuiUtility.resetFolder();
     }
 }

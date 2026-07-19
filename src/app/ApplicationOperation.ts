@@ -1,4 +1,4 @@
-export interface ApplicationOperation{
+export interface ApplicationOperation {
     start(): Promise<void>;
     preload(): Promise<void>;
     setup(): void;

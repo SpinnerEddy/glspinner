@@ -1,8 +1,8 @@
-import { Vector2 } from "../../src/math/vector/Vector2";
-import { Vector3 } from "../../src/math/vector/Vector3";
-import { VectorCalculator } from "../../src/math/VectorCalculator";
+import { Vector2 } from '../../src/math/vector/Vector2';
+import { Vector3 } from '../../src/math/vector/Vector3';
+import { VectorCalculator } from '../../src/math/VectorCalculator';
 
-test("Vector Add", () => {
+test('Vector Add', () => {
     const a = new Vector2(3, 4);
     const b = new Vector2(4, 5);
 
@@ -11,7 +11,7 @@ test("Vector Add", () => {
     expect(result).toEqual(except);
 });
 
-test("Vector Sub", () => {
+test('Vector Sub', () => {
     const a = new Vector2(3, 4);
     const b = new Vector2(4, 5);
 
@@ -20,7 +20,7 @@ test("Vector Sub", () => {
     expect(result).toEqual(except);
 });
 
-test("Vector calcDistance", () => {
+test('Vector calcDistance', () => {
     const a = new Vector2(3, 4);
     const b = new Vector2(4, 5);
 
@@ -29,7 +29,7 @@ test("Vector calcDistance", () => {
     expect(result).toEqual(except);
 });
 
-test("Vector dot", () => {
+test('Vector dot', () => {
     const a = new Vector2(3, 4);
     const b = new Vector2(4, 5);
 
@@ -38,7 +38,7 @@ test("Vector dot", () => {
     expect(result).toEqual(except);
 });
 
-test("Vector length", () => {
+test('Vector length', () => {
     const a = new Vector2(3, 4);
 
     const result = VectorCalculator.length(a);
@@ -46,7 +46,7 @@ test("Vector length", () => {
     expect(result).toEqual(except);
 });
 
-test("Vector normalize", () => {
+test('Vector normalize', () => {
     const a = new Vector2(3, 4);
 
     const result = VectorCalculator.normalize(a);
@@ -54,7 +54,7 @@ test("Vector normalize", () => {
     expect(result).toEqual(except);
 });
 
-test("Vector multiply", () => {
+test('Vector multiply', () => {
     const a = new Vector2(3, 4);
 
     const result = VectorCalculator.multiply(a, 3);
@@ -62,7 +62,7 @@ test("Vector multiply", () => {
     expect(result).toEqual(except);
 });
 
-test("Vector divide", () => {
+test('Vector divide', () => {
     const a = new Vector2(3, 4);
 
     const result = VectorCalculator.divide(a, 5);
@@ -70,7 +70,7 @@ test("Vector divide", () => {
     expect(result).toEqual(except);
 });
 
-test("Vector SetLength", () => {
+test('Vector SetLength', () => {
     const a = new Vector2(3, 4);
 
     const result = VectorCalculator.setLength(a, 10);
@@ -78,7 +78,7 @@ test("Vector SetLength", () => {
     expect(result).toEqual(except);
 });
 
-test("Vector calcAngle", () => {
+test('Vector calcAngle', () => {
     const a = new Vector2(0, 1);
     const b = new Vector2(1, 0);
 
@@ -87,7 +87,7 @@ test("Vector calcAngle", () => {
     expect(result).toEqual(except);
 });
 
-test("Vector cross", () => {
+test('Vector cross', () => {
     const a = new Vector3(1, 2, 3);
     const b = new Vector3(3, 4, 5);
 
@@ -96,7 +96,7 @@ test("Vector cross", () => {
     expect(result).toEqual(except);
 });
 
-test("Vector heading2D", () => {
+test('Vector heading2D', () => {
     const a = new Vector2(0, 1);
 
     const result = VectorCalculator.heading2D(a);

@@ -1,19 +1,22 @@
-import { RenderTargetSlot } from "../../../webgl/gl/fbo/RenderTargetConstants";
-import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
-import { RenderTag, RenderTagConstants } from "../definition/RenderTag";
-import { FinalBlitRendererFlow } from "../flow/FinalBlitRenderFlow";
-import { PostEffectRendererFlow } from "../flow/PostEffectRendererFlow";
-import { RendererFlowOperation } from "../flow/RendererFlowOperation";
-import { RendererContext } from "../RendererContext";
-import { SceneRendererPipelineOperation } from "./SceneRendererPipelineOperation";
+import { RenderTargetSlot } from '../../../webgl/gl/fbo/RenderTargetConstants';
+import { RenderTargetOperation } from '../../../webgl/gl/fbo/RenderTargetOperation';
+import { RenderTag, RenderTagConstants } from '../definition/RenderTag';
+import { FinalBlitRendererFlow } from '../flow/FinalBlitRenderFlow';
+import { PostEffectRendererFlow } from '../flow/PostEffectRendererFlow';
+import { RendererFlowOperation } from '../flow/RendererFlowOperation';
+import { RendererContext } from '../RendererContext';
+import { SceneRendererPipelineOperation } from './SceneRendererPipelineOperation';
 
 export class SceneRendererPipeline implements SceneRendererPipelineOperation {
-    
     private sceneRendererFlows: RendererFlowOperation[];
     private postEffectFlows: RendererFlowOperation[];
     private finalBlitFlow: RendererFlowOperation = {
-        render: () => { /* 何もしない */ },
-        isEnabled: () => { return false; }
+        render: () => {
+            /* 何もしない */
+        },
+        isEnabled: () => {
+            return false;
+        },
     };
 
     constructor() {
@@ -44,7 +47,7 @@ export class SceneRendererPipeline implements SceneRendererPipelineOperation {
 
         [readRT, writeRT] = [writeRT, readRT];
 
-        const activePostEffects = this.postEffectFlows.filter(flow => flow.isEnabled());
+        const activePostEffects = this.postEffectFlows.filter((flow) => flow.isEnabled());
         for (const postEffect of activePostEffects) {
             postEffect.render(gl, context, readRT, writeRT);
             [readRT, writeRT] = [writeRT, readRT];
@@ -57,18 +60,18 @@ export class SceneRendererPipeline implements SceneRendererPipelineOperation {
     }
 
     private renderScene(
-        gl: WebGL2RenderingContext, 
+        gl: WebGL2RenderingContext,
         context: RendererContext,
         tags: RenderTag[],
         sceneRendererFlows: RendererFlowOperation[],
         readRT: RenderTargetOperation,
-        writeRT: RenderTargetOperation)
-    {
+        writeRT: RenderTargetOperation
+    ) {
         for (const tag of tags) {
             context.setActivateRenderTag(tag);
-            for(const flow of sceneRendererFlows){
+            for (const flow of sceneRendererFlows) {
                 flow.render(gl, context, readRT, writeRT);
             }
         }
     }
-} 
+}

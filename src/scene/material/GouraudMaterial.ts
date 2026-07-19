@@ -1,16 +1,16 @@
-import { Color } from "../../color/Color";
-import { Vector3 } from "../../math/vector/Vector3";
-import { ShaderProgram } from "../../webgl/gl/ShaderProgram";
-import { ShaderUniformValue } from "../../webgl/gl/uniform/ShaderUniformValue";
-import { RendererContext } from "../renderer/RendererContext";
-import { BaseMaterial } from "./BaseMaterial";
+import { Color } from '../../color/Color';
+import { Vector3 } from '../../math/vector/Vector3';
+import { ShaderProgram } from '../../webgl/gl/ShaderProgram';
+import { ShaderUniformValue } from '../../webgl/gl/uniform/ShaderUniformValue';
+import { RendererContext } from '../renderer/RendererContext';
+import { BaseMaterial } from './BaseMaterial';
 
 export class GouraudMaterial extends BaseMaterial {
     private lightDirection: Vector3;
     private eyeDirection: Vector3;
     private ambientColor: Color;
 
-    constructor(shaderProgram: ShaderProgram, lightDirection: Vector3, eyeDirection: Vector3, ambientColor: Color){
+    constructor(shaderProgram: ShaderProgram, lightDirection: Vector3, eyeDirection: Vector3, ambientColor: Color) {
         super(shaderProgram);
         this.lightDirection = lightDirection;
         this.eyeDirection = eyeDirection;
@@ -31,12 +31,12 @@ export class GouraudMaterial extends BaseMaterial {
 
     setUniform(gl: WebGL2RenderingContext, context: RendererContext): void {
         const uniforms = context.getGlobalUniform();
-        for(const key in uniforms){
+        for (const key in uniforms) {
             this.shaderProgram.setUniform(gl, key, uniforms[key]);
         }
 
-        this.shaderProgram.setUniform(gl, "lightDirection", new ShaderUniformValue(this.lightDirection));
-        this.shaderProgram.setUniform(gl, "eyeDirection", new ShaderUniformValue(this.eyeDirection));
-        this.shaderProgram.setUniform(gl, "ambientColor", new ShaderUniformValue(this.ambientColor.toVector4()));
+        this.shaderProgram.setUniform(gl, 'lightDirection', new ShaderUniformValue(this.lightDirection));
+        this.shaderProgram.setUniform(gl, 'eyeDirection', new ShaderUniformValue(this.eyeDirection));
+        this.shaderProgram.setUniform(gl, 'ambientColor', new ShaderUniformValue(this.ambientColor.toVector4()));
     }
 }

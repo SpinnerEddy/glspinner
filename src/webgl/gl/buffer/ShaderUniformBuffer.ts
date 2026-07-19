@@ -1,14 +1,14 @@
-import { MathUtility } from "../../../math/MathUtility";
-import { UniformPairs } from "../uniform/ShaderUniformConstants";
-import { ShaderUniformValue } from "../uniform/ShaderUniformValue";
-import { BaseBuffer } from "./BaseBuffer";
+import { MathUtility } from '../../../math/MathUtility';
+import { UniformPairs } from '../uniform/ShaderUniformConstants';
+import { ShaderUniformValue } from '../uniform/ShaderUniformValue';
+import { BaseBuffer } from './BaseBuffer';
 
 export class ShaderUniformBuffer extends BaseBuffer {
     private cpuBuffer: Float32Array = new Float32Array();
     private memberOffsets: Map<string, number> = new Map();
     private shouldTransfer: boolean = false;
 
-    constructor(gl: WebGL2RenderingContext, uniforms: UniformPairs){
+    constructor(gl: WebGL2RenderingContext, uniforms: UniformPairs) {
         super(gl);
         this.initialize(uniforms);
 
@@ -41,7 +41,7 @@ export class ShaderUniformBuffer extends BaseBuffer {
     }
 
     dispose(): void {
-        if (this.buffer){
+        if (this.buffer) {
             this.gl.deleteBuffer(this.buffer);
             this.buffer = null;
         }
@@ -53,12 +53,11 @@ export class ShaderUniformBuffer extends BaseBuffer {
 
         const data = value.getUniformValues();
         const index = offset / 4;
-    
-        if (typeof data === "number") {
+
+        if (typeof data === 'number') {
             if (this.cpuBuffer[index] === data) return;
             this.cpuBuffer[index] = data;
-        }
-        else {
+        } else {
             this.cpuBuffer.set(data, index);
         }
 

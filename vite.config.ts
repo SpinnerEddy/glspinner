@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig } from 'vite';
 import glsl from 'vite-plugin-glsl';
 import path from 'path';
 
@@ -12,20 +12,20 @@ export default defineConfig({
             entry: path.resolve(__dirname, 'src/index.ts'),
             name: 'spinnergl',
             fileName: (format) => `spinnergl-lib.${format}.js`,
-            formats: ['es', 'cjs', 'umd']
+            formats: ['es', 'cjs', 'umd'],
         },
     },
     server: {
-        port: 2222
+        port: 2222,
     },
     resolve: {
         alias: {
-            '@webgl': path.resolve(__dirname, 'src/webgl')
-        }
+            '@webgl': path.resolve(__dirname, 'src/webgl'),
+        },
     },
     plugins: [
         glsl({
             include: ['**/*.glsl', '**/*.vert', '**/*.frag'],
-        })
-    ]
+        }),
+    ],
 });

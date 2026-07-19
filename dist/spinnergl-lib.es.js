@@ -190,10 +190,7 @@ class It extends $t {
     return this.values.reduce((r, i, n) => r + i * t.values[n], 0);
   }
   length() {
-    return Math.sqrt(this.values.reduce(
-      (t, e) => t + Math.pow(e, 2),
-      0
-    ));
+    return Math.sqrt(this.values.reduce((t, e) => t + Math.pow(e, 2), 0));
   }
   lerp(t, e, r) {
     if (e >= 0) return this;
@@ -285,10 +282,7 @@ class ft extends $t {
     return this.values.reduce((r, i, n) => r + i * t.values[n], 0);
   }
   length() {
-    return Math.sqrt(this.values.reduce(
-      (t, e) => t + Math.pow(e, 2),
-      0
-    ));
+    return Math.sqrt(this.values.reduce((t, e) => t + Math.pow(e, 2), 0));
   }
   lerp(t, e, r) {
     if (e >= 0) return this;
@@ -391,10 +385,7 @@ class Zt extends $t {
     return this.values.reduce((r, i, n) => r + i * t.values[n], 0);
   }
   length() {
-    return Math.sqrt(this.values.reduce(
-      (t, e) => t + Math.pow(e, 2),
-      0
-    ));
+    return Math.sqrt(this.values.reduce((t, e) => t + Math.pow(e, 2), 0));
   }
   lerp(t, e, r) {
     if (e >= 0) return this;
@@ -477,10 +468,7 @@ class lt {
     return lt.divide(t, e);
   }
   static length(t) {
-    return Math.sqrt(t.values.reduce(
-      (r, i) => r + Math.pow(i, 2),
-      0
-    ));
+    return Math.sqrt(t.values.reduce((r, i) => r + Math.pow(i, 2), 0));
   }
   static lerp(t, e, r) {
     if (r == 0) return t;
@@ -654,12 +642,7 @@ class Ft extends Ut {
     super(2, t);
   }
   identity() {
-    return new Ft(Float32Array.of(
-      1,
-      0,
-      0,
-      1
-    ));
+    return new Ft(Float32Array.of(1, 0, 0, 1));
   }
   add(t, e) {
     const r = this.data, i = t.data, n = e ? e.data : new Float32Array(this.elementSize);
@@ -715,17 +698,7 @@ class Rt extends Ut {
     super(3, t);
   }
   identity() {
-    return new Rt(Float32Array.of(
-      1,
-      0,
-      0,
-      0,
-      1,
-      0,
-      0,
-      0,
-      1
-    ));
+    return new Rt(Float32Array.of(1, 0, 0, 0, 1, 0, 0, 0, 1));
   }
   add(t, e) {
     const r = this.data, i = t.data, n = e ? e.data : new Float32Array(this.elementSize);
@@ -776,17 +749,19 @@ class Rt extends Ut {
     this.data.fill(t);
   }
   normalMatrix(t) {
-    return new Rt(Float32Array.of(
-      t.get(0, 0),
-      t.get(0, 1),
-      t.get(0, 2),
-      t.get(1, 0),
-      t.get(1, 1),
-      t.get(1, 2),
-      t.get(2, 0),
-      t.get(2, 1),
-      t.get(2, 2)
-    )).inverse();
+    return new Rt(
+      Float32Array.of(
+        t.get(0, 0),
+        t.get(0, 1),
+        t.get(0, 2),
+        t.get(1, 0),
+        t.get(1, 1),
+        t.get(1, 2),
+        t.get(2, 0),
+        t.get(2, 1),
+        t.get(2, 2)
+      )
+    ).inverse();
   }
 }
 class dt extends Ut {
@@ -794,24 +769,7 @@ class dt extends Ut {
     super(4, t);
   }
   identity() {
-    return new dt(Float32Array.of(
-      1,
-      0,
-      0,
-      0,
-      0,
-      1,
-      0,
-      0,
-      0,
-      0,
-      1,
-      0,
-      0,
-      0,
-      0,
-      1
-    ));
+    return new dt(Float32Array.of(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1));
   }
   add(t, e) {
     const r = this.data, i = t.data, n = e ? e.data : new Float32Array(this.elementSize);
@@ -1152,11 +1110,7 @@ class Ye {
     this.rotation = t, this.isRequiredRecalculation = !0;
   }
   getWorldPosition() {
-    return new ft(
-      this.worldMatrix.get(0, 3),
-      this.worldMatrix.get(1, 3),
-      this.worldMatrix.get(2, 3)
-    );
+    return new ft(this.worldMatrix.get(0, 3), this.worldMatrix.get(1, 3), this.worldMatrix.get(2, 3));
   }
   calculateLocalMatrix() {
     this.localMatrix = Tt.identity44(), this.localMatrix = Tt.scale3D(this.localMatrix, this.scale.x, this.scale.y, this.scale.z), this.localMatrix = Tt.rotateByQuaternion(this.localMatrix, this.rotation), this.localMatrix = Tt.translate3D(this.localMatrix, this.position);
@@ -4390,57 +4344,27 @@ class Et {
         this.clockType = i, (n = this.onChangeClockType) == null || n.call(this, this.clockType);
       },
       ["RealTime", "Fixed"]
-    ), it.addElement(
-      { fps: 60 },
-      "fps",
-      (i) => {
-        var n;
-        this.fps = i, (n = this.onChangeClockType) == null || n.call(this, this.clockType);
-      }
-    ), it.addElement(
-      { fixedFrameInterval: 60 },
-      "fixedFrameInterval",
-      (i) => {
-        var n;
-        this.fixedFrameInterval = i, (n = this.onChangeClockType) == null || n.call(this, this.clockType);
-      }
-    ), it.addElement(
-      { frameNum: 300 },
-      "frameNum",
-      (i) => {
-        this.frameNum = i;
-      }
-    ), it.addElement(
-      { saveName: "test" },
-      "saveName",
-      (i) => {
-        this.saveName = i;
-      }
-    ), it.addFolder("Resolution"), it.addElement(
-      { width: 800 },
-      "width",
-      (i) => {
-        this.width = i;
-      }
-    ), it.addElement(
-      { height: 800 },
-      "height",
-      (i) => {
-        this.height = i;
-      }
-    ), it.resetFolder(), it.addAction(
-      () => {
-        var i;
-        (i = this.onRecordStart) == null || i.call(this);
-      },
-      "StartRecord"
-    ), it.addAction(
-      () => {
-        var i;
-        (i = this.onRecordEnd) == null || i.call(this);
-      },
-      "StopRecord"
-    );
+    ), it.addElement({ fps: 60 }, "fps", (i) => {
+      var n;
+      this.fps = i, (n = this.onChangeClockType) == null || n.call(this, this.clockType);
+    }), it.addElement({ fixedFrameInterval: 60 }, "fixedFrameInterval", (i) => {
+      var n;
+      this.fixedFrameInterval = i, (n = this.onChangeClockType) == null || n.call(this, this.clockType);
+    }), it.addElement({ frameNum: 300 }, "frameNum", (i) => {
+      this.frameNum = i;
+    }), it.addElement({ saveName: "test" }, "saveName", (i) => {
+      this.saveName = i;
+    }), it.addFolder("Resolution"), it.addElement({ width: 800 }, "width", (i) => {
+      this.width = i;
+    }), it.addElement({ height: 800 }, "height", (i) => {
+      this.height = i;
+    }), it.resetFolder(), it.addAction(() => {
+      var i;
+      (i = this.onRecordStart) == null || i.call(this);
+    }, "StartRecord"), it.addAction(() => {
+      var i;
+      (i = this.onRecordEnd) == null || i.call(this);
+    }, "StopRecord");
   }
   static get recordOptions() {
     return {
@@ -6848,11 +6772,7 @@ class qi extends Ai {
     super(e);
     x(this, "recorder");
     x(this, "isRecording");
-    this.recorder = new $i(this.canvas), this.isRecording = !1, Et.initialize(
-      this.startRecording.bind(this),
-      this.endRecording.bind(this),
-      this.changeSceneClock.bind(this)
-    );
+    this.recorder = new $i(this.canvas), this.isRecording = !1, Et.initialize(this.startRecording.bind(this), this.endRecording.bind(this), this.changeSceneClock.bind(this));
   }
   async start() {
     await this.preload(), this.setup(), this.scene.setUpdate(this.update.bind(this)), this.scene.setDraw(this.draw.bind(this)), this.scene.setAdditionalSupport(this.additionalSupport.bind(this)), this.scene.start();
@@ -6879,61 +6799,21 @@ class qi extends Ai {
 }
 class Lt {
   static initialize() {
-    it.initialize(), it.addFolder("Lighting"), it.addColorElement(
-      { ambientColor: "#00000000" },
-      "ambientColor",
-      (t) => {
-        this.ambientColor = t;
-      }
-    ), it.addFolder("LightDirection"), it.addElementWithRange(
-      { lightDirectionX: -0.5 },
-      "lightDirectionX",
-      -1,
-      1,
-      (t) => {
-        this.lightDirectionX = t;
-      }
-    ), it.addElementWithRange(
-      { lightDirectionY: 0.5 },
-      "lightDirectionY",
-      -1,
-      1,
-      (t) => {
-        this.lightDirectionY = t;
-      }
-    ), it.addElementWithRange(
-      { lightDirectionZ: 0.5 },
-      "lightDirectionZ",
-      -1,
-      1,
-      (t) => {
-        this.lightDirectionZ = t;
-      }
-    ), it.resetFolder(), it.addFolder("EyeDirection"), it.addElementWithRange(
-      { eyeDirectionX: 0 },
-      "eyeDirectionX",
-      0,
-      20,
-      (t) => {
-        this.eyeDirectionX = t;
-      }
-    ), it.addElementWithRange(
-      { eyeDirectionY: 0 },
-      "eyeDirectionY",
-      0,
-      20,
-      (t) => {
-        this.eyeDirectionY = t;
-      }
-    ), it.addElementWithRange(
-      { eyeDirectionZ: 20 },
-      "eyeDirectionZ",
-      0,
-      20,
-      (t) => {
-        this.eyeDirectionZ = t;
-      }
-    ), it.resetFolder();
+    it.initialize(), it.addFolder("Lighting"), it.addColorElement({ ambientColor: "#00000000" }, "ambientColor", (t) => {
+      this.ambientColor = t;
+    }), it.addFolder("LightDirection"), it.addElementWithRange({ lightDirectionX: -0.5 }, "lightDirectionX", -1, 1, (t) => {
+      this.lightDirectionX = t;
+    }), it.addElementWithRange({ lightDirectionY: 0.5 }, "lightDirectionY", -1, 1, (t) => {
+      this.lightDirectionY = t;
+    }), it.addElementWithRange({ lightDirectionZ: 0.5 }, "lightDirectionZ", -1, 1, (t) => {
+      this.lightDirectionZ = t;
+    }), it.resetFolder(), it.addFolder("EyeDirection"), it.addElementWithRange({ eyeDirectionX: 0 }, "eyeDirectionX", 0, 20, (t) => {
+      this.eyeDirectionX = t;
+    }), it.addElementWithRange({ eyeDirectionY: 0 }, "eyeDirectionY", 0, 20, (t) => {
+      this.eyeDirectionY = t;
+    }), it.addElementWithRange({ eyeDirectionZ: 20 }, "eyeDirectionZ", 0, 20, (t) => {
+      this.eyeDirectionZ = t;
+    }), it.resetFolder();
   }
   static get lightOptions() {
     return {
@@ -6946,19 +6826,13 @@ class Lt {
 x(Lt, "ambientColor", "#00000000"), x(Lt, "lightDirectionX", -0.5), x(Lt, "lightDirectionY", 0.5), x(Lt, "lightDirectionZ", 0.5), x(Lt, "eyeDirectionX", 0), x(Lt, "eyeDirectionY", 0), x(Lt, "eyeDirectionZ", 20);
 class Ce {
   static initialize(t, e) {
-    this.onAudioPlay = t, this.onAudioStop = e, it.initialize(), it.addFolder("Audio"), it.addAction(
-      () => {
-        var r;
-        (r = this.onAudioPlay) == null || r.call(this);
-      },
-      "AudioPlay"
-    ), it.addAction(
-      () => {
-        var r;
-        (r = this.onAudioStop) == null || r.call(this);
-      },
-      "AudioStop"
-    ), it.resetFolder();
+    this.onAudioPlay = t, this.onAudioStop = e, it.initialize(), it.addFolder("Audio"), it.addAction(() => {
+      var r;
+      (r = this.onAudioPlay) == null || r.call(this);
+    }, "AudioPlay"), it.addAction(() => {
+      var r;
+      (r = this.onAudioStop) == null || r.call(this);
+    }, "AudioStop"), it.resetFolder();
   }
 }
 x(Ce, "onAudioPlay"), x(Ce, "onAudioStop");
@@ -6967,32 +6841,22 @@ class Qi {
     it.initialize(), it.addFolder("PostEffect");
     for (const i of t.keys()) {
       const n = i.toString(), s = { [n]: e.get(n) };
-      it.addElement(
-        s,
-        n,
-        (o) => {
-          r(n, o);
-        }
-      );
+      it.addElement(s, n, (o) => {
+        r(n, o);
+      });
     }
     it.resetFolder();
   }
 }
 class Se {
   static initialize(t, e) {
-    this.onPlayScene = t, this.onStopScene = e, it.initialize(), it.addFolder("Scene"), it.addAction(
-      () => {
-        var r;
-        (r = this.onPlayScene) == null || r.call(this);
-      },
-      "PlayScene"
-    ), it.addAction(
-      () => {
-        var r;
-        (r = this.onStopScene) == null || r.call(this);
-      },
-      "StopScene"
-    ), it.resetFolder();
+    this.onPlayScene = t, this.onStopScene = e, it.initialize(), it.addFolder("Scene"), it.addAction(() => {
+      var r;
+      (r = this.onPlayScene) == null || r.call(this);
+    }, "PlayScene"), it.addAction(() => {
+      var r;
+      (r = this.onStopScene) == null || r.call(this);
+    }, "StopScene"), it.resetFolder();
   }
 }
 x(Se, "onPlayScene"), x(Se, "onStopScene");
@@ -7062,39 +6926,15 @@ class Jt extends we {
     let m = 0;
     for (let _ = 0; _ < o; _++) {
       const f = _ * Z.aPosition;
-      s.set(
-        e.subarray(
-          f,
-          f + Z.aPosition
-        ),
-        m
-      ), m += Z.aPosition;
+      s.set(e.subarray(f, f + Z.aPosition), m), m += Z.aPosition;
       const w = _ * Z.aColor;
-      if (s.set(
-        r.subarray(
-          w,
-          w + Z.aColor
-        ),
-        m
-      ), m += Z.aColor, i.length > 0) {
+      if (s.set(r.subarray(w, w + Z.aColor), m), m += Z.aColor, i.length > 0) {
         const c = _ * Z.aNormal;
-        s.set(
-          i.subarray(
-            c,
-            c + Z.aNormal
-          ),
-          m
-        ), m += Z.aNormal;
+        s.set(i.subarray(c, c + Z.aNormal), m), m += Z.aNormal;
       }
       if (n.length > 0) {
         const c = _ * Z.aUv;
-        s.set(
-          n.subarray(
-            c,
-            c + Z.aUv
-          ),
-          m
-        ), m += Z.aUv;
+        s.set(n.subarray(c, c + Z.aUv), m), m += Z.aUv;
       }
     }
     return s;
@@ -7148,53 +6988,7 @@ class tn extends Qt {
   constructor(e, r = 1, i = 1) {
     super(e);
     x(this, "uv");
-    this.vertices = new Float32Array([
-      -r * 0.5,
-      -i * 0.5,
-      0,
-      r * 0.5,
-      -i * 0.5,
-      0,
-      r * 0.5,
-      i * 0.5,
-      0,
-      -r * 0.5,
-      i * 0.5,
-      0
-    ]), this.color = new Float32Array([
-      1,
-      0,
-      0,
-      1,
-      0,
-      1,
-      0,
-      1,
-      0,
-      0,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1
-    ]), this.uv = new Float32Array([
-      0,
-      0,
-      1,
-      0,
-      1,
-      1,
-      0,
-      1
-    ]), this.indices = new Int16Array([
-      0,
-      1,
-      2,
-      0,
-      2,
-      3
-    ]);
+    this.vertices = new Float32Array([-r * 0.5, -i * 0.5, 0, r * 0.5, -i * 0.5, 0, r * 0.5, i * 0.5, 0, -r * 0.5, i * 0.5, 0]), this.color = new Float32Array([1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1]), this.uv = new Float32Array([0, 0, 1, 0, 1, 1, 0, 1]), this.indices = new Int16Array([0, 1, 2, 0, 2, 3]);
   }
   setUpBuffers(e, r) {
     var o, l;
@@ -7202,62 +6996,14 @@ class tn extends Qt {
     const i = new Jt(e, this.vertices, this.color, this.uv), n = new qt(e, this.indices);
     i.setData(), n.setData();
     const s = (Z.aPosition + Z.aColor + Z.aUv) * Float32Array.BYTES_PER_ELEMENT;
-    r.aPosition.setAttributeBuffer(
-      e,
-      Z.aPosition,
-      e.FLOAT,
-      s,
-      0
-    ), (o = r.aColor) == null || o.setAttributeBuffer(
-      e,
-      Z.aColor,
-      e.FLOAT,
-      s,
-      Z.aPosition * Float32Array.BYTES_PER_ELEMENT
-    ), (l = r.aUv) == null || l.setAttributeBuffer(
-      e,
-      Z.aUv,
-      e.FLOAT,
-      s,
-      (Z.aPosition + Z.aColor) * Float32Array.BYTES_PER_ELEMENT
-    ), this.vao.addBuffer("geometry", i), this.vao.addBuffer("index", n), i.unbind(), n.unbind(), this.vao.unbindVao();
+    r.aPosition.setAttributeBuffer(e, Z.aPosition, e.FLOAT, s, 0), (o = r.aColor) == null || o.setAttributeBuffer(e, Z.aColor, e.FLOAT, s, Z.aPosition * Float32Array.BYTES_PER_ELEMENT), (l = r.aUv) == null || l.setAttributeBuffer(e, Z.aUv, e.FLOAT, s, (Z.aPosition + Z.aColor) * Float32Array.BYTES_PER_ELEMENT), this.vao.addBuffer("geometry", i), this.vao.addBuffer("index", n), i.unbind(), n.unbind(), this.vao.unbindVao();
   }
 }
 class Vi extends Qt {
   constructor(e, r = 2, i = 2, n = yt.empty()) {
     super(e);
     x(this, "uv");
-    this.vertices = new Float32Array([
-      -r * 0.5,
-      i * 0.5,
-      0,
-      r * 0.5,
-      i * 0.5,
-      0,
-      -r * 0.5,
-      -i * 0.5,
-      0,
-      r * 0.5,
-      -i * 0.5,
-      0
-    ]), yt.isEmpty(n) ? this.color = new Float32Array([
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1
-    ]) : this.color = new Float32Array([
+    this.vertices = new Float32Array([-r * 0.5, i * 0.5, 0, r * 0.5, i * 0.5, 0, -r * 0.5, -i * 0.5, 0, r * 0.5, -i * 0.5, 0]), yt.isEmpty(n) ? this.color = new Float32Array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]) : this.color = new Float32Array([
       n.red,
       n.green,
       n.blue,
@@ -7274,36 +7020,7 @@ class Vi extends Qt {
       n.green,
       n.blue,
       n.alpha
-    ]), this.normal = new Float32Array([
-      0,
-      0,
-      1,
-      0,
-      0,
-      1,
-      0,
-      0,
-      1,
-      0,
-      0,
-      1
-    ]), this.uv = new Float32Array([
-      0,
-      0,
-      1,
-      0,
-      0,
-      1,
-      1,
-      1
-    ]), this.indices = new Int16Array([
-      0,
-      1,
-      2,
-      3,
-      2,
-      1
-    ]);
+    ]), this.normal = new Float32Array([0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1]), this.uv = new Float32Array([0, 0, 1, 0, 0, 1, 1, 1]), this.indices = new Int16Array([0, 1, 2, 3, 2, 1]);
   }
   setUpBuffers(e, r) {
     var o, l, m;
@@ -7311,25 +7028,7 @@ class Vi extends Qt {
     const i = new Jt(e, this.vertices, this.color, this.normal, this.uv), n = new qt(e, this.indices);
     i.setData(), n.setData();
     const s = (Z.aPosition + Z.aColor + Z.aNormal + Z.aUv) * Float32Array.BYTES_PER_ELEMENT;
-    r.aPosition.setAttributeBuffer(
-      e,
-      Z.aPosition,
-      e.FLOAT,
-      s,
-      0
-    ), (o = r.aColor) == null || o.setAttributeBuffer(
-      e,
-      Z.aColor,
-      e.FLOAT,
-      s,
-      Z.aPosition * Float32Array.BYTES_PER_ELEMENT
-    ), (l = r.aNormal) == null || l.setAttributeBuffer(
-      e,
-      Z.aNormal,
-      e.FLOAT,
-      s,
-      (Z.aPosition + Z.aColor) * Float32Array.BYTES_PER_ELEMENT
-    ), (m = r.aUv) == null || m.setAttributeBuffer(
+    r.aPosition.setAttributeBuffer(e, Z.aPosition, e.FLOAT, s, 0), (o = r.aColor) == null || o.setAttributeBuffer(e, Z.aColor, e.FLOAT, s, Z.aPosition * Float32Array.BYTES_PER_ELEMENT), (l = r.aNormal) == null || l.setAttributeBuffer(e, Z.aNormal, e.FLOAT, s, (Z.aPosition + Z.aColor) * Float32Array.BYTES_PER_ELEMENT), (m = r.aUv) == null || m.setAttributeBuffer(
       e,
       Z.aUv,
       e.FLOAT,
@@ -7366,25 +7065,7 @@ class en extends Qt {
     const r = new Jt(t, this.vertices, this.color, this.normal), i = new qt(t, this.indices);
     r.setData(), i.setData();
     const n = (Z.aPosition + Z.aColor + Z.aNormal) * Float32Array.BYTES_PER_ELEMENT;
-    e.aPosition.setAttributeBuffer(
-      t,
-      Z.aPosition,
-      t.FLOAT,
-      n,
-      0
-    ), (s = e.aColor) == null || s.setAttributeBuffer(
-      t,
-      Z.aColor,
-      t.FLOAT,
-      n,
-      Z.aPosition * Float32Array.BYTES_PER_ELEMENT
-    ), (o = e.aNormal) == null || o.setAttributeBuffer(
-      t,
-      Z.aNormal,
-      t.FLOAT,
-      n,
-      (Z.aPosition + Z.aColor) * Float32Array.BYTES_PER_ELEMENT
-    ), this.vao.addBuffer("geometry", r), this.vao.addBuffer("index", i), r.unbind(), i.unbind(), this.vao.unbindVao();
+    e.aPosition.setAttributeBuffer(t, Z.aPosition, t.FLOAT, n, 0), (s = e.aColor) == null || s.setAttributeBuffer(t, Z.aColor, t.FLOAT, n, Z.aPosition * Float32Array.BYTES_PER_ELEMENT), (o = e.aNormal) == null || o.setAttributeBuffer(t, Z.aNormal, t.FLOAT, n, (Z.aPosition + Z.aColor) * Float32Array.BYTES_PER_ELEMENT), this.vao.addBuffer("geometry", r), this.vao.addBuffer("index", i), r.unbind(), i.unbind(), this.vao.unbindVao();
   }
 }
 class rn extends Qt {
@@ -7415,25 +7096,7 @@ class rn extends Qt {
     const r = new Jt(t, this.vertices, this.color, this.normal), i = new qt(t, this.indices);
     r.setData(), i.setData();
     const n = (Z.aPosition + Z.aColor + Z.aNormal) * Float32Array.BYTES_PER_ELEMENT;
-    e.aPosition.setAttributeBuffer(
-      t,
-      Z.aPosition,
-      t.FLOAT,
-      n,
-      0
-    ), (s = e.aColor) == null || s.setAttributeBuffer(
-      t,
-      Z.aColor,
-      t.FLOAT,
-      n,
-      Z.aPosition * Float32Array.BYTES_PER_ELEMENT
-    ), (o = e.aNormal) == null || o.setAttributeBuffer(
-      t,
-      Z.aNormal,
-      t.FLOAT,
-      n,
-      (Z.aPosition + Z.aColor) * Float32Array.BYTES_PER_ELEMENT
-    ), this.vao.addBuffer("geometry", r), this.vao.addBuffer("index", i), r.unbind(), i.unbind(), this.vao.unbindVao();
+    e.aPosition.setAttributeBuffer(t, Z.aPosition, t.FLOAT, n, 0), (s = e.aColor) == null || s.setAttributeBuffer(t, Z.aColor, t.FLOAT, n, Z.aPosition * Float32Array.BYTES_PER_ELEMENT), (o = e.aNormal) == null || o.setAttributeBuffer(t, Z.aNormal, t.FLOAT, n, (Z.aPosition + Z.aColor) * Float32Array.BYTES_PER_ELEMENT), this.vao.addBuffer("geometry", r), this.vao.addBuffer("index", i), r.unbind(), i.unbind(), this.vao.unbindVao();
   }
 }
 class nn extends Qt {
@@ -7447,68 +7110,9 @@ class nn extends Qt {
     let v = 0, u = 0;
     for (const p of r) {
       const d = p.getOffset(), g = p.getResolution(), E = d[0] + n, R = d[1], S = E + g[0], B = R + g[1], z = E * w, j = R * c, U = S * w, V = B * c;
-      o.push(
-        z,
-        j,
-        0,
-        U,
-        j,
-        0,
-        z,
-        V,
-        0,
-        U,
-        V,
-        0
-      );
+      o.push(z, j, 0, U, j, 0, z, V, 0, U, V, 0);
       const q = p.getUv();
-      l.push(
-        q.u0,
-        q.v1,
-        q.u1,
-        q.v1,
-        q.u0,
-        q.v0,
-        q.u1,
-        q.v0
-      ), _.push(
-        0 + s,
-        1 + s,
-        2 + s,
-        3 + s,
-        2 + s,
-        1 + s
-      ), f.push(
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1
-      ), m.push(
-        0,
-        0,
-        1,
-        0,
-        0,
-        1,
-        0,
-        0,
-        1,
-        0,
-        0,
-        1
-      ), s += 4, n += p.getXAdvance(), v = Math.max(v, B), u = Math.min(u, R);
+      l.push(q.u0, q.v1, q.u1, q.v1, q.u0, q.v0, q.u1, q.v0), _.push(0 + s, 1 + s, 2 + s, 3 + s, 2 + s, 1 + s), f.push(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1), m.push(0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1), s += 4, n += p.getXAdvance(), v = Math.max(v, B), u = Math.min(u, R);
     }
     this.vertices = new Float32Array(o), this.color = new Float32Array(f), this.indices = new Int16Array(_), this.normal = new Float32Array(m), this.uv = new Float32Array(l), this.width = n * w, this.height = (v - u) * c;
   }
@@ -7518,25 +7122,7 @@ class nn extends Qt {
     const i = new Jt(e, this.vertices, this.color, this.normal, this.uv), n = new qt(e, this.indices);
     i.setData(), n.setData();
     const s = (Z.aPosition + Z.aColor + Z.aNormal + Z.aUv) * Float32Array.BYTES_PER_ELEMENT;
-    r.aPosition.setAttributeBuffer(
-      e,
-      Z.aPosition,
-      e.FLOAT,
-      s,
-      0
-    ), (o = r.aColor) == null || o.setAttributeBuffer(
-      e,
-      Z.aColor,
-      e.FLOAT,
-      s,
-      Z.aPosition * Float32Array.BYTES_PER_ELEMENT
-    ), (l = r.aNormal) == null || l.setAttributeBuffer(
-      e,
-      Z.aNormal,
-      e.FLOAT,
-      s,
-      (Z.aPosition + Z.aColor) * Float32Array.BYTES_PER_ELEMENT
-    ), (m = r.aUv) == null || m.setAttributeBuffer(
+    r.aPosition.setAttributeBuffer(e, Z.aPosition, e.FLOAT, s, 0), (o = r.aColor) == null || o.setAttributeBuffer(e, Z.aColor, e.FLOAT, s, Z.aPosition * Float32Array.BYTES_PER_ELEMENT), (l = r.aNormal) == null || l.setAttributeBuffer(e, Z.aNormal, e.FLOAT, s, (Z.aPosition + Z.aColor) * Float32Array.BYTES_PER_ELEMENT), (m = r.aUv) == null || m.setAttributeBuffer(
       e,
       Z.aUv,
       e.FLOAT,
@@ -7685,17 +7271,7 @@ class ln {
         const n = t.createTexture();
         t.bindTexture(t.TEXTURE_2D, n);
         const s = this.getColorTextureSettingByAttachmentType(t, e.type);
-        t.texImage2D(
-          t.TEXTURE_2D,
-          0,
-          s.internalFormat,
-          this.width,
-          this.height,
-          0,
-          s.format,
-          s.texNumberType,
-          null
-        ), t.texParameteri(t.TEXTURE_2D, t.TEXTURE_MAG_FILTER, r.minFilter), t.texParameteri(t.TEXTURE_2D, t.TEXTURE_MIN_FILTER, r.magFilter), t.texParameteri(t.TEXTURE_2D, t.TEXTURE_WRAP_S, t.CLAMP_TO_EDGE), t.texParameteri(t.TEXTURE_2D, t.TEXTURE_WRAP_T, t.CLAMP_TO_EDGE);
+        t.texImage2D(t.TEXTURE_2D, 0, s.internalFormat, this.width, this.height, 0, s.format, s.texNumberType, null), t.texParameteri(t.TEXTURE_2D, t.TEXTURE_MAG_FILTER, r.minFilter), t.texParameteri(t.TEXTURE_2D, t.TEXTURE_MIN_FILTER, r.magFilter), t.texParameteri(t.TEXTURE_2D, t.TEXTURE_WRAP_S, t.CLAMP_TO_EDGE), t.texParameteri(t.TEXTURE_2D, t.TEXTURE_WRAP_T, t.CLAMP_TO_EDGE);
         const o = t.COLOR_ATTACHMENT0 + this.colorTextureCount;
         t.framebufferTexture2D(t.FRAMEBUFFER, o, t.TEXTURE_2D, n, 0), this.colorTextures.push(n), this.drawBufferAttachmentPoints.push(o), this.colorTextureCount++;
         break;
@@ -7847,26 +7423,13 @@ class un {
     this.cameraType == Re.Perspective ? this.calculatePerspectiveMatrix() : this.calculateOrthographicMatrix();
   }
   calculatePerspectiveMatrix() {
-    this.projectionMatrix = Tt.perspective(
-      this.fov,
-      this.viewportWidth,
-      this.viewportHeight,
-      this.near,
-      this.far
-    );
+    this.projectionMatrix = Tt.perspective(this.fov, this.viewportWidth, this.viewportHeight, this.near, this.far);
   }
   calculateOrthographicMatrix() {
     if (this.viewportHeight == 0)
       throw new Error("Height is zero.");
     const t = this.viewportWidth / this.viewportHeight, e = 1, r = e * t, i = -r, n = r, s = e, o = -e;
-    this.projectionMatrix = Tt.orthographic(
-      i,
-      n,
-      s,
-      o,
-      this.near,
-      this.far
-    );
+    this.projectionMatrix = Tt.orthographic(i, n, s, o, this.near, this.far);
   }
 }
 class Ue {

@@ -1,11 +1,10 @@
-import { BaseSceneRendererFlow } from "./BaseSceneRendererFlow";
-import { RendererContext } from "../RendererContext";
-import { EmptyNode } from "../../core/node/EmptyNode";
-import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
-import { SceneGraphUtility } from "../../core/SceneGraphUtility";
+import { BaseSceneRendererFlow } from './BaseSceneRendererFlow';
+import { RendererContext } from '../RendererContext';
+import { EmptyNode } from '../../core/node/EmptyNode';
+import { RenderTargetOperation } from '../../../webgl/gl/fbo/RenderTargetOperation';
+import { SceneGraphUtility } from '../../core/SceneGraphUtility';
 
 export class StandardSceneRendererFlow extends BaseSceneRendererFlow {
-
     private sceneGraphRoot: EmptyNode;
 
     constructor(sceneGraphRoot: EmptyNode) {
@@ -17,7 +16,7 @@ export class StandardSceneRendererFlow extends BaseSceneRendererFlow {
         outputRenderTarget.bindAsDrawTarget();
         SceneGraphUtility.traverse(this.sceneGraphRoot, (node) => {
             if (!node.shouldDraw(context)) return;
-            
+
             node.draw(gl, context);
         });
     }

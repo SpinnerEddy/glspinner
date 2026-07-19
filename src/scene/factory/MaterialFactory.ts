@@ -1,30 +1,30 @@
-import { Color } from "../../color/Color";
-import { ColorUtility } from "../../color/ColorUtility";
-import { Vector3 } from "../../math/vector/Vector3";
-import { TextFontLoader } from "../../webgl/gl/font/TextFontLoader";
-import { ShaderLoader } from "../../webgl/gl/ShaderLoader";
-import { TextureLoader } from "../../webgl/gl/texture/TextureLoader";
-import { BlurMaterial } from "../material/BlurMaterial";
-import { BrightMaterial } from "../material/BrightMaterial";
-import { ComposeMaterial } from "../material/ComposeMaterial";
-import { FragmentCanvasMaterial } from "../material/FragmentCanvasMaterial";
-import { FrameBufferTexturedMaterial } from "../material/FrameBufferTexturedMaterial";
-import { GlitchMaterial } from "../material/GlitchMaterial";
-import { GouraudMaterial } from "../material/GouraudMaterial";
-import { GrayScaleMaterial } from "../material/GrayScaleMaterial";
-import { MaskMaterial } from "../material/MaskMaterial";
-import { MosaicMaterial } from "../material/MosaicMaterial";
-import { PhongMaterial } from "../material/PhongMaterial";
-import { RGBShiftMaterial } from "../material/RGBShiftMaterial";
-import { TexturedMaterial } from "../material/TexturedMaterial";
-import { TexturedTextMaterial } from "../material/TexturedTextMaterial";
-import { UnlitMaterial } from "../material/UnlitMaterial";
+import { Color } from '../../color/Color';
+import { ColorUtility } from '../../color/ColorUtility';
+import { Vector3 } from '../../math/vector/Vector3';
+import { TextFontLoader } from '../../webgl/gl/font/TextFontLoader';
+import { ShaderLoader } from '../../webgl/gl/ShaderLoader';
+import { TextureLoader } from '../../webgl/gl/texture/TextureLoader';
+import { BlurMaterial } from '../material/BlurMaterial';
+import { BrightMaterial } from '../material/BrightMaterial';
+import { ComposeMaterial } from '../material/ComposeMaterial';
+import { FragmentCanvasMaterial } from '../material/FragmentCanvasMaterial';
+import { FrameBufferTexturedMaterial } from '../material/FrameBufferTexturedMaterial';
+import { GlitchMaterial } from '../material/GlitchMaterial';
+import { GouraudMaterial } from '../material/GouraudMaterial';
+import { GrayScaleMaterial } from '../material/GrayScaleMaterial';
+import { MaskMaterial } from '../material/MaskMaterial';
+import { MosaicMaterial } from '../material/MosaicMaterial';
+import { PhongMaterial } from '../material/PhongMaterial';
+import { RGBShiftMaterial } from '../material/RGBShiftMaterial';
+import { TexturedMaterial } from '../material/TexturedMaterial';
+import { TexturedTextMaterial } from '../material/TexturedTextMaterial';
+import { UnlitMaterial } from '../material/UnlitMaterial';
 
 export class MaterialFactory {
     private static shaderLoader: ShaderLoader;
     private static textureLoader: TextureLoader;
     private static textFontLoader: TextFontLoader;
-    
+
     static init(shaderLoader: ShaderLoader, textureLoader: TextureLoader, textFontLoader: TextFontLoader): void {
         this.shaderLoader = shaderLoader;
         this.textureLoader = textureLoader;
@@ -45,7 +45,7 @@ export class MaterialFactory {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
-        const shader = this.shaderLoader.getShaderProgram("texture");
+        const shader = this.shaderLoader.getShaderProgram('texture');
         const texture = this.textureLoader.getTexture(textureKey);
         return new TexturedMaterial(shader, texture, texIndex);
     }
@@ -55,7 +55,7 @@ export class MaterialFactory {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
-        const shader = this.shaderLoader.getShaderProgram("text");
+        const shader = this.shaderLoader.getShaderProgram('text');
         const texture = this.textFontLoader.getTextureForCurrentFont();
         const fontColor = ColorUtility.hexToColor01(fontColorHex).toRGBAArray;
         return new TexturedTextMaterial(shader, texture, smoothness, fontColor);
@@ -77,7 +77,7 @@ export class MaterialFactory {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
-        const shader = this.shaderLoader.getShaderProgram("framebuffer");
+        const shader = this.shaderLoader.getShaderProgram('framebuffer');
         return new FrameBufferTexturedMaterial(shader);
     }
 
@@ -86,7 +86,7 @@ export class MaterialFactory {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
-        const shader = this.shaderLoader.getShaderProgram("grayScale");
+        const shader = this.shaderLoader.getShaderProgram('grayScale');
         return new GrayScaleMaterial(shader);
     }
 
@@ -95,7 +95,7 @@ export class MaterialFactory {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
-        const shader = this.shaderLoader.getShaderProgram("blur");
+        const shader = this.shaderLoader.getShaderProgram('blur');
         return new BlurMaterial(shader, isVertical, blurRange);
     }
 
@@ -104,7 +104,7 @@ export class MaterialFactory {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
-        const shader = this.shaderLoader.getShaderProgram("bright");
+        const shader = this.shaderLoader.getShaderProgram('bright');
         return new BrightMaterial(shader);
     }
 
@@ -115,7 +115,6 @@ export class MaterialFactory {
 
         const shader = this.shaderLoader.getShaderProgram(shaderKey);
         return new MaskMaterial(shader);
-
     }
 
     static composeMaterial(): ComposeMaterial {
@@ -123,7 +122,7 @@ export class MaterialFactory {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
-        const shader = this.shaderLoader.getShaderProgram("compose");
+        const shader = this.shaderLoader.getShaderProgram('compose');
         return new ComposeMaterial(shader);
     }
 
@@ -132,26 +131,26 @@ export class MaterialFactory {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
-        const shader = this.shaderLoader.getShaderProgram("mosaic");
+        const shader = this.shaderLoader.getShaderProgram('mosaic');
         return new MosaicMaterial(shader);
     }
 
-    static rgbShiftMaterial(shaderKey: string = ""): MosaicMaterial {
+    static rgbShiftMaterial(shaderKey: string = ''): MosaicMaterial {
         if (!this.shaderLoader) {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
-        const key = shaderKey == "" ? "rgbShift" : shaderKey;
+        const key = shaderKey == '' ? 'rgbShift' : shaderKey;
         const shader = this.shaderLoader.getShaderProgram(key);
         return new RGBShiftMaterial(shader);
     }
 
-    static glitchMaterial(shaderKey: string = ""): GlitchMaterial {
+    static glitchMaterial(shaderKey: string = ''): GlitchMaterial {
         if (!this.shaderLoader) {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
-        const key = shaderKey == "" ? "glitch" : shaderKey;
+        const key = shaderKey == '' ? 'glitch' : shaderKey;
         const shader = this.shaderLoader.getShaderProgram(key);
         return new GlitchMaterial(shader);
     }
@@ -161,16 +160,16 @@ export class MaterialFactory {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
-        const shader = this.shaderLoader.getShaderProgram("unlit");
+        const shader = this.shaderLoader.getShaderProgram('unlit');
         return new UnlitMaterial(shader);
-    } 
+    }
 
     static phongMaterial(): PhongMaterial {
         if (!this.shaderLoader) {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
-        const shader = this.shaderLoader.getShaderProgram("phongLighting");
+        const shader = this.shaderLoader.getShaderProgram('phongLighting');
         return new PhongMaterial(shader);
     }
 
@@ -179,10 +178,10 @@ export class MaterialFactory {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
-        const shader = this.shaderLoader.getShaderProgram("gouraudLighting");
+        const shader = this.shaderLoader.getShaderProgram('gouraudLighting');
         const ld = lightDirection ?? new Vector3(-0.5, 0.5, 0.5);
         const ed = eyeDirection ?? new Vector3(0, 0, 20.0);
-        const amb = ambientColor ?? ColorUtility.hexToColor01("#000000");
+        const amb = ambientColor ?? ColorUtility.hexToColor01('#000000');
         return new GouraudMaterial(shader, ld, ed, amb);
     }
 }

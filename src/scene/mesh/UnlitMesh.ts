@@ -1,21 +1,20 @@
-import { GeometryOperation } from "../../webgl/gl/geometry/GeometryOperation";
-import { MaterialOperation } from "../material/MaterialOperation";
-import { RendererContext } from "../renderer/RendererContext";
-import { BaseMesh } from "./BaseMesh";
+import { GeometryOperation } from '../../webgl/gl/geometry/GeometryOperation';
+import { MaterialOperation } from '../material/MaterialOperation';
+import { RendererContext } from '../renderer/RendererContext';
+import { BaseMesh } from './BaseMesh';
 
 export class UnlitMesh extends BaseMesh {
     constructor(geometry: GeometryOperation, material: MaterialOperation) {
         super(geometry, material);
     }
-    
+
     updateUniforms(gl: WebGL2RenderingContext, context: RendererContext): void {
         this.material.setUniform(gl, context);
     }
 
     draw(gl: WebGL2RenderingContext): void {
-
         gl.enable(gl.DEPTH_TEST);
-    	gl.depthFunc(gl.LEQUAL);
+        gl.depthFunc(gl.LEQUAL);
         gl.disable(gl.CULL_FACE);
 
         this.geometry.bind();

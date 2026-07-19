@@ -1,7 +1,7 @@
-import { RenderTag, RenderTagConstants } from "../../renderer/definition/RenderTag";
-import { RendererContext } from "../../renderer/RendererContext";
-import { Transform } from "../../transform/Transform";
-import { SceneGraphNodeIdGenerator } from "../SceneGraphNodeIdGenerator";
+import { RenderTag, RenderTagConstants } from '../../renderer/definition/RenderTag';
+import { RendererContext } from '../../renderer/RendererContext';
+import { Transform } from '../../transform/Transform';
+import { SceneGraphNodeIdGenerator } from '../SceneGraphNodeIdGenerator';
 
 export abstract class SceneNode {
     protected id: string;
@@ -10,13 +10,13 @@ export abstract class SceneNode {
     protected transform: Transform;
     protected renderTag: RenderTag;
 
-    constructor(id: string = ""){
+    constructor(id: string = '') {
         this.transform = new Transform();
         this.children = [];
         this.renderTag = RenderTagConstants.ALL;
 
         const className = this.constructor as Function;
-        this.id = id !== "" ? id : SceneGraphNodeIdGenerator.generateId(className.name);
+        this.id = id !== '' ? id : SceneGraphNodeIdGenerator.generateId(className.name);
     }
 
     public addChild(child: SceneNode): void {
@@ -54,16 +54,16 @@ export abstract class SceneNode {
     private setParent(parent: SceneNode | undefined): void {
         if (this.parent == parent) return;
 
-        if (this.parent !== undefined){
+        if (this.parent !== undefined) {
             const index = this.parent.children.indexOf(this);
-            if (index !== -1){
+            if (index !== -1) {
                 this.parent.children.splice(index, 1);
             }
         }
 
         this.parent = parent;
 
-        if (parent !== undefined && !parent.children.includes(this)){
+        if (parent !== undefined && !parent.children.includes(this)) {
             parent.children.push(this);
         }
     }

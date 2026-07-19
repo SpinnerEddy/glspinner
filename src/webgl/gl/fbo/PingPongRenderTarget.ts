@@ -1,4 +1,4 @@
-import { RenderTargetOperation } from "./RenderTargetOperation";
+import { RenderTargetOperation } from './RenderTargetOperation';
 
 export class PingPongRenderTarget {
     private targets: [RenderTargetOperation, RenderTargetOperation];

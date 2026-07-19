@@ -1,7 +1,7 @@
-import { ClockOperation } from "../clock/ClockOperation";
-import { FixedTimeClock } from "../clock/FixedTimeClock";
-import { RealTimeClock } from "../clock/RealTimeClock";
-import { SceneOperation } from "./SceneOperation";
+import { ClockOperation } from '../clock/ClockOperation';
+import { FixedTimeClock } from '../clock/FixedTimeClock';
+import { RealTimeClock } from '../clock/RealTimeClock';
+import { SceneOperation } from './SceneOperation';
 
 export class RecordScene implements SceneOperation {
     private clock: ClockOperation;
@@ -11,7 +11,7 @@ export class RecordScene implements SceneOperation {
     private additionalSupportFunctionAsync: Function;
     private animationId: number;
 
-    constructor(){
+    constructor() {
         this.clock = new RealTimeClock();
         this.clock.reset();
         this.clock.setFps(60);
@@ -23,7 +23,7 @@ export class RecordScene implements SceneOperation {
     }
 
     public start(): void {
-        if(this.isRunning) return;
+        if (this.isRunning) return;
 
         this.isRunning = true;
         this.clock.reset();
@@ -31,7 +31,7 @@ export class RecordScene implements SceneOperation {
     }
 
     public stop(): void {
-        if(!this.isRunning) return;
+        if (!this.isRunning) return;
 
         this.isRunning = false;
         cancelAnimationFrame(this.animationId);
@@ -88,7 +88,7 @@ export class RecordScene implements SceneOperation {
 
     public async record(fps: number, frameNum: number): Promise<void> {
         this.clock.setFps(fps);
-        for(let i = 450; i < frameNum; i++){
+        for (let i = 450; i < frameNum; i++) {
             this.clock.setFrameNum(i);
 
             this.updateObjects();
@@ -109,13 +109,13 @@ export class RecordScene implements SceneOperation {
         this.drawFunction();
     }
 
-    private async additionalSupport(): Promise<void>{
+    private async additionalSupport(): Promise<void> {
         await this.additionalSupportFunctionAsync();
     }
 
     private delay(ms: number) {
         return new Promise((resolve) => {
-            setTimeout(resolve, ms)
-    });
-}
+            setTimeout(resolve, ms);
+        });
+    }
 }

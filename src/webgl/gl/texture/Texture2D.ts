@@ -1,11 +1,11 @@
-import { TextureOperation } from "./TextureOperation";
+import { TextureOperation } from './TextureOperation';
 
 export class Texture2D implements TextureOperation {
     private gl: WebGL2RenderingContext;
     private texture: WebGLTexture | undefined;
     private image: HTMLImageElement | undefined;
 
-    constructor(gl: WebGL2RenderingContext, source: string){
+    constructor(gl: WebGL2RenderingContext, source: string) {
         this.gl = gl;
         this.setUpTexture(source);
     }
@@ -19,12 +19,12 @@ export class Texture2D implements TextureOperation {
         this.gl.bindTexture(this.gl.TEXTURE_2D, null);
     }
 
-    getTextureSize(): {width: number, height: number} {
-        if(this.image){
-            return {width: this.image.width, height: this.image.height};
+    getTextureSize(): { width: number; height: number } {
+        if (this.image) {
+            return { width: this.image.width, height: this.image.height };
         }
 
-        return {width: 0, height: 0};
+        return { width: 0, height: 0 };
     }
 
     private setUpTexture(source: string): void {

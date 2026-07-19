@@ -1,21 +1,21 @@
-import { UniformType } from "./ShaderUniformConstants";
+import { UniformType } from './ShaderUniformConstants';
 
-export class ShaderUniform{
+export class ShaderUniform {
     private gl: WebGL2RenderingContext;
     private location: WebGLUniformLocation;
 
-    constructor(gl: WebGL2RenderingContext, program: WebGLProgram, uniformName: string){
+    constructor(gl: WebGL2RenderingContext, program: WebGLProgram, uniformName: string) {
         this.gl = gl;
         this.location = gl.getUniformLocation(program, uniformName)!;
-        if(this.location === null){
+        if (this.location === null) {
             console.error(`Failed to get the storage location of ${uniformName}`);
         }
     }
 
-    public setUniform(value: number | number[] | Float32Array | Int32Array, type: UniformType): void{
-        if(this.location === null) return;
+    public setUniform(value: number | number[] | Float32Array | Int32Array, type: UniformType): void {
+        if (this.location === null) return;
 
-        switch(type){
+        switch (type) {
             case '1f':
                 this.gl.uniform1f(this.location, value as number);
                 break;

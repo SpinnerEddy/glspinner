@@ -1,10 +1,10 @@
-import { Matrix44 } from "../../math/matrix/Matrix44";
-import { MatrixCalculator } from "../../math/MatrixCalculator";
-import { Quaternion } from "../../math/quaternion/Quaternion";
-import { QuaternionCalculator } from "../../math/QuaternionCalculator";
-import { Vector3 } from "../../math/vector/Vector3";
+import { Matrix44 } from '../../math/matrix/Matrix44';
+import { MatrixCalculator } from '../../math/MatrixCalculator';
+import { Quaternion } from '../../math/quaternion/Quaternion';
+import { QuaternionCalculator } from '../../math/QuaternionCalculator';
+import { Vector3 } from '../../math/vector/Vector3';
 
-export class Transform{
+export class Transform {
     private position: Vector3;
     private scale: Vector3;
     private rotation: Quaternion;
@@ -13,7 +13,7 @@ export class Transform{
     private worldMatrix: Matrix44;
     private isRequiredRecalculation: boolean;
 
-    constructor(){
+    constructor() {
         this.position = new Vector3(0, 0, 0);
         this.scale = new Vector3(1, 1, 1);
         this.rotation = QuaternionCalculator.identity();
@@ -25,7 +25,7 @@ export class Transform{
     }
 
     public updateMatrix(parentMatrix: Matrix44 | undefined = undefined): void {
-        if(!this.isRequiredRecalculation) return;
+        if (!this.isRequiredRecalculation) return;
 
         this.calculateLocalMatrix();
         this.calculateWorldMatrix(parentMatrix);
@@ -53,10 +53,7 @@ export class Transform{
     }
 
     public getWorldPosition(): Vector3 {
-        return new Vector3(
-            this.worldMatrix.get(0, 3),
-            this.worldMatrix.get(1, 3),
-            this.worldMatrix.get(2, 3));
+        return new Vector3(this.worldMatrix.get(0, 3), this.worldMatrix.get(1, 3), this.worldMatrix.get(2, 3));
     }
 
     private calculateLocalMatrix(): void {
@@ -67,10 +64,9 @@ export class Transform{
     }
 
     private calculateWorldMatrix(parentMatrix: Matrix44 | undefined): void {
-        if(parentMatrix === undefined){
+        if (parentMatrix === undefined) {
             this.worldMatrix = this.localMatrix;
-        }
-        else{
+        } else {
             this.worldMatrix = MatrixCalculator.multiply(parentMatrix, this.localMatrix);
         }
     }

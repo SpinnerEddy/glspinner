@@ -1,9 +1,9 @@
-import { BaseBuffer } from "./BaseBuffer";
+import { BaseBuffer } from './BaseBuffer';
 
 export class IndexBuffer extends BaseBuffer {
     private indices: Int16Array;
 
-    constructor(gl: WebGL2RenderingContext, indices: Int16Array){
+    constructor(gl: WebGL2RenderingContext, indices: Int16Array) {
         super(gl);
         this.indices = indices;
     }
@@ -26,7 +26,7 @@ export class IndexBuffer extends BaseBuffer {
     }
 
     dispose(): void {
-        if (this.buffer){
+        if (this.buffer) {
             this.gl.deleteBuffer(this.buffer);
             this.buffer = null;
         }

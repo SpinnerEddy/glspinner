@@ -1,18 +1,13 @@
-import { Matrix } from "./Matrix";
-import { Matrix44 } from "./Matrix44";
+import { Matrix } from './Matrix';
+import { Matrix44 } from './Matrix44';
 
-export class Matrix33 extends Matrix<Matrix33>{
-
-    constructor(data?: Float32Array){
+export class Matrix33 extends Matrix<Matrix33> {
+    constructor(data?: Float32Array) {
         super(3, data);
     }
 
     identity(): Matrix33 {
-        return new Matrix33(Float32Array.of(
-            1, 0, 0,
-            0, 1, 0,
-            0, 0, 1
-        ));
+        return new Matrix33(Float32Array.of(1, 0, 0, 0, 1, 0, 0, 0, 1));
     }
 
     add(other: Matrix33, out?: Matrix33): Matrix33 {
@@ -56,20 +51,19 @@ export class Matrix33 extends Matrix<Matrix33>{
     multiply(other: Matrix33 | number, out?: Matrix33): Matrix33 {
         const result = out ?? new Matrix33(new Float32Array(this.elementSize));
 
-        if(other instanceof Matrix){
-            for(let rowIndex = 0; rowIndex < this.row; rowIndex++){
-                for(let colIndex = 0; colIndex < other.col; colIndex++){
+        if (other instanceof Matrix) {
+            for (let rowIndex = 0; rowIndex < this.row; rowIndex++) {
+                for (let colIndex = 0; colIndex < other.col; colIndex++) {
                     let sum = 0;
-                    for(let k = 0; k < this.col; k++){
+                    for (let k = 0; k < this.col; k++) {
                         sum += this.get(rowIndex, k) * other.get(k, colIndex);
                     }
                     result.set(rowIndex, colIndex, sum);
                 }
             }
-        }
-        else{
-            for(let rowIndex = 0; rowIndex < this.row; rowIndex++){
-                for(let colIndex = 0; colIndex < this.col; colIndex++){
+        } else {
+            for (let rowIndex = 0; rowIndex < this.row; rowIndex++) {
+                for (let colIndex = 0; colIndex < this.col; colIndex++) {
                     result.set(rowIndex, colIndex, this.get(rowIndex, colIndex) * other);
                 }
             }
@@ -98,10 +92,10 @@ export class Matrix33 extends Matrix<Matrix33>{
 
     transpose(): Matrix33 {
         const result = new Matrix33(new Float32Array(this.elementSize));
-        for(let i = 0; i < this.row; i++){
-            for(let j = 0; j < this.col; j++){
+        for (let i = 0; i < this.row; i++) {
+            for (let j = 0; j < this.col; j++) {
                 result.set(j, i, this.get(i, j));
-            }    
+            }
         }
         return result;
     }
@@ -117,22 +111,22 @@ export class Matrix33 extends Matrix<Matrix33>{
         const h = this.get(2, 1);
         const i = this.get(2, 2);
 
-        const det = a*e*i + b*f*g + c*d*h - c*e*g - b*d*i - a*f*h;
+        const det = a * e * i + b * f * g + c * d * h - c * e * g - b * d * i - a * f * h;
         const result = new Matrix33();
-        if(det == 0){
+        if (det == 0) {
             return result;
         }
-        
+
         const invDet = 1 / det;
-        result.set(0, 0,  (e*i - f*h) * invDet);
-        result.set(0, 1, -(b*i - c*h) * invDet);
-        result.set(0, 2,  (b*f - c*e) * invDet);
-        result.set(1, 0, -(d*i - f*g) * invDet);
-        result.set(1, 1,  (a*i - c*g) * invDet);
-        result.set(1, 2, -(a*f - c*d) * invDet);
-        result.set(2, 0,  (d*h - e*g) * invDet);
-        result.set(2, 1, -(a*h - b*g) * invDet);
-        result.set(2, 2,  (a*e - b*d) * invDet);
+        result.set(0, 0, (e * i - f * h) * invDet);
+        result.set(0, 1, -(b * i - c * h) * invDet);
+        result.set(0, 2, (b * f - c * e) * invDet);
+        result.set(1, 0, -(d * i - f * g) * invDet);
+        result.set(1, 1, (a * i - c * g) * invDet);
+        result.set(1, 2, -(a * f - c * d) * invDet);
+        result.set(2, 0, (d * h - e * g) * invDet);
+        result.set(2, 1, -(a * h - b * g) * invDet);
+        result.set(2, 2, (a * e - b * d) * invDet);
         return result;
     }
 
@@ -145,11 +139,19 @@ export class Matrix33 extends Matrix<Matrix33>{
     }
 
     normalMatrix(modelMatrix: Matrix44): Matrix33 {
-        const subMatrix = new Matrix33(Float32Array.of(
-            modelMatrix.get(0, 0), modelMatrix.get(0, 1), modelMatrix.get(0, 2),
-            modelMatrix.get(1, 0), modelMatrix.get(1, 1), modelMatrix.get(1, 2),
-            modelMatrix.get(2, 0), modelMatrix.get(2, 1), modelMatrix.get(2, 2), 
-        ));
+        const subMatrix = new Matrix33(
+            Float32Array.of(
+                modelMatrix.get(0, 0),
+                modelMatrix.get(0, 1),
+                modelMatrix.get(0, 2),
+                modelMatrix.get(1, 0),
+                modelMatrix.get(1, 1),
+                modelMatrix.get(1, 2),
+                modelMatrix.get(2, 0),
+                modelMatrix.get(2, 1),
+                modelMatrix.get(2, 2)
+            )
+        );
 
         return subMatrix.inverse();
     }

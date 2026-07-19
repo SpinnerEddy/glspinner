@@ -1,12 +1,11 @@
-import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
-import { TextureSlot } from "../../../webgl/gl/texture/TextureConstants";
-import { BrightMaterial } from "../../material/BrightMaterial";
-import { RendererContext } from "../RendererContext";
-import { BaseShaderPass } from "./BaseShaderPass";
+import { RenderTargetOperation } from '../../../webgl/gl/fbo/RenderTargetOperation';
+import { TextureSlot } from '../../../webgl/gl/texture/TextureConstants';
+import { BrightMaterial } from '../../material/BrightMaterial';
+import { RendererContext } from '../RendererContext';
+import { BaseShaderPass } from './BaseShaderPass';
 
 export class BrightShaderPass extends BaseShaderPass {
-
-    constructor(gl: WebGL2RenderingContext, material: BrightMaterial){
+    constructor(gl: WebGL2RenderingContext, material: BrightMaterial) {
         super(gl, material);
     }
 
@@ -20,5 +19,4 @@ export class BrightShaderPass extends BaseShaderPass {
 
         gl.bindTexture(gl.TEXTURE_2D, null);
     }
-
 }

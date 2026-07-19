@@ -1,10 +1,9 @@
-import { Vector2 } from "../../math/vector/Vector2";
-import { VectorCalculator } from "../../math/VectorCalculator";
-import { KeyboardCodeType, MouseButtonType } from "../InputConstants";
-import { BaseDevice } from "./BaseDevice";
+import { Vector2 } from '../../math/vector/Vector2';
+import { VectorCalculator } from '../../math/VectorCalculator';
+import { KeyboardCodeType, MouseButtonType } from '../InputConstants';
+import { BaseDevice } from './BaseDevice';
 
 export class MouseDevice extends BaseDevice {
-
     private position: Vector2;
     private prevPosition: Vector2;
 
@@ -29,7 +28,7 @@ export class MouseDevice extends BaseDevice {
 
     update(): void {
         this.prevInput = { ...this.currentInput };
-        
+
         this.prevPosition.x = this.position.x;
         this.prevPosition.y = this.position.y;
     }

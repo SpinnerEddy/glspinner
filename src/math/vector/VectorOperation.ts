@@ -12,6 +12,6 @@ export interface VectorOperation<T> {
     calcDistance(other: T): number;
     dot(other: T): number;
     length(): number;
-    lerp(other: T, t: number, out?: T) : T;
+    lerp(other: T, t: number, out?: T): T;
     clone(): T;
 }

@@ -1,15 +1,15 @@
-import { ShaderProgram } from "../../webgl/gl/ShaderProgram";
-import { Texture2D } from "../../webgl/gl/texture/Texture2D";
-import { TextureOperation } from "../../webgl/gl/texture/TextureOperation";
-import { ShaderUniformValue } from "../../webgl/gl/uniform/ShaderUniformValue";
-import { RendererContext } from "../renderer/RendererContext";
-import { BaseMaterial } from "./BaseMaterial";
+import { ShaderProgram } from '../../webgl/gl/ShaderProgram';
+import { Texture2D } from '../../webgl/gl/texture/Texture2D';
+import { TextureOperation } from '../../webgl/gl/texture/TextureOperation';
+import { ShaderUniformValue } from '../../webgl/gl/uniform/ShaderUniformValue';
+import { RendererContext } from '../renderer/RendererContext';
+import { BaseMaterial } from './BaseMaterial';
 
 export class TexturedMaterial extends BaseMaterial {
     private texture: TextureOperation;
     private texIndex: number;
 
-    constructor(shaderProgram: ShaderProgram, texture: Texture2D, index: number){
+    constructor(shaderProgram: ShaderProgram, texture: Texture2D, index: number) {
         super(shaderProgram);
         this.texture = texture;
         this.texIndex = index;
@@ -17,13 +17,13 @@ export class TexturedMaterial extends BaseMaterial {
 
     setUniform(gl: WebGL2RenderingContext, context: RendererContext): void {
         const uniforms = context.getGlobalUniform();
-        for(const key in uniforms){
+        for (const key in uniforms) {
             this.shaderProgram.setUniform(gl, key, uniforms[key]);
         }
 
         this.texture.bind(this.texIndex);
 
-        this.shaderProgram.setUniform(gl, "tex", new ShaderUniformValue(this.texIndex, 'int'));
+        this.shaderProgram.setUniform(gl, 'tex', new ShaderUniformValue(this.texIndex, 'int'));
     }
 
     cleanup(): void {

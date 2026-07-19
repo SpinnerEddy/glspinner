@@ -1,14 +1,14 @@
-import { MatrixCalculator } from "../../math/MatrixCalculator";
-import { Vector2 } from "../../math/vector/Vector2";
-import { ShaderUniformBuffer } from "../../webgl/gl/buffer/ShaderUniformBuffer";
-import { ShaderProgram } from "../../webgl/gl/ShaderProgram";
-import { GlobalUniformKey, UniformBindingPoint, UniformPairs } from "../../webgl/gl/uniform/ShaderUniformConstants";
-import { ShaderUniformValue } from "../../webgl/gl/uniform/ShaderUniformValue";
-import { Camera } from "../camera/Camera";
-import { LightParams } from "../light/LightConstants";
-import { RenderTargetRegistry } from "./context/RenderTargetRegistry";
-import { RenderTargetRegistryOperation } from "./context/RenderTargetRegistryOperation";
-import { RenderTag, RenderTagConstants } from "./definition/RenderTag";
+import { MatrixCalculator } from '../../math/MatrixCalculator';
+import { Vector2 } from '../../math/vector/Vector2';
+import { ShaderUniformBuffer } from '../../webgl/gl/buffer/ShaderUniformBuffer';
+import { ShaderProgram } from '../../webgl/gl/ShaderProgram';
+import { GlobalUniformKey, UniformBindingPoint, UniformPairs } from '../../webgl/gl/uniform/ShaderUniformConstants';
+import { ShaderUniformValue } from '../../webgl/gl/uniform/ShaderUniformValue';
+import { Camera } from '../camera/Camera';
+import { LightParams } from '../light/LightConstants';
+import { RenderTargetRegistry } from './context/RenderTargetRegistry';
+import { RenderTargetRegistryOperation } from './context/RenderTargetRegistryOperation';
+import { RenderTag, RenderTagConstants } from './definition/RenderTag';
 
 export class RendererContext {
     private camera: Camera | undefined = undefined;
@@ -16,20 +16,20 @@ export class RendererContext {
     private globalUniforms: UniformPairs = {};
     private fragmentCanvasUniforms: UniformPairs = {};
     private currentShaderProgram: ShaderProgram | undefined = undefined;
-    private renderTargetRegistry: RenderTargetRegistryOperation; 
+    private renderTargetRegistry: RenderTargetRegistryOperation;
     private activateRenderTag: RenderTag = RenderTagConstants.ALL;
 
     private globalUniformBuffer: ShaderUniformBuffer;
 
     constructor(gl: WebGL2RenderingContext) {
         this.renderTargetRegistry = new RenderTargetRegistry();
-        
+
         const globalUniformPairs = {
-            [GlobalUniformKey.VIEW_MATRIX] : new ShaderUniformValue(MatrixCalculator.identity44()),
-            [GlobalUniformKey.PROJECTION_MATRIX] : new ShaderUniformValue(MatrixCalculator.identity44()),
-            [GlobalUniformKey.TIME] : new ShaderUniformValue(0),
-            [GlobalUniformKey.RESOLUTION] : new ShaderUniformValue(new Vector2(gl.drawingBufferWidth, gl.drawingBufferHeight)),
-            [GlobalUniformKey.MOUSE] : new ShaderUniformValue(new Vector2(0.0, 0.0))
+            [GlobalUniformKey.VIEW_MATRIX]: new ShaderUniformValue(MatrixCalculator.identity44()),
+            [GlobalUniformKey.PROJECTION_MATRIX]: new ShaderUniformValue(MatrixCalculator.identity44()),
+            [GlobalUniformKey.TIME]: new ShaderUniformValue(0),
+            [GlobalUniformKey.RESOLUTION]: new ShaderUniformValue(new Vector2(gl.drawingBufferWidth, gl.drawingBufferHeight)),
+            [GlobalUniformKey.MOUSE]: new ShaderUniformValue(new Vector2(0.0, 0.0)),
         };
         this.globalUniformBuffer = new ShaderUniformBuffer(gl, globalUniformPairs);
         this.globalUniformBuffer.setData();
@@ -62,11 +62,11 @@ export class RendererContext {
     public getGlobalUniform(): UniformPairs {
         return this.globalUniforms;
     }
-    
+
     public updateGlobalUniformValues(time: number, mousePos: Vector2): void {
         this.globalUniformBuffer.updateUniformValue(GlobalUniformKey.TIME, new ShaderUniformValue(time));
         this.globalUniformBuffer.updateUniformValue(GlobalUniformKey.MOUSE, new ShaderUniformValue(mousePos));
-        
+
         if (this.camera === undefined) return;
         this.globalUniformBuffer.updateUniformValue(GlobalUniformKey.VIEW_MATRIX, new ShaderUniformValue(this.camera.getViewMatrix()));
         this.globalUniformBuffer.updateUniformValue(GlobalUniformKey.PROJECTION_MATRIX, new ShaderUniformValue(this.camera.getProjectionMatrix()));
@@ -90,7 +90,7 @@ export class RendererContext {
     }
 
     public isCurrentShaderProgramSame(program: ShaderProgram): boolean {
-        if(this.currentShaderProgram === undefined) return false;
+        if (this.currentShaderProgram === undefined) return false;
 
         return this.currentShaderProgram === program;
     }

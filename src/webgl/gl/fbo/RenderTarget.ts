@@ -1,13 +1,13 @@
-import { RenderTargetOperation } from "./RenderTargetOperation";
-import { RenderTargetOption } from "./RenderTargetOption";
+import { RenderTargetOperation } from './RenderTargetOperation';
+import { RenderTargetOption } from './RenderTargetOption';
 
 export class RenderTarget implements RenderTargetOperation {
     private gl: WebGL2RenderingContext;
-    
+
     private framebuffer!: WebGLFramebuffer;
     private colorTextures!: WebGLTexture[];
     private depthRenderbuffer: WebGLRenderbuffer | undefined;
-    
+
     private width: number;
     private height: number;
 
@@ -31,18 +31,18 @@ export class RenderTarget implements RenderTargetOperation {
     }
 
     getFrameBuffer(): WebGLFramebuffer {
-        return this.framebuffer;    
+        return this.framebuffer;
     }
 
     getColorTexture(index: number = 0): WebGLTexture {
-        if(index !== 0){
-            throw new Error("Only single color attachment supported!");
+        if (index !== 0) {
+            throw new Error('Only single color attachment supported!');
         }
         return this.colorTextures?.at(index)!;
     }
 
     getDepthTexture(): WebGLTexture {
-        throw new Error("Method not implemented.");
+        throw new Error('Method not implemented.');
     }
 
     getSize(): [number, number] {
@@ -50,7 +50,7 @@ export class RenderTarget implements RenderTargetOperation {
     }
 
     resize(resolution: [number, number]): void {
-        if(this.width === resolution[0] && this.height === resolution[1]) return;
+        if (this.width === resolution[0] && this.height === resolution[1]) return;
 
         this.width = resolution[0];
         this.height = resolution[1];
@@ -67,7 +67,7 @@ export class RenderTarget implements RenderTargetOperation {
         const gl = this.gl;
 
         if (this.colorTextures) {
-            this.colorTextures.forEach(element => {
+            this.colorTextures.forEach((element) => {
                 gl.deleteTexture(element);
             });
         }
@@ -91,7 +91,7 @@ export class RenderTarget implements RenderTargetOperation {
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebuffer);
 
         // カラーテクスチャ
-        for(let i = 0; i < colorTextureCount; i++){
+        for (let i = 0; i < colorTextureCount; i++) {
             const colorTexture = gl.createTexture();
             gl.bindTexture(gl.TEXTURE_2D, colorTexture);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.width, this.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
@@ -104,7 +104,7 @@ export class RenderTarget implements RenderTargetOperation {
         }
 
         // depth
-        if(useDepth){
+        if (useDepth) {
             this.depthRenderbuffer = gl.createRenderbuffer();
             gl.bindRenderbuffer(gl.RENDERBUFFER, this.depthRenderbuffer);
             gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, this.width, this.height);

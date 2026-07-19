@@ -1,7 +1,7 @@
-import { QuaternionCalculator } from "../../src/math/QuaternionCalculator";
-import { Vector3 } from "../../src/math/vector/Vector3";
+import { QuaternionCalculator } from '../../src/math/QuaternionCalculator';
+import { Vector3 } from '../../src/math/vector/Vector3';
 
-test("Quaternion Add", () => {
+test('Quaternion Add', () => {
     const a = QuaternionCalculator.create(1, 2, 3, 4);
     const b = QuaternionCalculator.create(4, 3, 2, 1);
 
@@ -10,7 +10,7 @@ test("Quaternion Add", () => {
     expect(result).toEqual(except);
 });
 
-test("Quaternion Sub", () => {
+test('Quaternion Sub', () => {
     const a = QuaternionCalculator.create(5, 4, 3, 2);
     const b = QuaternionCalculator.create(4, 3, 2, 1);
 
@@ -19,12 +19,12 @@ test("Quaternion Sub", () => {
     expect(result).toEqual(except);
 });
 
-test("Quaternion Multiply", () => {
+test('Quaternion Multiply', () => {
     const q1 = QuaternionCalculator.createFromEuler(Math.PI / 6, Math.PI / 4, Math.PI / 3);
     const q2 = QuaternionCalculator.createFromEuler(-Math.PI / 6, -Math.PI / 4, -Math.PI / 3);
 
     const result = QuaternionCalculator.multiply(q1, q2);
-    const except = QuaternionCalculator.create(0.2134, -0.4170, -0.0089, 0.8835);
+    const except = QuaternionCalculator.create(0.2134, -0.417, -0.0089, 0.8835);
 
     expect(result.x).toBeCloseTo(except.x);
     expect(result.y).toBeCloseTo(except.y);
@@ -32,7 +32,7 @@ test("Quaternion Multiply", () => {
     expect(result.w).toBeCloseTo(except.w);
 });
 
-test("Quaternion Scale", () => {
+test('Quaternion Scale', () => {
     const q = QuaternionCalculator.create(5, 4, 3, 2);
 
     const result = QuaternionCalculator.scale(q, 4);
@@ -40,7 +40,7 @@ test("Quaternion Scale", () => {
     expect(result).toEqual(except);
 });
 
-test("Quaternion CreateFromAxisAndRadians", () => {
+test('Quaternion CreateFromAxisAndRadians', () => {
     const result = QuaternionCalculator.createFromAxisAndRadians(new Vector3(1, 1, 1), Math.PI / 3);
 
     const except = QuaternionCalculator.create(0.2887, 0.2887, 0.2887, 0.866);
@@ -50,7 +50,7 @@ test("Quaternion CreateFromAxisAndRadians", () => {
     expect(result.w).toBeCloseTo(except.w);
 });
 
-test("Quaternion Dot", () => {
+test('Quaternion Dot', () => {
     const q1 = QuaternionCalculator.create(2, 2, 3, 4);
     const q2 = QuaternionCalculator.create(1, 4, 3, 2);
     const result = QuaternionCalculator.dot(q1, q2);
@@ -59,7 +59,7 @@ test("Quaternion Dot", () => {
     expect(result).toEqual(except);
 });
 
-test("Quaternion Conjugate", () => {
+test('Quaternion Conjugate', () => {
     const q = QuaternionCalculator.create(2, -2, -3, 4);
     const result = QuaternionCalculator.conjugate(q);
 
@@ -67,7 +67,7 @@ test("Quaternion Conjugate", () => {
     expect(result).toEqual(except);
 });
 
-test("Quaternion Normalize", () => {
+test('Quaternion Normalize', () => {
     const q = QuaternionCalculator.create(3, -3, -3, 3);
     const result = QuaternionCalculator.normalize(q);
 
@@ -75,7 +75,7 @@ test("Quaternion Normalize", () => {
     expect(result).toEqual(except);
 });
 
-test("Quaternion Inverse", () => {
+test('Quaternion Inverse', () => {
     const q = QuaternionCalculator.create(4, 2, -2, 1);
     const result = QuaternionCalculator.inverse(q);
 
@@ -86,7 +86,7 @@ test("Quaternion Inverse", () => {
     expect(result.w).toBeCloseTo(except.w);
 });
 
-test("Quaternion RotateVector1", () => {
+test('Quaternion RotateVector1', () => {
     const q = QuaternionCalculator.createFromAxisAndRadians(new Vector3(0, 1, 0), Math.PI * 0.5);
     const v = new Vector3(1, 0, 0);
     const result = QuaternionCalculator.rotateVector(q, v);
@@ -97,7 +97,7 @@ test("Quaternion RotateVector1", () => {
     expect(result.z).toBeCloseTo(except.z);
 });
 
-test("Quaternion RotateVector2", () => {
+test('Quaternion RotateVector2', () => {
     const q = QuaternionCalculator.createFromAxisAndRadians(new Vector3(1, 1, 1), Math.PI / 3);
     const v = new Vector3(1, 0, 0);
     const result = QuaternionCalculator.rotateVector(q, v);
@@ -108,8 +108,7 @@ test("Quaternion RotateVector2", () => {
     expect(result.z).toBeCloseTo(except.z);
 });
 
-
-test("Quaternion Slerp1", () => {
+test('Quaternion Slerp1', () => {
     const q1 = QuaternionCalculator.create(0, 1, 0, 0);
     const q2 = QuaternionCalculator.create(1, 0, 0, 0);
     const t = 0;
@@ -119,7 +118,7 @@ test("Quaternion Slerp1", () => {
     expect(result).toEqual(except);
 });
 
-test("Quaternion Slerp2", () => {
+test('Quaternion Slerp2', () => {
     const q1 = QuaternionCalculator.create(0, 1, 0, 0);
     const q2 = QuaternionCalculator.create(1, 0, 0, 0);
     const t = 1;
@@ -129,7 +128,7 @@ test("Quaternion Slerp2", () => {
     expect(result).toEqual(except);
 });
 
-test("Quaternion Slerp3", () => {
+test('Quaternion Slerp3', () => {
     const q1 = QuaternionCalculator.create(0, 0, 1, 0);
     const q2 = QuaternionCalculator.create(1, 1, 0, 1);
     const t = 0.5;
@@ -142,7 +141,7 @@ test("Quaternion Slerp3", () => {
     expect(result.w).toBeCloseTo(except.w);
 });
 
-test("Quaternion Slerp4", () => {
+test('Quaternion Slerp4', () => {
     const q1 = QuaternionCalculator.normalize(QuaternionCalculator.create(0, 1, 0, 1));
     const q2 = QuaternionCalculator.normalize(QuaternionCalculator.create(0, -1, 0, -1));
     const t = 0.5;
@@ -155,7 +154,7 @@ test("Quaternion Slerp4", () => {
     expect(result.w).toBeCloseTo(except.w);
 });
 
-test("Quaternion Slerp5", () => {
+test('Quaternion Slerp5', () => {
     const q1 = QuaternionCalculator.normalize(QuaternionCalculator.create(0, 0, 0, 1));
     const q2 = QuaternionCalculator.normalize(QuaternionCalculator.create(0.0002, 0, 0, 1));
     const t = 0.5;

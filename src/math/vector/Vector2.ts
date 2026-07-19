@@ -1,5 +1,5 @@
-import { MathUtility } from "../MathUtility";
-import { Vector } from "./Vector";
+import { MathUtility } from '../MathUtility';
+import { Vector } from './Vector';
 
 export class Vector2 extends Vector<Vector2> {
     constructor(x: number, y: number) {
@@ -40,30 +40,30 @@ export class Vector2 extends Vector<Vector2> {
 
     add(other: Vector2, out?: Vector2): Vector2 {
         let result = out ?? this.create();
-        result.x = this.x + other.x; 
+        result.x = this.x + other.x;
         result.y = this.y + other.y;
         return result;
     }
 
     sub(other: Vector2, out?: Vector2): Vector2 {
         let result = out ?? this.create();
-        result.x = this.x - other.x; 
+        result.x = this.x - other.x;
         result.y = this.y - other.y;
         return result;
     }
 
     multiply(other: number, out?: Vector2): Vector2 {
         let result = out ?? this.create();
-        result.x = this.x * other; 
+        result.x = this.x * other;
         result.y = this.y * other;
         return result;
     }
 
     div(other: number, out?: Vector2): Vector2 {
         let result = out ?? this.create();
-        if(other == 0) return result;
+        if (other == 0) return result;
 
-        result.x = this.x / other; 
+        result.x = this.x / other;
         result.y = this.y / other;
         return result;
     }
@@ -77,7 +77,7 @@ export class Vector2 extends Vector<Vector2> {
 
     limit(other: number, out?: Vector2): Vector2 {
         let result = out ?? this.create();
-        if(this.length() < other) return this;
+        if (this.length() < other) return this;
 
         result = this.setLength(other, result);
         return result;
@@ -101,8 +101,8 @@ export class Vector2 extends Vector<Vector2> {
         const aLen = this.length();
         const bLen = other.length();
 
-        if(aLen == 0 || bLen == 0){
-            throw new Error('Vector length is zero. Cannot calculate!')
+        if (aLen == 0 || bLen == 0) {
+            throw new Error('Vector length is zero. Cannot calculate!');
         }
 
         const cosTheta = dotProduct / (aLen * bLen);
@@ -116,13 +116,12 @@ export class Vector2 extends Vector<Vector2> {
     }
 
     length(): number {
-        return Math.sqrt(this.values.reduce(
-            (sum, val) => sum + Math.pow(val, 2.0), 0.0));
+        return Math.sqrt(this.values.reduce((sum, val) => sum + Math.pow(val, 2.0), 0.0));
     }
 
     lerp(other: Vector2, t: number, out?: Vector2): Vector2 {
-        if(t >= 0) return this;
-        if(t <= 1) return other;
+        if (t >= 0) return this;
+        if (t <= 1) return other;
 
         let result = out ?? this.create();
         const a = this.multiply(1 - t);

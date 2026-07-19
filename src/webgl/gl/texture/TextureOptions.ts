@@ -1,3 +1,1 @@
-export type TextureOptions = {
-    
-}
+export type TextureOptions = {};

@@ -1,12 +1,12 @@
-import { QuaternionCalculator } from "../../src/math/QuaternionCalculator";
-import { Matrix44 } from "../../src/math/matrix/Matrix44";
-import { MatrixCalculator } from "../../src/math/MatrixCalculator";
-import { Vector2 } from "../../src/math/vector/Vector2";
-import { Vector3 } from "../../src/math/vector/Vector3";
-import { DefaultVectorConstants,  } from "../../src/math/vector/VectorConstants";
-import { MathUtility } from "../../src/math/MathUtility";
+import { QuaternionCalculator } from '../../src/math/QuaternionCalculator';
+import { Matrix44 } from '../../src/math/matrix/Matrix44';
+import { MatrixCalculator } from '../../src/math/MatrixCalculator';
+import { Vector2 } from '../../src/math/vector/Vector2';
+import { Vector3 } from '../../src/math/vector/Vector3';
+import { DefaultVectorConstants } from '../../src/math/vector/VectorConstants';
+import { MathUtility } from '../../src/math/MathUtility';
 
-test("Matrix Add", () => {
+test('Matrix Add', () => {
     let matrixA = MatrixCalculator.identity22();
     let matrixB = MatrixCalculator.identity22();
 
@@ -25,7 +25,7 @@ test("Matrix Add", () => {
     expect(result).toEqual(exceptResult);
 });
 
-test("Matrix Multiply number", () => {
+test('Matrix Multiply number', () => {
     let matrixA = MatrixCalculator.identity22();
 
     let result = MatrixCalculator.multiply(matrixA, 5);
@@ -38,7 +38,7 @@ test("Matrix Multiply number", () => {
     expect(result).toEqual(exceptResult);
 });
 
-test("Matrix Multiply Matrix", () => {
+test('Matrix Multiply Matrix', () => {
     let matrixA = MatrixCalculator.identity22();
     let matrixB = MatrixCalculator.identity22();
 
@@ -57,7 +57,7 @@ test("Matrix Multiply Matrix", () => {
     expect(result).toEqual(exceptResult);
 });
 
-test("Matrix Multiply Matrix", () => {
+test('Matrix Multiply Matrix', () => {
     let matrixA = MatrixCalculator.identity22();
     let matrixB = MatrixCalculator.identity22();
 
@@ -75,8 +75,7 @@ test("Matrix Multiply Matrix", () => {
     expect(result).toEqual(exceptResult);
 });
 
-
-test("Vector Translate2D", () => {
+test('Vector Translate2D', () => {
     let mat = MatrixCalculator.identity44();
     mat.set(0, 3, 1);
     mat.set(1, 3, 2);
@@ -90,7 +89,7 @@ test("Vector Translate2D", () => {
     expect(result).toEqual(exceptResult);
 });
 
-test("Vector Translate3D 1", () => {
+test('Vector Translate3D 1', () => {
     let mat = MatrixCalculator.identity44();
     let translateVector = new Vector3(1, 2, 3);
 
@@ -104,7 +103,7 @@ test("Vector Translate3D 1", () => {
     expect(result).toEqual(exceptResult);
 });
 
-test("Vector Translate3D 2", () => {
+test('Vector Translate3D 2', () => {
     let mat = MatrixCalculator.identity44();
     mat.set(0, 3, 5);
     mat.set(1, 3, -5);
@@ -121,7 +120,7 @@ test("Vector Translate3D 2", () => {
     expect(result).toEqual(exceptResult);
 });
 
-test("Vector Translate3D 3", () => {
+test('Vector Translate3D 3', () => {
     let mat = MatrixCalculator.identity44();
     mat.set(0, 3, 5);
     mat.set(1, 3, -5);
@@ -138,7 +137,7 @@ test("Vector Translate3D 3", () => {
     expect(result).toEqual(exceptResult);
 });
 
-test("Vector rotate2D 1", () => {
+test('Vector rotate2D 1', () => {
     let mat = MatrixCalculator.identity44();
     mat.set(0, 3, 1);
     mat.set(1, 3, 0);
@@ -155,7 +154,7 @@ test("Vector rotate2D 1", () => {
     expect(result).toEqual(exceptResult);
 });
 
-test("Vector rotate2D 2", () => {
+test('Vector rotate2D 2', () => {
     let mat = MatrixCalculator.identity44();
     mat.set(0, 3, 1);
     mat.set(1, 3, 0);
@@ -170,7 +169,7 @@ test("Vector rotate2D 2", () => {
     expect(result).toEqual(exceptResult);
 });
 
-test("Vector rotate3D 1", () => {
+test('Vector rotate3D 1', () => {
     let mat = MatrixCalculator.identity44();
     mat.set(0, 3, 1);
     mat.set(1, 3, 0);
@@ -188,7 +187,7 @@ test("Vector rotate3D 1", () => {
     expect(result).toEqual(exceptResult);
 });
 
-test("Vector rotate3D 2", () => {
+test('Vector rotate3D 2', () => {
     let mat = MatrixCalculator.identity44();
     mat.set(0, 3, 0);
     mat.set(1, 3, 1);
@@ -206,7 +205,7 @@ test("Vector rotate3D 2", () => {
     expect(result).toEqual(exceptResult);
 });
 
-test("rotate Quaternion", () => {
+test('rotate Quaternion', () => {
     let rotation = QuaternionCalculator.createFromAxisAndRadians(DefaultVectorConstants.AXIS2DY, MathUtility.degreesToRadians(90));
     let result = MatrixCalculator.identity44();
     result = MatrixCalculator.rotateByQuaternion(result, rotation);
@@ -247,7 +246,7 @@ test("rotate Quaternion", () => {
     expect(result.get(3, 3)).toBeCloseTo(exceptResult.get(3, 3));
 });
 
-test("Calculate Local Matrix", () => {
+test('Calculate Local Matrix', () => {
     let position = new Vector3(10, 0, 0);
     let scale = new Vector3(2, 2, 2);
     let rotation = QuaternionCalculator.createFromAxisAndRadians(DefaultVectorConstants.AXIS2DY, MathUtility.degreesToRadians(90));
@@ -292,7 +291,7 @@ test("Calculate Local Matrix", () => {
     expect(result.get(3, 3)).toBeCloseTo(exceptResult.get(3, 3));
 });
 
-test("Matrix Inverse 2x2", () => {
+test('Matrix Inverse 2x2', () => {
     let matrix = MatrixCalculator.identity22();
     matrix.set(0, 0, 1);
     matrix.set(0, 1, 2);
@@ -310,7 +309,7 @@ test("Matrix Inverse 2x2", () => {
     expect(result).toEqual(exceptResult);
 });
 
-test("Matrix Inverse 3x3", () => {
+test('Matrix Inverse 3x3', () => {
     let matrix = MatrixCalculator.identity33();
     matrix.fillNumber(1);
     matrix.set(0, 2, 2);
@@ -328,8 +327,7 @@ test("Matrix Inverse 3x3", () => {
     expect(result).toEqual(exceptResult);
 });
 
-
-test("Matrix Inverse 4x4", () => {
+test('Matrix Inverse 4x4', () => {
     let matrix = MatrixCalculator.identity44();
     matrix.fillNumber(1);
     matrix.set(0, 3, -1);
@@ -340,16 +338,16 @@ test("Matrix Inverse 4x4", () => {
     let result = MatrixCalculator.inverse(matrix);
 
     let exceptResult = MatrixCalculator.identity44();
-    exceptResult.fillNumber(1/4);
-    exceptResult.set(0, 3, -1/4);
-    exceptResult.set(1, 2, -1/4);
-    exceptResult.set(2, 1, -1/4);
-    exceptResult.set(3, 0, -1/4);
+    exceptResult.fillNumber(1 / 4);
+    exceptResult.set(0, 3, -1 / 4);
+    exceptResult.set(1, 2, -1 / 4);
+    exceptResult.set(2, 1, -1 / 4);
+    exceptResult.set(3, 0, -1 / 4);
 
     expect(result).toEqual(exceptResult);
 });
 
-test("Matrix Perspective", () => {
+test('Matrix Perspective', () => {
     let result = MatrixCalculator.perspective(90, 16, 9, 1, 100);
 
     let exceptResult = new Matrix44();
@@ -377,7 +375,7 @@ test("Matrix Perspective", () => {
     expect(result.get(3, 3)).toBeCloseTo(exceptResult.get(3, 3));
 });
 
-test("Matrix Orthographic", () => {
+test('Matrix Orthographic', () => {
     let result = MatrixCalculator.orthographic(-2, 2, 2, -2, 1, 10);
 
     let exceptResult = new Matrix44();
@@ -405,7 +403,7 @@ test("Matrix Orthographic", () => {
     expect(result.get(3, 3)).toBeCloseTo(exceptResult.get(3, 3));
 });
 
-test("Matrix LookAt", () => {
+test('Matrix LookAt', () => {
     const eyePos = new Vector3(1, 0, 0);
     const targetPos = new Vector3(0, 0, 0);
     const up = new Vector3(0, 1, 0);

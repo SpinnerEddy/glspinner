@@ -1,13 +1,13 @@
-import { Matrix } from "./matrix/Matrix";
-import { Matrix22 } from "./matrix/Matrix22";
-import { Matrix33 } from "./matrix/Matrix33";
-import { Matrix44 } from "./matrix/Matrix44";
-import { MatrixClassAndSizePair } from "./matrix/MatrixConstants";
-import { Quaternion } from "./quaternion/Quaternion";
-import { Vector2 } from "./vector/Vector2";
-import { Vector3 } from "./vector/Vector3";
+import { Matrix } from './matrix/Matrix';
+import { Matrix22 } from './matrix/Matrix22';
+import { Matrix33 } from './matrix/Matrix33';
+import { Matrix44 } from './matrix/Matrix44';
+import { MatrixClassAndSizePair } from './matrix/MatrixConstants';
+import { Quaternion } from './quaternion/Quaternion';
+import { Vector2 } from './vector/Vector2';
+import { Vector3 } from './vector/Vector3';
 
-export class MatrixCalculator{
+export class MatrixCalculator {
     static identity22(): Matrix22 {
         return new Matrix22().identity();
     }
@@ -19,12 +19,12 @@ export class MatrixCalculator{
     static identity44(): Matrix44 {
         return new Matrix44().identity();
     }
-    
+
     static add<T extends Matrix<T>>(a: T, b: T): T {
-        if(!this.checkSizeEqual(a, b)){
-            throw new Error("Not Equal Matrix Dimension. Cannot Calculate!")
+        if (!this.checkSizeEqual(a, b)) {
+            throw new Error('Not Equal Matrix Dimension. Cannot Calculate!');
         }
-        
+
         const result = this.createMatrixInstance<T>(a.size);
         a.add(b, result);
 
@@ -32,10 +32,10 @@ export class MatrixCalculator{
     }
 
     static sub<T extends Matrix<T>>(a: T, b: T): T {
-        if(!this.checkSizeEqual(a, b)){
-            throw new Error("Not Equal Matrix Dimension. Cannot Calculate!")
+        if (!this.checkSizeEqual(a, b)) {
+            throw new Error('Not Equal Matrix Dimension. Cannot Calculate!');
         }
-        
+
         const result = this.createMatrixInstance<T>(a.size);
         a.sub(b, result);
 
@@ -47,24 +47,22 @@ export class MatrixCalculator{
     static multiply<T extends Matrix<T>>(a: T, b: T | number): T {
         const result = this.createMatrixInstance<T>(a.size);
 
-        if(b instanceof Matrix){
-            if(a.col != b.row){
-                throw new Error("Not Equal A Row Number and B Col Number. Cannot Multiply!");
+        if (b instanceof Matrix) {
+            if (a.col != b.row) {
+                throw new Error('Not Equal A Row Number and B Col Number. Cannot Multiply!');
             }
 
             a.multiply(b, result);
-        }
-        else{
-            
+        } else {
             a.multiply(b, result);
         }
-        
+
         return result;
     }
 
     static div<T extends Matrix<T>>(a: T, b: number): T {
-        if(b == 0){
-            throw new Error("b is zero. Cannot Divide!")
+        if (b == 0) {
+            throw new Error('b is zero. Cannot Divide!');
         }
 
         const result = this.createMatrixInstance<T>(a.size);
@@ -92,7 +90,7 @@ export class MatrixCalculator{
         const result = target.rotate3D(angle, axis);
         return result;
     }
-    
+
     static rotateByQuaternion(target: Matrix44, rotation: Quaternion): Matrix44 {
         const result = target.rotateByQuaternion(rotation);
         return result;
@@ -113,7 +111,7 @@ export class MatrixCalculator{
         return result;
     }
 
-    static inverse<T extends Matrix<T>>(baseMatrix: T): T{
+    static inverse<T extends Matrix<T>>(baseMatrix: T): T {
         const result = baseMatrix.inverse();
         return result;
     }
@@ -124,7 +122,7 @@ export class MatrixCalculator{
         return result;
     }
 
-    static perspective(fovDegrees: number, width: number, height:number, near: number, far: number): Matrix44 {
+    static perspective(fovDegrees: number, width: number, height: number, near: number, far: number): Matrix44 {
         let result = new Matrix44();
         result = result.perspective(fovDegrees, width, height, near, far, result);
         return result;
@@ -136,8 +134,8 @@ export class MatrixCalculator{
         return result;
     }
 
-    private static checkSizeEqual<T extends Matrix<T>>(a: T, b: T): boolean{
-        if(a.col != b.col || a.row != b.row){
+    private static checkSizeEqual<T extends Matrix<T>>(a: T, b: T): boolean {
+        if (a.col != b.col || a.row != b.row) {
             console.log(`col: ${a.col},${b.col}`);
             console.log(`row: ${a.row},${b.row}`);
             return false;
@@ -148,11 +146,10 @@ export class MatrixCalculator{
 
     private static createMatrixInstance<T extends Matrix<T>>(size: number): T {
         const matrixClass = MatrixClassAndSizePair[size] as new () => T;
-        if(!matrixClass) {
+        if (!matrixClass) {
             throw new Error('Unsupport matrix size');
         }
 
         return new matrixClass();
-
     }
 }

@@ -1,32 +1,32 @@
-import { Clock } from "./Clock";
+import { Clock } from './Clock';
 
-export class RealTimeClock extends Clock{
+export class RealTimeClock extends Clock {
     private lastTime: number;
 
-    constructor(){
+    constructor() {
         super();
         this.lastTime = 0;
     }
 
     public update(): void {
         const currentTime = performance.now();
-        this.elapsedTime = (currentTime - this.startTime) * this.timeScale / 1000;
-        this.deltaTime = Math.max((currentTime - this.lastTime) * this.timeScale / 1000, 0);
+        this.elapsedTime = ((currentTime - this.startTime) * this.timeScale) / 1000;
+        this.deltaTime = Math.max(((currentTime - this.lastTime) * this.timeScale) / 1000, 0);
 
         this.lastTime = currentTime;
         this.frameCount++;
 
-        if(this.lastDrawCallTime <= -1){
+        if (this.lastDrawCallTime <= -1) {
             this.lastDrawCallTime = this.deltaTime;
-        }else{
+        } else {
             this.lastDrawCallTime += this.deltaTime;
         }
     }
 
     public shouldDraw(): boolean {
-        if(this.lastDrawCallTime == -1) return true;
+        if (this.lastDrawCallTime == -1) return true;
 
-        if(this.lastDrawCallTime >= this.frameInterval){
+        if (this.lastDrawCallTime >= this.frameInterval) {
             this.lastDrawCallTime = -1;
             return true;
         }

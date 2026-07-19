@@ -1,13 +1,13 @@
-import { ShaderUniformValue } from "../../../webgl/gl/uniform/ShaderUniformValue";
-import { TextMesh } from "../../mesh/TextMesh";
-import { RenderTagConstants } from "../../renderer/definition/RenderTag";
-import { RendererContext } from "../../renderer/RendererContext";
-import { SceneNode } from "./SceneNode";
+import { ShaderUniformValue } from '../../../webgl/gl/uniform/ShaderUniformValue';
+import { TextMesh } from '../../mesh/TextMesh';
+import { RenderTagConstants } from '../../renderer/definition/RenderTag';
+import { RendererContext } from '../../renderer/RendererContext';
+import { SceneNode } from './SceneNode';
 
 export class TextMeshNode extends SceneNode {
     private mesh: TextMesh;
 
-    constructor(mesh: TextMesh, id: string = ""){
+    constructor(mesh: TextMesh, id: string = '') {
         super(id);
         this.mesh = mesh;
         this.renderTag = RenderTagConstants.OVERLAY;
@@ -26,8 +26,8 @@ export class TextMeshNode extends SceneNode {
 
     private updateUniforms(gl: WebGL2RenderingContext, context: RendererContext): void {
         const modelMatrix = this.transform.getWorldMatrix();
-        
-        context.updateGlobalUniform("modelMatrix", new ShaderUniformValue(modelMatrix));
+
+        context.updateGlobalUniform('modelMatrix', new ShaderUniformValue(modelMatrix));
 
         this.mesh.updateUniforms(gl, context);
     }

@@ -6,20 +6,20 @@ export enum AttachmentType {
     DEPTH,
     DEPTH_TEXTURE,
     STENCIL,
-    DEPTH_STENCIL
+    DEPTH_STENCIL,
 }
 
 export type AttachmentConfig = {
     type: AttachmentType;
     minFilter?: number;
     magFilter?: number;
-}
+};
 
 export type CustomRenderTargetOption = {
-    attachments: AttachmentConfig[]
-}
+    attachments: AttachmentConfig[];
+};
 
 export type RenderTargetOption = {
-    colorTextureCount?: number,
-    useDepth?: boolean
-}
+    colorTextureCount?: number;
+    useDepth?: boolean;
+};

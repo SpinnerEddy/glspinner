@@ -1,16 +1,16 @@
-import { InputHub } from "../input/InputHub";
-import { AudioOutput } from "../scene/audio/AudioOutput";
-import { SceneGraph } from "../scene/core/SceneGraph";
-import { SceneOperation } from "../scene/core/SceneOperation";
-import { MaterialFactory } from "../scene/factory/MaterialFactory";
-import { SceneRendererPipeline } from "../scene/renderer/pipeline/SceneRendererPipeline";
-import { SceneRendererPipelineOperation } from "../scene/renderer/pipeline/SceneRendererPipelineOperation";
-import { RendererContext } from "../scene/renderer/RendererContext";
-import { TextFontLoader } from "../webgl/gl/font/TextFontLoader";
-import { ShaderLoader } from "../webgl/gl/ShaderLoader";
-import { TextureLoader } from "../webgl/gl/texture/TextureLoader";
-import { WebGLUtility } from "../webgl/gl/WebGLUtility";
-import { ApplicationOperation } from "./ApplicationOperation";
+import { InputHub } from '../input/InputHub';
+import { AudioOutput } from '../scene/audio/AudioOutput';
+import { SceneGraph } from '../scene/core/SceneGraph';
+import { SceneOperation } from '../scene/core/SceneOperation';
+import { MaterialFactory } from '../scene/factory/MaterialFactory';
+import { SceneRendererPipeline } from '../scene/renderer/pipeline/SceneRendererPipeline';
+import { SceneRendererPipelineOperation } from '../scene/renderer/pipeline/SceneRendererPipelineOperation';
+import { RendererContext } from '../scene/renderer/RendererContext';
+import { TextFontLoader } from '../webgl/gl/font/TextFontLoader';
+import { ShaderLoader } from '../webgl/gl/ShaderLoader';
+import { TextureLoader } from '../webgl/gl/texture/TextureLoader';
+import { WebGLUtility } from '../webgl/gl/WebGLUtility';
+import { ApplicationOperation } from './ApplicationOperation';
 
 export abstract class BaseApplication implements ApplicationOperation {
     protected canvas: HTMLCanvasElement;
@@ -21,12 +21,12 @@ export abstract class BaseApplication implements ApplicationOperation {
     protected textFontLoader: TextFontLoader;
     protected scene: SceneOperation;
     protected sceneGraph: SceneGraph;
-    protected rendererContext: RendererContext; 
+    protected rendererContext: RendererContext;
     protected audioOutput: AudioOutput;
     protected rendererFlowPipeline: SceneRendererPipelineOperation;
     protected inputHub: InputHub;
 
-    constructor(scene: SceneOperation){
+    constructor(scene: SceneOperation) {
         this.canvas = document.getElementById('webgl-canvas') as HTMLCanvasElement;
         this.webglUtility = new WebGLUtility(this.canvas);
         this.gl = this.webglUtility.getWebGL2RenderingContext();
@@ -45,7 +45,7 @@ export abstract class BaseApplication implements ApplicationOperation {
         await this.preload();
         this.setup();
         this.scene.setUpdate(this.update.bind(this));
-        this.scene.setDraw(this.draw.bind(this))
+        this.scene.setDraw(this.draw.bind(this));
         this.scene.start();
     }
 

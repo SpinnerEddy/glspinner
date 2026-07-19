@@ -1,11 +1,11 @@
-import { RendererContext } from "../renderer/RendererContext";
-import { EmptyNode } from "./node/EmptyNode";
-import { SceneNode } from "./node/SceneNode";
+import { RendererContext } from '../renderer/RendererContext';
+import { EmptyNode } from './node/EmptyNode';
+import { SceneNode } from './node/SceneNode';
 
-export class SceneGraph{
+export class SceneGraph {
     private readonly root: EmptyNode;
 
-    constructor(){
+    constructor() {
         this.root = new EmptyNode();
     }
 

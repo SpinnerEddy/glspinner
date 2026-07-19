@@ -1,5 +1,4 @@
-export const RenderTargetSlot = 
-{ 
+export const RenderTargetSlot = {
     CURRENT_FRAME: 0,
     TEMP_FRAME_BUFFER: 1,
     PREV_FRAME: 2,
@@ -10,4 +9,4 @@ export const RenderTargetSlot =
     PINGPONG_TEMP_BUFFER: 100,
 } as const;
 
-export type RenderTargetSlotKey = typeof RenderTargetSlot[keyof typeof RenderTargetSlot];
+export type RenderTargetSlotKey = (typeof RenderTargetSlot)[keyof typeof RenderTargetSlot];

@@ -1,12 +1,11 @@
-import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
-import { TextureSlot } from "../../../webgl/gl/texture/TextureConstants";
-import { GrayScaleMaterial } from "../../material/GrayScaleMaterial";
-import { RendererContext } from "../RendererContext";
-import { BaseShaderPass } from "./BaseShaderPass";
+import { RenderTargetOperation } from '../../../webgl/gl/fbo/RenderTargetOperation';
+import { TextureSlot } from '../../../webgl/gl/texture/TextureConstants';
+import { GrayScaleMaterial } from '../../material/GrayScaleMaterial';
+import { RendererContext } from '../RendererContext';
+import { BaseShaderPass } from './BaseShaderPass';
 
 export class GrayScaleShaderPass extends BaseShaderPass {
-
-    constructor(gl: WebGL2RenderingContext, material: GrayScaleMaterial){
+    constructor(gl: WebGL2RenderingContext, material: GrayScaleMaterial) {
         super(gl, material);
     }
 
@@ -20,5 +19,4 @@ export class GrayScaleShaderPass extends BaseShaderPass {
 
         gl.bindTexture(gl.TEXTURE_2D, null);
     }
-
 }

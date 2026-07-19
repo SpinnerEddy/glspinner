@@ -1,9 +1,9 @@
-import { ShaderAttribute } from "./attribute/ShaderAttribute";
-import { ShaderUniform } from "./uniform/ShaderUniform";
-import { UniformBindingPoint } from "./uniform/ShaderUniformConstants";
-import { ShaderUniformValue } from "./uniform/ShaderUniformValue";
+import { ShaderAttribute } from './attribute/ShaderAttribute';
+import { ShaderUniform } from './uniform/ShaderUniform';
+import { UniformBindingPoint } from './uniform/ShaderUniformConstants';
+import { ShaderUniformValue } from './uniform/ShaderUniformValue';
 
-export class ShaderProgram{
+export class ShaderProgram {
     private program: WebGLProgram;
     private vertexShader: WebGLShader | undefined;
     private fragmentShader: WebGLShader | undefined;
@@ -11,7 +11,7 @@ export class ShaderProgram{
     private uniforms: Map<string, ShaderUniform> = new Map();
     private varyings: string[] = [];
 
-    constructor(gl: WebGL2RenderingContext, vertShaderSource: string, fragShaderSource: string, varyings: string[] = []){
+    constructor(gl: WebGL2RenderingContext, vertShaderSource: string, fragShaderSource: string, varyings: string[] = []) {
         this.program = this.createProgram(gl, vertShaderSource, fragShaderSource, varyings);
     }
 
@@ -28,21 +28,21 @@ export class ShaderProgram{
     }
 
     public getAttribute(gl: WebGL2RenderingContext, name: string): ShaderAttribute {
-        if(!this.attributes.has(name)){
+        if (!this.attributes.has(name)) {
             this.attributes.set(name, new ShaderAttribute(gl, this.program, name));
         }
         return this.attributes.get(name)!;
     }
 
     public getUniform(gl: WebGL2RenderingContext, name: string): ShaderUniform {
-        if(!this.uniforms.has(name)){
+        if (!this.uniforms.has(name)) {
             this.uniforms.set(name, new ShaderUniform(gl, this.program, name));
         }
         return this.uniforms.get(name)!;
     }
 
     public setUniform(gl: WebGL2RenderingContext, name: string, value: ShaderUniformValue): void {
-        this.getUniform(gl, name).setUniform(value.getUniformValues(), value.getUniformType())
+        this.getUniform(gl, name).setUniform(value.getUniformValues(), value.getUniformType());
     }
 
     private createProgram(gl: WebGL2RenderingContext, vertexShaderSource: string, fragmentShaderSource: string, varyings: string[] = []): WebGLProgram {
@@ -53,18 +53,18 @@ export class ShaderProgram{
         this.varyings = varyings;
         gl.attachShader(program, this.vertexShader);
         gl.attachShader(program, this.fragmentShader);
-        if(varyings.length > 0){
+        if (varyings.length > 0) {
             gl.transformFeedbackVaryings(program, this.varyings, gl.SEPARATE_ATTRIBS);
         }
 
         gl.linkProgram(program);
 
-        if(!gl.getProgramParameter(program, gl.LINK_STATUS)){
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
             alert(gl.getProgramInfoLog(program));
-            throw new Error('Cannot create program!!');   
+            throw new Error('Cannot create program!!');
         }
 
-        const blockIndex = gl.getUniformBlockIndex(program, "GlobalUniforms");
+        const blockIndex = gl.getUniformBlockIndex(program, 'GlobalUniforms');
         if (blockIndex !== gl.INVALID_INDEX) {
             gl.uniformBlockBinding(program, blockIndex, UniformBindingPoint.GLOBAL);
         }
@@ -77,15 +77,15 @@ export class ShaderProgram{
         let shader = this.createShader(gl, type);
         gl.shaderSource(shader, shaderSourceStr);
         gl.compileShader(shader);
-        if(!gl.getShaderParameter(shader, gl.COMPILE_STATUS)){
-            console.log(gl.getShaderInfoLog(shader))
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            console.log(gl.getShaderInfoLog(shader));
             throw new Error('Cannot compile shader!!');
         }
         return shader;
     }
-    
+
     private createShader(gl: WebGL2RenderingContext, type: 'vert' | 'frag'): WebGLShader {
-        switch(type){
+        switch (type) {
             case 'vert':
                 return gl.createShader(gl.VERTEX_SHADER)!;
             case 'frag':

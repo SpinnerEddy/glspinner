@@ -1,6 +1,6 @@
-import { DefaultValueConstants, TrigonometricConstants } from "./ValueConstants";
+import { DefaultValueConstants, TrigonometricConstants } from './ValueConstants';
 
-export class MathUtility{
+export class MathUtility {
     static degreesToRadians(degrees: number): number {
         return TrigonometricConstants.DEG_TO_RAD * degrees;
     }
@@ -74,19 +74,19 @@ export class MathUtility{
         let incrementValue = totalRange / count;
         let totalValue = 0.0;
 
-        for(let i = startRange; i <= range; i += incrementValue){
+        for (let i = startRange; i <= range; i += incrementValue) {
             let value = MathUtility.exp(-(i * i) / totalRange);
             totalValue += value;
             gCoefficients.push(value);
         }
 
-        for(let i = 0; i < gCoefficients.length; i++){
+        for (let i = 0; i < gCoefficients.length; i++) {
             gCoefficients[i] /= totalValue;
         }
 
         return new Float32Array(gCoefficients);
     }
-    
+
     private static roundToZero(inputValue: number) {
         return Math.abs(inputValue) < DefaultValueConstants.EPSILON ? 0 : inputValue;
     }

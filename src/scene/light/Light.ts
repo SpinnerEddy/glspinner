@@ -1,11 +1,11 @@
-import { Color } from "../../color/Color";
-import { LightOperation } from "./LightOperation";
+import { Color } from '../../color/Color';
+import { LightOperation } from './LightOperation';
 
-export class Light implements LightOperation { 
+export class Light implements LightOperation {
     private color: Color;
     private intensity: number;
 
-    constructor(color: Color, intensity: number){
+    constructor(color: Color, intensity: number) {
         this.color = color;
         this.intensity = intensity;
     }
@@ -13,9 +13,9 @@ export class Light implements LightOperation {
     setColor(color: Color): void {
         this.color = color;
     }
-    
+
     setIntensity(intensity: number): void {
-        this.intensity = intensity
+        this.intensity = intensity;
     }
 
     getColor(): Color {

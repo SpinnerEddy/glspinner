@@ -1,11 +1,11 @@
-import { InputInfoPairs, KeyboardCodeType, MouseButtonType } from "../InputConstants";
-import { DeviceOperation } from "./DeviceOperation";
+import { InputInfoPairs, KeyboardCodeType, MouseButtonType } from '../InputConstants';
+import { DeviceOperation } from './DeviceOperation';
 
 export abstract class BaseDevice implements DeviceOperation {
     protected currentInput: InputInfoPairs;
     protected prevInput: InputInfoPairs;
 
-    constructor(){
+    constructor() {
         this.currentInput = {};
         this.prevInput = {};
     }

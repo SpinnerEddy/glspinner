@@ -1,9 +1,9 @@
-import { Matrix44 } from "../../math/matrix/Matrix44";
-import { MatrixCalculator } from "../../math/MatrixCalculator";
-import { Quaternion } from "../../math/quaternion/Quaternion";
-import { QuaternionCalculator } from "../../math/QuaternionCalculator";
-import { Vector3 } from "../../math/vector/Vector3";
-import { CameraDirection, CameraOptions, CameraType } from "./CameraConstants";
+import { Matrix44 } from '../../math/matrix/Matrix44';
+import { MatrixCalculator } from '../../math/MatrixCalculator';
+import { Quaternion } from '../../math/quaternion/Quaternion';
+import { QuaternionCalculator } from '../../math/QuaternionCalculator';
+import { Vector3 } from '../../math/vector/Vector3';
+import { CameraDirection, CameraOptions, CameraType } from './CameraConstants';
 
 export class Camera {
     private cameraType: number;
@@ -21,7 +21,7 @@ export class Camera {
     private up: Vector3;
     private forward: Vector3;
 
-    constructor(cameraType: number = CameraType.Perspective, options: CameraOptions = {}, direction: CameraDirection = {}){
+    constructor(cameraType: number = CameraType.Perspective, options: CameraOptions = {}, direction: CameraDirection = {}) {
         this.cameraType = cameraType;
         this.position = options.position ?? new Vector3(0.0, 0.0, 30.0);
         this.rotation = options.rotation ?? new Quaternion(0.0, 0.0, 0.0, 1.0);
@@ -38,19 +38,19 @@ export class Camera {
         this.calculateViewMatrix();
     }
 
-    public setPosition(position: Vector3){
+    public setPosition(position: Vector3) {
         this.position = position;
         this.calculateViewMatrix();
     }
 
-    public setRotation(rotation: Quaternion){
+    public setRotation(rotation: Quaternion) {
         this.rotation = rotation;
         this.calculateViewMatrix();
     }
 
-    public setViewport(width: number, height: number){
-        if(height == 0){
-            throw new Error("Height is zero.");
+    public setViewport(width: number, height: number) {
+        if (height == 0) {
+            throw new Error('Height is zero.');
         }
 
         this.viewportWidth = width;
@@ -58,7 +58,7 @@ export class Camera {
         this.calculateProjectionMatrix();
     }
 
-    public setCameraType(type: number){
+    public setCameraType(type: number) {
         this.cameraType = type;
         this.calculateProjectionMatrix();
     }
@@ -77,7 +77,7 @@ export class Camera {
         return eyeDirection;
     }
 
-    private calculateViewMatrix(){
+    private calculateViewMatrix() {
         const calcUp = QuaternionCalculator.rotateVector(this.rotation, this.up);
         const calcForward = QuaternionCalculator.rotateVector(this.rotation, this.forward);
 
@@ -85,31 +85,25 @@ export class Camera {
         this.viewMatrix = MatrixCalculator.lookAt(this.position, target, calcUp);
     }
 
-    private calculateProjectionMatrix(){
-        if(this.cameraType == CameraType.Perspective){
+    private calculateProjectionMatrix() {
+        if (this.cameraType == CameraType.Perspective) {
             this.calculatePerspectiveMatrix();
-        }
-        else{
+        } else {
             this.calculateOrthographicMatrix();
         }
     }
 
-    private calculatePerspectiveMatrix(){
-        this.projectionMatrix = MatrixCalculator.perspective(
-            this.fov, 
-            this.viewportWidth, 
-            this.viewportHeight, 
-            this.near, 
-            this.far);
+    private calculatePerspectiveMatrix() {
+        this.projectionMatrix = MatrixCalculator.perspective(this.fov, this.viewportWidth, this.viewportHeight, this.near, this.far);
     }
 
-    private calculateOrthographicMatrix(){
-        if(this.viewportHeight == 0){
-            throw new Error("Height is zero.");
+    private calculateOrthographicMatrix() {
+        if (this.viewportHeight == 0) {
+            throw new Error('Height is zero.');
         }
 
         const aspect = this.viewportWidth / this.viewportHeight;
-        const orthoHeight = 1.0
+        const orthoHeight = 1.0;
         const orthoWidth = orthoHeight * aspect;
 
         const left = -orthoWidth;
@@ -117,13 +111,6 @@ export class Camera {
         const top = orthoHeight;
         const bottom = -orthoHeight;
 
-        this.projectionMatrix = MatrixCalculator.orthographic(
-            left,
-            right,
-            top,
-            bottom,
-            this.near,
-            this.far
-        );
+        this.projectionMatrix = MatrixCalculator.orthographic(left, right, top, bottom, this.near, this.far);
     }
 }

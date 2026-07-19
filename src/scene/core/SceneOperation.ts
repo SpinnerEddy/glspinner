@@ -1,6 +1,6 @@
-import { ClockOperation } from "../clock/ClockOperation";
+import { ClockOperation } from '../clock/ClockOperation';
 
-export interface SceneOperation{
+export interface SceneOperation {
     start(): void;
     stop(): void;
     reset(): void;

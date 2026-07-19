@@ -1,17 +1,15 @@
-import { Color } from "./Color";
-import { Color255 } from "./Color255";
+import { Color } from './Color';
+import { Color255 } from './Color255';
 
-export const DefaultColorConstants = 
-{
+export const DefaultColorConstants = {
     RED: new Color(1, 0, 0),
     GREEN: new Color(0, 1, 0),
     BLUE: new Color(0, 0, 1),
     WHITE: new Color(1, 1, 1),
-    BLACK: new Color(0, 0, 0)
-}
+    BLACK: new Color(0, 0, 0),
+};
 
-export const MyColorConstants255 =
-{
+export const MyColorConstants255 = {
     COLOR_EMPTY: new Color255(0, 0, 0, 0),
 
     COLOR_SUBARU: new Color255(174, 180, 156, 255),
@@ -26,11 +24,10 @@ export const MyColorConstants255 =
     COLOR_CHINA: new Color255(246, 139, 31, 255),
     COLOR_SENA: new Color255(246, 174, 84, 255),
     COLOR_LILJA: new Color255(234, 253, 255, 255),
-    COLOR_SUMIKA: new Color255(124, 252, 0, 255)
-}
+    COLOR_SUMIKA: new Color255(124, 252, 0, 255),
+};
 
-export const MyColorCode =
-{
+export const MyColorCode = {
     COLOR_EMPTY: '#000000',
 
     COLOR_SUBARU: '#aeb49c',
@@ -45,5 +42,5 @@ export const MyColorCode =
     COLOR_CHINA: '#f68b1f',
     COLOR_SENA: '#f6ae54',
     COLOR_LILJA: '#eafdff',
-    COLOR_SUMIKA: '#7cfc00'
-}
+    COLOR_SUMIKA: '#7cfc00',
+};

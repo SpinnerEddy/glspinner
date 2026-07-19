@@ -1,8 +1,7 @@
-import { MouseButtonType, KeyboardCodeType } from "../InputConstants";
-import { BaseDevice } from "./BaseDevice";
+import { MouseButtonType, KeyboardCodeType } from '../InputConstants';
+import { BaseDevice } from './BaseDevice';
 
 export class MidiDevice extends BaseDevice {
-
     constructor() {
         super();
 
@@ -10,8 +9,8 @@ export class MidiDevice extends BaseDevice {
             midi.inputs.forEach((input) => {
                 input.onmidimessage = (e) => {
                     console.log(e.data);
-                }
-            })
+                };
+            });
             midi.outputs.forEach((output) => {
                 output.open();
                 output.send([224, 0, 127]);
@@ -42,8 +41,8 @@ export class MidiDevice extends BaseDevice {
                 output.send([0x90, 46, 127]);
                 output.send([0x90, 47, 127]);
                 console.log(output);
-            })
-        })
+            });
+        });
     }
 
     update(): void {
@@ -64,5 +63,4 @@ export class MidiDevice extends BaseDevice {
         // throw new Error("Method not implemented.");
         return false;
     }
-
 }

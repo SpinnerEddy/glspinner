@@ -1,5 +1,5 @@
-import { RendererContext } from "../../renderer/RendererContext";
-import { SceneNode } from "./SceneNode";
+import { RendererContext } from '../../renderer/RendererContext';
+import { SceneNode } from './SceneNode';
 
 export class EmptyNode extends SceneNode {
     public update(): void {

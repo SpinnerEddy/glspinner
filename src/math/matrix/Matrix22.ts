@@ -1,16 +1,12 @@
-import { Matrix } from "./Matrix";
+import { Matrix } from './Matrix';
 
-export class Matrix22 extends Matrix<Matrix22>{
-
-    constructor(data?: Float32Array){
+export class Matrix22 extends Matrix<Matrix22> {
+    constructor(data?: Float32Array) {
         super(2, data);
     }
 
     identity(): Matrix22 {
-        return new Matrix22(Float32Array.of(
-            1, 0,
-            0, 1
-        ));
+        return new Matrix22(Float32Array.of(1, 0, 0, 1));
     }
 
     add(other: Matrix22, out?: Matrix22): Matrix22 {
@@ -44,20 +40,19 @@ export class Matrix22 extends Matrix<Matrix22>{
     multiply(other: Matrix22 | number, out?: Matrix22): Matrix22 {
         const result = out ?? new Matrix22(new Float32Array(this.elementSize));
 
-        if(other instanceof Matrix){
-            for(let rowIndex = 0; rowIndex < this.row; rowIndex++){
-                for(let colIndex = 0; colIndex < other.col; colIndex++){
+        if (other instanceof Matrix) {
+            for (let rowIndex = 0; rowIndex < this.row; rowIndex++) {
+                for (let colIndex = 0; colIndex < other.col; colIndex++) {
                     let sum = 0;
-                    for(let k = 0; k < this.col; k++){
+                    for (let k = 0; k < this.col; k++) {
                         sum += this.get(rowIndex, k) * other.get(k, colIndex);
                     }
                     result.set(rowIndex, colIndex, sum);
                 }
             }
-        }
-        else{
-            for(let rowIndex = 0; rowIndex < this.row; rowIndex++){
-                for(let colIndex = 0; colIndex < this.col; colIndex++){
+        } else {
+            for (let rowIndex = 0; rowIndex < this.row; rowIndex++) {
+                for (let colIndex = 0; colIndex < this.col; colIndex++) {
                     result.set(rowIndex, colIndex, this.get(rowIndex, colIndex) * other);
                 }
             }
@@ -81,10 +76,10 @@ export class Matrix22 extends Matrix<Matrix22>{
 
     transpose(): Matrix22 {
         const result = new Matrix22(new Float32Array(this.elementSize));
-        for(let i = 0; i < this.row; i++){
-            for(let j = 0; j < this.col; j++){
+        for (let i = 0; i < this.row; i++) {
+            for (let j = 0; j < this.col; j++) {
                 result.set(j, i, this.get(i, j));
-            }    
+            }
         }
         return result;
     }
@@ -95,9 +90,9 @@ export class Matrix22 extends Matrix<Matrix22>{
         const c = this.get(1, 0);
         const d = this.get(1, 1);
 
-        const det = a*d - b*c;
+        const det = a * d - b * c;
         const result = new Matrix22();
-        if(det == 0){
+        if (det == 0) {
             return result;
         }
 

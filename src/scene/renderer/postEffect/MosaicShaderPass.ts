@@ -1,12 +1,11 @@
-import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
-import { TextureSlot } from "../../../webgl/gl/texture/TextureConstants";
-import { MosaicMaterial } from "../../material/MosaicMaterial";
-import { RendererContext } from "../RendererContext";
-import { BaseShaderPass } from "./BaseShaderPass";
+import { RenderTargetOperation } from '../../../webgl/gl/fbo/RenderTargetOperation';
+import { TextureSlot } from '../../../webgl/gl/texture/TextureConstants';
+import { MosaicMaterial } from '../../material/MosaicMaterial';
+import { RendererContext } from '../RendererContext';
+import { BaseShaderPass } from './BaseShaderPass';
 
 export class MosaicShaderPass extends BaseShaderPass {
-
-    constructor(gl: WebGL2RenderingContext, material: MosaicMaterial){
+    constructor(gl: WebGL2RenderingContext, material: MosaicMaterial) {
         super(gl, material);
     }
 
@@ -20,5 +19,4 @@ export class MosaicShaderPass extends BaseShaderPass {
 
         gl.bindTexture(gl.TEXTURE_2D, null);
     }
-
 }

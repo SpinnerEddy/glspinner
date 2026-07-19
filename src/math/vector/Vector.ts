@@ -1,21 +1,21 @@
-import { VectorOperation } from "./VectorOperation";
+import { VectorOperation } from './VectorOperation';
 
-export abstract class Vector<T extends Vector<T>> implements VectorOperation<T>{
+export abstract class Vector<T extends Vector<T>> implements VectorOperation<T> {
     protected components: Float32Array;
 
-    constructor(components: Float32Array){
+    constructor(components: Float32Array) {
         this.components = components;
     }
 
-    get values(): Float32Array{
+    get values(): Float32Array {
         return this.components;
     }
 
-    get size(): number{
+    get size(): number {
         return this.components.length;
     }
 
-    get(index: number): number{
+    get(index: number): number {
         return this.components[index];
     }
 

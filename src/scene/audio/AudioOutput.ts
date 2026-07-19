@@ -1,21 +1,21 @@
-import { AudioInputOperation } from "./AudioInputOperation";
+import { AudioInputOperation } from './AudioInputOperation';
 
 export class AudioOutput {
     private audioContext: AudioContext;
     private audioBuffer: AudioBuffer | undefined;
-    private sourceNode: AudioBufferSourceNode | undefined; 
+    private sourceNode: AudioBufferSourceNode | undefined;
 
     private isPlaying: boolean = false;
     private pauseTime: number = 0;
     private startTime: number = 0;
 
-    constructor(){
+    constructor() {
         this.audioContext = new AudioContext();
     }
 
     public playAudio(offset: number = 0): void {
-        if(this.audioBuffer == undefined){
-            console.log("Audio not loaded!!");
+        if (this.audioBuffer == undefined) {
+            console.log('Audio not loaded!!');
             return;
         }
 
@@ -29,7 +29,7 @@ export class AudioOutput {
     }
 
     public pauseAudio(): void {
-        if(this.sourceNode && this.isPlaying){
+        if (this.sourceNode && this.isPlaying) {
             this.sourceNode.stop();
             this.sourceNode.disconnect();
             this.sourceNode = undefined;
@@ -40,13 +40,13 @@ export class AudioOutput {
     }
 
     public resumeAudio(): void {
-        if(this.sourceNode == undefined || this.isPlaying) return;
-        
+        if (this.sourceNode == undefined || this.isPlaying) return;
+
         this.playAudio(this.pauseTime);
     }
 
     public stopAudio(): void {
-        if(this.sourceNode){
+        if (this.sourceNode) {
             this.sourceNode.stop();
             this.sourceNode.disconnect();
             this.sourceNode = undefined;
@@ -56,7 +56,7 @@ export class AudioOutput {
         this.pauseTime = 0;
     }
 
-    public setInput(audioInput: AudioInputOperation){
+    public setInput(audioInput: AudioInputOperation) {
         this.audioBuffer = audioInput.getBuffer();
     }
 

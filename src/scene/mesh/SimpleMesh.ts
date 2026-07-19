@@ -1,10 +1,10 @@
-import { GeometryOperation } from "../../webgl/gl/geometry/GeometryOperation";
-import { ShaderUniformValue } from "../../webgl/gl/uniform/ShaderUniformValue";
-import { MaterialOperation } from "../material/MaterialOperation";
-import { PhongMaterial } from "../material/PhongMaterial";
-import { RendererContext } from "../renderer/RendererContext";
-import { Transform } from "../transform/Transform";
-import { BaseMesh } from "./BaseMesh";
+import { GeometryOperation } from '../../webgl/gl/geometry/GeometryOperation';
+import { ShaderUniformValue } from '../../webgl/gl/uniform/ShaderUniformValue';
+import { MaterialOperation } from '../material/MaterialOperation';
+import { PhongMaterial } from '../material/PhongMaterial';
+import { RendererContext } from '../renderer/RendererContext';
+import { Transform } from '../transform/Transform';
+import { BaseMesh } from './BaseMesh';
 
 export class SimpleMesh extends BaseMesh {
     constructor(geometry: GeometryOperation, material: MaterialOperation) {
@@ -17,18 +17,18 @@ export class SimpleMesh extends BaseMesh {
         const eyeDirection = context.getCamera().calculateEyeDirection();
 
         let uniforms = context.getGlobalUniform();
-        uniforms["modelMatrix"] = new ShaderUniformValue(modelMatrix);
-        uniforms["invMatrix"] = new ShaderUniformValue(invertMatrix);
-        uniforms["eyeDirection"] = new ShaderUniformValue(eyeDirection);
-        
+        uniforms['modelMatrix'] = new ShaderUniformValue(modelMatrix);
+        uniforms['invMatrix'] = new ShaderUniformValue(invertMatrix);
+        uniforms['eyeDirection'] = new ShaderUniformValue(eyeDirection);
+
         const phong = this.material as PhongMaterial;
-        if(phong == null) return;
-        if(context.getLights().length == 0) return;
+        if (phong == null) return;
+        if (context.getLights().length == 0) return;
 
         let light = context.getLights().at(0)!;
         phong.setLightUniform(gl, light);
     }
-    
+
     updateUniforms(gl: WebGL2RenderingContext, context: RendererContext): void {
         this.material.setUniform(gl, context);
     }

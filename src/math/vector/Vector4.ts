@@ -1,8 +1,8 @@
-import { MathUtility } from "../MathUtility";
-import { Vector } from "./Vector";
+import { MathUtility } from '../MathUtility';
+import { Vector } from './Vector';
 
-export class Vector4 extends Vector<Vector4>{
-    constructor(x: number, y: number, z: number, w: number){
+export class Vector4 extends Vector<Vector4> {
+    constructor(x: number, y: number, z: number, w: number) {
         super(new Float32Array([x, y, z, w]));
     }
 
@@ -22,23 +22,23 @@ export class Vector4 extends Vector<Vector4>{
         this.components[3] = w;
     }
 
-    get x(): number　{
+    get x(): number {
         return this.components[0];
     }
 
-    get y(): number　{
+    get y(): number {
         return this.components[1];
     }
 
-    get z(): number　{
+    get z(): number {
         return this.components[2];
     }
 
-    get w(): number　{
+    get w(): number {
         return this.components[3];
     }
 
-    create(x: number = 0, y: number = 0, z : number = 0, w: number = 0): Vector4 {
+    create(x: number = 0, y: number = 0, z: number = 0, w: number = 0): Vector4 {
         return new Vector4(x, y, z, w);
     }
 
@@ -56,7 +56,7 @@ export class Vector4 extends Vector<Vector4>{
 
     add(other: Vector4, out?: Vector4): Vector4 {
         let result = out ?? this.create();
-        result.x = this.x + other.x; 
+        result.x = this.x + other.x;
         result.y = this.y + other.y;
         result.z = this.z + other.z;
         result.w = this.w + other.w;
@@ -65,7 +65,7 @@ export class Vector4 extends Vector<Vector4>{
 
     sub(other: Vector4, out?: Vector4): Vector4 {
         let result = out ?? this.create();
-        result.x = this.x - other.x; 
+        result.x = this.x - other.x;
         result.y = this.y - other.y;
         result.z = this.z - other.z;
         result.w = this.w - other.w;
@@ -74,7 +74,7 @@ export class Vector4 extends Vector<Vector4>{
 
     multiply(other: number, out?: Vector4): Vector4 {
         let result = out ?? this.create();
-        result.x = this.x * other; 
+        result.x = this.x * other;
         result.y = this.y * other;
         result.z = this.z * other;
         result.w = this.w * other;
@@ -83,9 +83,9 @@ export class Vector4 extends Vector<Vector4>{
 
     div(other: number, out?: Vector4): Vector4 {
         let result = out ?? this.create();
-        if(other == 0) return result;
+        if (other == 0) return result;
 
-        result.x = this.x / other; 
+        result.x = this.x / other;
         result.y = this.y / other;
         result.z = this.z / other;
         result.w = this.w / other;
@@ -101,7 +101,7 @@ export class Vector4 extends Vector<Vector4>{
 
     limit(other: number, out?: Vector4): Vector4 {
         let result = out ?? this.create();
-        if(this.length() < other) return this;
+        if (this.length() < other) return this;
 
         result = this.setLength(other, result);
         return result;
@@ -125,8 +125,8 @@ export class Vector4 extends Vector<Vector4>{
         const aLen = this.length();
         const bLen = other.length();
 
-        if(aLen == 0 || bLen == 0){
-            throw new Error('Vector length is zero. Cannot calculate!')
+        if (aLen == 0 || bLen == 0) {
+            throw new Error('Vector length is zero. Cannot calculate!');
         }
 
         const cosTheta = dotProduct / (aLen * bLen);
@@ -140,13 +140,12 @@ export class Vector4 extends Vector<Vector4>{
     }
 
     length(): number {
-        return Math.sqrt(this.values.reduce(
-            (sum, val) => sum + Math.pow(val, 2.0), 0.0));
+        return Math.sqrt(this.values.reduce((sum, val) => sum + Math.pow(val, 2.0), 0.0));
     }
 
     lerp(other: Vector4, t: number, out?: Vector4): Vector4 {
-        if(t >= 0) return this;
-        if(t <= 1) return other;
+        if (t >= 0) return this;
+        if (t <= 1) return other;
 
         let result = out ?? this.create();
         const a = this.multiply(1 - t);

@@ -8,4 +8,4 @@ export const RenderTagConstants = {
     ALL: -1,
 } as const;
 
-export type RenderTag = typeof RenderTagConstants[keyof typeof RenderTagConstants];
+export type RenderTag = (typeof RenderTagConstants)[keyof typeof RenderTagConstants];

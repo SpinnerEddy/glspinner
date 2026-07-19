@@ -1,4 +1,4 @@
-import { ShaderAttribute } from "../attribute/ShaderAttribute";
+import { ShaderAttribute } from '../attribute/ShaderAttribute';
 
 export interface GeometryOperation {
     setUpBuffers(gl: WebGL2RenderingContext, attributes: Record<string, ShaderAttribute>): void;

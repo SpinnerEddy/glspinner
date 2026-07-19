@@ -1,12 +1,11 @@
-import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
-import { TextureSlot } from "../../../webgl/gl/texture/TextureConstants";
-import { RGBShiftMaterial } from "../../material/RGBShiftMaterial";
-import { RendererContext } from "../RendererContext";
-import { BaseShaderPass } from "./BaseShaderPass";
+import { RenderTargetOperation } from '../../../webgl/gl/fbo/RenderTargetOperation';
+import { TextureSlot } from '../../../webgl/gl/texture/TextureConstants';
+import { RGBShiftMaterial } from '../../material/RGBShiftMaterial';
+import { RendererContext } from '../RendererContext';
+import { BaseShaderPass } from './BaseShaderPass';
 
 export class RGBShiftShaderPass extends BaseShaderPass {
-
-    constructor(gl: WebGL2RenderingContext, material: RGBShiftMaterial){
+    constructor(gl: WebGL2RenderingContext, material: RGBShiftMaterial) {
         super(gl, material);
     }
 
@@ -20,5 +19,4 @@ export class RGBShiftShaderPass extends BaseShaderPass {
 
         gl.bindTexture(gl.TEXTURE_2D, null);
     }
-
 }

@@ -1,27 +1,27 @@
-import { MathUtility } from "../../src/math/MathUtility";
+import { MathUtility } from '../../src/math/MathUtility';
 
-test("degreeToRadians", () => {
+test('degreeToRadians', () => {
     const degree = 180.0;
     const radians = MathUtility.degreesToRadians(degree);
 
     expect(radians).toEqual(Math.PI);
 });
 
-test("RadiansToDegrees", () => {
+test('RadiansToDegrees', () => {
     const radians = Math.PI;
     const degrees = MathUtility.radiansToDegrees(radians);
 
     expect(degrees).toEqual(180);
 });
 
-test("RadiansToDegrees2", () => {
+test('RadiansToDegrees2', () => {
     const radians = 3.839724354387525;
     const degrees = MathUtility.radiansToDegrees(radians);
 
     expect(degrees).toEqual(220);
 });
 
-test("clamp", () => {
+test('clamp', () => {
     const minValue = -40.0;
     const maxValue = 50.0;
 
@@ -38,7 +38,7 @@ test("clamp", () => {
     expect(result3).toEqual(-40.0);
 });
 
-test("saturate", () => {
+test('saturate', () => {
     const testValue1 = 0.3;
     const result1 = MathUtility.saturate(testValue1);
     expect(result1).toEqual(0.3);
@@ -51,4 +51,3 @@ test("saturate", () => {
     const result3 = MathUtility.saturate(testValue3);
     expect(result3).toEqual(1);
 });
-

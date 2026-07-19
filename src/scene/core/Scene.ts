@@ -1,9 +1,9 @@
-import { ClockOperation } from "../clock/ClockOperation";
-import { FixedTimeClock } from "../clock/FixedTimeClock";
-import { RealTimeClock } from "../clock/RealTimeClock";
-import { SceneOperation } from "./SceneOperation";
+import { ClockOperation } from '../clock/ClockOperation';
+import { FixedTimeClock } from '../clock/FixedTimeClock';
+import { RealTimeClock } from '../clock/RealTimeClock';
+import { SceneOperation } from './SceneOperation';
 
-export class Scene implements SceneOperation{
+export class Scene implements SceneOperation {
     private clock: ClockOperation;
     private isRunning: boolean;
     private updateFunction: Function;
@@ -11,7 +11,7 @@ export class Scene implements SceneOperation{
     private additionalSupportFunctionAsync: Function;
     private animationId: number;
 
-    constructor(){
+    constructor() {
         this.clock = new RealTimeClock();
         this.clock.reset();
         this.clock.setFps(60);
@@ -23,7 +23,7 @@ export class Scene implements SceneOperation{
     }
 
     public start(): void {
-        if(this.isRunning) return;
+        if (this.isRunning) return;
 
         this.isRunning = true;
         this.clock.reset();
@@ -31,7 +31,7 @@ export class Scene implements SceneOperation{
     }
 
     public stop(): void {
-        if(!this.isRunning) return;
+        if (!this.isRunning) return;
 
         this.isRunning = false;
         cancelAnimationFrame(this.animationId);
@@ -75,7 +75,7 @@ export class Scene implements SceneOperation{
     }
 
     private async run(): Promise<void> {
-        if(!this.isRunning) return;
+        if (!this.isRunning) return;
 
         this.clock.update();
 
@@ -86,7 +86,7 @@ export class Scene implements SceneOperation{
 
         //     await this.additionalSupport();
         // }
-        
+
         this.updateObjects();
 
         this.drawObjects();
@@ -96,7 +96,6 @@ export class Scene implements SceneOperation{
         this.animationId = requestAnimationFrame(() => {
             this.run();
         });
-
     }
 
     private updateObjects(): void {
@@ -107,7 +106,7 @@ export class Scene implements SceneOperation{
         this.drawFunction();
     }
 
-    private async additionalSupport(): Promise<void>{
+    private async additionalSupport(): Promise<void> {
         await this.additionalSupportFunctionAsync();
     }
 }

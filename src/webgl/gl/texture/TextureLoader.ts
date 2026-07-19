@@ -1,19 +1,19 @@
-import { Texture2D } from "./Texture2D";
+import { Texture2D } from './Texture2D';
 
-export class TextureLoader{
+export class TextureLoader {
     private gl: WebGL2RenderingContext;
     private textureCache: Map<string, Texture2D> = new Map();
     private textureKeySet: Set<string> = new Set();
 
-    constructor(gl: WebGL2RenderingContext){
+    constructor(gl: WebGL2RenderingContext) {
         this.gl = gl;
     }
 
     public getTexture(key: string): Texture2D {
-        if(!this.textureKeySet.has(key)){
+        if (!this.textureKeySet.has(key)) {
             throw new Error(`Common Texture with key ${key} not found`);
         }
-        
+
         return this.textureCache.get(key)!;
     }
 

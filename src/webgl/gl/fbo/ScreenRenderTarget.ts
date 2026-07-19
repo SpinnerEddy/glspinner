@@ -1,12 +1,12 @@
-import { RenderTargetOperation } from "./RenderTargetOperation";
+import { RenderTargetOperation } from './RenderTargetOperation';
 
 export class ScreenRenderTarget implements RenderTargetOperation {
     private gl: WebGL2RenderingContext;
-    
+
     private width: number;
     private height: number;
 
-    constructor(gl: WebGL2RenderingContext, resolution: [number, number]){
+    constructor(gl: WebGL2RenderingContext, resolution: [number, number]) {
         this.gl = gl;
         this.width = resolution[0];
         this.height = resolution[1];
@@ -18,15 +18,15 @@ export class ScreenRenderTarget implements RenderTargetOperation {
     }
 
     getColorTexture(_index: number): WebGLTexture {
-        throw new Error("ScreenRenderTarget does not have a color texture!");
+        throw new Error('ScreenRenderTarget does not have a color texture!');
     }
 
     getDepthTexture(): WebGLTexture {
-        throw new Error("ScreenRenderTarget does not have a depth texture!");
+        throw new Error('ScreenRenderTarget does not have a depth texture!');
     }
 
     getFrameBuffer(): WebGLFramebuffer {
-        throw new Error("ScreenRenderTarget does not have a Framebuffer!");
+        throw new Error('ScreenRenderTarget does not have a Framebuffer!');
     }
 
     getSize(): [number, number] {
@@ -34,13 +34,11 @@ export class ScreenRenderTarget implements RenderTargetOperation {
     }
 
     resize(resolution: [number, number]): void {
-        if(this.width === resolution[0] && this.height === resolution[1]) return;
+        if (this.width === resolution[0] && this.height === resolution[1]) return;
 
         this.width = resolution[0];
         this.height = resolution[1];
     }
 
-    dispose(): void {
-    }
-
+    dispose(): void {}
 }

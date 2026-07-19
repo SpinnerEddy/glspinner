@@ -1,12 +1,11 @@
-import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
-import { TextureSlot } from "../../../webgl/gl/texture/TextureConstants";
-import { GlitchMaterial } from "../../material/GlitchMaterial";
-import { RendererContext } from "../RendererContext";
-import { BaseShaderPass } from "./BaseShaderPass";
+import { RenderTargetOperation } from '../../../webgl/gl/fbo/RenderTargetOperation';
+import { TextureSlot } from '../../../webgl/gl/texture/TextureConstants';
+import { GlitchMaterial } from '../../material/GlitchMaterial';
+import { RendererContext } from '../RendererContext';
+import { BaseShaderPass } from './BaseShaderPass';
 
 export class GlitchShaderPass extends BaseShaderPass {
-
-    constructor(gl: WebGL2RenderingContext, material: GlitchMaterial){
+    constructor(gl: WebGL2RenderingContext, material: GlitchMaterial) {
         super(gl, material);
     }
 
@@ -20,5 +19,4 @@ export class GlitchShaderPass extends BaseShaderPass {
 
         gl.bindTexture(gl.TEXTURE_2D, null);
     }
-
 }

@@ -1,25 +1,25 @@
-import { MathUtility } from "./MathUtility";
-import { Vector } from "./vector/Vector";
-import { Vector2 } from "./vector/Vector2";
-import { Vector3 } from "./vector/Vector3";
-import { VectorClassAndSizePair } from "./vector/VectorConstants";
+import { MathUtility } from './MathUtility';
+import { Vector } from './vector/Vector';
+import { Vector2 } from './vector/Vector2';
+import { Vector3 } from './vector/Vector3';
+import { VectorClassAndSizePair } from './vector/VectorConstants';
 
-export class VectorCalculator{
+export class VectorCalculator {
     static min<T extends Vector<T>>(a: T, b: T): T {
         const aLength = VectorCalculator.length(a);
         const bLength = VectorCalculator.length(b);
-        return aLength <= bLength ? a: b;
+        return aLength <= bLength ? a : b;
     }
 
     static max<T extends Vector<T>>(a: T, b: T): T {
         const aLength = VectorCalculator.length(a);
         const bLength = VectorCalculator.length(b);
-        return aLength >= bLength ? a: b;
+        return aLength >= bLength ? a : b;
     }
 
     static add<T extends Vector<T>>(a: T, b: T): T {
-        if(a.size != b.size){
-            throw new Error("Vector lengths not equal! Cannot Additive!")
+        if (a.size != b.size) {
+            throw new Error('Vector lengths not equal! Cannot Additive!');
         }
 
         const result = a.values.map((val, index) => val + b.values[index]);
@@ -27,8 +27,8 @@ export class VectorCalculator{
     }
 
     static sub<T extends Vector<T>>(a: T, b: T): T {
-        if(a.size != b.size){
-            throw new Error("Vector lengths not equal! Cannot Additive!")
+        if (a.size != b.size) {
+            throw new Error('Vector lengths not equal! Cannot Additive!');
         }
 
         const result = a.values.map((val, index) => val - b.values[index]);
@@ -42,16 +42,16 @@ export class VectorCalculator{
     }
 
     static calcAngle<T extends Vector<T>>(a: T, b: T): number {
-        if(a.size != b.size){
-            throw new Error("Vector lengths not equal! Cannot Additive!")
+        if (a.size != b.size) {
+            throw new Error('Vector lengths not equal! Cannot Additive!');
         }
 
         const dotProduct = VectorCalculator.dot(a, b);
         const aLength = VectorCalculator.length(a);
         const bLength = VectorCalculator.length(b);
 
-        if(aLength == 0 || bLength == 9){
-            throw new Error('Vector length is zero. Cannot calculate!')
+        if (aLength == 0 || bLength == 9) {
+            throw new Error('Vector length is zero. Cannot calculate!');
         }
 
         const cosTheta = dotProduct / (aLength * bLength);
@@ -61,8 +61,8 @@ export class VectorCalculator{
     }
 
     static dot<T extends Vector<T>>(a: T, b: T): number {
-        if(a.size != b.size){
-            throw new Error("Vector lengths not equal! Cannot Additive!")
+        if (a.size != b.size) {
+            throw new Error('Vector lengths not equal! Cannot Additive!');
         }
 
         const result = a.values.reduce((sum, value, index) => sum + value * b.values[index], 0.0);
@@ -75,15 +75,15 @@ export class VectorCalculator{
     }
 
     static divide<T extends Vector<T>>(a: T, b: number): T {
-        if(b == 0){
-            throw new Error("Cannot divide because b is zero!!");
+        if (b == 0) {
+            throw new Error('Cannot divide because b is zero!!');
         }
         const result = a.values.map((val) => val / b);
         return VectorCalculator.convertVector(a.size, result);
     }
 
     static limit<T extends Vector<T>>(a: T, b: number): T {
-        if(a.length() < b){
+        if (a.length() < b) {
             return a;
         }
 
@@ -105,25 +105,24 @@ export class VectorCalculator{
     }
 
     static length<T extends Vector<T>>(vector: T): number {
-        const result = Math.sqrt(vector.values.reduce(
-            (sum, val) => sum + Math.pow(val, 2.0), 0.0));
+        const result = Math.sqrt(vector.values.reduce((sum, val) => sum + Math.pow(val, 2.0), 0.0));
         return result;
     }
 
     static lerp<T extends Vector<T>>(min: T, max: T, t: number): T {
-        if(t == 0) return min;
-        if(t == 1) return max;
+        if (t == 0) return min;
+        if (t == 1) return max;
 
-        const a = VectorCalculator.multiply(min, (1 - t));
+        const a = VectorCalculator.multiply(min, 1 - t);
         const b = VectorCalculator.multiply(max, t);
         const result = VectorCalculator.add(a, b);
         return result;
     }
 
-    static cross(a: Vector3, b: Vector3): Vector3{
-        const v1 = a.y*b.z - a.z*b.y;
-        const v2 = a.z*b.x - a.x*b.z;
-        const v3 = a.x*b.y - a.y*b.x;
+    static cross(a: Vector3, b: Vector3): Vector3 {
+        const v1 = a.y * b.z - a.z * b.y;
+        const v2 = a.z * b.x - a.x * b.z;
+        const v3 = a.x * b.y - a.y * b.x;
         return new Vector3(v1, v2, v3);
     }
 

@@ -1,29 +1,29 @@
-import { Matrix44 } from "../matrix/Matrix44";
+import { Matrix44 } from '../matrix/Matrix44';
 
-export class Quaternion{
+export class Quaternion {
     private components: Float32Array;
 
-    constructor(x: number, y: number, z: number, w: number){
+    constructor(x: number, y: number, z: number, w: number) {
         this.components = new Float32Array([x, y, z, w]);
     }
 
-    get x(){
+    get x() {
         return this.components[0];
     }
 
-    get y(){
+    get y() {
         return this.components[1];
     }
 
-    get z(){
+    get z() {
         return this.components[2];
     }
 
-    get w(){
+    get w() {
         return this.components[3];
     }
 
-    toMatrix(): Matrix44{
+    toMatrix(): Matrix44 {
         const matrix = new Matrix44();
         let result = matrix.identity();
 
@@ -40,12 +40,12 @@ export class Quaternion{
         return result;
     }
 
-    toEuler(): {pitch: number, yaw: number, roll: number}{
+    toEuler(): { pitch: number; yaw: number; roll: number } {
         const matrix = this.toMatrix();
         const pitch = Math.atan2(matrix.get(0, 2), matrix.get(2, 2));
         const yaw = Math.asin(-matrix.get(2, 0));
         const roll = Math.atan2(matrix.get(2, 1), matrix.get(2, 2));
 
-        return {pitch, yaw, roll};
+        return { pitch, yaw, roll };
     }
 }

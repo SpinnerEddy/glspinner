@@ -1,10 +1,10 @@
-import { ShaderAttribute } from "../attribute/ShaderAttribute";
-import { AttributeElementSize } from "../attribute/ShaderAttributeConstants";
-import { GeometryBuffer } from "../buffer/GeometryBuffer";
-import { IndexBuffer } from "../buffer/IndexBuffer";
-import { FontGlyph } from "../font/FontGlyph";
-import { Texture2D } from "../texture/Texture2D";
-import { BaseGeometry } from "./BaseGeometry";
+import { ShaderAttribute } from '../attribute/ShaderAttribute';
+import { AttributeElementSize } from '../attribute/ShaderAttributeConstants';
+import { GeometryBuffer } from '../buffer/GeometryBuffer';
+import { IndexBuffer } from '../buffer/IndexBuffer';
+import { FontGlyph } from '../font/FontGlyph';
+import { Texture2D } from '../texture/Texture2D';
+import { BaseGeometry } from './BaseGeometry';
 
 export class TextQuad extends BaseGeometry {
     protected uv: Float32Array;
@@ -24,18 +24,17 @@ export class TextQuad extends BaseGeometry {
         let colors = [];
 
         const scaleW = 1.0 / textTexture.getTextureSize().width;
-        const scaleH = 1.0 / textTexture.getTextureSize().height; 
+        const scaleH = 1.0 / textTexture.getTextureSize().height;
 
         let maxY = 0;
         let minY = 0;
 
         for (const glyph of text) {
-
             const offset = glyph.getOffset();
             const resolution = glyph.getResolution();
 
-            const x0Px = (offset[0] + cursorX);
-            const y0Px = (offset[1]);
+            const x0Px = offset[0] + cursorX;
+            const y0Px = offset[1];
             const x1Px = x0Px + resolution[0];
             const y1Px = y0Px + resolution[1];
 
@@ -44,40 +43,17 @@ export class TextQuad extends BaseGeometry {
             const x1 = x1Px * scaleW;
             const y1 = y1Px * scaleH;
 
-            vertices.push(
-                x0, y0, 0.0,
-                x1, y0, 0.0,
-                x0, y1, 0.0,
-                x1, y1, 0.0
-            );
+            vertices.push(x0, y0, 0.0, x1, y0, 0.0, x0, y1, 0.0, x1, y1, 0.0);
 
             const uv = glyph.getUv();
 
-            uvs.push(
-                uv.u0, uv.v1,
-                uv.u1, uv.v1,
-                uv.u0, uv.v0,
-                uv.u1, uv.v0
-            );
+            uvs.push(uv.u0, uv.v1, uv.u1, uv.v1, uv.u0, uv.v0, uv.u1, uv.v0);
 
-            indices.push(
-                0 + indexOffset, 1 + indexOffset, 2 + indexOffset,
-                3 + indexOffset, 2 + indexOffset, 1 + indexOffset
-            );
+            indices.push(0 + indexOffset, 1 + indexOffset, 2 + indexOffset, 3 + indexOffset, 2 + indexOffset, 1 + indexOffset);
 
-            colors.push(
-                1.0, 1.0, 1.0, 1.0,
-                1.0, 1.0, 1.0, 1.0,
-                1.0, 1.0, 1.0, 1.0,
-                1.0, 1.0, 1.0, 1.0
-            );
+            colors.push(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
 
-            normals.push(
-                0.0, 0.0, 1.0,
-                0.0, 0.0, 1.0,
-                0.0, 0.0, 1.0,
-                0.0, 0.0, 1.0
-            );
+            normals.push(0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0);
 
             indexOffset += 4;
             cursorX += glyph.getXAdvance();
@@ -106,33 +82,19 @@ export class TextQuad extends BaseGeometry {
         ib.setData();
 
         const stride = (AttributeElementSize.aPosition + AttributeElementSize.aColor + AttributeElementSize.aNormal + AttributeElementSize.aUv) * Float32Array.BYTES_PER_ELEMENT;
-        attributes["aPosition"].setAttributeBuffer(
-            gl,
-            AttributeElementSize.aPosition, 
-            gl.FLOAT, 
-            stride, 
-            0);
-        attributes["aColor"]?.setAttributeBuffer(
-            gl,
-            AttributeElementSize.aColor,
-            gl.FLOAT, 
-            stride, 
-            AttributeElementSize.aPosition * Float32Array.BYTES_PER_ELEMENT);
-        attributes["aNormal"]?.setAttributeBuffer(
-            gl,
-            AttributeElementSize.aNormal,
-            gl.FLOAT, 
-            stride, 
-            (AttributeElementSize.aPosition + AttributeElementSize.aColor) * Float32Array.BYTES_PER_ELEMENT);
-        attributes["aUv"]?.setAttributeBuffer(
+        attributes['aPosition'].setAttributeBuffer(gl, AttributeElementSize.aPosition, gl.FLOAT, stride, 0);
+        attributes['aColor']?.setAttributeBuffer(gl, AttributeElementSize.aColor, gl.FLOAT, stride, AttributeElementSize.aPosition * Float32Array.BYTES_PER_ELEMENT);
+        attributes['aNormal']?.setAttributeBuffer(gl, AttributeElementSize.aNormal, gl.FLOAT, stride, (AttributeElementSize.aPosition + AttributeElementSize.aColor) * Float32Array.BYTES_PER_ELEMENT);
+        attributes['aUv']?.setAttributeBuffer(
             gl,
             AttributeElementSize.aUv,
-            gl.FLOAT, 
-            stride, 
-            (AttributeElementSize.aPosition + AttributeElementSize.aColor + AttributeElementSize.aNormal) * Float32Array.BYTES_PER_ELEMENT);
+            gl.FLOAT,
+            stride,
+            (AttributeElementSize.aPosition + AttributeElementSize.aColor + AttributeElementSize.aNormal) * Float32Array.BYTES_PER_ELEMENT
+        );
 
-        this.vao.addBuffer("geometry", gb);
-        this.vao.addBuffer("index", ib);
+        this.vao.addBuffer('geometry', gb);
+        this.vao.addBuffer('index', ib);
 
         gb.unbind();
         ib.unbind();

@@ -1,11 +1,11 @@
-import { BaseBuffer } from "./BaseBuffer";
+import { BaseBuffer } from './BaseBuffer';
 
 export class VertexArray {
     private gl: WebGL2RenderingContext;
     private vao: WebGLVertexArrayObject | null = null;
     private buffers: Map<string, BaseBuffer>;
 
-    constructor(gl: WebGL2RenderingContext){
+    constructor(gl: WebGL2RenderingContext) {
         this.gl = gl;
         this.buffers = new Map<string, BaseBuffer>();
     }
@@ -24,14 +24,14 @@ export class VertexArray {
 
     bind(): void {
         this.bindVao();
-        for(const buffer of this.buffers.values()){
+        for (const buffer of this.buffers.values()) {
             buffer.bind();
         }
     }
 
     unbind(): void {
         this.unbindVao();
-        for(const buffer of this.buffers.values()){
+        for (const buffer of this.buffers.values()) {
             buffer.unbind();
         }
     }
@@ -41,7 +41,7 @@ export class VertexArray {
     }
 
     dispose(): void {
-        for(const buffer of this.buffers.values()){
+        for (const buffer of this.buffers.values()) {
             buffer.dispose();
         }
 

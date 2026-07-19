@@ -1,6 +1,6 @@
-import { ClockOperation } from "./ClockOperation";
+import { ClockOperation } from './ClockOperation';
 
-export abstract class Clock implements ClockOperation{
+export abstract class Clock implements ClockOperation {
     protected startTime: number;
     protected elapsedTime: number;
     protected timeScale: number;
@@ -10,7 +10,7 @@ export abstract class Clock implements ClockOperation{
     protected fps: number;
     protected frameInterval: number;
 
-    constructor(){
+    constructor() {
         this.startTime = performance.now();
         this.elapsedTime = 0.0;
         this.timeScale = 1;
@@ -64,5 +64,5 @@ export abstract class Clock implements ClockOperation{
     }
 
     public abstract update(): void;
-    public abstract shouldDraw(): boolean
+    public abstract shouldDraw(): boolean;
 }

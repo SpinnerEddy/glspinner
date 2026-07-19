@@ -1,4 +1,4 @@
-import { KeyboardCodeType, MouseButtonType } from "../InputConstants";
+import { KeyboardCodeType, MouseButtonType } from '../InputConstants';
 
 export interface DeviceOperation {
     update(): void;

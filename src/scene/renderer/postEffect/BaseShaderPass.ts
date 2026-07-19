@@ -1,11 +1,11 @@
-import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
-import { Plane } from "../../../webgl/gl/geometry/Plane";
-import { MeshNode } from "../../core/node/MeshNode";
-import { SceneGraphUtility } from "../../core/SceneGraphUtility";
-import { BaseMaterial } from "../../material/BaseMaterial";
-import { UnlitMesh } from "../../mesh/UnlitMesh";
-import { RendererContext } from "../RendererContext";
-import { ShaderPassOperation } from "./ShaderPassOperation";
+import { RenderTargetOperation } from '../../../webgl/gl/fbo/RenderTargetOperation';
+import { Plane } from '../../../webgl/gl/geometry/Plane';
+import { MeshNode } from '../../core/node/MeshNode';
+import { SceneGraphUtility } from '../../core/SceneGraphUtility';
+import { BaseMaterial } from '../../material/BaseMaterial';
+import { UnlitMesh } from '../../mesh/UnlitMesh';
+import { RendererContext } from '../RendererContext';
+import { ShaderPassOperation } from './ShaderPassOperation';
 
 export abstract class BaseShaderPass implements ShaderPassOperation {
     protected material: BaseMaterial;
@@ -14,12 +14,12 @@ export abstract class BaseShaderPass implements ShaderPassOperation {
 
     constructor(gl: WebGL2RenderingContext, material: BaseMaterial) {
         this.material = material;
-        
+
         const planeGeometry = new Plane(gl, 2, 2);
         const planeAttributes = {
             aPosition: material.getAttribute(gl, 'aPosition'),
             aColor: material.getAttribute(gl, 'aColor'),
-            aUv: material.getAttribute(gl, "aUv")
+            aUv: material.getAttribute(gl, 'aUv'),
         };
         planeGeometry.setUpBuffers(gl, planeAttributes);
         const planeMesh = new UnlitMesh(planeGeometry, material);

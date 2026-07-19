@@ -1,9 +1,9 @@
-import { Color } from "../../color/Color";
+import { Color } from '../../color/Color';
 
-export class WebGLUtility{
+export class WebGLUtility {
     private gl: WebGL2RenderingContext;
 
-    constructor(canvas: HTMLCanvasElement){
+    constructor(canvas: HTMLCanvasElement) {
         this.gl = this.initializeWebGL2RenderingContext(canvas);
     }
 
@@ -11,7 +11,7 @@ export class WebGLUtility{
         return this.gl;
     }
 
-    public clearColor(color : Color): void{
+    public clearColor(color: Color): void {
         this.gl.clearColor(color.red, color.green, color.blue, color.alpha);
         this.gl.clearDepth(1.0);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
@@ -19,13 +19,12 @@ export class WebGLUtility{
 
     public resizeCanvasToDisplaySize(canvas: HTMLCanvasElement): boolean {
         const dpr = window.devicePixelRatio || 1;
-        const displayWidth  = Math.floor(canvas.clientWidth * dpr);
+        const displayWidth = Math.floor(canvas.clientWidth * dpr);
         const displayHeight = Math.floor(canvas.clientHeight * dpr);
 
-        const needResize = canvas.width !== displayWidth ||
-                           canvas.height !== displayHeight;
-                        
-        if(needResize){
+        const needResize = canvas.width !== displayWidth || canvas.height !== displayHeight;
+
+        if (needResize) {
             canvas.width = displayWidth;
             canvas.height = displayHeight;
         }
@@ -33,15 +32,15 @@ export class WebGLUtility{
         return needResize;
     }
 
-    public setViewport(canvas: HTMLCanvasElement){
+    public setViewport(canvas: HTMLCanvasElement) {
         this.resizeCanvasToDisplaySize(canvas);
         this.gl.viewport(0, 0, canvas.width, canvas.height);
     }
 
     private initializeWebGL2RenderingContext(canvas: HTMLCanvasElement): WebGL2RenderingContext {
         const gl = canvas.getContext('webgl2');
-        if(gl == null){
-            throw new Error("Not Support WebGL2!!");
+        if (gl == null) {
+            throw new Error('Not Support WebGL2!!');
         }
         return gl;
     }

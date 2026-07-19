@@ -1,12 +1,9 @@
-import { AudioInputOperation } from "./AudioInputOperation";
+import { AudioInputOperation } from './AudioInputOperation';
 
 export class ExternalFileAudioInput implements AudioInputOperation {
-    
     private audioBuffer: AudioBuffer | undefined;
 
-    constructor(){
-
-    }
+    constructor() {}
 
     async load(path: string, audioContext: AudioContext): Promise<void> {
         const response = await fetch(path);
@@ -17,5 +14,4 @@ export class ExternalFileAudioInput implements AudioInputOperation {
     getBuffer(): AudioBuffer {
         return this.audioBuffer!;
     }
-
 }

@@ -15,7 +15,7 @@ export interface FontGlyphData {
 
 export class FontGlyph {
     private char: string;
-    private uv: {u0: number, v0: number, u1: number, v1: number};
+    private uv: { u0: number; v0: number; u1: number; v1: number };
     private resolution: [number, number];
     private offset: [number, number];
     private xAdvance: number;
@@ -23,10 +23,10 @@ export class FontGlyph {
     constructor(data: FontGlyphData, textureWidth: number, textureHeight: number) {
         this.char = data.char;
         this.uv = {
-            u0: data.x / textureWidth, 
+            u0: data.x / textureWidth,
             v0: data.y / textureHeight,
             u1: (data.x + data.width) / textureWidth,
-            v1: (data.y + data.height) / textureHeight
+            v1: (data.y + data.height) / textureHeight,
         };
         this.resolution = [data.width, data.height];
         this.offset = [data.xoffset, data.yoffset];
@@ -37,7 +37,7 @@ export class FontGlyph {
         return this.char;
     }
 
-    getUv(): {u0: number, v0: number, u1: number, v1: number} {
+    getUv(): { u0: number; v0: number; u1: number; v1: number } {
         return this.uv;
     }
 

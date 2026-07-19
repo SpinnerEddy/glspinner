@@ -1,9 +1,8 @@
-import { ShaderLoader } from "../../webgl/gl/ShaderLoader";
-import { ShaderUniformValue } from "../../webgl/gl/uniform/ShaderUniformValue";
-import { AudioInputOperation } from "./AudioInputOperation";
+import { ShaderLoader } from '../../webgl/gl/ShaderLoader';
+import { ShaderUniformValue } from '../../webgl/gl/uniform/ShaderUniformValue';
+import { AudioInputOperation } from './AudioInputOperation';
 
 export class ShaderAudioInput implements AudioInputOperation {
-    
     private audioBuffer: AudioBuffer | undefined;
     private gl: WebGL2RenderingContext;
     private shaderLoader: ShaderLoader;
@@ -33,8 +32,8 @@ export class ShaderAudioInput implements AudioInputOperation {
         shader.use(gl);
 
         // set uniforms
-        shader.setUniform(gl, "uSampleRate", new ShaderUniformValue(this.sampleRate));
-        shader.setUniform(gl, "uTimeOffset", new ShaderUniformValue(0.0));
+        shader.setUniform(gl, 'uSampleRate', new ShaderUniformValue(this.sampleRate));
+        shader.setUniform(gl, 'uTimeOffset', new ShaderUniformValue(0.0));
 
         // discard rasterization (we don't want fragments)
         gl.enable(gl.RASTERIZER_DISCARD);
@@ -48,7 +47,7 @@ export class ShaderAudioInput implements AudioInputOperation {
 
         // 4) Read back buffer into Float32Array
         const samples = new Float32Array(sampleNums * 2);
-        
+
         gl.bindBuffer(gl.TRANSFORM_FEEDBACK_BUFFER, buffer);
         gl.getBufferSubData(gl.TRANSFORM_FEEDBACK_BUFFER, 0, samples);
 
@@ -57,7 +56,7 @@ export class ShaderAudioInput implements AudioInputOperation {
         // audioBuffer.getChannelData(0).set(samples);
         const left = audioBuffer.getChannelData(0);
         const right = audioBuffer.getChannelData(1);
-        for(let i = 0; i < sampleNums; i++){
+        for (let i = 0; i < sampleNums; i++) {
             left[i] = samples[i * 2 + 0];
             right[i] = samples[i * 2 + 1];
         }
@@ -84,7 +83,7 @@ export class ShaderAudioInput implements AudioInputOperation {
     }
 
     saveToWav(): void {
-        if(this.audioBuffer == undefined) throw new Error("Invalid AudioBuffer");
+        if (this.audioBuffer == undefined) throw new Error('Invalid AudioBuffer');
 
         const numCh = this.audioBuffer.numberOfChannels;
         const sampleRate = this.audioBuffer.sampleRate;
@@ -99,18 +98,27 @@ export class ShaderAudioInput implements AudioInputOperation {
             }
         };
 
-        write("RIFF");
-        view.setUint32(pos, 36 + length, true); pos += 4;
-        write("WAVEfmt ");
-        view.setUint32(pos, 16, true); pos += 4;
-        view.setUint16(pos, 1, true); pos += 2;
-        view.setUint16(pos, numCh, true); pos += 2;
-        view.setUint32(pos, sampleRate, true); pos += 4;
-        view.setUint32(pos, sampleRate * numCh * 2, true); pos += 4;
-        view.setUint16(pos, numCh * 2, true); pos += 2;
-        view.setUint16(pos, 16, true); pos += 2;
-        write("data");
-        view.setUint32(pos, length, true); pos += 4;
+        write('RIFF');
+        view.setUint32(pos, 36 + length, true);
+        pos += 4;
+        write('WAVEfmt ');
+        view.setUint32(pos, 16, true);
+        pos += 4;
+        view.setUint16(pos, 1, true);
+        pos += 2;
+        view.setUint16(pos, numCh, true);
+        pos += 2;
+        view.setUint32(pos, sampleRate, true);
+        pos += 4;
+        view.setUint32(pos, sampleRate * numCh * 2, true);
+        pos += 4;
+        view.setUint16(pos, numCh * 2, true);
+        pos += 2;
+        view.setUint16(pos, 16, true);
+        pos += 2;
+        write('data');
+        view.setUint32(pos, length, true);
+        pos += 4;
 
         for (let i = 0; i < this.audioBuffer.length; i++) {
             for (let ch = 0; ch < numCh; ch++) {
@@ -120,13 +128,13 @@ export class ShaderAudioInput implements AudioInputOperation {
             }
         }
 
-        console.log("saveToWav");
-        const blob = new Blob([view], { type: "audio/wav" });
+        console.log('saveToWav');
+        const blob = new Blob([view], { type: 'audio/wav' });
 
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = "shader_audio.wav";
+        a.download = 'shader_audio.wav';
         a.click();
         URL.revokeObjectURL(url);
     }

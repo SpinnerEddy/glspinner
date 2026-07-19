@@ -1,15 +1,13 @@
-import { Color } from "./Color";
-import { Color255 } from "./Color255";
-import { MyColorConstants255 } from "./ColorConstants";
+import { Color } from './Color';
+import { Color255 } from './Color255';
+import { MyColorConstants255 } from './ColorConstants';
 
-export class ColorUtility
-{
-    public static hexToColor255(colorCode: string): Color255
-    {
+export class ColorUtility {
+    public static hexToColor255(colorCode: string): Color255 {
         const format = /^#([0-9A-Fa-f]{6})$/;
         const result = format.exec(colorCode);
 
-        if(!result){
+        if (!result) {
             return MyColorConstants255.COLOR_EMPTY;
         }
 
@@ -20,17 +18,16 @@ export class ColorUtility
         const b = parseInt(hexColor.slice(4, 6), 16);
 
         return new Color255(r, g, b);
-    } 
+    }
 
-    public static hexToColor01(colorCode: string): Color
-    {
+    public static hexToColor01(colorCode: string): Color {
         const color255 = this.hexToColor255(colorCode);
 
         return color255.translateTo01();
-    } 
+    }
 
     public static hsvToRgb(hue: number, saturation: number, value: number, alpha: number): Color {
-        if(saturation > 1 || value > 1 || alpha > 1) return Color.empty();
+        if (saturation > 1 || value > 1 || alpha > 1) return Color.empty();
 
         var th = hue % 360;
         var i = Math.floor(th / 60);
@@ -39,8 +36,8 @@ export class ColorUtility
         var n = value * (1 - saturation * f);
         var k = value * (1 - saturation * (1 - f));
         var color = new Array();
-        if(!(saturation > 0) && !(saturation < 0)){
-            color.push(value, value, value, alpha); 
+        if (!(saturation > 0) && !(saturation < 0)) {
+            color.push(value, value, value, alpha);
         } else {
             var r = new Array(value, n, m, m, k, value);
             var g = new Array(k, value, value, n, m, m);

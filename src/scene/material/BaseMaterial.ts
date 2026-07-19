@@ -1,12 +1,12 @@
-import { ShaderAttribute } from "../../webgl/gl/attribute/ShaderAttribute";
-import { ShaderProgram } from "../../webgl/gl/ShaderProgram";
-import { RendererContext } from "../renderer/RendererContext";
-import { MaterialOperation } from "./MaterialOperation";
+import { ShaderAttribute } from '../../webgl/gl/attribute/ShaderAttribute';
+import { ShaderProgram } from '../../webgl/gl/ShaderProgram';
+import { RendererContext } from '../renderer/RendererContext';
+import { MaterialOperation } from './MaterialOperation';
 
 export abstract class BaseMaterial implements MaterialOperation {
     protected shaderProgram: ShaderProgram;
 
-    constructor(shaderProgram: ShaderProgram){
+    constructor(shaderProgram: ShaderProgram) {
         this.shaderProgram = shaderProgram;
     }
 
@@ -24,6 +24,6 @@ export abstract class BaseMaterial implements MaterialOperation {
     }
 
     cleanup(): void {}
-    
+
     abstract setUniform(gl: WebGL2RenderingContext, context: RendererContext): void;
 }

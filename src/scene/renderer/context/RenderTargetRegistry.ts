@@ -1,17 +1,16 @@
-import { PingPongRenderTarget } from "../../../webgl/gl/fbo/PingPongRenderTarget";
-import { RenderTargetSlotKey } from "../../../webgl/gl/fbo/RenderTargetConstants";
-import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperation";
-import { ScreenRenderTarget } from "../../../webgl/gl/fbo/ScreenRenderTarget";
-import { RenderTargetRegistryOperation } from "./RenderTargetRegistryOperation";
+import { PingPongRenderTarget } from '../../../webgl/gl/fbo/PingPongRenderTarget';
+import { RenderTargetSlotKey } from '../../../webgl/gl/fbo/RenderTargetConstants';
+import { RenderTargetOperation } from '../../../webgl/gl/fbo/RenderTargetOperation';
+import { ScreenRenderTarget } from '../../../webgl/gl/fbo/ScreenRenderTarget';
+import { RenderTargetRegistryOperation } from './RenderTargetRegistryOperation';
 
 export class RenderTargetRegistry implements RenderTargetRegistryOperation {
-
     private renderTargetPool: Map<RenderTargetSlotKey, RenderTargetOperation> = new Map();
-    private screenRenderTarget : ScreenRenderTarget | undefined = undefined;
+    private screenRenderTarget: ScreenRenderTarget | undefined = undefined;
     private pingPongRenderTargetPool: Map<RenderTargetSlotKey, PingPongRenderTarget> = new Map();
 
     getRenderTargetFromPool(slot: RenderTargetSlotKey): RenderTargetOperation | undefined {
-        if(!this.renderTargetPool.has(slot)) {
+        if (!this.renderTargetPool.has(slot)) {
             return undefined;
         }
 
@@ -23,7 +22,7 @@ export class RenderTargetRegistry implements RenderTargetRegistryOperation {
     }
 
     getPingPongRenderTargetFromPool(slot: RenderTargetSlotKey): PingPongRenderTarget | undefined {
-        if(!this.pingPongRenderTargetPool.has(slot)) {
+        if (!this.pingPongRenderTargetPool.has(slot)) {
             return undefined;
         }
 
@@ -43,13 +42,12 @@ export class RenderTargetRegistry implements RenderTargetRegistryOperation {
     }
 
     dispose(): void {
-        this.renderTargetPool.forEach(rt => rt.dispose());
+        this.renderTargetPool.forEach((rt) => rt.dispose());
         this.renderTargetPool.clear();
 
-        this.pingPongRenderTargetPool.forEach(ppRT => ppRT.dispose());
+        this.pingPongRenderTargetPool.forEach((ppRT) => ppRT.dispose());
         this.pingPongRenderTargetPool.clear();
 
         this.screenRenderTarget?.dispose();
     }
-
 }

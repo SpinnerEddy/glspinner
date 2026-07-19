@@ -1,21 +1,17 @@
-import { RecordScene } from "../scene/core/RecordScene";
-import { ClockType, RecordGuiController } from "../tools/gui/RecordGuiController";
-import { Recorder } from "../tools/Recorder";
-import { BaseApplication } from "./BaseApplication";
+import { RecordScene } from '../scene/core/RecordScene';
+import { ClockType, RecordGuiController } from '../tools/gui/RecordGuiController';
+import { Recorder } from '../tools/Recorder';
+import { BaseApplication } from './BaseApplication';
 
 export abstract class RecordingApplication extends BaseApplication {
     protected recorder: Recorder;
     private isRecording: boolean;
 
-    constructor(scene: RecordScene){
+    constructor(scene: RecordScene) {
         super(scene);
         this.recorder = new Recorder(this.canvas);
         this.isRecording = false;
-        RecordGuiController.initialize(
-            this.startRecording.bind(this), 
-            this.endRecording.bind(this),
-            this.changeSceneClock.bind(this)
-        );
+        RecordGuiController.initialize(this.startRecording.bind(this), this.endRecording.bind(this), this.changeSceneClock.bind(this));
     }
 
     public async start(): Promise<void> {
@@ -28,7 +24,7 @@ export abstract class RecordingApplication extends BaseApplication {
     }
 
     startRecording(): void {
-        if(this.isRecording) return;
+        if (this.isRecording) return;
 
         this.recorder.resetRecord();
         this.recorder.setOptions(RecordGuiController.recordOptions);
@@ -37,20 +33,19 @@ export abstract class RecordingApplication extends BaseApplication {
     }
 
     endRecording(): void {
-        if(!this.isRecording) return;
+        if (!this.isRecording) return;
         this.isRecording = false;
-        
-        if(RecordGuiController.recordOptions.type == 'Frame') return;
+
+        if (RecordGuiController.recordOptions.type == 'Frame') return;
 
         this.recorder.saveFramesAsZip();
     }
-    
+
     changeSceneClock(clockType: ClockType): void {
         const options = RecordGuiController.recordOptions;
-        if(clockType == 'RealTime'){
+        if (clockType == 'RealTime') {
             this.scene.setRealTimeClock(options.fps);
-        }
-        else{
+        } else {
             this.scene.setFixedTimeClock(options.fps, options.fixedFrameInterval);
         }
     }
@@ -60,16 +55,16 @@ export abstract class RecordingApplication extends BaseApplication {
     }
 
     async additionalSupport(): Promise<void> {
-        if(this.isRecording){
+        if (this.isRecording) {
             const frameCount = this.scene.getClock().getFrameCount();
-            const name = `frame_${String(frameCount + 1).padStart(5, '0')}.png`
+            const name = `frame_${String(frameCount + 1).padStart(5, '0')}.png`;
             await this.recorder.saveFrameWithName(name);
 
             // if(this.recorder.endRecordingAuto()){
             //     this.endRecording();
             // }
         }
-    } 
+    }
 
     abstract setup(): void;
     abstract update(): void;

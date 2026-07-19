@@ -1,7 +1,6 @@
-export const AttributeElementSize = 
-{
+export const AttributeElementSize = {
     aPosition: 3,
     aColor: 4,
     aUv: 2,
-    aNormal: 3
-}
+    aNormal: 3,
+};
