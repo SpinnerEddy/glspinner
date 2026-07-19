@@ -1,6 +1,7 @@
+import { InputHub } from "../input/InputHub";
 import { AudioOutput } from "../scene/audio/AudioOutput";
-import { Scene } from "../scene/core/Scene";
 import { SceneGraph } from "../scene/core/SceneGraph";
+import { SceneOperation } from "../scene/core/SceneOperation";
 import { SceneRendererPipelineOperation } from "../scene/renderer/pipeline/SceneRendererPipelineOperation";
 import { RendererContext } from "../scene/renderer/RendererContext";
 import { TextFontLoader } from "../webgl/gl/font/TextFontLoader";
@@ -15,12 +16,13 @@ export declare abstract class BaseApplication implements ApplicationOperation {
     protected shaderLoader: ShaderLoader;
     protected textureLoader: TextureLoader;
     protected textFontLoader: TextFontLoader;
-    protected scene: Scene;
+    protected scene: SceneOperation;
     protected sceneGraph: SceneGraph;
     protected rendererContext: RendererContext;
     protected audioOutput: AudioOutput;
     protected rendererFlowPipeline: SceneRendererPipelineOperation;
-    constructor(scene: Scene);
+    protected inputHub: InputHub;
+    constructor(scene: SceneOperation);
     start(): Promise<void>;
     preload(): Promise<void>;
     abstract setup(): void;

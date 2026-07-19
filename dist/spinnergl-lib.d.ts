@@ -6,6 +6,164 @@ interface ApplicationOperation {
     draw(): void;
 }
 
+interface VectorOperation<T> {
+    min(other: T, out?: T): T;
+    max(other: T, out?: T): T;
+    add(other: T, out?: T): T;
+    sub(other: T, out?: T): T;
+    multiply(other: number, out?: T): T;
+    div(other: number, out?: T): T;
+    setLength(other: number, out?: T): T;
+    limit(other: number, out?: T): T;
+    normalize(out?: T): T;
+    calcAngle(other: T): number;
+    calcDistance(other: T): number;
+    dot(other: T): number;
+    length(): number;
+    lerp(other: T, t: number, out?: T): T;
+    clone(): T;
+}
+
+declare abstract class Vector<T extends Vector<T>> implements VectorOperation<T> {
+    protected components: Float32Array;
+    constructor(components: Float32Array);
+    get values(): Float32Array;
+    get size(): number;
+    get(index: number): number;
+    abstract min(other: T, out?: T): T;
+    abstract max(other: T, out?: T): T;
+    abstract add(other: T, out?: T): T;
+    abstract sub(other: T, out?: T): T;
+    abstract multiply(other: number, out?: T): T;
+    abstract div(other: number, out?: T): T;
+    abstract setLength(other: number, out?: T): T;
+    abstract limit(other: number, out?: T): T;
+    abstract normalize(out?: T): T;
+    abstract calcDistance(other: T): number;
+    abstract calcAngle(other: T): number;
+    abstract dot(other: T): number;
+    abstract length(): number;
+    abstract lerp(other: T, t: number, out?: T): T;
+    abstract clone(): T;
+}
+
+declare class Vector2 extends Vector<Vector2> {
+    constructor(x: number, y: number);
+    set x(x: number);
+    set y(y: number);
+    get x(): number;
+    get y(): number;
+    create(x?: number, y?: number): Vector2;
+    min(other: Vector2, out?: Vector2): Vector2;
+    max(other: Vector2, out?: Vector2): Vector2;
+    add(other: Vector2, out?: Vector2): Vector2;
+    sub(other: Vector2, out?: Vector2): Vector2;
+    multiply(other: number, out?: Vector2): Vector2;
+    div(other: number, out?: Vector2): Vector2;
+    setLength(other: number, out?: Vector2): Vector2;
+    limit(other: number, out?: Vector2): Vector2;
+    normalize(out?: Vector2): Vector2;
+    calcDistance(other: Vector2): number;
+    calcAngle(other: Vector2): number;
+    dot(other: Vector2): number;
+    length(): number;
+    lerp(other: Vector2, t: number, out?: Vector2): Vector2;
+    clone(): Vector2;
+    heading2D(): number;
+}
+
+declare const DeviceName: {
+    readonly Mouse: "Mouse";
+    readonly Keyboard: "Keyboard";
+    readonly Midi: "Midi";
+};
+type DeviceType = typeof DeviceName[keyof typeof DeviceName];
+declare const MouseButton: {
+    readonly LEFT: 0;
+    readonly MIDDLE: 1;
+    readonly RIGHT: 2;
+};
+type MouseButtonType = typeof MouseButton[keyof typeof MouseButton];
+declare const KeyboardCode: {
+    readonly A: "KeyA";
+    readonly B: "KeyB";
+    readonly C: "KeyC";
+    readonly D: "KeyD";
+    readonly E: "KeyE";
+    readonly F: "KeyF";
+    readonly G: "KeyG";
+    readonly H: "KeyH";
+    readonly I: "KeyI";
+    readonly J: "KeyJ";
+    readonly K: "KeyK";
+    readonly L: "KeyL";
+    readonly M: "KeyM";
+    readonly N: "KeyN";
+    readonly O: "KeyO";
+    readonly P: "KeyP";
+    readonly Q: "KeyQ";
+    readonly R: "KeyR";
+    readonly S: "KeyS";
+    readonly T: "KeyT";
+    readonly U: "KeyU";
+    readonly V: "KeyV";
+    readonly W: "KeyW";
+    readonly X: "KeyX";
+    readonly Y: "KeyY";
+    readonly Z: "KeyZ";
+    readonly 0: "D0";
+    readonly 1: "D1";
+    readonly 2: "D2";
+    readonly 3: "D3";
+    readonly 4: "D4";
+    readonly 5: "D5";
+    readonly 6: "D6";
+    readonly 7: "D7";
+    readonly 8: "D8";
+    readonly 9: "D9";
+    readonly F1: "F1";
+    readonly F2: "F2";
+    readonly F3: "F3";
+    readonly F4: "F4";
+    readonly F5: "F5";
+    readonly F6: "F6";
+    readonly F7: "F7";
+    readonly F8: "F8";
+    readonly F9: "F9";
+    readonly F10: "F10";
+    readonly F11: "F11";
+    readonly F12: "F12";
+    readonly UP: "ArrowUp";
+    readonly DOWN: "ArrowDown";
+    readonly LEFT: "ArrowLeft";
+    readonly RIGHT: "ArrowRight";
+    readonly SPACE: "Space";
+};
+type KeyboardCodeType = typeof KeyboardCode[keyof typeof KeyboardCode];
+type InputOption = {
+    device: DeviceType;
+    type: MouseButtonType | KeyboardCodeType;
+};
+
+interface DeviceOperation {
+    update(): void;
+    isDown(type: MouseButtonType | KeyboardCodeType): boolean;
+    isPressed(type: MouseButtonType | KeyboardCodeType): boolean;
+    isReleased(type: MouseButtonType | KeyboardCodeType): boolean;
+}
+
+declare class InputHub<TDevices extends Record<string, DeviceOperation> = Record<string, DeviceOperation>> {
+    private devices;
+    constructor();
+    update(): void;
+    isDown(option: InputOption): boolean;
+    isPressed(option: InputOption): boolean;
+    isReleased(option: InputOption): boolean;
+    getMousePosition(): Vector2;
+    getMouseDelta(): Vector2;
+    private resolveDevice;
+}
+
 interface AudioInputOperation {
     load(path: string, audioContext: AudioContext): Promise<void>;
     getBuffer(): AudioBuffer;
@@ -25,77 +183,6 @@ declare class AudioOutput {
     stopAudio(): void;
     setInput(audioInput: AudioInputOperation): void;
     getAudioContext(): AudioContext;
-}
-
-interface ClockOperation {
-    update(): void;
-    setTimeScale(timeScale: number): void;
-    setFps(fps: number): void;
-    setFrameInterval(fps: number): void;
-    shouldDraw(): boolean;
-    getElapsedTime(): number;
-    getDeltaTime(): number;
-    getFrameCount(): number;
-    getFrameInterval(): number;
-    reset(): void;
-}
-
-interface SceneOperation {
-    start(): void;
-    stop(): void;
-    reset(): void;
-    setUpdate(updateFunction: Function): void;
-    setDraw(drawFunction: Function): void;
-    setAdditionalSupport(additionalSupport: Function): void;
-    setRealTimeClock(fps: number): void;
-    setFixedTimeClock(fps: number, frameInterval: number): void;
-}
-
-declare class Scene implements SceneOperation {
-    private clock;
-    private isRunning;
-    private updateFunction;
-    private drawFunction;
-    private additionalSupportFunctionAsync;
-    private animationId;
-    constructor();
-    start(): void;
-    stop(): void;
-    reset(): void;
-    setUpdate(updateFunction: Function): void;
-    setDraw(drawFunction: Function): void;
-    setAdditionalSupport(additionalSupport: Function): void;
-    setRealTimeClock(fps: number): void;
-    setFixedTimeClock(fps: number, frameInterval: number): void;
-    get Clock(): ClockOperation;
-    private run;
-    private updateObjects;
-    private drawObjects;
-    private additionalSupport;
-}
-
-declare const RenderTargetSlot: {
-    readonly RENDER_TARGET_A: 0;
-    readonly RENDER_TARGET_B: 1;
-    readonly PREV_FRAME_RENDER_TARGET: 2;
-    readonly BLUR_RENDER_TARGET_HALF: 3;
-    readonly BLUR_RENDER_TARGET_QUARTER: 4;
-    readonly BLOOM_TEMP_RENDER_TARGET_BRIGHT: 5;
-    readonly BLOOM_TEMP_RENDER_TARGET_BLUR_H: 6;
-    readonly BLOOM_TEMP_RENDER_TARGET_BLUR_V: 7;
-    readonly BLOOM_RENDER_TARGET: 8;
-    readonly RENDER_TARGET_EFFECTED: 9;
-};
-type RenderTargetSlotKey = typeof RenderTargetSlot[keyof typeof RenderTargetSlot];
-
-interface RenderTargetOperation {
-    drawToFrameBuffer(drawFunction: () => void): void;
-    drawToScreen(drawFunction: () => void): void;
-    getTexture(): WebGLTexture;
-    bind(index: number): void;
-    unbind(): void;
-    resize(resolution: [number, number]): void;
-    dispose(): void;
 }
 
 declare class ShaderAttribute {
@@ -167,72 +254,6 @@ declare class Quaternion {
         yaw: number;
         roll: number;
     };
-}
-
-interface VectorOperation<T> {
-    min(other: T, out?: T): T;
-    max(other: T, out?: T): T;
-    add(other: T, out?: T): T;
-    sub(other: T, out?: T): T;
-    multiply(other: number, out?: T): T;
-    div(other: number, out?: T): T;
-    setLength(other: number, out?: T): T;
-    limit(other: number, out?: T): T;
-    normalize(out?: T): T;
-    calcAngle(other: T): number;
-    calcDistance(other: T): number;
-    dot(other: T): number;
-    length(): number;
-    lerp(other: T, t: number, out?: T): T;
-    clone(): T;
-}
-
-declare abstract class Vector<T extends Vector<T>> implements VectorOperation<T> {
-    protected components: Float32Array;
-    constructor(components: Float32Array);
-    get values(): Float32Array;
-    get size(): number;
-    get(index: number): number;
-    abstract min(other: T, out?: T): T;
-    abstract max(other: T, out?: T): T;
-    abstract add(other: T, out?: T): T;
-    abstract sub(other: T, out?: T): T;
-    abstract multiply(other: number, out?: T): T;
-    abstract div(other: number, out?: T): T;
-    abstract setLength(other: number, out?: T): T;
-    abstract limit(other: number, out?: T): T;
-    abstract normalize(out?: T): T;
-    abstract calcDistance(other: T): number;
-    abstract calcAngle(other: T): number;
-    abstract dot(other: T): number;
-    abstract length(): number;
-    abstract lerp(other: T, t: number, out?: T): T;
-    abstract clone(): T;
-}
-
-declare class Vector2 extends Vector<Vector2> {
-    constructor(x: number, y: number);
-    set x(x: number);
-    set y(y: number);
-    get x(): number;
-    get y(): number;
-    create(x?: number, y?: number): Vector2;
-    min(other: Vector2, out?: Vector2): Vector2;
-    max(other: Vector2, out?: Vector2): Vector2;
-    add(other: Vector2, out?: Vector2): Vector2;
-    sub(other: Vector2, out?: Vector2): Vector2;
-    multiply(other: number, out?: Vector2): Vector2;
-    div(other: number, out?: Vector2): Vector2;
-    setLength(other: number, out?: Vector2): Vector2;
-    limit(other: number, out?: Vector2): Vector2;
-    normalize(out?: Vector2): Vector2;
-    calcDistance(other: Vector2): number;
-    calcAngle(other: Vector2): number;
-    dot(other: Vector2): number;
-    length(): number;
-    lerp(other: Vector2, t: number, out?: Vector2): Vector2;
-    clone(): Vector2;
-    heading2D(): number;
 }
 
 declare class Vector3 extends Vector<Vector3> {
@@ -339,11 +360,14 @@ declare class Vector4 extends Vector<Vector4> {
 declare class ShaderUniformValue {
     private values;
     private type;
+    private byteSize;
     constructor(value: UniformAvailableType, type?: UniformValueType);
     getUniformValues(): number | number[] | Float32Array | Int32Array;
     getUniformType(): UniformType;
+    getByteSize(): number;
     private getValue;
     private getType;
+    private calculateByteSize;
     private isFloat;
 }
 
@@ -351,6 +375,23 @@ type UniformType = '1f' | '1fv' | '1i' | '1iv' | '2f' | '2fv' | '2i' | '2iv' | '
 type UniformAvailableType = number | number[] | Float32Array | Int32Array | Matrix22 | Matrix33 | Matrix44 | Vector2 | Vector3 | Vector4;
 type UniformValueType = 'float' | 'int';
 type UniformPairs = Record<string, ShaderUniformValue>;
+declare const NumberByte = 4;
+declare const UniformBindingPoint: {
+    readonly GLOBAL: 0;
+    readonly MATERIAL: 1;
+    readonly OBJECT: 2;
+    readonly LIGHT: 3;
+    readonly DEBUG: 10;
+};
+type UniformBindingPointKey = typeof UniformBindingPoint[keyof typeof UniformBindingPoint];
+declare const GlobalUniformKey: {
+    readonly VIEW_MATRIX: "viewMatrix";
+    readonly PROJECTION_MATRIX: "projectionMatrix";
+    readonly TIME: "time";
+    readonly RESOLUTION: "resolution";
+    readonly MOUSE: "mouse";
+};
+type GlobalUniformKeyValue = typeof GlobalUniformKey[keyof typeof GlobalUniformKey];
 
 declare class ShaderUniform {
     private gl;
@@ -473,19 +514,94 @@ type PointLightParams = BaseLightParams & {
 };
 type LightParams = DirectionalLightParams | PointLightParams;
 
+interface RenderTargetOperation {
+    bindAsDrawTarget(): void;
+    getFrameBuffer(): WebGLFramebuffer;
+    getColorTexture(index: number): WebGLTexture;
+    getDepthTexture(): WebGLTexture;
+    getSize(): [number, number];
+    resize(resolution: [number, number]): void;
+    dispose(): void;
+}
+
+declare class PingPongRenderTarget {
+    private targets;
+    private readIndex;
+    constructor(targetA: RenderTargetOperation, targetB: RenderTargetOperation);
+    get read(): RenderTargetOperation;
+    get write(): RenderTargetOperation;
+    swap(): void;
+    resize(resolution: [number, number]): void;
+    dispose(): void;
+    getColorTexture(index: number): WebGLTexture;
+    getDepthTexture(): WebGLTexture;
+}
+
+declare const RenderTargetSlot: {
+    readonly CURRENT_FRAME: 0;
+    readonly TEMP_FRAME_BUFFER: 1;
+    readonly PREV_FRAME: 2;
+    readonly HALF_RES_BUFFER: 3;
+    readonly BRIGHT_PASS_BUFFER: 4;
+    readonly BLOOM_RENDER_TARGET: 5;
+    readonly PINGPONG_TEMP_BUFFER: 100;
+};
+type RenderTargetSlotKey = typeof RenderTargetSlot[keyof typeof RenderTargetSlot];
+
+declare class ScreenRenderTarget implements RenderTargetOperation {
+    private gl;
+    private width;
+    private height;
+    constructor(gl: WebGL2RenderingContext, resolution: [number, number]);
+    bindAsDrawTarget(): void;
+    getColorTexture(_index: number): WebGLTexture;
+    getDepthTexture(): WebGLTexture;
+    getFrameBuffer(): WebGLFramebuffer;
+    getSize(): [number, number];
+    resize(resolution: [number, number]): void;
+    dispose(): void;
+}
+
+interface RenderTargetRegistryOperation {
+    getRenderTargetFromPool(slot: RenderTargetSlotKey): RenderTargetOperation | undefined;
+    addRenderTargetToPool(slot: RenderTargetSlotKey, renderTarget: RenderTargetOperation): void;
+    getPingPongRenderTargetFromPool(slot: RenderTargetSlotKey): PingPongRenderTarget | undefined;
+    addPingPongRenderTargetToPool(slot: RenderTargetSlotKey, pingPongRenderTarget: PingPongRenderTarget): void;
+    getScreenRenderTarget(): ScreenRenderTarget;
+    setScreenRenderTarget(screenRenderTarget: ScreenRenderTarget): void;
+    dispose(): void;
+}
+
+declare const RenderTagConstants: {
+    readonly BACKGROUND: 0;
+    readonly OPAQUE: 1;
+    readonly EMISSIVE: 2;
+    readonly TRANSPARENT: 3;
+    readonly DISTORTION: 4;
+    readonly OVERLAY: 5;
+    readonly ALL: -1;
+};
+type RenderTag = typeof RenderTagConstants[keyof typeof RenderTagConstants];
+
 declare class RendererContext {
     private camera;
     private lights;
     private globalUniforms;
     private fragmentCanvasUniforms;
     private currentShaderProgram;
-    private renderTargetPool;
-    getRenderTargetFromPool(key: RenderTargetSlotKey): RenderTargetOperation | undefined;
-    addRenderTargetToPool(key: RenderTargetSlotKey, renderTarget: RenderTargetOperation): void;
+    private renderTargetRegistry;
+    private activateRenderTag;
+    private globalUniformBuffer;
+    constructor(gl: WebGL2RenderingContext);
+    getRenderTargetRegistry(): RenderTargetRegistryOperation;
+    setActivateRenderTag(renderTag: RenderTag): void;
+    getActivateRenderTag(): RenderTag;
     setCamera(camera: Camera): void;
     getCamera(): Camera;
     updateGlobalUniform(key: string, value: ShaderUniformValue): void;
     getGlobalUniform(): UniformPairs;
+    updateGlobalUniformValues(time: number, mousePos: Vector2): void;
+    bindGlobalUniforms(): void;
     updateFragmentCanvasUniform(key: string, value: ShaderUniformValue): void;
     getFragmentCanvasUniform(): UniformPairs;
     setCurrentShaderProgram(program: ShaderProgram): void;
@@ -517,12 +633,14 @@ declare abstract class SceneNode {
     protected parent: SceneNode | undefined;
     protected children: SceneNode[];
     protected transform: Transform;
+    protected renderTag: RenderTag;
     constructor(id?: string);
     addChild(child: SceneNode): void;
     removeChild(child: SceneNode): void;
     getChildren(): SceneNode[];
     getId(): string;
     getTransform(): Transform;
+    shouldDraw(rendererContext: RendererContext): boolean;
     private setParent;
     abstract update(): void;
     abstract draw(gl: WebGL2RenderingContext, context: RendererContext): void;
@@ -536,12 +654,66 @@ declare class SceneGraph {
     getGraph(): SceneNode;
 }
 
+interface ClockOperation {
+    update(): void;
+    setTimeScale(timeScale: number): void;
+    setFps(fps: number): void;
+    setFrameInterval(fps: number): void;
+    setFrameNum(frame: number): void;
+    shouldDraw(): boolean;
+    getElapsedTime(): number;
+    getDeltaTime(): number;
+    getFrameCount(): number;
+    getFrameInterval(): number;
+    reset(): void;
+}
+
+interface SceneOperation {
+    start(): void;
+    stop(): void;
+    reset(): void;
+    getClock(): ClockOperation;
+    setUpdate(updateFunction: Function): void;
+    setDraw(drawFunction: Function): void;
+    setAdditionalSupport(additionalSupport: Function): void;
+    setRealTimeClock(fps: number): void;
+    setFixedTimeClock(fps: number, frameInterval: number): void;
+}
+
+interface ShaderPassOperation {
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
+    setEffectEnabled(enabled: boolean): void;
+    getEffectEnabled(): boolean;
+}
+
 interface RendererFlowOperation {
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation | undefined, outputRenderTarget: RenderTargetOperation | undefined): RenderTargetOperation | undefined;
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
+    isEnabled(): boolean;
+}
+
+declare abstract class BaseSceneRendererFlow implements RendererFlowOperation {
+    abstract render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
+    abstract isEnabled(): boolean;
+}
+
+declare class FinalBlitRendererFlow extends BaseSceneRendererFlow {
+    private finalBlitShaderPass;
+    constructor(shaderPass: ShaderPassOperation);
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
+    isEnabled(): boolean;
+}
+
+declare class PostEffectRendererFlow extends BaseSceneRendererFlow {
+    private shaderPass;
+    constructor(shaderPass: ShaderPassOperation);
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
+    isEnabled(): boolean;
 }
 
 interface SceneRendererPipelineOperation {
-    addFlow(rendererFlow: RendererFlowOperation): void;
+    addSceneRendererFlow(rendererFlow: RendererFlowOperation): void;
+    addPostEffectFlow(rendererFlow: PostEffectRendererFlow): void;
+    addFinalBlitFlow(rendererFlow: FinalBlitRendererFlow): void;
     render(gl: WebGL2RenderingContext, context: RendererContext): void;
 }
 
@@ -656,17 +828,43 @@ declare abstract class BaseApplication implements ApplicationOperation {
     protected shaderLoader: ShaderLoader;
     protected textureLoader: TextureLoader;
     protected textFontLoader: TextFontLoader;
-    protected scene: Scene;
+    protected scene: SceneOperation;
     protected sceneGraph: SceneGraph;
     protected rendererContext: RendererContext;
     protected audioOutput: AudioOutput;
     protected rendererFlowPipeline: SceneRendererPipelineOperation;
-    constructor(scene: Scene);
+    protected inputHub: InputHub;
+    constructor(scene: SceneOperation);
     start(): Promise<void>;
     preload(): Promise<void>;
     abstract setup(): void;
     abstract update(): void;
     abstract draw(): void;
+}
+
+declare class RecordScene implements SceneOperation {
+    private clock;
+    private isRunning;
+    private updateFunction;
+    private drawFunction;
+    private additionalSupportFunctionAsync;
+    private animationId;
+    constructor();
+    start(): void;
+    stop(): void;
+    reset(): void;
+    getClock(): ClockOperation;
+    setUpdate(updateFunction: Function): void;
+    setDraw(drawFunction: Function): void;
+    setAdditionalSupport(additionalSupport: Function): void;
+    setRealTimeClock(fps: number): void;
+    setFixedTimeClock(fps: number, frameInterval: number): void;
+    get Clock(): ClockOperation;
+    record(fps: number, frameNum: number): Promise<void>;
+    private updateObjects;
+    private drawObjects;
+    private additionalSupport;
+    private delay;
 }
 
 type RecordType = 'Frame' | 'SequencialFrames' | 'StartAndStop';
@@ -687,6 +885,7 @@ declare class Recorder {
     resetRecord(): void;
     setOptions(options: RecordOptions): void;
     saveSequentialFrames(): Promise<void>;
+    saveFrameWithName(name: string): Promise<void>;
     endRecordingAuto(): boolean;
     saveFramesAsZip(zipName?: string): Promise<void>;
     private save;
@@ -713,7 +912,7 @@ declare class RecordGuiController {
 declare abstract class RecordingApplication extends BaseApplication {
     protected recorder: Recorder;
     private isRecording;
-    constructor(scene: Scene);
+    constructor(scene: RecordScene);
     start(): Promise<void>;
     startRecording(): void;
     endRecording(): void;
@@ -762,12 +961,6 @@ declare class AudioGuiController {
     private static onAudioPlay;
     private static onAudioStop;
     static initialize(onAudioPlay: () => void, onAudioStop: () => void): void;
-}
-
-interface ShaderPassOperation {
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
-    setEffectEnabled(enabled: boolean): void;
-    getEffectEnabled(): boolean;
 }
 
 declare class PostEffectGuiController {
@@ -845,6 +1038,7 @@ declare class MathUtility {
     static acos(angle: number): number;
     static atan2(y: number, x: number): number;
     static fract(value: number): number;
+    static ceil(value: number): number;
     static linearStep(start: number, end: number, t: number): number;
     static timeToBeat(time: number, bpm: number): number;
     static beatToTime(beat: number, bpm: number): number;
@@ -986,6 +1180,21 @@ declare class IndexBuffer extends BaseBuffer {
     dispose(): void;
 }
 
+declare class ShaderUniformBuffer extends BaseBuffer {
+    private cpuBuffer;
+    private memberOffsets;
+    private shouldTransfer;
+    constructor(gl: WebGL2RenderingContext, uniforms: UniformPairs);
+    get BufferType(): number;
+    bind(slot?: number): void;
+    unbind(): void;
+    setData(): void;
+    dispose(): void;
+    updateUniformValue(key: string, value: ShaderUniformValue): void;
+    transferUniform(): void;
+    private initialize;
+}
+
 interface GeometryOperation {
     setUpBuffers(gl: WebGL2RenderingContext, attributes: Record<string, ShaderAttribute>): void;
     bind(): void;
@@ -1059,33 +1268,53 @@ declare const TextureSlot: {
     POST_EFFECTED: number;
 };
 
-declare class RenderTarget implements RenderTargetOperation {
+declare enum AttachmentType {
+    COLOR = 0,
+    ID = 1,
+    NORMAL = 2,
+    EMISSIVE = 3,
+    DEPTH = 4,
+    DEPTH_TEXTURE = 5,
+    STENCIL = 6,
+    DEPTH_STENCIL = 7
+}
+type AttachmentConfig = {
+    type: AttachmentType;
+    minFilter?: number;
+    magFilter?: number;
+};
+type CustomRenderTargetOption = {
+    attachments: AttachmentConfig[];
+};
+type RenderTargetOption = {
+    colorTextureCount?: number;
+    useDepth?: boolean;
+};
+
+declare class CustomRenderTarget implements RenderTargetOperation {
     private gl;
-    private fbo;
-    private rbo;
-    private texture;
+    private framebuffer;
+    private colorTextures;
+    private depthTexture;
+    private depthRenderbuffer;
     private width;
     private height;
-    constructor(gl: WebGL2RenderingContext, resolution: [number, number]);
-    drawToFrameBuffer(drawFunction: () => void): void;
-    drawToScreen(drawFunction: () => void): void;
-    bind(index: number): void;
-    unbind(): void;
-    getTexture(): WebGLTexture;
+    private option;
+    private colorTextureCount;
+    private drawBufferAttachmentPoints;
+    constructor(gl: WebGL2RenderingContext, resolution: [number, number], option?: CustomRenderTargetOption);
+    bindAsDrawTarget(): void;
+    getFrameBuffer(): WebGLFramebuffer;
+    getColorTexture(index?: number): WebGLTexture;
+    getDepthTexture(): WebGLTexture;
+    getSize(): [number, number];
     resize(resolution: [number, number]): void;
     dispose(): void;
-    private setUpFrameBuffer;
-}
-
-declare class PingPongRenderTarget {
-    private targets;
-    private readIndex;
-    constructor(gl: WebGL2RenderingContext, resolution: [number, number]);
-    get read(): RenderTarget;
-    get write(): RenderTarget;
-    swap(): void;
-    resize(resolution: [number, number]): void;
-    dispose(): void;
+    private initialize;
+    private setUpAttachment;
+    private getColorTextureSettingByAttachmentType;
+    private getRenderbufferSettingByAttachmentType;
+    private getTextureFilters;
 }
 
 declare class ExternalFileAudioInput implements AudioInputOperation {
@@ -1104,6 +1333,7 @@ declare class ShaderAudioInput implements AudioInputOperation {
     constructor(gl: WebGL2RenderingContext, shaderLoader: ShaderLoader, audioDuration?: number);
     load(path: string, audioContext: AudioContext): Promise<void>;
     getBuffer(): AudioBuffer;
+    saveToWav(): void;
 }
 
 declare abstract class Clock implements ClockOperation {
@@ -1119,6 +1349,7 @@ declare abstract class Clock implements ClockOperation {
     setFps(fps: number): void;
     setFrameInterval(fps: number): void;
     setTimeScale(timeScale: number): void;
+    setFrameNum(frame: number): void;
     getElapsedTime(): number;
     getDeltaTime(): number;
     getFrameCount(): number;
@@ -1249,9 +1480,9 @@ interface MeshOperation {
 }
 
 declare abstract class BaseMesh implements MeshOperation {
-    protected geometry: BaseGeometry;
-    protected material: BaseMaterial;
-    constructor(geometry: BaseGeometry, material: BaseMaterial);
+    protected geometry: GeometryOperation;
+    protected material: MaterialOperation;
+    constructor(geometry: GeometryOperation, material: MaterialOperation);
     useMaterial(gl: WebGL2RenderingContext, context: RendererContext): void;
     updateMaterialParams(_gl: WebGL2RenderingContext, _transform: Transform, _context: RendererContext): void;
     abstract updateUniforms(gl: WebGL2RenderingContext, context: RendererContext): void;
@@ -1259,26 +1490,26 @@ declare abstract class BaseMesh implements MeshOperation {
 }
 
 declare class FullScreenQuadMesh extends BaseMesh {
-    constructor(geometry: Rectangle, material: BaseMaterial);
+    constructor(geometry: Rectangle, material: MaterialOperation);
     updateUniforms(gl: WebGL2RenderingContext, context: RendererContext): void;
     draw(gl: WebGL2RenderingContext): void;
 }
 
 declare class SimpleMesh extends BaseMesh {
-    constructor(geometry: BaseGeometry, material: BaseMaterial);
+    constructor(geometry: GeometryOperation, material: MaterialOperation);
     updateMaterialParams(gl: WebGL2RenderingContext, transform: Transform, context: RendererContext): void;
     updateUniforms(gl: WebGL2RenderingContext, context: RendererContext): void;
     draw(gl: WebGL2RenderingContext): void;
 }
 
 declare class UnlitMesh extends BaseMesh {
-    constructor(geometry: BaseGeometry, material: BaseMaterial);
+    constructor(geometry: GeometryOperation, material: MaterialOperation);
     updateUniforms(gl: WebGL2RenderingContext, context: RendererContext): void;
     draw(gl: WebGL2RenderingContext): void;
 }
 
 declare class TextMesh extends BaseMesh {
-    constructor(geometry: TextQuad, material: BaseMaterial);
+    constructor(geometry: TextQuad, material: MaterialOperation);
     get resolution(): [number, number];
     updateUniforms(gl: WebGL2RenderingContext, context: RendererContext): void;
     draw(gl: WebGL2RenderingContext): void;
@@ -1331,6 +1562,30 @@ declare class Light implements LightOperation {
     setIntensity(intensity: number): void;
     getColor(): Color;
     getIntensity(): number;
+}
+
+declare class Scene implements SceneOperation {
+    private clock;
+    private isRunning;
+    private updateFunction;
+    private drawFunction;
+    private additionalSupportFunctionAsync;
+    private animationId;
+    constructor();
+    start(): void;
+    stop(): void;
+    reset(): void;
+    getClock(): ClockOperation;
+    setUpdate(updateFunction: Function): void;
+    setDraw(drawFunction: Function): void;
+    setAdditionalSupport(additionalSupport: Function): void;
+    setRealTimeClock(fps: number): void;
+    setFixedTimeClock(fps: number, frameInterval: number): void;
+    get Clock(): ClockOperation;
+    private run;
+    private updateObjects;
+    private drawObjects;
+    private additionalSupport;
 }
 
 declare class SceneGraphUtility {
@@ -1393,21 +1648,11 @@ declare class TextMeshNode extends SceneNode {
     private updateMaterialParams;
 }
 
-declare abstract class BaseSceneRendererFlow implements RendererFlowOperation {
-    abstract render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation | undefined, outputRenderTarget: RenderTargetOperation | undefined): RenderTargetOperation | undefined;
-}
-
 declare class StandardSceneRendererFlow extends BaseSceneRendererFlow {
     private sceneGraphRoot;
     constructor(sceneGraphRoot: EmptyNode);
-    render(gl: WebGL2RenderingContext, context: RendererContext, _inputRenderTarget: RenderTargetOperation | undefined, outputRenderTarget: RenderTargetOperation | undefined): RenderTargetOperation | undefined;
-    private drawScene;
-}
-
-declare class PostEffectRendererFlow extends BaseSceneRendererFlow {
-    private shaderPasses;
-    constructor(shaderPasses: Map<string, ShaderPassOperation>);
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation | undefined, outputRenderTarget: RenderTargetOperation | undefined): RenderTargetOperation | undefined;
+    render(gl: WebGL2RenderingContext, context: RendererContext, _inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
+    isEnabled(): boolean;
 }
 
 type RendererFlowOptions = {
@@ -1417,10 +1662,15 @@ type RendererFlowOptions = {
 };
 
 declare class SceneRendererPipeline implements SceneRendererPipelineOperation {
-    private rendererFlows;
+    private sceneRendererFlows;
+    private postEffectFlows;
+    private finalBlitFlow;
     constructor();
-    addFlow(rendererFlow: RendererFlowOperation): void;
+    addSceneRendererFlow(rendererFlow: RendererFlowOperation): void;
+    addPostEffectFlow(rendererFlow: PostEffectRendererFlow): void;
+    addFinalBlitFlow(rendererFlow: FinalBlitRendererFlow): void;
     render(gl: WebGL2RenderingContext, context: RendererContext): void;
+    private renderScene;
 }
 
 declare abstract class BaseShaderPass implements ShaderPassOperation {
@@ -1428,55 +1678,57 @@ declare abstract class BaseShaderPass implements ShaderPassOperation {
     protected plane: MeshNode;
     protected isEffectEnabled: boolean;
     constructor(gl: WebGL2RenderingContext, material: BaseMaterial);
-    abstract render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    abstract render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
     setEffectEnabled(enabled: boolean): void;
     getEffectEnabled(): boolean;
-    protected draw(gl: WebGL2RenderingContext, context: RendererContext, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    protected draw(gl: WebGL2RenderingContext, context: RendererContext, outputRenderTarget: RenderTargetOperation): void;
 }
 
 declare class GrayScaleShaderPass extends BaseShaderPass {
     constructor(gl: WebGL2RenderingContext, material: GrayScaleMaterial);
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
 }
 
 declare class MosaicShaderPass extends BaseShaderPass {
     constructor(gl: WebGL2RenderingContext, material: MosaicMaterial);
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
 }
 
 declare class RGBShiftShaderPass extends BaseShaderPass {
     constructor(gl: WebGL2RenderingContext, material: RGBShiftMaterial);
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
 }
 
 declare class GlitchShaderPass extends BaseShaderPass {
     constructor(gl: WebGL2RenderingContext, material: GlitchMaterial);
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
 }
 
 declare class FinalBlitShaderPass extends BaseShaderPass {
     constructor(gl: WebGL2RenderingContext, material: FrameBufferTexturedMaterial);
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
 }
 
 declare class BlurShaderPass extends BaseShaderPass {
     constructor(gl: WebGL2RenderingContext, material: BlurMaterial);
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
 }
 
 declare class BrightShaderPass extends BaseShaderPass {
     constructor(gl: WebGL2RenderingContext, material: BrightMaterial);
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
 }
 
 declare class SingleDirectionBlurShaderPass extends BaseShaderPass {
     constructor(gl: WebGL2RenderingContext, material: BlurMaterial);
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
 }
 
 declare class ComposeShaderPass extends BaseShaderPass {
+    private bloomTexture;
     constructor(gl: WebGL2RenderingContext, material: ComposeMaterial);
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
+    setBloomTexture(bloomFrame: RenderTargetOperation): void;
 }
 
 declare class BloomShaderPass implements ShaderPassOperation {
@@ -1486,17 +1738,17 @@ declare class BloomShaderPass implements ShaderPassOperation {
     private composeShaderPass;
     private isEffectEnabled;
     constructor(gl: WebGL2RenderingContext, brightMaterial: BrightMaterial, horizontalBlurMaterial: BlurMaterial, verticalBlurMaterial: BlurMaterial, composeMaterial: ComposeMaterial);
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
     setEffectEnabled(enabled: boolean): void;
     getEffectEnabled(): boolean;
 }
 
 declare class MaskShaderPass extends BaseShaderPass {
     constructor(gl: WebGL2RenderingContext, material: MaskMaterial);
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
 }
 
 declare function initializeLibrary(): void;
 
-export { AttributeElementSize, AudioGuiController, AudioOutput, BaseApplication, BaseBuffer, BaseGeometry, BaseMaterial, BaseMesh, BaseSceneRendererFlow, BaseShaderPass, BloomShaderPass, BlurMaterial, BlurShaderPass, BrightMaterial, BrightShaderPass, Camera, CameraType, Clock, Color, Color255, ColorUtility, ComposeMaterial, ComposeShaderPass, DefaultColorConstants, DefaultValueConstants, DefaultVectorConstants, DirectionalLightNode, EmptyNode, ExternalFileAudioInput, FinalBlitShaderPass, FixedTimeClock, FontGlyph, FragmentCanvasMaterial, FrameBufferTexturedMaterial, FullScreenQuadMesh, GeometryBuffer, GlitchMaterial, GlitchShaderPass, GouraudMaterial, GrayScaleMaterial, GrayScaleShaderPass, GroupNode, GuiUtility, IndexBuffer, Light, LightGuiController, LightNode, LightType, MaskMaterial, MaskShaderPass, MaterialFactory, MathUtility, Matrix, Matrix22, Matrix33, Matrix44, MatrixCalculator, MatrixClassAndSizePair, MeshNode, MosaicMaterial, MosaicShaderPass, MyColorCode, MyColorConstants255, PhongMaterial, PingPongRenderTarget, Plane, PlaySceneGuiController, PointLightNode, PostEffectGuiController, PostEffectRendererFlow, Quaternion, QuaternionCalculator, RGBShiftMaterial, RGBShiftShaderPass, RealTimeClock, RecordGuiController, Recorder, RecordingApplication, Rectangle, RenderTarget, RenderTargetSlot, RendererContext, Scene, SceneGraphNodeIdGenerator, SceneGraphUtility, SceneNode, SceneRendererPipeline, ShaderAttribute, ShaderAudioInput, ShaderLoader, ShaderProgram, ShaderUniform, ShaderUniformValue, SimpleMesh, SingleDirectionBlurShaderPass, Sphere, StandardSceneRendererFlow, TextFontLoader, TextMesh, TextMeshNode, TextQuad, Texture2D, TextureFrameBuffer, TextureLoader, TextureSlot, TexturedMaterial, Torus, Transform, TrigonometricConstants, UnlitMaterial, UnlitMesh, Vector, Vector2, Vector3, Vector4, VectorCalculator, VectorClassAndSizePair, VertexArray, WebGLUtility, initializeLibrary };
-export type { ApplicationOperation, AudioInputOperation, BaseLightParams, BufferOperation, CameraDirection, CameraOptions, ClockOperation, ClockType, DirectionalLightParams, FontGlyphData, GeometryOperation, LightOperation, LightOptions, LightParams, MaterialOperation, MatrixOperation, MeshOperation, PointLightParams, RecordOptions, RecordType, RenderTargetOperation, RenderTargetSlotKey, RendererFlowOperation, RendererFlowOptions, SceneOperation, SceneRendererPipelineOperation, ShaderPassOperation, TextureOperation, UniformAvailableType, UniformPairs, UniformType, UniformValueType, VectorOperation };
+export { AttachmentType, AttributeElementSize, AudioGuiController, AudioOutput, BaseApplication, BaseBuffer, BaseGeometry, BaseMaterial, BaseMesh, BaseSceneRendererFlow, BaseShaderPass, BloomShaderPass, BlurMaterial, BlurShaderPass, BrightMaterial, BrightShaderPass, Camera, CameraType, Clock, Color, Color255, ColorUtility, ComposeMaterial, ComposeShaderPass, CustomRenderTarget, DefaultColorConstants, DefaultValueConstants, DefaultVectorConstants, DirectionalLightNode, EmptyNode, ExternalFileAudioInput, FinalBlitRendererFlow, FinalBlitShaderPass, FixedTimeClock, FontGlyph, FragmentCanvasMaterial, FrameBufferTexturedMaterial, FullScreenQuadMesh, GeometryBuffer, GlitchMaterial, GlitchShaderPass, GlobalUniformKey, GouraudMaterial, GrayScaleMaterial, GrayScaleShaderPass, GroupNode, GuiUtility, IndexBuffer, Light, LightGuiController, LightNode, LightType, MaskMaterial, MaskShaderPass, MaterialFactory, MathUtility, Matrix, Matrix22, Matrix33, Matrix44, MatrixCalculator, MatrixClassAndSizePair, MeshNode, MosaicMaterial, MosaicShaderPass, MyColorCode, MyColorConstants255, NumberByte, PhongMaterial, PingPongRenderTarget, Plane, PlaySceneGuiController, PointLightNode, PostEffectGuiController, PostEffectRendererFlow, Quaternion, QuaternionCalculator, RGBShiftMaterial, RGBShiftShaderPass, RealTimeClock, RecordGuiController, RecordScene, Recorder, RecordingApplication, Rectangle, RenderTagConstants, RenderTargetSlot, RendererContext, Scene, SceneGraphNodeIdGenerator, SceneGraphUtility, SceneNode, SceneRendererPipeline, ScreenRenderTarget, ShaderAttribute, ShaderAudioInput, ShaderLoader, ShaderProgram, ShaderUniform, ShaderUniformBuffer, ShaderUniformValue, SimpleMesh, SingleDirectionBlurShaderPass, Sphere, StandardSceneRendererFlow, TextFontLoader, TextMesh, TextMeshNode, TextQuad, Texture2D, TextureFrameBuffer, TextureLoader, TextureSlot, TexturedMaterial, Torus, Transform, TrigonometricConstants, UniformBindingPoint, UnlitMaterial, UnlitMesh, Vector, Vector2, Vector3, Vector4, VectorCalculator, VectorClassAndSizePair, VertexArray, WebGLUtility, initializeLibrary };
+export type { ApplicationOperation, AttachmentConfig, AudioInputOperation, BaseLightParams, BufferOperation, CameraDirection, CameraOptions, ClockOperation, ClockType, CustomRenderTargetOption, DirectionalLightParams, FontGlyphData, GeometryOperation, GlobalUniformKeyValue, LightOperation, LightOptions, LightParams, MaterialOperation, MatrixOperation, MeshOperation, PointLightParams, RecordOptions, RecordType, RenderTag, RenderTargetOperation, RenderTargetOption, RenderTargetSlotKey, RendererFlowOperation, RendererFlowOptions, SceneOperation, SceneRendererPipelineOperation, ShaderPassOperation, TextureOperation, UniformAvailableType, UniformBindingPointKey, UniformPairs, UniformType, UniformValueType, VectorOperation };

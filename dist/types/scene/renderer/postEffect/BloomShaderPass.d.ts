@@ -11,7 +11,7 @@ export declare class BloomShaderPass implements ShaderPassOperation {
     private composeShaderPass;
     private isEffectEnabled;
     constructor(gl: WebGL2RenderingContext, brightMaterial: BrightMaterial, horizontalBlurMaterial: BlurMaterial, verticalBlurMaterial: BlurMaterial, composeMaterial: ComposeMaterial);
-    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
     setEffectEnabled(enabled: boolean): void;
     getEffectEnabled(): boolean;
 }

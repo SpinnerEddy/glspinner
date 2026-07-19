@@ -5,6 +5,6 @@ import { RenderTargetOperation } from "../../../webgl/gl/fbo/RenderTargetOperati
 export declare class StandardSceneRendererFlow extends BaseSceneRendererFlow {
     private sceneGraphRoot;
     constructor(sceneGraphRoot: EmptyNode);
-    render(gl: WebGL2RenderingContext, context: RendererContext, _inputRenderTarget: RenderTargetOperation | undefined, outputRenderTarget: RenderTargetOperation | undefined): RenderTargetOperation | undefined;
-    private drawScene;
+    render(gl: WebGL2RenderingContext, context: RendererContext, _inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
+    isEnabled(): boolean;
 }

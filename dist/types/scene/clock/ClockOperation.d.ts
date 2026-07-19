@@ -3,6 +3,7 @@ export interface ClockOperation {
     setTimeScale(timeScale: number): void;
     setFps(fps: number): void;
     setFrameInterval(fps: number): void;
+    setFrameNum(frame: number): void;
     shouldDraw(): boolean;
     getElapsedTime(): number;
     getDeltaTime(): number;

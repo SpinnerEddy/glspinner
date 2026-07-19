@@ -16,6 +16,7 @@ export declare class Recorder {
     resetRecord(): void;
     setOptions(options: RecordOptions): void;
     saveSequentialFrames(): Promise<void>;
+    saveFrameWithName(name: string): Promise<void>;
     endRecordingAuto(): boolean;
     saveFramesAsZip(zipName?: string): Promise<void>;
     private save;

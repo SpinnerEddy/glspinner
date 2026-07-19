@@ -1,6 +1,6 @@
 import { ClockOperation } from "../clock/ClockOperation";
 import { SceneOperation } from "./SceneOperation";
-export declare class Scene implements SceneOperation {
+export declare class RecordScene implements SceneOperation {
     private clock;
     private isRunning;
     private updateFunction;
@@ -18,8 +18,9 @@ export declare class Scene implements SceneOperation {
     setRealTimeClock(fps: number): void;
     setFixedTimeClock(fps: number, frameInterval: number): void;
     get Clock(): ClockOperation;
-    private run;
+    record(fps: number, frameNum: number): Promise<void>;
     private updateObjects;
     private drawObjects;
     private additionalSupport;
+    private delay;
 }

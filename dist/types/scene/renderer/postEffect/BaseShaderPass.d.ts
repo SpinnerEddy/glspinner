@@ -8,8 +8,8 @@ export declare abstract class BaseShaderPass implements ShaderPassOperation {
     protected plane: MeshNode;
     protected isEffectEnabled: boolean;
     constructor(gl: WebGL2RenderingContext, material: BaseMaterial);
-    abstract render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    abstract render(gl: WebGL2RenderingContext, context: RendererContext, inputRenderTarget: RenderTargetOperation, outputRenderTarget: RenderTargetOperation): void;
     setEffectEnabled(enabled: boolean): void;
     getEffectEnabled(): boolean;
-    protected draw(gl: WebGL2RenderingContext, context: RendererContext, outputRenderTarget: RenderTargetOperation, isBlit: boolean): RenderTargetOperation;
+    protected draw(gl: WebGL2RenderingContext, context: RendererContext, outputRenderTarget: RenderTargetOperation): void;
 }

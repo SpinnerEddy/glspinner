@@ -9,4 +9,5 @@ export declare class ShaderAudioInput implements AudioInputOperation {
     constructor(gl: WebGL2RenderingContext, shaderLoader: ShaderLoader, audioDuration?: number);
     load(path: string, audioContext: AudioContext): Promise<void>;
     getBuffer(): AudioBuffer;
+    saveToWav(): void;
 }

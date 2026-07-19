@@ -12,6 +12,7 @@ export declare abstract class Clock implements ClockOperation {
     setFps(fps: number): void;
     setFrameInterval(fps: number): void;
     setTimeScale(timeScale: number): void;
+    setFrameNum(frame: number): void;
     getElapsedTime(): number;
     getDeltaTime(): number;
     getFrameCount(): number;

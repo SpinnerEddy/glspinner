@@ -1,9 +1,9 @@
-import { BaseGeometry } from "../../webgl/gl/geometry/BaseGeometry";
-import { BaseMaterial } from "../material/BaseMaterial";
+import { GeometryOperation } from "../../webgl/gl/geometry/GeometryOperation";
+import { MaterialOperation } from "../material/MaterialOperation";
 import { RendererContext } from "../renderer/RendererContext";
 import { BaseMesh } from "./BaseMesh";
 export declare class UnlitMesh extends BaseMesh {
-    constructor(geometry: BaseGeometry, material: BaseMaterial);
+    constructor(geometry: GeometryOperation, material: MaterialOperation);
     updateUniforms(gl: WebGL2RenderingContext, context: RendererContext): void;
     draw(gl: WebGL2RenderingContext): void;
 }
