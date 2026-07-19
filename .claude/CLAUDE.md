@@ -14,9 +14,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm test` — Jestの全テストを実行（`ts-jest`、`testEnvironment: 'node'`）。
 - `npm run test:watch` — Jestをwatchモードで実行。
 - 単一テストファイルの実行: `npx jest tests/math/MathUtilityTest.ts`（`tests/`配下の任意のパスを指定可能）。
+- `npm run lint` / `npm run lint:fix` — ESLint（`eslint.config.mjs`）でチェック/自動修正する。
+- `npm run format` / `npm run format:check` — Prettier（`.prettierrc.json`/`.prettierignore`）で整形/整形チェックする。
 - `package.json`には`npm run dev:lib`もあるが、参照先の`src/libs/vite.config.ts`がこのリポジトリに存在しない。現状壊れているスクリプトとして扱うこと。
 
-ESLint/Prettierの設定は無く、lint/formatスクリプトも無い。スタイルは規約（後述）でのみ担保されている。
+ESLint/Prettierは`glspinner-linter`スキルにより導入済み（`eslint.config.mjs`/`.prettierrc.json`/`.prettierignore`）。ただしESLintが機械的に強制しているのはクラス/インターフェース/型エイリアスのPascalCase、メソッドのcamelCase、private/protectedメンバーのcamelCase（アンダースコア接頭辞禁止）などクラス命名の一部のみで、`==`/`!=`と`===`/`!==`の混在は`.claude/rules/general.md`で「厳密な規約ではない」と明記された揺れのため`eqeqeq`ルールを意図的に無効化している。命名・フォーマット規約の大半（`Constants`接尾辞の有無、getter/setter方式の使い分け、各クラスファミリー固有の慣習等）は依然としてESLintではカバーされておらず、規約（`.claude/rules/`配下）が一次情報源であることに変わりはない。
 
 ## アーキテクチャ
 
@@ -69,7 +71,7 @@ SceneRendererPipeline  （1フレームを統括: 不透明パス → ポスト�
 
 ## プロジェクト固有のClaude Codeスキル
 
-`.claude/skills/`・`.claude/commands/`配下に、このプロジェクトの定型作業向けカスタムスキル/コマンドがある: `glspinner-context`（共通の下準備、設計・規約コンテキストの収集）、`glspinner-design`、`glspinner-implement`、`glspinner-test`、`glspinner-review`、`glspinner-tidy`（意味を変えない機械的整形のみ）、`glspinner-document`、`glspinner-reading`、`glspinner-task-discovery`（既知ギャップの棚卸し）、`glspinner-ideation`、`glspinner-conventions`（`.claude/rules/`を管理）。該当する作業ではその場しのぎではなくこれらのスキルを優先して使うこと。
+`.claude/skills/`・`.claude/commands/`配下に、このプロジェクトの定型作業向けカスタムスキル/コマンドがある: `glspinner-context`（共通の下準備、設計・規約コンテキストの収集）、`glspinner-design`、`glspinner-implement`、`glspinner-test`、`glspinner-review`、`glspinner-tidy`（意味を変えない機械的整形のみ）、`glspinner-document`、`glspinner-reading`、`glspinner-task-discovery`（既知ギャップの棚卸し）、`glspinner-ideation`（アイディア発想。発想ロジック本体はcommand `glspinner-ideas` に切り出されており`glspinner-notion-tasks`と共有）、`glspinner-notion-tasks`（発想したアイディアをユーザーが選んだ分だけNotionの「✔️ タスク管理」DBにタスク登録する）、`glspinner-conventions`（`.claude/rules/`を管理）。該当する作業ではその場しのぎではなくこれらのスキルを優先して使うこと。
 
 ## テストに関する注意
 
