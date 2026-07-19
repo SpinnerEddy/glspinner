@@ -1,4 +1,5 @@
 node_modules/
+.claude/settings.local.json
 examples/shader/testAudio.frag
 examples/shader/testAudio.vert
 examples/font/OpenSans.json
