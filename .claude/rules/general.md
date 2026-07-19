@@ -37,7 +37,9 @@ src/
 │       ├── pipeline/              SceneRendererPipeline（フロー全体のオーケストレーション、pipeline.md参照）
 │       ├── postEffect/            BaseShaderPassと各種ポストエフェクトパス（pass.md参照）
 │       └── context/               RenderTargetRegistry（FBOプール管理、render-target.md参照）
-└── webgl/gl/        WebGL2の薄いラッパー層（Shader, Buffer, FBO, Geometry, Texture, Font, Uniform, Attribute。buffer.md/geometry.md/render-target.md参照）
+└── webgl/
+    ├── gl/          WebGL2の薄いラッパー層（Shader, Buffer, FBO, Geometry, Texture, Font, Uniform, Attribute。buffer.md/geometry.md/render-target.md参照）
+    └── shader/      GLSLシェーダー本体（*.vert/*.frag、shader.md参照）
 ```
 
 ## この文書について
@@ -68,6 +70,7 @@ glspinnerには `.eslintrc` も `.prettierrc` も存在せず、`package.json` �
 - `vector-matrix.md` — `Vector`/`Matrix`系（自己参照ジェネリクスの独自パターン）
 - `audio.md` — `AudioOutput`/`AudioInputOperation`系
 - `tools.md` — `Recorder`、`GuiUtility`、`*GuiController`系（静的クラス+`initialize()`パターン）
+- `shader.md` — `src/webgl/shader/`配下のGLSLシェーダー（TypeScriptのクラス構造とは無関係な唯一のファミリー）
 
 ## 命名規則
 
@@ -120,3 +123,4 @@ glspinnerには `.eslintrc` も `.prettierrc` も存在せず、`package.json` �
 - 2026-07-19: `claude_io/design.md`（アーキテクチャ解説）の内容を「規約に近い」との判断で`.claude/rules/`へ統合し、`design.md`を廃止する方針を決定。本ファイルにはプロジェクト概要とディレクトリ構成と責務マップ（旧design.md第1-2章）を追加。アプリケーションライフサイクル・SceneGraph周辺・RendererContext・Factory詳細・InputHubは各該当ファイルへ、オーディオ（`AudioOutput`/`AudioInputOperation`）とツール群（`Recorder`/`GuiUtility`/`*GuiController`）はそれぞれ新規`audio.md`/`tools.md`へ切り出した。
 - 2026-07-19（追記）: 上記の方針決定時点では実際には`claude_io/design.md`ファイルの物理削除が漏れており、記録と実態が食い違ったまま残っていた。改めて全10章を読み直して内容の再突き合わせを行い、`ShaderProgram.createProgram()`がリンク後に`GlobalUniforms`という名前のUniform Blockを検出して`UniformBindingPoint.GLOBAL`へ自動バインドする挙動（design.md第6章に記載、rules未収録だった）を`buffer.md`「UBO専用の`ShaderUniformBuffer`」節へ追記。他の章は既に`.claude/rules/`各ファイルへ反映済みであることを確認した（design.md第6章が`Box`ジオメトリを実装済みとして触れているのは`geometry.md`の記述と食い違っており、`Box.ts`は中身が空のプレースホルダファイルのため`geometry.md`側の「未実装」という記述を正とした）。CLAUDE.mdの「詳細な設計リファレンス」節と、`flow.md`/`operation-base.md`内の`claude_io/design.md`への参照を除去した上で、`claude_io/design.md`を物理削除。あわせて、design.md統合の過程でも参照が残っていた各SKILL.md（`glspinner-design`/`glspinner-document`/`glspinner-ideation`/`glspinner-reading`/`glspinner-review`/`glspinner-task-discovery`/`glspinner-implement`）と共通command`glspinner-context.md`のdesign.md参照も`.claude/rules/`参照へ書き換えた。
 - 2026-07-19（追記2）: ユーザー指定により`operation-base.md`「小規模ファミリー」節にまとめられていたApplication系・Clock系を独立ファイル化。`src/app/`（`ApplicationOperation`→`BaseApplication`→`RecordingApplication`という2段中間抽象クラス構成、コンストラクタでの`SceneOperation`外部注入、利用者側`src/`外での具象化）を`application.md`へ、`src/scene/clock/`（`ClockOperation`→`Clock`という`BaseClock`ではない命名の、共通実装が濃い抽象クラス）を`clock.md`へそれぞれ新規作成。`operation-base.md`側は該当2ブロックを削除し、Scene系の記述に`RecordScene`の非リアルタイム実行の詳細（元はApplication系ブロックにあった）を統合した上で新2ファイルへの導線を追加。本ファイルのファミリーファイル一覧索引とディレクトリ構成マップ内の参照リンクも更新。
+- 2026-07-19（追記3）: `src/webgl/shader/`配下のGLSLシェーダー24ファイル（`examples/shader/`の4ペアはサンドボックス用途のため対象外）を実際に読み込み、新規`shader.md`を作成。TypeScriptの`XxxOperation`+`BaseXxx`パターンとは無関係な、GLSLファイル集合という初のクラス構造非依存ファミリー。`aXxx`/`vXxx`命名やGlobalUniformsブロックの完全一致コピーといった多数派パターンに加え、`blur.frag`のタブ混入・独自main()シグネチャ・Allman brace styleや、`gouraudLighting`/`phongLighting`がGlobalUniformsを使わない構造的な例外など、コピペで蓄積した揺れを正直に記録した。`ShaderLoader`のファイル名キー化・`ShaderProgram`の`GlobalUniforms`マジックストリングは規約ではなく実装上の制約として区別して記載。本ファイルのファミリーファイル一覧索引とディレクトリ構成マップ（`webgl/`配下を`gl/`と`shader/`に分割）も更新。

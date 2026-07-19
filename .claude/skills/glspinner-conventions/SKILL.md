@@ -34,6 +34,7 @@ glspinnerには`.eslintrc`も`.prettierrc`も存在しない（`package.json`に
 | `vector-matrix.md` | `Vector`/`Matrix`系（自己参照ジェネリクスの独自パターン） |
 | `audio.md` | `AudioOutput`/`AudioInputOperation`系 |
 | `tools.md` | `Recorder`/`GuiUtility`/`*GuiController`系（静的クラス+`initialize()`パターン） |
+| `shader.md` | `src/webgl/shader/`配下のGLSLシェーダー（TypeScriptのクラス構造とは無関係な唯一のファミリー） |
 
 `.claude/rules/`配下のファイルはSKILL/commandではなくプレーンな参照ドキュメントなのでfrontmatterは付けない（各SKILLの実行手順から明示的に読みに行く前提）。ファミリーを持たない一回限りのクラス（`MathUtility`, `ColorUtility`, `*Loader`, `MaterialFactory`, `ShaderProgram`, `ShaderAttribute`, `ShaderUniform`等）は専用ファイルを持たず、`general.md`の横断規約のみに従う。`Camera`/`Transform`/`SceneGraph`は`node.md`、`Recorder`/`*GuiController`は`tools.md`にそれぞれ周辺クラスとして含まれる（家族を持たない一回限りのクラスと、周辺クラスとして既存ファイルに含めるクラスの違いは、関連する既存ファミリーが近くにあるかどうかで判断する）。
 
