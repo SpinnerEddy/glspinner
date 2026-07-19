@@ -74,17 +74,17 @@ export class RecordScene implements SceneOperation {
         return this.clock;
     }
 
-    private async run(): Promise<void> {
-        if(!this.isRunning) return;
+    // private async run(): Promise<void> {
+    //     if(!this.isRunning) return;
 
-        this.clock.update();
+    //     this.clock.update();
 
-        this.updateObjects();
+    //     this.updateObjects();
 
-        this.drawObjects();
+    //     this.drawObjects();
 
-        await this.additionalSupport();
-    }
+    //     await this.additionalSupport();
+    // }
 
     public async record(fps: number, frameNum: number): Promise<void> {
         this.clock.setFps(fps);

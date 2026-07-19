@@ -412,9 +412,9 @@ test("Matrix LookAt", () => {
     let result = MatrixCalculator.lookAt(eyePos, targetPos, up);
 
     let exceptResult = new Matrix44();
-    exceptResult.set(0, 2, -1);
+    exceptResult.set(0, 2, 1);
     exceptResult.set(1, 1, 1);
-    exceptResult.set(2, 0, 1);
+    exceptResult.set(2, 0, -1);
     exceptResult.set(2, 3, -1);
     exceptResult.set(3, 3, 1);
 

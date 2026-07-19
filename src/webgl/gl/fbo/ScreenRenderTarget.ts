@@ -17,7 +17,7 @@ export class ScreenRenderTarget implements RenderTargetOperation {
         this.gl.viewport(0, 0, this.width, this.height);
     }
 
-    getColorTexture(index: number): WebGLTexture {
+    getColorTexture(_index: number): WebGLTexture {
         throw new Error("ScreenRenderTarget does not have a color texture!");
     }
 

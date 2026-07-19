@@ -15,7 +15,7 @@ test("Vector Sub", () => {
     const a = new Vector2(3, 4);
     const b = new Vector2(4, 5);
 
-    const result = VectorCalculator.sub(a, b);
+    const result = VectorCalculator.sub(b, a);
     const except = new Vector2(1, 1);
     expect(result).toEqual(except);
 });

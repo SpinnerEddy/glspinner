@@ -50,17 +50,17 @@ export class MidiDevice extends BaseDevice {
         // throw new Error("Method not implemented.");
     }
 
-    isDown(code: MouseButtonType | KeyboardCodeType): boolean {
+    isDown(_code: MouseButtonType | KeyboardCodeType): boolean {
         // throw new Error("Method not implemented.");
         return false;
     }
 
-    isPressed(code: MouseButtonType | KeyboardCodeType): boolean {
+    isPressed(_code: MouseButtonType | KeyboardCodeType): boolean {
         // throw new Error("Method not implemented.");
         return false;
     }
 
-    isReleased(code: MouseButtonType | KeyboardCodeType): boolean {
+    isReleased(_code: MouseButtonType | KeyboardCodeType): boolean {
         // throw new Error("Method not implemented.");
         return false;
     }
