@@ -1,0 +1,38 @@
+{
+  "_readme": "これはテンプレートです。実体は ~/.claude/glspinner/notion-databases.json に置き、リポジトリにはコミットしません（このリポジトリはpublicで、Notionのdata source ID・ページURLを直接コミットしたくないため）。新しい環境でセットアップする場合は、このファイルをコピーして ~/.claude/glspinner/notion-databases.json を作成し、実際のdataSourceId等を埋めてください。キー・構造は本物と同じにしてあります。",
+  "databases": {
+    "glspinner-tasks": {
+      "title": "glspinner改良タスク",
+      "dataSourceId": "<Notionのdata source ID（ハイフン付きUUID）をここに>",
+      "url": "<NotionのデータベースURL>",
+      "usedBy": ["glspinner-notion-tasks"],
+      "titlePrefix": null,
+      "properties": {
+        "Name": { "type": "title" },
+        "Status": { "type": "status", "options": ["未着手", "進行中", "完了"], "defaultOnCreate": "未着手" },
+        "Order": {
+          "type": "number",
+          "description": "着手順序。プロジェクトルートのTODO.md §11の番号と対応させる想定。TODO.md未作成の間は省略してよい。"
+        },
+        "TODO参照": {
+          "type": "text",
+          "description": "関連するTODO.mdのセクション番号。TODO.md未作成の間は省略してよい。"
+        }
+      },
+      "notes": "glspinner専用DBのためタイトルにプロジェクトプレフィックスは付けない。",
+      "history": []
+    },
+    "glspinner-retro": {
+      "title": "📝 振り返り",
+      "dataSourceId": "<Notionのdata source ID（ハイフン付きUUID）をここに>",
+      "usedBy": ["glspinner-retro"],
+      "titlePrefix": null,
+      "properties": {
+        "Name": { "type": "title" },
+        "プロジェクト": { "type": "select", "defaultOnCreate": "glspinner" }
+      },
+      "notes": "他プロジェクト（tech-retroスキル等）の振り返りとも共有する汎用DB。glspinnerからの登録ではプロジェクトに常に\"glspinner\"を指定する。"
+    }
+  },
+  "fallback": "DBが見つからない・IDが変わっている等でアクセスできない場合、このファイルの値を決め打ちで使い続けず、mcp__claude_ai_Notion__notion-searchでDBタイトルを検索し直し、候補をユーザーに確認してから進める。確認が取れたら実体側（~/.claude/glspinner/notion-databases.json）の該当エントリを更新すること。"
+}
