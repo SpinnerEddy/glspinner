@@ -4,13 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## プロジェクト概要
 
-`glspinner`（SpinnerEddy氏によるWebGL practicing用ツール）は、シーングラフ・ポストエフェクトチェーン付きの多段レンダリングパイプライン・マテリアル/メッシュ・入力デバイス（キーボード/マウス/MIDI）・オーディオ入力・フレームキャプチャ録画・lil-guiデバッグツールを備えた、自作のWebGL2フレームワーク。ライブラリとして`dist/spinnergl-lib.*.js`をビルドし、`src/index.ts`が公開APIのバレルファイル。`examples/`は開発用サンドボックスで、公開ライブラリには含まれない。
+`glspinner`（SpinnerEddy氏によるWebGL practicing用ツール）は、シーングラフ・ポストエフェクトチェーン付きの多段レンダリングパイプライン・マテリアル/メッシュ・入力デバイス（キーボード/マウス/MIDI）・オーディオ入力・フレームキャプチャ録画・lil-guiデバッグツールを備えた、自作のWebGL2フレームワーク。ライブラリとして`dist/spinnergl-lib.*.js`をビルドし、公開APIは2つのエントリポイントに分かれる: `src/index.ts`（コアAPI、`dist/spinnergl-lib.{es,cjs,umd}.js`）と`src/tools.ts`（`lil-gui`/`jszip`に依存するGUIコントローラー群・`Recorder`、`dist/spinnergl-lib.tools.{es,cjs}.js`）。`lil-gui`/`jszip`はコア側のビルドからexternal化されており、`tools`側を使わない限りバンドルに含まれない。`examples/`は開発用サンドボックスで、公開ライブラリには含まれない。
 
 ## コマンド
 
 - `npm run dev` — `examples/`を対象にVite開発サーバーを起動する（`vite.config.ts`で`root: 'examples'`、ポート2222）。
-- `npm run build` — `tsc`（型チェックのみ、`noEmit: true`）→`vite build`（ライブラリビルド、エントリ`src/index.ts`、フォーマットes/cjs/umd）。
-- `npm run build:types` — `tsc -p tsconfig.build.json`（`.d.ts`を`dist/types`へ出力）→`rollup -c rollup.dts.config.js`でバンドル。
+- `npm run build` — `tsc`（型チェックのみ、`noEmit: true`）→`vite build`（コアライブラリビルド、エントリ`src/index.ts`、フォーマットes/cjs/umd、`vite.config.ts`）→`vite build --config vite.tools.config.ts`（toolsライブラリビルド、エントリ`src/tools.ts`、フォーマットes/cjsのみ）。両ビルドとも`lil-gui`/`jszip`はexternal化。
+- `npm run build:types` — `rollup -c rollup.dts.config.js`。`rollup-plugin-dts`が`src/index.ts`/`src/tools.ts`を直接読み込んで型を抽出・バンドルし、`dist/spinnergl-lib.d.ts`/`dist/spinnergl-lib.tools.d.ts`を生成する（`tsc`による個別`.d.ts`出力や`dist/types`という中間ディレクトリは経由しない）。
 - `npm test` — Jestの全テストを実行（`ts-jest`、`testEnvironment: 'node'`）。
 - `npm run test:watch` — Jestをwatchモードで実行。
 - 単一テストファイルの実行: `npx jest tests/math/MathUtilityTest.ts`（`tests/`配下の任意のパスを指定可能）。
