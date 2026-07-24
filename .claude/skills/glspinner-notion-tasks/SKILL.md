@@ -13,11 +13,13 @@ Notion MCP（`mcp__claude_ai_Notion__*`ツール群）が接続済みである�
 
 ## 前提: 対象Notion DB
 
-登録先DBの情報（data source ID・プロパティ定義・過去の変更履歴）は、SKILL.md本体にはベタ書きせず`~/.claude/glspinner/notion-databases.json`（**リポジトリの外**、ユーザーのホーム配下）の`databases["glspinner-tasks"]`エントリを一次情報源として参照する。このリポジトリはpublicのため、data source IDやページURLをコミットしたくないという理由でリポジトリ外に置いている。DBの切り替えが発生した場合はこの外部JSONファイルだけを更新すればよく、SKILL.mdの書き換えは不要（登録先が変わった旨をこのSKILL.mdへ都度追記しない）。リポジトリ側には構造だけを示すテンプレート`.claude/skills/notion-databases.example.json`を置いてある（実際のIDは含まない）。
+登録先DBの情報（data source ID・URL）は、SKILL.md本体にはベタ書きせず`~/.claude/notion-databases.json`（**リポジトリの外**、ユーザーのホーム配下）の`glspinner_task`エントリを一次情報源として参照する。このファイルはglspinner専用ではなく、他プロジェクト（`tech-issue`/`tech-retro`/`notion-task-sync`等）とも共有するマシン単位の設定ファイルで、`{ "<key>": { "display_name": ..., "data_source_id": "collection://...", "url"?: ..., "used_by": [...] } }`というフラットな構造を持つ。`glspinner_task`エントリの`used_by`には`"glspinner-notion-tasks"`が含まれている。このリポジトリはpublicのため、data source IDやページURLをコミットしたくないという理由でリポジトリ外に置いている。DBの切り替えが発生した場合はこの外部JSONファイルだけを更新すればよく、SKILL.mdの書き換えは不要。
 
-`~/.claude/glspinner/notion-databases.json`が存在しない場合（新しい環境で初めて実行する場合など）は、`.claude/skills/notion-databases.example.json`をコピーして作成するようユーザーに促し、実際のdata source ID等を教えてもらってから埋める。
+`~/.claude/notion-databases.json`自体が存在しない、または`glspinner_task`エントリが無い場合（新しい環境で初めて実行する場合など）は、ユーザーに実際のdata source ID等を確認して該当エントリを追記するよう促す（他プロジェクトのエントリは削除・上書きしないこと——共有ファイルのため）。
 
-このJSONに記載のDBが見つからない・IDが変わっている等でアクセスできない場合は、決め打ちで別のDBに登録せず、`mcp__claude_ai_Notion__notion-search`でJSON内の`title`を検索し直し、候補をユーザーに確認してから進める。確認が取れたら`~/.claude/glspinner/notion-databases.json`の該当エントリも更新しておく（新しい設定を`history`に追記し、現行値を差し替える）。
+このJSONに記載のDBが見つからない・IDが変わっている等でアクセスできない場合は、決め打ちで別のDBに登録せず、`mcp__claude_ai_Notion__notion-search`で`display_name`を検索し直し、候補をユーザーに確認してから進める。確認が取れたら`~/.claude/notion-databases.json`の該当エントリも更新しておく。
+
+登録先DBのプロパティ定義（`Name`/`Status`/`Order`/`TODO参照`）はこのファイルには含まれない（他プロジェクトと共有するフラット構造のため、DB固有のスキーマ情報は載せていない）。プロパティ定義は下記「3. Notionページの作成」に直接記載する一次情報源として扱う。
 
 ## 実行手順
 
@@ -33,8 +35,12 @@ Notion MCP（`mcp__claude_ai_Notion__*`ツール群）が接続済みである�
 
 選ばれたアイディアごとに、`mcp__claude_ai_Notion__notion-create-pages`で以下の内容のページを作成する（複数選ばれた場合は`pages`配列にまとめて1回で作成してよい）:
 
-- **parent**: `{"type": "data_source_id", "data_source_id": "<~/.claude/glspinner/notion-databases.jsonのdatabases[\"glspinner-tasks\"].dataSourceId>"}`
-- **properties**: `~/.claude/glspinner/notion-databases.json`の`databases["glspinner-tasks"].properties`定義に従う。`titlePrefix`が設定されていればNameの前に付与する（現行設定では`null`のため付与しない）。`Status`は`defaultOnCreate`の値を使う。`Order`/`TODO参照`はそれぞれの`description`に従い、対応するTODO.mdが無ければ省略する。
+- **parent**: `{"type": "data_source_id", "data_source_id": "<~/.claude/notion-databases.jsonのglspinner_task.data_source_idから\"collection://\"接頭辞を除いたUUID>"}`
+- **properties**: 以下のプロパティ定義に従う（`Name`のプレフィックスは付けない。glspinner専用DBのため）。
+  - `Name`（title）: アイディア名
+  - `Status`（status）: `未着手`/`進行中`/`完了`のいずれか。新規作成時は`未着手`を使う。
+  - `Order`（number）: 着手順序。プロジェクトルートのTODO.md §11の番号と対応させる想定。TODO.md未作成の間は省略してよい。
+  - `TODO参照`（text）: 関連するTODO.mdのセクション番号。TODO.md未作成の間は省略してよい。
 - **content**（Notion Markdown本文）: `glspinner-ideas`が出したフォーマット（アイディア名／一言説明／既存アーキテクチャへの乗せ方／難易度目安）をほぼそのまま箇条書きで転記する。本文冒頭に「`glspinner`プロジェクトのideationから」の一言を添え、由来が分かるようにする。
 
 `notion-create-pages`を呼ぶ前に、Notion Markdownの仕様（`notion://docs/enhanced-markdown-spec`）をまだ読んでいなければ一度確認しておくと安全（記法を推測で書かない）。

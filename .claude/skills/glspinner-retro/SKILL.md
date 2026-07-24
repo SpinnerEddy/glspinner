@@ -13,11 +13,11 @@ glspinnerでの作業には、実装や規約整理のような「手を動か�
 
 ## 前提: 対象Notion DB
 
-登録先DBの情報（data source ID・プロパティ定義）は、SKILL.md本体にはベタ書きせず`~/.claude/glspinner/notion-databases.json`（**リポジトリの外**、ユーザーのホーム配下）の`databases["glspinner-retro"]`エントリを一次情報源として参照する。このリポジトリはpublicのため、data source IDやページURLをコミットしたくないという理由でリポジトリ外に置いている。プロパティは`Name`（タイトル）・`プロジェクト`（select、他プロジェクトの振り返りとも共有する汎用DBとして設計されている）で、glspinnerからの登録では`プロジェクト`に常にJSON側の`defaultOnCreate`値（`"glspinner"`）を使う。DBの切り替えが発生した場合はこの外部JSONファイルだけを更新すればよい。リポジトリ側には構造だけを示すテンプレート`.claude/skills/notion-databases.example.json`を置いてある（実際のIDは含まない）。
+登録先DBの情報（data source ID）は、SKILL.md本体にはベタ書きせず`~/.claude/notion-databases.json`（**リポジトリの外**、ユーザーのホーム配下）の`tech_retro`エントリを一次情報源として参照する。このファイルはglspinner専用ではなく、他プロジェクト（`tech-issue`/`tech-retro`/`notion-task-sync`等）とも共有するマシン単位の設定ファイルで、`{ "<key>": { "display_name": ..., "data_source_id": "collection://...", "url"?: ..., "used_by": [...] } }`というフラットな構造を持つ。「📝 振り返り」DBは`tech-retro`スキルと共有しているため、キー名も`glspinner-retro`ではなく`tech_retro`のまま（`used_by`に`"glspinner-retro"`が追加されている）。プロパティは`Name`（タイトル）・`プロジェクト`（select、他プロジェクトの振り返りとも共有する汎用DBとして設計されている）で、glspinnerからの登録では`プロジェクト`に常に`"glspinner"`を使う。このリポジトリはpublicのため、data source IDやページURLをコミットしたくないという理由でリポジトリ外に置いている。DBの切り替えが発生した場合はこの外部JSONファイルだけを更新すればよい。
 
-`~/.claude/glspinner/notion-databases.json`が存在しない場合（新しい環境で初めて実行する場合など）は、`.claude/skills/notion-databases.example.json`をコピーして作成するようユーザーに促し、実際のdata source ID等を教えてもらってから埋める。
+`~/.claude/notion-databases.json`自体が存在しない、または`tech_retro`エントリが無い場合（新しい環境で初めて実行する場合など）は、ユーザーに実際のdata source ID等を確認して該当エントリを追記するよう促す（他プロジェクトのエントリは削除・上書きしないこと——共有ファイルのため）。
 
-このJSONに記載のDBが見つからない・IDが変わっている等でアクセスできない場合は、決め打ちで別のDBに登録せず、`mcp__claude_ai_Notion__notion-search`でJSON内の`title`を検索し直し、候補をユーザーに確認してから進める。確認が取れたら`~/.claude/glspinner/notion-databases.json`の該当エントリも更新しておく。
+このJSONに記載のDBが見つからない・IDが変わっている等でアクセスできない場合は、決め打ちで別のDBに登録せず、`mcp__claude_ai_Notion__notion-search`で`display_name`を検索し直し、候補をユーザーに確認してから進める。確認が取れたら`~/.claude/notion-databases.json`の該当エントリも更新しておく。
 
 ## 実行手順
 
@@ -37,7 +37,7 @@ glspinnerでの作業には、実装や規約整理のような「手を動か�
 
 `mcp__claude_ai_Notion__notion-create-pages`で以下の内容のページを作成する:
 
-- **parent**: `{"type": "data_source_id", "data_source_id": "<~/.claude/glspinner/notion-databases.jsonのdatabases[\"glspinner-retro\"].dataSourceId>"}`
+- **parent**: `{"type": "data_source_id", "data_source_id": "<~/.claude/notion-databases.jsonのtech_retro.data_source_idから\"collection://\"接頭辞を除いたUUID>"}`
 - **properties**:
   - `Name`: 手順3で決めたタイトル
   - `プロジェクト`: `"glspinner"`（JSON側`properties.プロジェクト.defaultOnCreate`）
