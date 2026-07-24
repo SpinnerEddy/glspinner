@@ -2,7 +2,7 @@
     "name": "glspinner",
     "version": "1.0.0",
     "description": "SpinnerEddy's tool made for practicing WebGL",
-    "main": "src/index.ts",
+    "main": "dist/spinnergl-lib.cjs.js",
     "directories": {
         "test": "tests"
     },
