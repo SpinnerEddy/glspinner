@@ -25,6 +25,7 @@
         "dev:lib": "vite --config src/libs/vite.config.ts",
         "build": "tsc && vite build && vite build --config vite.tools.config.ts",
         "build:types": "rollup -c rollup.dts.config.js",
+        "prepare": "npm run build && npm run build:types",
         "preview": "vite preview",
         "test": "jest",
         "test:watch": "jest --watch",
