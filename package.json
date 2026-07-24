@@ -7,12 +7,24 @@
         "test": "tests"
     },
     "module": "dist/spinnergl-lib.es.js",
-    "types": "dist/types/index.d.ts",
+    "types": "dist/spinnergl-lib.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/spinnergl-lib.d.ts",
+            "import": "./dist/spinnergl-lib.es.js",
+            "require": "./dist/spinnergl-lib.cjs.js"
+        },
+        "./tools": {
+            "types": "./dist/spinnergl-lib.tools.d.ts",
+            "import": "./dist/spinnergl-lib.tools.es.js",
+            "require": "./dist/spinnergl-lib.tools.cjs.js"
+        }
+    },
     "scripts": {
         "dev": "vite",
         "dev:lib": "vite --config src/libs/vite.config.ts",
-        "build": "tsc && vite build",
-        "build:types": "tsc -p tsconfig.build.json && rollup -c rollup.dts.config.js",
+        "build": "tsc && vite build && vite build --config vite.tools.config.ts",
+        "build:types": "rollup -c rollup.dts.config.js",
         "preview": "vite preview",
         "test": "jest",
         "test:watch": "jest --watch",
@@ -51,5 +63,17 @@
     },
     "dependencies": {
         "@anthropic-ai/claude-code": "^2.1.215"
+    },
+    "peerDependencies": {
+        "jszip": "^3.10.1",
+        "lil-gui": "^0.20.0"
+    },
+    "peerDependenciesMeta": {
+        "jszip": {
+            "optional": true
+        },
+        "lil-gui": {
+            "optional": true
+        }
     }
 }

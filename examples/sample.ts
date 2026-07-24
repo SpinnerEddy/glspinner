@@ -1,4 +1,5 @@
 import * as GLSpinner from '../src/index.ts';
+import * as GLSpinnerTools from '../src/tools.ts';
 import spinnerShaderFrag from '../examples/shader/spinner.frag';
 import spinnerShaderVert from '../examples/shader/spinner.vert';
 import uboTestShaderFrag from '../examples/shader/uboTest.frag';
@@ -145,7 +146,7 @@ class Sample extends GLSpinner.BaseApplication {
 
         this.audioOutput.setInput(this.shaderAudioInput);
 
-        GLSpinner.PlaySceneGuiController.initialize(
+        GLSpinnerTools.PlaySceneGuiController.initialize(
             () => this.scene.start(),
             () => this.scene.stop()
         );

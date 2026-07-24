@@ -123,6 +123,12 @@ export abstract class RecordingApplication extends BaseApplication {
 
 `additionalSupport()`内には、録画終了を自動判定する行がコメントアウトされたまま残っている（`// if(this.recorder.endRecordingAuto()){ this.endRecording(); }`。`general.md`「無効化中のコードは削除せずコメントアウトで残す」運用の実例）。
 
+### `RecordingApplication`の公開エントリポイント（物理配置とは別軸）
+
+`lil-gui`/`jszip`が本番ビルド（`dist/spinnergl-lib.*.js`）に混入する問題への対応として、2026-07にライブラリの公開エントリポイントを`src/index.ts`（コア）と`src/tools.ts`（`GuiUtility`/`RecordGuiController`/`LightGuiController`/`AudioGuiController`/`PostEffectGuiController`/`PlaySceneGuiController`/`Recorder`をexport、`tools.md`参照）の2つに分割した。`RecordingApplication`もtools側への移動が検討されたが、**コア側`src/index.ts`に残す**判断になった。理由は、`RecordingApplication`が継承する`BaseApplication`のコンストラクタが`WebGLUtility`/`ShaderLoader`/`RendererContext`/`SceneGraph`/`SceneRendererPipeline`/`InputHub`等のコアフレームワーク一式を丸ごと抱えるため、`RecordingApplication`をtools側の独立ビルドに含めるとコアフレームワークのコードがコア・tools両方のビルド成果物に二重にバンドルされてしまうため（`tools.ts`へ移した7クラスは`color`/`math`の軽量な値型と`lil-gui`/`jszip`にしか依存せず、この問題が起きない）。
+
+結果として`RecordingApplication.ts`は物理的に`src/app/`に残ったままで、`~Application`ファミリーのクラス構成（`BaseApplication`→`RecordingApplication`という2段中間抽象クラス）や振る舞いは変わっていない。変わったのは「どちらの公開エントリポイントからexportされるか」という一点のみ（**物理配置と公開エントリポイントは別軸**）。`RecordingApplication`自身は従来どおりコンストラクタで`Recorder`を直接`new`し`RecordGuiController.initialize()`を呼んでおり、tools層への実装上の依存自体は変わらず残っている——つまり`spinnergl-lib`（コア）から`RecordingApplication`をimportすると、`lil-gui`/`jszip`への外部参照（`vite.config.ts`の`external`設定によりコード自体はバンドルされず、`import`文として残るのみ）は引き続き辿られる。
+
 ## 利用者側の具象化パターン
 
 `src/`内には最終的な具象`Application`クラスは存在しない。ライブラリ利用側（`examples/sample.ts`の`Sample extends GLSpinner.BaseApplication`）が`setup`/`update`/`draw`（および必要なら`preload`もsuper呼び出しを挟んで拡張）を実装して初めて具象化する、という他ファミリーには無い構造（`material.md`/`device.md`等はいずれも`src/`内で全ての具象クラスが完結する）。新規にアプリケーションエントリーポイントを作る場合も、`src/app/`配下に具象クラスを追加するのではなく、この利用者側実装パターン（`examples/`または実際のアプリケーションコード側）に倣う。
@@ -146,4 +152,8 @@ public async start(): Promise<void> {
 - **`~Clock`/`Scene`系**（`clock.md`、`operation-base.md`「Scene系」）: `Application`自身はクロックを持たず、コンストラクタで受け取った`SceneOperation`（`Scene`または`RecordScene`）に時間管理を委譲する。`RecordingApplication.changeSceneClock()`が`scene.setRealTimeClock()`/`scene.setFixedTimeClock()`を呼び分けることで、録画時のクロック種別（リアルタイム/固定フレーム）を切り替える。
 - **`MaterialFactory`**（`material.md`）: `BaseApplication.preload()`が`MaterialFactory.init()`を呼ぶ唯一の箇所。利用者側の`preload()`オーバーライドは`super.preload()`を呼んだ上で追加のシェーダ/テクスチャ/フォントロードを行うのが定型（`examples/sample.ts`参照）。
 - **`InputHub`**（`device.md`）・**`SceneRendererPipeline`**（`pipeline.md`）・**`RendererContext`**（`pipeline.md`）: いずれも`BaseApplication`のコンストラクタで生成され、`protected`フィールドとして利用者側の`setup`/`update`/`draw`から参照される。
-- **`tools.md`**: `RecordingApplication`が`Recorder`（インスタンスクラス）と`RecordGuiController`（静的クラス）を組み合わせる、`~Application`ファミリーが`tools.md`ファミリーに依存する唯一の接続点。
+- **`tools.md`**: `RecordingApplication`が`Recorder`（インスタンスクラス）と`RecordGuiController`（静的クラス）を組み合わせる、`~Application`ファミリーが`tools.md`ファミリーに依存する唯一の接続点。この依存があるため`RecordingApplication`はコア側の公開エントリポイント（`src/index.ts`）に留まる（詳細は上記「`RecordingApplication`の公開エントリポイント」節）。
+
+## 変更履歴
+
+- 2026-07-25: `lil-gui`/`jszip`の本番ビルド混入対策としてライブラリの公開エントリポイントを`src/index.ts`/`src/tools.ts`に分割した際、`RecordingApplication`をコア側に残すと判断した経緯を「`RecordingApplication`の公開エントリポイント（物理配置とは別軸）」節へ追記。

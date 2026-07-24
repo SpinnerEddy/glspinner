@@ -1,10 +1,20 @@
 import dts from 'rollup-plugin-dts';
 
-export default {
-    input: 'dist/types/index.d.ts',
-    output: {
-        file: 'dist/spinnergl-lib.d.ts',
-        format: 'es',
+export default [
+    {
+        input: 'src/index.ts',
+        output: {
+            file: 'dist/spinnergl-lib.d.ts',
+            format: 'es',
+        },
+        plugins: [dts()],
     },
-    plugins: [dts()],
-};
+    {
+        input: 'src/tools.ts',
+        output: {
+            file: 'dist/spinnergl-lib.tools.d.ts',
+            format: 'es',
+        },
+        plugins: [dts()],
+    },
+];

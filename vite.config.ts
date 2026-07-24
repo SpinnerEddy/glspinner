@@ -14,6 +14,9 @@ export default defineConfig({
             fileName: (format) => `spinnergl-lib.${format}.js`,
             formats: ['es', 'cjs', 'umd'],
         },
+        rollupOptions: {
+            external: ['lil-gui', 'jszip'],
+        },
     },
     server: {
         port: 2222,
