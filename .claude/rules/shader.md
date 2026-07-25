@@ -18,7 +18,7 @@ grayScale / mosaic / rgbShift / glitch / blur / bright / compose
 
 ## 共通テンプレート（24ファイル中22ファイルがほぼ準拠）
 
-`layout(std140) uniform GlobalUniforms`ブロックを使う12本の`.vert`は、以下がバイト単位で完全一致している（`unlit.vert`が典型例）:
+`layout(std140) uniform GlobalUniforms`ブロックは14本の`.vert`全てが使っている（2026-07の「Material/Mesh Uniform受け渡し方式の統一リファクタ」で`gouraudLighting.vert`/`phongLighting.vert`もこのブロックを使う形に書き換えられ、以前あった「使わない構造的な例外」は解消済み。下記「揺れ・例外」参照）。このうち12本（`gouraudLighting`/`phongLighting`を除く全て）は、以下がバイト単位で完全一致している（`unlit.vert`が典型例）:
 
 ```glsl
 #version 300 es
@@ -109,23 +109,28 @@ void main(void){
 1. **タブ混入**: `blur.frag`・`glitch.frag`にタブ文字が混入している。`glitch.frag`は同一ファイル内でタブとスペースが混在している（TS側の`UnlitMesh.ts`のタブ混入1箇所と同種の事例）。
 2. **`main()`シグネチャの例外**: `blur.frag`だけ`void main() {`（`void`引数を省略し、`{`の前に空白がある）という書き方。他23ファイルは`void main(void){`。
 3. **brace styleの例外**: `blur.frag`の`if`/`else`ブロックだけAllman style（開き括弧が次の行）。他のファイルはK&R styleで統一されている。
-4. **`GlobalUniforms`を使わない構造的な例外**: `gouraudLighting.vert`/`phongLighting.vert`は`layout(std140) uniform GlobalUniforms`ブロックを使わず、`mvpMatrix`/`modelMatrix`を個別の`uniform`として受け取る古いスタイル。他の12本の`.vert`とは構造が異なる（詳細は下記「コード側の要件」参照）。
-5. **ヘルパー関数のブレース前空白が不統一**: `functionName(){`（空白なし、例: `boxelUv()`, `rand()`）と`functionName() {`（空白あり、例: `median()`, `toLinear()`, `toGamma()`, `offset()`）が混在している。
-6. **`const`と`out`の宣言順序が不統一**: `bright.frag`は`const vec3 brightCoef`を`out vec4 outputColor`より先に書いているが、ほぼ同種の輝度計算をする`grayScale.frag`は逆順（`out`が先）。
-7. **末尾空白**: `glitch.frag`・`phongLighting.frag`に行末の余分な空白が残っている。
-8. **バイト単位での完全重複**: `.vert`は14ファイル中12ファイル（`blur`/`bright`/`compose`/`default`/`framebuffer`/`glitch`/`grayScale`/`mosaic`/`rgbShift`/`text`/`texture`/`unlit`）が完全に同一内容。`.frag`も14ファイル中3ファイル（`default`/`gouraudLighting`/`unlit`）が完全に同一内容。スタイルの揺れではなくDRYの観点の指摘だが、`ShaderLoader`がファイル単位でしかロードしない設計（後述）と表裏一体の状態なので記録しておく。
+4. **ヘルパー関数のブレース前空白が不統一**: `functionName(){`（空白なし、例: `boxelUv()`, `rand()`）と`functionName() {`（空白あり、例: `median()`, `toLinear()`, `toGamma()`, `offset()`）が混在している。
+5. **`const`と`out`の宣言順序が不統一**: `bright.frag`は`const vec3 brightCoef`を`out vec4 outputColor`より先に書いているが、ほぼ同種の輝度計算をする`grayScale.frag`は逆順（`out`が先）。
+6. **末尾空白**: `glitch.frag`・`phongLighting.frag`に行末の余分な空白が残っている。
+7. **バイト単位での完全重複**: `.vert`は14ファイル中12ファイル（`blur`/`bright`/`compose`/`default`/`framebuffer`/`glitch`/`grayScale`/`mosaic`/`rgbShift`/`text`/`texture`/`unlit`）が完全に同一内容。`.frag`も14ファイル中3ファイル（`default`/`gouraudLighting`/`unlit`）が完全に同一内容。スタイルの揺れではなくDRYの観点の指摘だが、`ShaderLoader`がファイル単位でしかロードしない設計（後述）と表裏一体の状態なので記録しておく。`gouraudLighting.vert`/`phongLighting.vert`は2026-07に`GlobalUniforms`ブロックを採用したことでこの12ファイルと構造的には近づいたが、`aNormal`を使う専用の`in`宣言・独自の`main()`本体を持つためバイト単位の完全一致グループには含まれない（下記「コード側の要件」参照）。
 
-これらのうち1〜3・5〜7はPrettier/lint相当のツールが無いことに起因する典型的な「機械整形すれば消える揺れ」、4・8は設計判断が絡む（軽々に一括修正すべきでない）区別が必要な事項。
+これらのうち1〜6はPrettier/lint相当のツールが無いことに起因する典型的な「機械整形すれば消える揺れ」、7は設計判断が絡む（軽々に一括修正すべきでない）事項。
+
+**過去の例外について**: 以前はここに「`gouraudLighting.vert`/`phongLighting.vert`が`GlobalUniforms`ブロックを使わず`mvpMatrix`/`modelMatrix`を個別uniformとして受け取る構造的な例外」という項目があったが、2026-07の「Material/Mesh Uniform受け渡し方式の統一リファクタ」でこの2ファイルも他12本の`.vert`と同じ`GlobalUniforms`ブロックを使う形に書き換えられ、`mvpMatrix`という個別uniform自体が削除されたため、この例外は解消された（下記「コード側の要件」参照）。
 
 ## コード側の要件（規約ではなく実装上の制約）
 
 以下はスタイルの好みではなく、崩すと実際に動かなくなる/意図通り配線されなくなる制約:
 
 - **ファイル名がシェーダーキーになる**: `ShaderLoader.loadCommonShaders()`はファイル名（拡張子抜き）をそのままシェーダーキーとして使う（`blur.vert`+`blur.frag` → キー`"blur"`）。vert/fragはファイル名を一致させる必要があり、このキーは`MaterialFactory`側の生成メソッドが参照するキー名とも一致していなければならない。新規シェーダーを追加する場合、`ShaderLoader`側のコード変更は不要な代わりに、ファイル名の対応関係を崩さないよう注意する（`material.md`「Factoryとの関係」参照）。
-- **`GlobalUniforms`はマジックストリング**: `src/webgl/gl/ShaderProgram.ts`の`createProgram()`が`gl.getUniformBlockIndex(program, 'GlobalUniforms')`という文字列リテラルで直接検索し、見つかった場合のみ`UniformBindingPoint.GLOBAL`へバインドする（`buffer.md`「UBO専用の`ShaderUniformBuffer`」節参照）。UBO経由でview/projection行列・time・resolutionを自動的に受け取りたい場合は、ブロック名を寸分違わず`GlobalUniforms`にする必要がある。前述の`gouraudLighting`/`phongLighting`のようにこのブロックを持たないシェーダーは、この自動配線の恩恵を受けられず個別uniformで代替している。
+- **`GlobalUniforms`はマジックストリング**: `src/webgl/gl/ShaderProgram.ts`の`createProgram()`が`gl.getUniformBlockIndex(program, 'GlobalUniforms')`という文字列リテラルで直接検索し、見つかった場合のみ`UniformBindingPoint.GLOBAL`へバインドする（`buffer.md`「UBO専用の`ShaderUniformBuffer`」節参照）。UBO経由でview/projection行列・time・resolutionを自動的に受け取りたい場合は、ブロック名を寸分違わず`GlobalUniforms`にする必要がある。2026-07までは`gouraudLighting`/`phongLighting`だけがこのブロックを持たず個別uniformで代替していたが、リファクタ後は14本の`.vert`全てがこの自動配線を利用する。
 
 ## 他ファミリーとの関係
 
-- **`material.md`**: 各`.vert`/`.frag`ペアは対応する`~Material`（`UnlitMaterial`, `TexturedMaterial`, `GrayScaleMaterial`等）から`MaterialFactory`経由で生成・使用される。シェーダー側の`uniform`名は、対応する`~Material.setUniform()`が`context.getGlobalUniform()`や固有ロジックで設定する値の名前と一致していなければならない。
+- **`material.md`**: 各`.vert`/`.frag`ペアは対応する`~Material`（`UnlitMaterial`, `TexturedMaterial`, `GrayScaleMaterial`等）から`MaterialFactory`経由で生成・使用される。シェーダー側の`uniform`名は、対応する`~Material.setUniform()`が`transform`や自身のフィールド・固有ロジックから計算して設定する値の名前と一致していなければならない。
 - **`buffer.md`**: `GlobalUniforms`ブロックの中身（`viewMatrix`/`projectionMatrix`/`time`/`resolution`の4つ）は`ShaderUniformBuffer`が毎フレーム転送するデータそのもの。シェーダー側でブロックのメンバー構成を変える場合は`RendererContext`側の`ShaderUniformBuffer`構成も合わせて変更する必要がある。
 - **`pipeline.md`**: `RendererContext.bindGlobalUniforms()`が`UniformBindingPoint.GLOBAL`（binding=0）へバッファをバインドする側。シェーダー側の`GlobalUniforms`マジックストリングとペアで初めてグローバルUniformの自動配線が成立する。
+
+## 変更履歴
+
+- 2026-07-25: 「Material/Mesh Uniform受け渡し方式の統一リファクタ」（Notionタスク②）を反映。`gouraudLighting.vert`/`phongLighting.vert`が`GlobalUniforms`ブロックを採用し`mvpMatrix`個別uniformが削除されたことで、「揺れ・例外」節にあった「`GlobalUniforms`を使わない構造的な例外」を解消済みとして整理し、関連箇所（「共通テンプレート」節、「コード側の要件」節、「他ファミリーとの関係」節）を更新した。

@@ -74,12 +74,17 @@ export const RenderTagConstants = {
 `RendererContext`（`src/scene/renderer/RendererContext.ts`）は「1フレームの描画に必要な共有情報」を集約するハブで、`~Pipeline`/`~Flow`/`~Pass`/`~Node`のほぼ全メソッドが引数として受け取る中心的インフラ:
 
 - `camera`（`node.md`の`Camera`参照）, `lights`（`LightParams[]`。`setLights()`は定義されているが**呼び出し元がプロジェクト内に存在しない**——`getLights()`は`material.md`の`PhongMaterial`連携等で使われているが、投入する側の配線が無いサイレントな未接続箇所）
-- `globalUniforms`（Uniform名→値の辞書。マテリアルはここから必要な値を読んでシェーダへ流す。`updateGlobalUniform()`/`getGlobalUniform()`）
 - `globalUniformBuffer`（`ShaderUniformBuffer` = UBO。view/projection行列、time、resolution、mouseを`GlobalUniforms`ブロックとして`bindGlobalUniforms()`で`UniformBindingPoint.GLOBAL`（binding=0）にバインド。詳細は`buffer.md`）
 - `currentShaderProgram`（同一シェーダプログラムの再バインドを避けるための状態キャッシュ。`setCurrentShaderProgram()`/`isCurrentShaderProgramSame()`を`material.md`の`BaseMaterial.use()`が参照する）
 - `renderTargetRegistry`（`getRenderTargetRegistry()`。`render-target.md`参照）
 - `activateRenderTag`（`setActivateRenderTag()`/`getActivateRenderTag()`。上記`RenderTag`参照）
 
+`RendererContext`は以前`globalUniforms`/`fragmentCanvasUniforms`という2つの`UniformPairs`（Uniform名→値の辞書）を持ち、マテリアルはここから必要な値を読んでシェーダへ流していた。2026-07のリファクタでこの2つの辞書と関連メソッド（`getGlobalUniform`/`updateGlobalUniform`/`getFragmentCanvasUniform`/`updateFragmentCanvasUniform`）は完全に削除され、`RendererContext`は上記5項目（`camera`/`lights`/`globalUniformBuffer`/`currentShaderProgram`/`renderTargetRegistry`/`activateRenderTag`）のみを保持するようにスリム化された。複数ノードを跨いで共有される可変辞書が「値が1描画分遅延して送られる」という実バグの温床になっていたためで、各`~Material`（`material.md`参照）は必要な値を`setUniform()`の引数（`transform`）や`context.getCamera()`/`context.getLights()`から自己完結して取得する形に置き換わった。任意キーのuniformを扱いたい`FragmentCanvasMaterial`のような特殊ケースは、`RendererContext`側の共有辞書ではなく、そのマテリアル自身が持つインスタンス限定の`customUniforms`で対応する（`material.md`参照）。
+
 ## `~Flow`ファミリーとの関係
 
 `SceneRendererPipeline`は`RendererFlowOperation`型の配列・フィールドを保持するオーケストレーション層で、実際の描画ロジックは持たない。各`RendererFlowOperation`実装（`flow.md`参照）に処理を委譲する。
+
+## 変更履歴
+
+- 2026-07-25: 「Material/Mesh Uniform受け渡し方式の統一リファクタ」（Notionタスク⑥）を反映。`RendererContext`から`globalUniforms`/`fragmentCanvasUniforms`辞書と関連メソッドが削除されたことを反映して「`RendererContext`（フレーム単位の共有状態）」節を更新した。

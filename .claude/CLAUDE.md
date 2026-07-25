@@ -57,7 +57,7 @@ SceneRendererPipeline  （1フレームを統括: 不透明パス → ポスト�
 - `RenderTag`（`BACKGROUND/OPAQUE/EMISSIVE/TRANSPARENT/DISTORTION/OVERLAY/ALL`）が各パスの描画対象ノードを決める。現状配線されているのは`OPAQUE`と`OVERLAY`のみ。`RendererContext.setActivateRenderTag()`と`SceneNode.shouldDraw()`がこのフィルタを実現している。
 - `RenderTargetRegistry`は`RenderTargetSlot`（`CURRENT_FRAME`, `TEMP_FRAME_BUFFER`, `PREV_FRAME`, `HALF_RES_BUFFER`, `BRIGHT_PASS_BUFFER`, `BLOOM_RENDER_TARGET`, `PINGPONG_TEMP_BUFFER`）をキーにした`RenderTargetOperation`の`Map`プール。各パスは互いへの参照を持たず、このプールからスロット指定で取り出す。
 - `SceneRendererPipeline.render()`は2枚のRT（`readRT`/`writeRT`、各段の後にswap）を有効なポストエフェクトチェーンに通すping-pong方式。無効化された`PostEffectRendererFlow`は`gl.blitFramebuffer`でシェーダパスをバイパスするので、エフェクトのON/OFF切り替えがread/write連鎖の整合性を崩さない。
-- `RendererContext`はフレーム単位のハブ: カメラ・ライト・`globalUniforms`辞書・`GlobalUniforms`のUBO（view/projection/time/resolution/mouseを`ShaderUniformBuffer`でパック）・現在のシェーダプログラム（無駄な再バインド防止用）・RTレジストリを持つ。
+- `RendererContext`はフレーム単位のハブ: カメラ・ライト・`GlobalUniforms`のUBO（view/projection/time/resolution/mouseを`ShaderUniformBuffer`でパック）・現在のシェーダプログラム（無駄な再バインド防止用）・RTレジストリを持つ。
 - パイプライン自体はアプリ側が`setup()`内で`addSceneRendererFlow`/`addPostEffectFlow`/`addFinalBlitFlow`を使って組み立てる。固定のデフォルトチェーンは無い（`examples/sample.ts`はBloom→Bright→横Blur→縦Blur→GrayScale→Mosaic→RGBShift→Glitchという例）。
 
 ### `XxxOperation` + `BaseXxx` パターン

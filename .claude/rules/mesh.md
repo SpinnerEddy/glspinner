@@ -15,46 +15,38 @@ export abstract class BaseMesh implements MeshOperation {
     protected geometry: GeometryOperation;
     protected material: MaterialOperation;
     useMaterial(gl, context) { this.material.use(gl, context); }
-    updateMaterialParams(...) { /* デフォルトは何もしない */ }
-    abstract updateUniforms(gl, context): void;
+    abstract updateUniforms(gl, context, transform: Transform): void;
     abstract draw(gl): void;
 }
 ```
 
-`useMaterial()`はマテリアルへの委譲を共通化。`updateMaterialParams()`はデフォルトで空実装（オーバーライドしなくてもよい）。`updateUniforms()`と`draw()`が具象クラスの責務。
+`useMaterial()`はマテリアルへの委譲を共通化。`updateUniforms()`と`draw()`が具象クラスの責務。
+
+`MeshOperation`は以前`updateMaterialParams(gl, transform, context)`という追加メソッドを持ち、`SimpleMesh`だけがこれをオーバーライドしてPhongライティング用のパラメータ（`modelMatrix`の逆行列・視線方向・ライトUniform）を設定していた。2026-07のリファクタ（`material.md`「`PhongMaterial`/`GouraudMaterial`の自己完結化」参照）でこの責務は`PhongMaterial`自身に移り、`updateMaterialParams`は`MeshOperation`/`BaseMesh`から完全に削除された。今は`updateUniforms(gl, context, transform)`ひとつに統一されている。
 
 ## 具象クラスの役割分担
 
-- **`SimpleMesh`**: Phongライティング等、通常の3Dオブジェクト用。`updateMaterialParams()`で`modelMatrix`の逆行列・視線方向・ライトUniformをまとめて設定する（下記コード参照）。`draw()`は`geometry.bind() → gl.drawElements(TRIANGLES) → geometry.unbind() → material.cleanup()`という定型。
-- **`UnlitMesh`**: ライティングなし。深度テスト有効・カリング無効を明示（ポストエフェクトのフルスクリーンプレーン描画にも使われる。`pass.md`の`BaseShaderPass`参照）。
-- **`TextMesh`**: `TextQuad`ジオメトリ専用。アルファブレンド有効・深度テスト無効（常に手前に表示）。
-- **`FullScreenQuadMesh`**: `updateMaterialParams`すら使わない最小構成（フラグメントシェーダキャンバス用）。
+`SimpleMesh`/`UnlitMesh`/`TextMesh`/`FullScreenQuadMesh`はいずれも`updateUniforms()`が次の1行だけの同一パターンになった（マテリアル種別による差異は無い）。
 
 ```ts
-// SimpleMesh.updateMaterialParams()
-updateMaterialParams(gl, transform, context): void {
-    const modelMatrix = transform.getWorldMatrix();
-    const invertMatrix = modelMatrix.inverse();
-    const eyeDirection = context.getCamera().calculateEyeDirection();
-
-    let uniforms = context.getGlobalUniform();
-    uniforms["modelMatrix"] = new ShaderUniformValue(modelMatrix);
-    uniforms["invMatrix"] = new ShaderUniformValue(invertMatrix);
-    uniforms["eyeDirection"] = new ShaderUniformValue(eyeDirection);
-
-    const phong = this.material as PhongMaterial;
-    if (phong == null) return;
-    if (context.getLights().length == 0) return;
-
-    let light = context.getLights().at(0)!;
-    phong.setLightUniform(gl, light);
+updateUniforms(gl: WebGL2RenderingContext, context: RendererContext, transform: Transform): void {
+    this.material.setUniform(gl, context, transform);
 }
 ```
 
-`this.material as PhongMaterial`のダウンキャストは、`material.md`で触れた「`MaterialOperation`の契約に現れないファミリー固有メソッドを呼ぶための非対称な拡張点」の具体例。`phong == null`という`==`比較（`===`ではない）で判定している点も既存コードの流儀。
+以前は`SimpleMesh`だけ`updateMaterialParams()`という追加メソッドで`PhongMaterial`固有の値を設定していたため他の3クラスと形が異なっていたが、その責務が`PhongMaterial`自身に移った（`material.md`参照）ことで、`SimpleMesh`も他の3クラスと構造上区別がつかなくなった。差異があるのは`draw()`側のみ:
 
-いずれの具象クラスも`draw()`は`geometry.bind() → gl.drawElements(TRIANGLES, ...) → geometry.unbind() → material.cleanup()`という共通パターンを踏襲する（`BaseMesh`側で共通化されていないため、新規追加時は手で複製することになる）。
+- **`SimpleMesh`**: Phongライティング等、通常の3Dオブジェクト用。`draw()`は`geometry.bind() → gl.drawElements(TRIANGLES) → geometry.unbind() → material.cleanup()`という定型。
+- **`UnlitMesh`**: ライティングなし。深度テスト有効・カリング無効を明示（ポストエフェクトのフルスクリーンプレーン描画にも使われる。`pass.md`の`BaseShaderPass`参照）。
+- **`TextMesh`**: `TextQuad`ジオメトリ専用。アルファブレンド有効・深度テスト無効（常に手前に表示）。
+- **`FullScreenQuadMesh`**: `draw()`に`material.cleanup()`呼び出しすら無い最小構成（フラグメントシェーダキャンバス用）。
+
+いずれの具象クラスも`draw()`は`geometry.bind() → gl.drawElements(TRIANGLES, ...) → geometry.unbind() → material.cleanup()`という共通パターンを踏襲する（`FullScreenQuadMesh`を除く。`BaseMesh`側で共通化されていないため、新規追加時は手で複製することになる）。
 
 ## `~Node`ファミリーとの関係
 
 `~Mesh`自体はシーングラフに属さない（`geometry`+`material`+描画ロジックのみを持つ）。シーングラフ上に配置するには`MeshNode`（`node.md`参照）でラップする。
+
+## 変更履歴
+
+- 2026-07-25: 「Material/Mesh Uniform受け渡し方式の統一リファクタ」（Notionタスク④）を反映。`MeshOperation.updateMaterialParams`の削除と`updateUniforms(gl, context, transform)`への統一により、`SimpleMesh`が他3クラスと同一のパターンになったことを反映して全面改訂した。

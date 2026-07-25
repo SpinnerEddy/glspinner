@@ -66,10 +66,15 @@ export abstract class SceneNode {
 ```ts
 public draw(gl, context) {
     this.mesh.useMaterial(gl, context);
-    this.updateUniforms(gl, context);       // modelMatrixをグローバルUniformへ反映 + mesh.updateUniforms
-    this.updateMaterialParams(gl, context); // ライティング用パラメータなど
+    this.mesh.updateUniforms(gl, context, this.transform);
     this.mesh.draw(gl);
 }
 ```
 
 `~Node`自身は描画の実体を持たず、保持している`~Mesh`（`mesh.md`参照）に処理を委譲する薄いラッパーという役割分担。新規の描画系Nodeを追加する場合もこのパターン（Nodeは委譲のみ、実体はMesh側）を踏襲する。
+
+2026-07のリファクタ以前は`draw()`が`updateUniforms(gl, context)`（`context.updateGlobalUniform('modelMatrix', ...)`で辞書に書き込む中継用`private`メソッド）と`updateMaterialParams(gl, context)`（`mesh.updateMaterialParams()`への中継）の2段階に分かれていたが、`transform`を`mesh.updateUniforms()`の引数として直接渡せるようになったことで両方とも不要になり、`draw()`から`this.mesh.updateUniforms(gl, context, this.transform)`を直接呼ぶだけの3行に簡略化された（`TextMeshNode`も同型）。`mesh.md`「`BaseMesh`が提供する共通実装」参照。
+
+## 変更履歴
+
+- 2026-07-25: 「Material/Mesh Uniform受け渡し方式の統一リファクタ」（Notionタスク⑤）を反映し、「`MeshNode`の`draw()`パターン」節を簡略化後の3行構成に更新した。
