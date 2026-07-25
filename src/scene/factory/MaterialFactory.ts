@@ -90,22 +90,22 @@ export class MaterialFactory {
         return new GrayScaleMaterial(shader);
     }
 
-    static singleDirectionBlurMaterial(isVertical: boolean, blurRange: number): BlurMaterial {
+    static singleDirectionBlurMaterial(isVertical: boolean, blurStrength: number, texResolution: [number, number], blurRange: number): BlurMaterial {
         if (!this.shaderLoader) {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
         const shader = this.shaderLoader.getShaderProgram('blur');
-        return new BlurMaterial(shader, isVertical, blurRange);
+        return new BlurMaterial(shader, isVertical, blurStrength, texResolution, blurRange);
     }
 
-    static brightMaterial(): BrightMaterial {
+    static brightMaterial(brightThreshold: number): BrightMaterial {
         if (!this.shaderLoader) {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
         const shader = this.shaderLoader.getShaderProgram('bright');
-        return new BrightMaterial(shader);
+        return new BrightMaterial(shader, brightThreshold);
     }
 
     static maskMaterial(shaderKey: string): MaskMaterial {
@@ -117,42 +117,40 @@ export class MaterialFactory {
         return new MaskMaterial(shader);
     }
 
-    static composeMaterial(): ComposeMaterial {
+    static composeMaterial(bloomStrength: number): ComposeMaterial {
         if (!this.shaderLoader) {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
         const shader = this.shaderLoader.getShaderProgram('compose');
-        return new ComposeMaterial(shader);
+        return new ComposeMaterial(shader, bloomStrength);
     }
 
-    static mosaicMaterial(): MosaicMaterial {
+    static mosaicMaterial(mosaicSize: number): MosaicMaterial {
         if (!this.shaderLoader) {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
         const shader = this.shaderLoader.getShaderProgram('mosaic');
-        return new MosaicMaterial(shader);
+        return new MosaicMaterial(shader, mosaicSize);
     }
 
-    static rgbShiftMaterial(shaderKey: string = ''): MosaicMaterial {
+    static rgbShiftMaterial(shiftOffset: number): RGBShiftMaterial {
         if (!this.shaderLoader) {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
-        const key = shaderKey == '' ? 'rgbShift' : shaderKey;
-        const shader = this.shaderLoader.getShaderProgram(key);
-        return new RGBShiftMaterial(shader);
+        const shader = this.shaderLoader.getShaderProgram('rgbShift');
+        return new RGBShiftMaterial(shader, shiftOffset);
     }
 
-    static glitchMaterial(shaderKey: string = ''): GlitchMaterial {
+    static glitchMaterial(glitchCoef: number): GlitchMaterial {
         if (!this.shaderLoader) {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
-        const key = shaderKey == '' ? 'glitch' : shaderKey;
-        const shader = this.shaderLoader.getShaderProgram(key);
-        return new GlitchMaterial(shader);
+        const shader = this.shaderLoader.getShaderProgram('glitch');
+        return new GlitchMaterial(shader, glitchCoef);
     }
 
     static unlitMaterial(): UnlitMaterial {

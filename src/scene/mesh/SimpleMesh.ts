@@ -1,7 +1,5 @@
 import { GeometryOperation } from '../../webgl/gl/geometry/GeometryOperation';
-import { ShaderUniformValue } from '../../webgl/gl/uniform/ShaderUniformValue';
 import { MaterialOperation } from '../material/MaterialOperation';
-import { PhongMaterial } from '../material/PhongMaterial';
 import { RendererContext } from '../renderer/RendererContext';
 import { Transform } from '../transform/Transform';
 import { BaseMesh } from './BaseMesh';

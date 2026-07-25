@@ -10,9 +10,8 @@ export class GrayScaleMaterial extends BaseMaterial {
         super(shaderProgram);
     }
 
-    setUniform(gl: WebGL2RenderingContext, context: RendererContext, transform: Transform): void {
-        const uniforms = context.getGlobalUniform();
-        this.shaderProgram.setUniform(gl, 'modelMatrix', uniforms['modelMatrix']);
+    setUniform(gl: WebGL2RenderingContext, _context: RendererContext, transform: Transform): void {
+        this.shaderProgram.setUniform(gl, 'modelMatrix', new ShaderUniformValue(transform.getWorldMatrix()));
         this.shaderProgram.setUniform(gl, 'tex', new ShaderUniformValue(TextureSlot.CURRENT_FRAME, 'int'));
     }
 }

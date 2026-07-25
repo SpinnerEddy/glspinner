@@ -1,4 +1,5 @@
 import { ShaderProgram } from '../../webgl/gl/ShaderProgram';
+import { ShaderUniformValue } from '../../webgl/gl/uniform/ShaderUniformValue';
 import { RendererContext } from '../renderer/RendererContext';
 import { Transform } from '../transform/Transform';
 import { BaseMaterial } from './BaseMaterial';
@@ -8,10 +9,7 @@ export class UnlitMaterial extends BaseMaterial {
         super(shaderProgram);
     }
 
-    setUniform(gl: WebGL2RenderingContext, context: RendererContext, transform: Transform): void {
-        const uniforms = context.getGlobalUniform();
-        for (const key in uniforms) {
-            this.shaderProgram.setUniform(gl, key, uniforms[key]);
-        }
+    setUniform(gl: WebGL2RenderingContext, _context: RendererContext, transform: Transform): void {
+        this.shaderProgram.setUniform(gl, 'modelMatrix', new ShaderUniformValue(transform.getWorldMatrix()));
     }
 }

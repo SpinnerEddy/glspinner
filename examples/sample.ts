@@ -82,29 +82,25 @@ class Sample extends GLSpinner.BaseApplication {
         const standardRendererFlow = new GLSpinner.StandardSceneRendererFlow(this.baseSceneRoot);
         this.rendererFlowPipeline.addSceneRendererFlow(standardRendererFlow);
 
-        const horizontalBlurShaderPass = new GLSpinner.SingleDirectionBlurShaderPass(this.gl, GLSpinner.MaterialFactory.singleDirectionBlurMaterial(false, 0.001));
-        const verticalBlurShaderPass = new GLSpinner.SingleDirectionBlurShaderPass(this.gl, GLSpinner.MaterialFactory.singleDirectionBlurMaterial(true, 0.001));
-        this.rendererContext.updateGlobalUniform('texResolution', new GLSpinner.ShaderUniformValue([this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
+        const horizontalBlurShaderPass = new GLSpinner.SingleDirectionBlurShaderPass(this.gl, GLSpinner.MaterialFactory.singleDirectionBlurMaterial(false, 1.0, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight], 0.001));
+        const verticalBlurShaderPass = new GLSpinner.SingleDirectionBlurShaderPass(this.gl, GLSpinner.MaterialFactory.singleDirectionBlurMaterial(true, 1.0, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight], 0.001));
         const graySceleShaderPass = new GLSpinner.GrayScaleShaderPass(this.gl, GLSpinner.MaterialFactory.grayScaleMaterial());
 
-        const brightShaderPass = new GLSpinner.BrightShaderPass(this.gl, GLSpinner.MaterialFactory.brightMaterial());
+        const brightShaderPass = new GLSpinner.BrightShaderPass(this.gl, GLSpinner.MaterialFactory.brightMaterial(0.85));
 
         const bloomShaderPass = new GLSpinner.BloomShaderPass(
             this.gl,
-            GLSpinner.MaterialFactory.brightMaterial(),
-            GLSpinner.MaterialFactory.singleDirectionBlurMaterial(false, 0.001),
-            GLSpinner.MaterialFactory.singleDirectionBlurMaterial(true, 0.001),
-            GLSpinner.MaterialFactory.composeMaterial()
+            GLSpinner.MaterialFactory.brightMaterial(0.85),
+            GLSpinner.MaterialFactory.singleDirectionBlurMaterial(false, 1.0, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight], 0.001),
+            GLSpinner.MaterialFactory.singleDirectionBlurMaterial(true, 1.0, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight], 0.001),
+            GLSpinner.MaterialFactory.composeMaterial(10.0)
         );
 
-        const mosaicShaderPass = new GLSpinner.MosaicShaderPass(this.gl, GLSpinner.MaterialFactory.mosaicMaterial());
-        this.rendererContext.updateGlobalUniform('mosaicSize', new GLSpinner.ShaderUniformValue(60.0));
+        const mosaicShaderPass = new GLSpinner.MosaicShaderPass(this.gl, GLSpinner.MaterialFactory.mosaicMaterial(60.0));
 
-        const rgbShiftShaderPass = new GLSpinner.MosaicShaderPass(this.gl, GLSpinner.MaterialFactory.rgbShiftMaterial());
+        const rgbShiftShaderPass = new GLSpinner.RGBShiftShaderPass(this.gl, GLSpinner.MaterialFactory.rgbShiftMaterial(0.01));
 
-        const glitchShaderPass = new GLSpinner.GlitchShaderPass(this.gl, GLSpinner.MaterialFactory.glitchMaterial());
-        this.rendererContext.updateGlobalUniform('glitchCoef', new GLSpinner.ShaderUniformValue(0.3));
-        this.rendererContext.updateGlobalUniform('shiftOffset', new GLSpinner.ShaderUniformValue(0.01));
+        const glitchShaderPass = new GLSpinner.GlitchShaderPass(this.gl, GLSpinner.MaterialFactory.glitchMaterial(0.3));
 
         this.rendererFlowPipeline.addPostEffectFlow(new GLSpinner.PostEffectRendererFlow(bloomShaderPass));
         this.rendererFlowPipeline.addPostEffectFlow(new GLSpinner.PostEffectRendererFlow(brightShaderPass));
@@ -157,12 +153,6 @@ class Sample extends GLSpinner.BaseApplication {
             node.getTransform().setPosition(new GLSpinner.Vector3(-0.45, 0.3, 0.0));
             node.update();
         });
-
-        this.rendererContext.updateGlobalUniform('time', new GLSpinner.ShaderUniformValue(this.scene.getClock().getElapsedTime()));
-        this.rendererContext.updateGlobalUniform('resolution', new GLSpinner.ShaderUniformValue([this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
-        this.rendererContext.updateGlobalUniform('blurStrength', new GLSpinner.ShaderUniformValue(1.0));
-        this.rendererContext.updateGlobalUniform('brightThreshold', new GLSpinner.ShaderUniformValue(0.85));
-        this.rendererContext.updateGlobalUniform('bloomStrength', new GLSpinner.ShaderUniformValue(10.0));
 
         this.rendererContext.updateFragmentCanvasUniform('cameraPos', new GLSpinner.ShaderUniformValue(this.cameraPos));
 

@@ -19,10 +19,9 @@ export class TexturedTextMaterial extends BaseMaterial {
         this.fontColor = fontColor;
     }
 
-    setUniform(gl: WebGL2RenderingContext, context: RendererContext, transform: Transform): void {
-        const uniforms = context.getGlobalUniform();
+    setUniform(gl: WebGL2RenderingContext, _context: RendererContext, transform: Transform): void {
         this.fontTexture.bind(TextureSlot.FONT_ATLAS);
-        this.shaderProgram.setUniform(gl, 'modelMatrix', uniforms['modelMatrix']);
+        this.shaderProgram.setUniform(gl, 'modelMatrix', new ShaderUniformValue(transform.getWorldMatrix()));
         this.shaderProgram.setUniform(gl, 'tex', new ShaderUniformValue(TextureSlot.FONT_ATLAS, 'int'));
         this.shaderProgram.setUniform(gl, 'smoothness', new ShaderUniformValue(this.smoothness));
         this.shaderProgram.setUniform(gl, 'fontColor', new ShaderUniformValue(this.fontColor));

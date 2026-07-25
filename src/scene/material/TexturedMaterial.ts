@@ -16,14 +16,10 @@ export class TexturedMaterial extends BaseMaterial {
         this.texIndex = index;
     }
 
-    setUniform(gl: WebGL2RenderingContext, context: RendererContext, transform: Transform): void {
-        const uniforms = context.getGlobalUniform();
-        for (const key in uniforms) {
-            this.shaderProgram.setUniform(gl, key, uniforms[key]);
-        }
+    setUniform(gl: WebGL2RenderingContext, _context: RendererContext, transform: Transform): void {
+        this.shaderProgram.setUniform(gl, 'modelMatrix', new ShaderUniformValue(transform.getWorldMatrix()));
 
         this.texture.bind(this.texIndex);
-
         this.shaderProgram.setUniform(gl, 'tex', new ShaderUniformValue(this.texIndex, 'int'));
     }
 
