@@ -15,14 +15,9 @@ export class PhongMaterial extends BaseMaterial {
         const invertMatrix = modelMatrix.inverse();
         const eyeDirection = context.getCamera().calculateEyeDirection();
 
-        const uniforms = context.getGlobalUniform();
-        uniforms['modelMatrix'] = new ShaderUniformValue(modelMatrix);
-        uniforms['invMatrix'] = new ShaderUniformValue(invertMatrix);
-        uniforms['eyeDirection'] = new ShaderUniformValue(eyeDirection);
-
-        for (const key in uniforms) {
-            this.shaderProgram.setUniform(gl, key, uniforms[key]);
-        }
+        this.shaderProgram.setUniform(gl, 'modelMatrix', new ShaderUniformValue(modelMatrix));
+        this.shaderProgram.setUniform(gl, 'invMatrix', new ShaderUniformValue(invertMatrix));
+        this.shaderProgram.setUniform(gl, 'eyeDirection', new ShaderUniformValue(eyeDirection));
 
         if (context.getLights().length == 0) return;
 

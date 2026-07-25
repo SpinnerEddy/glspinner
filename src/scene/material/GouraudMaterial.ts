@@ -18,6 +18,17 @@ export class GouraudMaterial extends BaseMaterial {
         this.ambientColor = ambientColor;
     }
 
+    setUniform(gl: WebGL2RenderingContext, _context: RendererContext, transform: Transform): void {
+        const modelMatrix = transform.getWorldMatrix();
+        const invertMatrix = modelMatrix.inverse();
+
+        this.shaderProgram.setUniform(gl, 'modelMatrix', new ShaderUniformValue(modelMatrix));
+        this.shaderProgram.setUniform(gl, 'invMatrix', new ShaderUniformValue(invertMatrix));
+        this.shaderProgram.setUniform(gl, 'lightDirection', new ShaderUniformValue(this.lightDirection));
+        this.shaderProgram.setUniform(gl, 'eyeDirection', new ShaderUniformValue(this.eyeDirection));
+        this.shaderProgram.setUniform(gl, 'ambientColor', new ShaderUniformValue(this.ambientColor.toVector4()));
+    }
+    
     setLightDirection(lightDirection: Vector3): void {
         this.lightDirection = lightDirection;
     }
@@ -28,16 +39,5 @@ export class GouraudMaterial extends BaseMaterial {
 
     setAmbientColor(ambientColor: Color): void {
         this.ambientColor = ambientColor;
-    }
-
-    setUniform(gl: WebGL2RenderingContext, context: RendererContext, transform: Transform): void {
-        const uniforms = context.getGlobalUniform();
-        for (const key in uniforms) {
-            this.shaderProgram.setUniform(gl, key, uniforms[key]);
-        }
-
-        this.shaderProgram.setUniform(gl, 'lightDirection', new ShaderUniformValue(this.lightDirection));
-        this.shaderProgram.setUniform(gl, 'eyeDirection', new ShaderUniformValue(this.eyeDirection));
-        this.shaderProgram.setUniform(gl, 'ambientColor', new ShaderUniformValue(this.ambientColor.toVector4()));
     }
 }
