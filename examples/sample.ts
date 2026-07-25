@@ -154,8 +154,7 @@ class Sample extends GLSpinner.BaseApplication {
             node.update();
         });
 
-        this.rendererContext.updateFragmentCanvasUniform('cameraPos', new GLSpinner.ShaderUniformValue(this.cameraPos));
-
+        
         this.rendererContext.updateGlobalUniformValues(this.scene.getClock().getElapsedTime(), this.inputHub.getMousePosition());
         this.rendererContext.bindGlobalUniforms();
 
