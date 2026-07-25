@@ -69,6 +69,18 @@ SceneRendererPipeline  （1フレームを統括: 不透明パス → ポスト�
 - `LightFactory.ts`は存在するが中身が空。`MidiDevice`はMIDIメッセージを受信するが`isDown`/`isPressed`/`isReleased`は`false`固定のスタブ。
 - 一見バグに見えるが実は意図的な規約であるもの（等価比較演算子`==`/`===`の混在、JSDocが一切無い、無効化したコードは削除せずコメントアウトで残す、`Geometry`/`Mesh`が`Material`と違いFactory化されていない、等）が複数ある。詳細は`.claude/rules/general.md`と`.claude/rules/operation-base.md`にカタログ化してあるので、「矛盾している」ように見えるコードを直す前に必ず確認すること。
 
+## 編集範囲の制限
+
+glspinnerのライブラリ本体に関わるコード——シェーダー（`src/webgl/shader/`配下の`.vert`/`.frag`）、および`src/`配下のTypeScript全般（`src/app/`, `src/scene/`, `src/webgl/gl/`, `src/input/`, `src/math/`, `src/color/`, `src/tools/`のロジック・機能・WebGL実装）——は、**Claude Codeによる直接のコード編集を禁止**する。ユーザー自身が実装することで内容を理解している状態を保つための運用ルールであり、コードの巧拙とは無関係の制約である。
+
+Claude Codeが直接編集してよいのは以下に限る:
+- テストコード（`tests/`配下）
+- Vite設定関連ファイル（`vite.config.ts`, `vite.tools.config.ts`等）
+- JSON設定ファイル（`package.json`等）
+- Markdownファイル（`README.md`, `.claude/CLAUDE.md`, `.claude/rules/`配下等）
+
+一方、コードを直接編集しない形の支援——設計相談、コードレビュー、実装方針の提案、Notion等外部ドキュメントへの記録、`glspinner-design`/`glspinner-review`/`glspinner-task-discovery`のような分析系スキルの実行——はこの制限の対象外で、これまで通り行ってよい。実装を伴う依頼を受けた場合は、対象ファイルが上記の編集可能範囲に収まるかをまず確認し、収まらない場合はコード変更を行わず、設計方針の言語化やレビューといった代替の形で支援する。
+
 ## プロジェクト固有のClaude Codeスキル
 
 `.claude/skills/`・`.claude/commands/`配下に、このプロジェクトの定型作業向けカスタムスキル/コマンドがある: `glspinner-context`（共通の下準備、設計・規約コンテキストの収集）、`glspinner-design`、`glspinner-implement`、`glspinner-test`、`glspinner-review`、`glspinner-tidy`（意味を変えない機械的整形のみ）、`glspinner-document`、`glspinner-reading`、`glspinner-task-discovery`（既知ギャップの棚卸し）、`glspinner-ideation`（アイディア発想。発想ロジック本体はcommand `glspinner-ideas` に切り出されており`glspinner-notion-tasks`と共有）、`glspinner-notion-tasks`（発想したアイディアをユーザーが選んだ分だけNotionの「✔️ タスク管理」DBにタスク登録する）、`glspinner-retro`（技術的な壁打ち・振り返りを見出し+箇条書きに整理してNotionの「📝 振り返り」DBへ記録する）、`glspinner-conventions`（`.claude/rules/`を管理）。該当する作業ではその場しのぎではなくこれらのスキルを優先して使うこと。
