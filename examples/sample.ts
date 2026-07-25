@@ -16,7 +16,6 @@ class Sample extends GLSpinner.BaseApplication {
     private shaderPasses!: Map<string, GLSpinner.ShaderPassOperation>;
     private shaderPassEnabledSwitch!: Map<string, boolean>;
     private textRoot!: GLSpinner.EmptyNode;
-    private cameraPos!: GLSpinner.Vector3;
 
     async preload(): Promise<void> {
         await super.preload();
@@ -59,7 +58,6 @@ class Sample extends GLSpinner.BaseApplication {
         const fboPlaneMesh = new GLSpinner.UnlitMesh(fboPlane, fboMaterial);
         const fboPlaneMeshNode = new GLSpinner.MeshNode(fboPlaneMesh);
         GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, fboPlaneMeshNode);
-        this.cameraPos = new GLSpinner.Vector3(0.0, 0.5, -2.5);
 
         GLSpinner.SceneGraphUtility.addChild(fboPlaneMeshNode, this.textRoot);
 
@@ -154,7 +152,7 @@ class Sample extends GLSpinner.BaseApplication {
             node.update();
         });
 
-        
+
         this.rendererContext.updateGlobalUniformValues(this.scene.getClock().getElapsedTime(), this.inputHub.getMousePosition());
         this.rendererContext.bindGlobalUniforms();
 
