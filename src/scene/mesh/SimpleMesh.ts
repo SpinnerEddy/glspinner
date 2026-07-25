@@ -11,26 +11,8 @@ export class SimpleMesh extends BaseMesh {
         super(geometry, material);
     }
 
-    updateMaterialParams(gl: WebGL2RenderingContext, transform: Transform, context: RendererContext): void {
-        const modelMatrix = transform.getWorldMatrix();
-        const invertMatrix = modelMatrix.inverse();
-        const eyeDirection = context.getCamera().calculateEyeDirection();
-
-        let uniforms = context.getGlobalUniform();
-        uniforms['modelMatrix'] = new ShaderUniformValue(modelMatrix);
-        uniforms['invMatrix'] = new ShaderUniformValue(invertMatrix);
-        uniforms['eyeDirection'] = new ShaderUniformValue(eyeDirection);
-
-        const phong = this.material as PhongMaterial;
-        if (phong == null) return;
-        if (context.getLights().length == 0) return;
-
-        let light = context.getLights().at(0)!;
-        phong.setLightUniform(gl, light);
-    }
-
-    updateUniforms(gl: WebGL2RenderingContext, context: RendererContext): void {
-        this.material.setUniform(gl, context);
+    updateUniforms(gl: WebGL2RenderingContext, context: RendererContext, transform: Transform): void {
+        this.material.setUniform(gl, context, transform);
     }
 
     draw(gl: WebGL2RenderingContext): void {

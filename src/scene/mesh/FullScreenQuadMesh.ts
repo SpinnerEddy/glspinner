@@ -1,6 +1,7 @@
 import { Rectangle } from '../../webgl/gl/geometry/Rectangle';
 import { MaterialOperation } from '../material/MaterialOperation';
 import { RendererContext } from '../renderer/RendererContext';
+import { Transform } from '../transform/Transform';
 import { BaseMesh } from './BaseMesh';
 
 export class FullScreenQuadMesh extends BaseMesh {
@@ -8,8 +9,8 @@ export class FullScreenQuadMesh extends BaseMesh {
         super(geometry, material);
     }
 
-    updateUniforms(gl: WebGL2RenderingContext, context: RendererContext): void {
-        this.material.setUniform(gl, context);
+    updateUniforms(gl: WebGL2RenderingContext, context: RendererContext, transform: Transform): void {
+        this.material.setUniform(gl, context, transform);
     }
 
     draw(gl: WebGL2RenderingContext): void {

@@ -20,7 +20,6 @@ export class MeshNode extends SceneNode {
     public draw(gl: WebGL2RenderingContext, context: RendererContext): void {
         this.mesh.useMaterial(gl, context);
         this.updateUniforms(gl, context);
-        this.updateMaterialParams(gl, context);
         this.mesh.draw(gl);
     }
 
@@ -29,10 +28,6 @@ export class MeshNode extends SceneNode {
 
         context.updateGlobalUniform('modelMatrix', new ShaderUniformValue(modelMatrix));
 
-        this.mesh.updateUniforms(gl, context);
-    }
-
-    private updateMaterialParams(gl: WebGL2RenderingContext, context: RendererContext): void {
-        this.mesh.updateMaterialParams(gl, this.transform, context);
+        this.mesh.updateUniforms(gl, context, this.transform);
     }
 }

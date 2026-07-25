@@ -4,6 +4,7 @@ import { TextureSlot } from '../../webgl/gl/texture/TextureConstants';
 import { TextureOperation } from '../../webgl/gl/texture/TextureOperation';
 import { ShaderUniformValue } from '../../webgl/gl/uniform/ShaderUniformValue';
 import { RendererContext } from '../renderer/RendererContext';
+import { Transform } from '../transform/Transform';
 import { BaseMaterial } from './BaseMaterial';
 
 export class TexturedTextMaterial extends BaseMaterial {
@@ -18,7 +19,7 @@ export class TexturedTextMaterial extends BaseMaterial {
         this.fontColor = fontColor;
     }
 
-    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void {
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext, transform: Transform): void {
         const uniforms = context.getGlobalUniform();
         this.fontTexture.bind(TextureSlot.FONT_ATLAS);
         this.shaderProgram.setUniform(gl, 'modelMatrix', uniforms['modelMatrix']);

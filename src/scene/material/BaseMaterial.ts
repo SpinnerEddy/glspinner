@@ -1,6 +1,7 @@
 import { ShaderAttribute } from '../../webgl/gl/attribute/ShaderAttribute';
 import { ShaderProgram } from '../../webgl/gl/ShaderProgram';
 import { RendererContext } from '../renderer/RendererContext';
+import { Transform } from '../transform/Transform';
 import { MaterialOperation } from './MaterialOperation';
 
 export abstract class BaseMaterial implements MaterialOperation {
@@ -25,5 +26,5 @@ export abstract class BaseMaterial implements MaterialOperation {
 
     cleanup(): void {}
 
-    abstract setUniform(gl: WebGL2RenderingContext, context: RendererContext): void;
+    abstract setUniform(gl: WebGL2RenderingContext, context: RendererContext, transform: Transform): void;
 }

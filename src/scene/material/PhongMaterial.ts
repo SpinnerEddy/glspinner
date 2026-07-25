@@ -2,6 +2,7 @@ import { ShaderProgram } from '../../webgl/gl/ShaderProgram';
 import { ShaderUniformValue } from '../../webgl/gl/uniform/ShaderUniformValue';
 import { DirectionalLightParams, LightParams, LightType, PointLightParams } from '../light/LightConstants';
 import { RendererContext } from '../renderer/RendererContext';
+import { Transform } from '../transform/Transform';
 import { BaseMaterial } from './BaseMaterial';
 
 export class PhongMaterial extends BaseMaterial {
@@ -9,14 +10,27 @@ export class PhongMaterial extends BaseMaterial {
         super(shaderProgram);
     }
 
-    setUniform(gl: WebGL2RenderingContext, context: RendererContext): void {
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext, transform: Transform): void {
+        const modelMatrix = transform.getWorldMatrix();
+        const invertMatrix = modelMatrix.inverse();
+        const eyeDirection = context.getCamera().calculateEyeDirection();
+
         const uniforms = context.getGlobalUniform();
+        uniforms['modelMatrix'] = new ShaderUniformValue(modelMatrix);
+        uniforms['invMatrix'] = new ShaderUniformValue(invertMatrix);
+        uniforms['eyeDirection'] = new ShaderUniformValue(eyeDirection);
+
         for (const key in uniforms) {
             this.shaderProgram.setUniform(gl, key, uniforms[key]);
         }
+
+        if (context.getLights().length == 0) return;
+
+        const light = context.getLights().at(0)!;
+        this.setLightUniform(gl, light);
     }
 
-    setLightUniform(gl: WebGL2RenderingContext, light: LightParams): void {
+    private setLightUniform(gl: WebGL2RenderingContext, light: LightParams): void {
         if (light.lightType == LightType.Directional) {
             const directional = light as DirectionalLightParams;
             this.shaderProgram.setUniform(gl, 'lightDirection', new ShaderUniformValue(directional.direction));
