@@ -2,7 +2,7 @@ import { MatrixCalculator } from '../../math/MatrixCalculator';
 import { Vector2 } from '../../math/vector/Vector2';
 import { ShaderUniformBuffer } from '../../webgl/gl/buffer/ShaderUniformBuffer';
 import { ShaderProgram } from '../../webgl/gl/ShaderProgram';
-import { GlobalUniformKey, UniformBindingPoint, UniformPairs } from '../../webgl/gl/uniform/ShaderUniformConstants';
+import { GlobalUniformKey, UniformBindingPoint } from '../../webgl/gl/uniform/ShaderUniformConstants';
 import { ShaderUniformValue } from '../../webgl/gl/uniform/ShaderUniformValue';
 import { Camera } from '../camera/Camera';
 import { LightParams } from '../light/LightConstants';
@@ -13,8 +13,6 @@ import { RenderTag, RenderTagConstants } from './definition/RenderTag';
 export class RendererContext {
     private camera: Camera | undefined = undefined;
     private lights: LightParams[] = [];
-    private globalUniforms: UniformPairs = {};
-    private fragmentCanvasUniforms: UniformPairs = {};
     private currentShaderProgram: ShaderProgram | undefined = undefined;
     private renderTargetRegistry: RenderTargetRegistryOperation;
     private activateRenderTag: RenderTag = RenderTagConstants.ALL;
@@ -55,14 +53,6 @@ export class RendererContext {
         return this.camera!;
     }
 
-    public updateGlobalUniform(key: string, value: ShaderUniformValue): void {
-        this.globalUniforms[key] = value;
-    }
-
-    public getGlobalUniform(): UniformPairs {
-        return this.globalUniforms;
-    }
-
     public updateGlobalUniformValues(time: number, mousePos: Vector2): void {
         this.globalUniformBuffer.updateUniformValue(GlobalUniformKey.TIME, new ShaderUniformValue(time));
         this.globalUniformBuffer.updateUniformValue(GlobalUniformKey.MOUSE, new ShaderUniformValue(mousePos));
@@ -75,14 +65,6 @@ export class RendererContext {
     public bindGlobalUniforms(): void {
         this.globalUniformBuffer.transferUniform();
         this.globalUniformBuffer.bind(UniformBindingPoint.GLOBAL);
-    }
-
-    public updateFragmentCanvasUniform(key: string, value: ShaderUniformValue): void {
-        this.fragmentCanvasUniforms[key] = value;
-    }
-
-    public getFragmentCanvasUniform(): UniformPairs {
-        return this.fragmentCanvasUniforms;
     }
 
     public setCurrentShaderProgram(program: ShaderProgram): void {
