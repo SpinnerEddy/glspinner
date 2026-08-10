@@ -8,8 +8,9 @@ class Sample extends GLSpinner.BaseApplication {
     private backgroundColorStr!: string;
     private shaderAudioInput!: GLSpinner.ShaderAudioInput;
     private baseSceneRoot!: GLSpinner.EmptyNode;
-    private shaderPasses!: Map<string, GLSpinner.ShaderPassOperation>;
-    private shaderPassEnabledSwitch!: Map<string, boolean>;
+    private boxNode!: GLSpinner.MeshNode;
+    // private shaderPasses!: Map<string, GLSpinner.ShaderPassOperation>;
+    // private shaderPassEnabledSwitch!: Map<string, boolean>;
 
     async preload(): Promise<void> {
         await super.preload();
@@ -22,7 +23,7 @@ class Sample extends GLSpinner.BaseApplication {
     }
 
     setup(): void {
-        this.backgroundColorStr = '#e80f0f';
+        this.backgroundColorStr = '#000000';
 
         // 元々の描画内容
         this.baseSceneRoot = new GLSpinner.EmptyNode();
@@ -47,15 +48,15 @@ class Sample extends GLSpinner.BaseApplication {
         const standardRendererFlow = new GLSpinner.StandardSceneRendererFlow(this.baseSceneRoot);
         this.rendererFlowPipeline.addSceneRendererFlow(standardRendererFlow);
 
-        const bloomShaderPass = new GLSpinner.BloomShaderPass(
-            this.gl,
-            GLSpinner.MaterialFactory.brightMaterial(0.85),
-            GLSpinner.MaterialFactory.singleDirectionBlurMaterial(false, 1.0, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight], 0.001),
-            GLSpinner.MaterialFactory.singleDirectionBlurMaterial(true, 1.0, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight], 0.001),
-            GLSpinner.MaterialFactory.composeMaterial(10.0)
-        );
+        // const bloomShaderPass = new GLSpinner.BloomShaderPass(
+        //     this.gl,
+        //     GLSpinner.MaterialFactory.brightMaterial(0.85),
+        //     GLSpinner.MaterialFactory.singleDirectionBlurMaterial(false, 1.0, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight], 0.001),
+        //     GLSpinner.MaterialFactory.singleDirectionBlurMaterial(true, 1.0, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight], 0.001),
+        //     GLSpinner.MaterialFactory.composeMaterial(10.0)
+        // );
 
-        this.rendererFlowPipeline.addPostEffectFlow(new GLSpinner.PostEffectRendererFlow(bloomShaderPass));
+        // this.rendererFlowPipeline.addPostEffectFlow(new GLSpinner.PostEffectRendererFlow(bloomShaderPass));
 
         // this.shaderPasses = new Map<string, GLSpinner.ShaderPassOperation>();
         // this.shaderPasses.set('bloom', bloomShaderPass);
@@ -67,7 +68,20 @@ class Sample extends GLSpinner.BaseApplication {
         // const finalBlitShaderPass = new GLSpinner.FinalBlitRendererFlow(frameBufferOutputPass);
         // this.rendererFlowPipeline.addFinalBlitFlow(finalBlitShaderPass);
 
-        this.camera = new GLSpinner.Camera(GLSpinner.CameraType.Orthography);
+        const boxMaterial = GLSpinner.MaterialFactory.unlitMaterial();
+        const box = new GLSpinner.Box(this.gl, 10, 10, 10);
+        const boxAttributes = {
+            aPosition: boxMaterial.getAttribute(this.gl, 'aPosition'),
+            aColor: boxMaterial.getAttribute(this.gl, 'aColor'),
+            aNormal: boxMaterial.getAttribute(this.gl, 'aNormal'),
+            aUv: boxMaterial.getAttribute(this.gl, 'aUv'),
+        };
+        box.setUpBuffers(this.gl, boxAttributes);
+        const boxMesh = new GLSpinner.UnlitMesh(box, boxMaterial);
+        this.boxNode = new GLSpinner.MeshNode(boxMesh);
+        GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, this.boxNode);
+
+        this.camera = new GLSpinner.Camera(GLSpinner.CameraType.Perspective);
         this.rendererContext.setCamera(this.camera);
 
         this.audioOutput.setInput(this.shaderAudioInput);
@@ -79,6 +93,13 @@ class Sample extends GLSpinner.BaseApplication {
     }
 
     update(): void {
+        const elapsed = this.scene.getClock().getElapsedTime();
+
+        GLSpinner.SceneGraphUtility.traverse(this.baseSceneRoot, (node) => {
+            node.getTransform().setRotation(GLSpinner.QuaternionCalculator.createFromAxisAndRadians(GLSpinner.DefaultVectorConstants.AXIS2DY, elapsed));
+            node.update();
+        });
+
         this.rendererContext.updateGlobalUniformValues(this.scene.getClock().getElapsedTime(), this.inputHub.getMousePosition());
         this.rendererContext.bindGlobalUniforms();
     }

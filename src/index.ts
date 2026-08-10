@@ -51,6 +51,7 @@ export * from './webgl/gl/buffer/ShaderUniformBuffer';
 // Geometry
 export * from './webgl/gl/geometry/Rectangle';
 export * from './webgl/gl/geometry/Plane';
+export * from './webgl/gl/geometry/Box';
 export * from './webgl/gl/geometry/Torus';
 export * from './webgl/gl/geometry/Sphere';
 export * from './webgl/gl/geometry/TextQuad';

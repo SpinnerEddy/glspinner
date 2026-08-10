@@ -37,6 +37,11 @@ export class SceneRendererPipeline implements SceneRendererPipelineOperation {
     }
 
     render(gl: WebGL2RenderingContext, context: RendererContext): void {
+        if (!this.finalBlitFlow.isEnabled()) {
+            this.renderSceneUnusedRenderTarget(gl, context);
+            return;
+        }
+
         const rtRegistry = context.getRenderTargetRegistry();
 
         let readRT: RenderTargetOperation = rtRegistry.getRenderTargetFromPool(RenderTargetSlot.TEMP_FRAME_BUFFER)!;
@@ -57,6 +62,13 @@ export class SceneRendererPipeline implements SceneRendererPipelineOperation {
         this.finalBlitFlow.render(gl, context, readRT, screenTarget);
 
         this.renderScene(gl, context, [RenderTagConstants.OVERLAY], this.sceneRendererFlows, readRT, screenTarget);
+    }
+
+    private renderSceneUnusedRenderTarget(gl: WebGL2RenderingContext, context: RendererContext): void {
+        const screenTarget = context.getRenderTargetRegistry().getScreenRenderTarget();
+
+        this.renderScene(gl, context, [RenderTagConstants.OPAQUE], this.sceneRendererFlows, screenTarget, screenTarget);
+        this.renderScene(gl, context, [RenderTagConstants.OVERLAY], this.sceneRendererFlows, screenTarget, screenTarget);
     }
 
     private renderScene(
