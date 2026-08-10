@@ -124,6 +124,7 @@ export * from './scene/transform/Transform';
 
 // Scene/Factory
 export * from './scene/factory/MaterialFactory';
+export * from './scene/factory/LightFactory';
 
 // Scene/Light
 export * from './scene/light/Light';
