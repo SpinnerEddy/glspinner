@@ -40,7 +40,7 @@ export class Plane extends BaseGeometry {
 
         this.uv = new Float32Array([0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0]);
 
-        this.indices = new Int16Array([0, 1, 2, 3, 2, 1]);
+        this.indices = new Int16Array([0, 2, 1, 3, 1, 2]);
     }
 
     setUpBuffers(gl: WebGL2RenderingContext, attributes: Record<string, ShaderAttribute>): void {
