@@ -9,8 +9,8 @@ class Sample extends GLSpinner.BaseApplication {
     private shaderAudioInput!: GLSpinner.ShaderAudioInput;
     private baseSceneRoot!: GLSpinner.EmptyNode;
     private boxNode!: GLSpinner.MeshNode;
-    // private shaderPasses!: Map<string, GLSpinner.ShaderPassOperation>;
-    // private shaderPassEnabledSwitch!: Map<string, boolean>;
+    private shaderPasses!: Map<string, GLSpinner.ShaderPassOperation>;
+    private shaderPassEnabledSwitch!: Map<string, boolean>;
 
     async preload(): Promise<void> {
         await super.preload();
@@ -69,7 +69,7 @@ class Sample extends GLSpinner.BaseApplication {
         // this.rendererFlowPipeline.addFinalBlitFlow(finalBlitShaderPass);
 
         const boxMaterial = GLSpinner.MaterialFactory.unlitMaterial();
-        const box = new GLSpinner.Box(this.gl, 10, 10, 10);
+        const box = new GLSpinner.Box(this.gl, 5, 5, 5);
         const boxAttributes = {
             aPosition: boxMaterial.getAttribute(this.gl, 'aPosition'),
             aColor: boxMaterial.getAttribute(this.gl, 'aColor'),
