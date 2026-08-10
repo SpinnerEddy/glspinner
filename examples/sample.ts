@@ -81,6 +81,10 @@ class Sample extends GLSpinner.BaseApplication {
         this.boxNode = new GLSpinner.MeshNode(boxMesh);
         GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, this.boxNode);
 
+        const light = GLSpinner.LightFactory.light(new GLSpinner.Color(1.0, 1.0, 1.0), 1.0);
+        const lightNode = new GLSpinner.DirectionalLightNode(light);
+        GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, lightNode);
+
         this.camera = new GLSpinner.Camera(GLSpinner.CameraType.Perspective);
         this.rendererContext.setCamera(this.camera);
 
@@ -94,11 +98,16 @@ class Sample extends GLSpinner.BaseApplication {
 
     update(): void {
         const elapsed = this.scene.getClock().getElapsedTime();
+        this.boxNode.getTransform().setRotation(GLSpinner.QuaternionCalculator.createFromAxisAndRadians(GLSpinner.DefaultVectorConstants.AXIS2DY, elapsed));
 
+        const lights: GLSpinner.LightParams[] = [];
         GLSpinner.SceneGraphUtility.traverse(this.baseSceneRoot, (node) => {
-            node.getTransform().setRotation(GLSpinner.QuaternionCalculator.createFromAxisAndRadians(GLSpinner.DefaultVectorConstants.AXIS2DY, elapsed));
+            if (node instanceof GLSpinner.LightNode) {
+                lights.push(node.getLightData());
+            }
             node.update();
         });
+        this.rendererContext.setLights(lights);
 
         this.rendererContext.updateGlobalUniformValues(this.scene.getClock().getElapsedTime(), this.inputHub.getMousePosition());
         this.rendererContext.bindGlobalUniforms();
