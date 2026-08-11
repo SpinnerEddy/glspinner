@@ -80,7 +80,7 @@ class Sample extends GLSpinner.BaseApplication {
         this.boxNode = new GLSpinner.MeshNode(boxMesh);
         GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, this.boxNode);
 
-        const light = GLSpinner.LightFactory.light(new GLSpinner.Color(0.0, 0.0, 0.0), 1.0);
+        const light = GLSpinner.LightFactory.light(new GLSpinner.Color(0.1, 0.3, 0.8), 1.0);
         const lightNode = new GLSpinner.DirectionalLightNode(light);
         GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, lightNode);
 

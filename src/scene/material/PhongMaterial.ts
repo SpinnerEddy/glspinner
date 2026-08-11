@@ -28,12 +28,12 @@ export class PhongMaterial extends BaseMaterial {
     private setLightUniform(gl: WebGL2RenderingContext, light: LightParams): void {
         if (light.lightType == LightType.Directional) {
             this.shaderProgram.setUniform(gl, 'lightDirection', new ShaderUniformValue(light.direction));
-            this.shaderProgram.setUniform(gl, 'ambientColor', new ShaderUniformValue(light.color.toVector4()));
+            this.shaderProgram.setUniform(gl, 'lightColor', new ShaderUniformValue(light.color.toVector4()));
             this.shaderProgram.setUniform(gl, 'lightType', new ShaderUniformValue(light.lightType, 'int'));
             this.shaderProgram.setUniform(gl, 'intensity', new ShaderUniformValue(light.intensity));
         } else if (light.lightType == LightType.Point) {
             this.shaderProgram.setUniform(gl, 'lightPosition', new ShaderUniformValue(light.position));
-            this.shaderProgram.setUniform(gl, 'ambientColor', new ShaderUniformValue(light.color.toVector4()));
+            this.shaderProgram.setUniform(gl, 'lightColor', new ShaderUniformValue(light.color.toVector4()));
             this.shaderProgram.setUniform(gl, 'lightType', new ShaderUniformValue(light.lightType, 'int'));
             this.shaderProgram.setUniform(gl, 'intensity', new ShaderUniformValue(light.intensity));
         }

@@ -9,8 +9,9 @@ uniform mat4 invMatrix;
 uniform vec3 lightDirection;
 uniform vec3 lightPosition;
 uniform vec3 eyeDirection;
-uniform vec4 ambientColor;
 uniform int lightType;
+uniform vec4 lightColor;
+uniform float intensity;
 
 out vec4 outputColor;
 
@@ -31,6 +32,7 @@ void main(void){
     vec3 halfLEVec = normalize(invLight + invEye);
     float diffuse = clamp(dot(vNormal, invLight), 0.0, 1.0);
     float specular = pow(clamp(dot(vNormal, halfLEVec), 0.0, 1.0), 50.0);
-    vec4 destColor = vColor * vec4(vec3(diffuse), 1.0) + vec4(vec3(specular), 1.0) + ambientColor;
+    vec3 radiance = lightColor.rgb * intensity;
+    vec4 destColor = vColor * vec4(diffuse * radiance, 1.0) + vec4(specular * radiance, 1.0);
     outputColor = destColor;
 }
