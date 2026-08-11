@@ -80,9 +80,13 @@ class Sample extends GLSpinner.BaseApplication {
         this.boxNode = new GLSpinner.MeshNode(boxMesh);
         GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, this.boxNode);
 
-        const light = GLSpinner.LightFactory.light(new GLSpinner.Color(0.1, 0.3, 0.8), 1.0);
-        const lightNode = new GLSpinner.DirectionalLightNode(light);
-        GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, lightNode);
+        const directionalLight = GLSpinner.LightFactory.light(new GLSpinner.Color(0.1, 0.3, 0.8), 1.0);
+        const directionalLightNode = new GLSpinner.DirectionalLightNode(directionalLight);
+        GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, directionalLightNode);
+
+        const ambientLight = GLSpinner.LightFactory.light(new GLSpinner.Color(1.0, 1.0, 1.0), 0.1);
+        const ambientLightNode = new GLSpinner.AmbientLightNode(ambientLight);
+        GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, ambientLightNode);
 
         this.camera = new GLSpinner.Camera(GLSpinner.CameraType.Perspective);
         this.rendererContext.setCamera(this.camera);
