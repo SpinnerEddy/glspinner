@@ -88,6 +88,11 @@ class Sample extends GLSpinner.BaseApplication {
         const ambientLightNode = new GLSpinner.AmbientLightNode(ambientLight);
         GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, ambientLightNode);
 
+        const pointLight = GLSpinner.LightFactory.light(new GLSpinner.Color(1.0, 0.2, 0.2), 1.0);
+        const pointLightNode = new GLSpinner.PointLightNode(pointLight);
+        pointLightNode.getTransform().setPosition(new GLSpinner.Vector3(6, 0, 6));
+        GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, pointLightNode);
+
         this.camera = new GLSpinner.Camera(GLSpinner.CameraType.Perspective);
         this.rendererContext.setCamera(this.camera);
 
