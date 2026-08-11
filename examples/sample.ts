@@ -68,20 +68,19 @@ class Sample extends GLSpinner.BaseApplication {
         // const finalBlitShaderPass = new GLSpinner.FinalBlitRendererFlow(frameBufferOutputPass);
         // this.rendererFlowPipeline.addFinalBlitFlow(finalBlitShaderPass);
 
-        const boxMaterial = GLSpinner.MaterialFactory.unlitMaterial();
+        const boxMaterial = GLSpinner.MaterialFactory.phongMaterial();
         const box = new GLSpinner.Box(this.gl, 5, 5, 5);
         const boxAttributes = {
             aPosition: boxMaterial.getAttribute(this.gl, 'aPosition'),
             aColor: boxMaterial.getAttribute(this.gl, 'aColor'),
-            aNormal: boxMaterial.getAttribute(this.gl, 'aNormal'),
-            aUv: boxMaterial.getAttribute(this.gl, 'aUv'),
+            aNormal: boxMaterial.getAttribute(this.gl, 'aNormal')
         };
         box.setUpBuffers(this.gl, boxAttributes);
-        const boxMesh = new GLSpinner.UnlitMesh(box, boxMaterial);
+        const boxMesh = new GLSpinner.SimpleMesh(box, boxMaterial);
         this.boxNode = new GLSpinner.MeshNode(boxMesh);
         GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, this.boxNode);
 
-        const light = GLSpinner.LightFactory.light(new GLSpinner.Color(1.0, 1.0, 1.0), 1.0);
+        const light = GLSpinner.LightFactory.light(new GLSpinner.Color(0.0, 0.0, 0.0), 1.0);
         const lightNode = new GLSpinner.DirectionalLightNode(light);
         GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, lightNode);
 

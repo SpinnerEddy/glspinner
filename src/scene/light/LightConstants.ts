@@ -6,17 +6,21 @@ export const LightType = {
     Point: 2,
 } as const;
 
-export type BaseLightParams = {
-    lightType: number;
+export const MAX_DIRECTIONAL_LIGHTS = 8;
+export const MAX_POINT_LIGHTS = 8;
+
+type LightCommonParams = {
     color: Color;
     intensity: number;
 };
 
-export type DirectionalLightParams = BaseLightParams & {
+export type DirectionalLightParams = LightCommonParams & {
+    lightType: typeof LightType.Directional;
     direction: Vector3;
 };
 
-export type PointLightParams = BaseLightParams & {
+export type PointLightParams = LightCommonParams & {
+    lightType: typeof LightType.Point;
     position: Vector3;
 };
 

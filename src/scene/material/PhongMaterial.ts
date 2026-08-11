@@ -1,6 +1,6 @@
 import { ShaderProgram } from '../../webgl/gl/ShaderProgram';
 import { ShaderUniformValue } from '../../webgl/gl/uniform/ShaderUniformValue';
-import { DirectionalLightParams, LightParams, LightType, PointLightParams } from '../light/LightConstants';
+import { LightParams, LightType } from '../light/LightConstants';
 import { RendererContext } from '../renderer/RendererContext';
 import { Transform } from '../transform/Transform';
 import { BaseMaterial } from './BaseMaterial';
@@ -27,15 +27,15 @@ export class PhongMaterial extends BaseMaterial {
 
     private setLightUniform(gl: WebGL2RenderingContext, light: LightParams): void {
         if (light.lightType == LightType.Directional) {
-            const directional = light as DirectionalLightParams;
-            this.shaderProgram.setUniform(gl, 'lightDirection', new ShaderUniformValue(directional.direction));
-            this.shaderProgram.setUniform(gl, 'ambientColor', new ShaderUniformValue(directional.color.toVector4()));
-            this.shaderProgram.setUniform(gl, 'lightType', new ShaderUniformValue(directional.lightType, 'int'));
+            this.shaderProgram.setUniform(gl, 'lightDirection', new ShaderUniformValue(light.direction));
+            this.shaderProgram.setUniform(gl, 'ambientColor', new ShaderUniformValue(light.color.toVector4()));
+            this.shaderProgram.setUniform(gl, 'lightType', new ShaderUniformValue(light.lightType, 'int'));
+            this.shaderProgram.setUniform(gl, 'intensity', new ShaderUniformValue(light.intensity));
         } else if (light.lightType == LightType.Point) {
-            const point = light as PointLightParams;
-            this.shaderProgram.setUniform(gl, 'lightPosition', new ShaderUniformValue(point.position));
-            this.shaderProgram.setUniform(gl, 'ambientColor', new ShaderUniformValue(point.color.toVector4()));
-            this.shaderProgram.setUniform(gl, 'lightType', new ShaderUniformValue(point.lightType, 'int'));
+            this.shaderProgram.setUniform(gl, 'lightPosition', new ShaderUniformValue(light.position));
+            this.shaderProgram.setUniform(gl, 'ambientColor', new ShaderUniformValue(light.color.toVector4()));
+            this.shaderProgram.setUniform(gl, 'lightType', new ShaderUniformValue(light.lightType, 'int'));
+            this.shaderProgram.setUniform(gl, 'intensity', new ShaderUniformValue(light.intensity));
         }
     }
 }

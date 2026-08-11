@@ -14,6 +14,9 @@ export class SimpleMesh extends BaseMesh {
     }
 
     draw(gl: WebGL2RenderingContext): void {
+        gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LEQUAL);
+
         this.geometry.bind();
         gl.drawElements(gl.TRIANGLES, this.geometry.getIndexCount(), gl.UNSIGNED_SHORT, 0);
         this.geometry.unbind();
