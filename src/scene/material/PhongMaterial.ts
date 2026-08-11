@@ -36,6 +36,9 @@ export class PhongMaterial extends BaseMaterial {
             this.shaderProgram.setUniform(gl, 'lightColor', new ShaderUniformValue(light.color.toVector4()));
             this.shaderProgram.setUniform(gl, 'lightType', new ShaderUniformValue(light.lightType, 'int'));
             this.shaderProgram.setUniform(gl, 'intensity', new ShaderUniformValue(light.intensity));
+        } else if (light.lightType == LightType.Ambient) {
+            this.shaderProgram.setUniform(gl, 'lightColor', new ShaderUniformValue(light.color.toVector4()));
+            this.shaderProgram.setUniform(gl, 'intensity', new ShaderUniformValue(light.intensity));
         }
     }
 }

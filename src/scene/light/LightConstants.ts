@@ -4,6 +4,7 @@ import { Vector3 } from '../../math/vector/Vector3';
 export const LightType = {
     Directional: 1,
     Point: 2,
+    Ambient: 3,
 } as const;
 
 export const MAX_DIRECTIONAL_LIGHTS = 8;
@@ -24,4 +25,8 @@ export type PointLightParams = LightCommonParams & {
     position: Vector3;
 };
 
-export type LightParams = DirectionalLightParams | PointLightParams;
+export type AmbientLightParams = LightCommonParams & {
+    lightType: typeof LightType.Ambient;
+};
+
+export type LightParams = DirectionalLightParams | PointLightParams | AmbientLightParams;
