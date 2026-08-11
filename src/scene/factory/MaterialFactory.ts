@@ -162,13 +162,13 @@ export class MaterialFactory {
         return new UnlitMaterial(shader);
     }
 
-    static phongMaterial(): PhongMaterial {
+    static phongMaterial(shininess: number = 50.0): PhongMaterial {
         if (!this.shaderLoader) {
             throw new Error('MaterialFac†ory not initialized. Call init!!');
         }
 
         const shader = this.shaderLoader.getShaderProgram('phongLighting');
-        return new PhongMaterial(shader);
+        return new PhongMaterial(shader, shininess);
     }
 
     static gouraudMaterial(lightDirection?: Vector3, eyeDirection?: Vector3, ambientColor?: Color): GouraudMaterial {

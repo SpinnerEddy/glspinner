@@ -27,6 +27,7 @@ in vec3 vNormal;
 
 uniform mat4 invMatrix;
 uniform vec3 eyeDirection;
+uniform float shininess;
 
 uniform PointLight pointLights[MAX_POINT_LIGHTS];
 uniform int pointLightCounts;
@@ -41,7 +42,7 @@ LightResult calculateLight(vec3 ld, vec3 lightColor, float intensity){
     vec3 invEye = normalize(invMatrix * vec4(eyeDirection, 0.0)).xyz;
     vec3 halfLEVec = normalize(invLight + invEye);
     float diffuse = clamp(dot(vNormal, invLight), 0.0, 1.0);
-    float specular = pow(clamp(dot(vNormal, halfLEVec), 0.0, 1.0), 50.0);
+    float specular = pow(clamp(dot(vNormal, halfLEVec), 0.0, 1.0), shininess);
     vec3 radiance = lightColor * intensity;
     return LightResult(diffuse * radiance, specular * radiance);
 }

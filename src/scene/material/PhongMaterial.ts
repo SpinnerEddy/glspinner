@@ -7,8 +7,11 @@ import { Transform } from '../transform/Transform';
 import { BaseMaterial } from './BaseMaterial';
 
 export class PhongMaterial extends BaseMaterial {
-    constructor(shaderProgram: ShaderProgram) {
+    private shininess: number;
+
+    constructor(shaderProgram: ShaderProgram, shininess: number) {
         super(shaderProgram);
+        this.shininess = shininess;
     }
 
     setUniform(gl: WebGL2RenderingContext, context: RendererContext, transform: Transform): void {
@@ -19,11 +22,16 @@ export class PhongMaterial extends BaseMaterial {
         this.shaderProgram.setUniform(gl, 'modelMatrix', new ShaderUniformValue(modelMatrix));
         this.shaderProgram.setUniform(gl, 'invMatrix', new ShaderUniformValue(invertMatrix));
         this.shaderProgram.setUniform(gl, 'eyeDirection', new ShaderUniformValue(eyeDirection));
+        this.shaderProgram.setUniform(gl, 'shininess', new ShaderUniformValue(this.shininess));
 
         if (context.getLights().length == 0) return;
 
         const lights = context.getLights();
         this.setLightUniforms(gl, lights);
+    }
+
+    setShininess(shininess: number): void {
+        this.shininess = shininess;
     }
 
     private setLightUniforms(gl: WebGL2RenderingContext, lights: LightParams[]): void {
