@@ -1,6 +1,7 @@
 ---
 name: glspinner-ideation
 description: glspinnerに追加できそうな新機能・実験ネタを、既存の痕跡に縛られずゼロから発想する。WebGL練習用ツールという性格を踏まえ、既存アーキテクチャ（RenderTag/Slot、BaseShaderPass、Operation+Baseパターン等）にどう乗るかまで含めて具体的なアイディアを出す。「新しい機能のアイディアが欲しい」「こんなエフェクト追加できないか発想して」「次に何か面白いことをやりたい」など、既存コードに未完成の痕跡があるかどうかに関わらず新規アイディアを求められたら必ずこのスキルを使う。既にコード上にやりかけの痕跡がある項目の棚卸しはglspinner-task-discoveryの仕事なので、そちらと混同しない。発想したアイディアをNotionのタスクとして残したい場合はglspinner-notion-tasksの仕事なので、そちらへ引き継ぐ。
+model: opus
 ---
 
 # glspinner-ideation
@@ -12,6 +13,10 @@ description: glspinnerに追加できそうな新機能・実験ネタを、既�
 発想ロジックそのものは`glspinner-notion-tasks`（発想結果をNotionタスク化するSKILL）と共有するため、`.claude/commands/glspinner-ideas.md`というcommandに切り出してある（`glspinner-context`と同型の構成）。このSKILLは「発想して提示し、次の作業へ引き継ぐ」という利用者向けの入口を担う。
 
 ## 実行手順
+
+### 0. モードの確認
+
+プランモードでない場合は、まず`EnterPlanMode`ツールを呼んでプランモードに入る。ここはコードを書かずに合意まで進めるフェーズなので、常にプランモードで実行する。
 
 ### 1. アイディアの発想
 

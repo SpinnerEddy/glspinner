@@ -94,6 +94,8 @@ Claude Codeが常時・無条件に直接編集してよいのは以下に限る
 
 `.claude/skills/`・`.claude/commands/`配下に、このプロジェクトの定型作業向けカスタムスキル/コマンドがある: `glspinner-context`（共通の下準備、設計・規約コンテキストの収集）、`glspinner-design`、`glspinner-implement`、`glspinner-test`、`glspinner-review`、`glspinner-tidy`（意味を変えない機械的整形のみ）、`glspinner-document`、`glspinner-reading`、`glspinner-task-discovery`（既知ギャップの棚卸し）、`glspinner-ideation`（アイディア発想。発想ロジック本体はcommand `glspinner-ideas` に切り出されており`glspinner-notion-tasks`と共有）、`glspinner-notion-tasks`（発想したアイディアをユーザーが選んだ分だけNotionの「✔️ タスク管理」DBにタスク登録する）、`glspinner-retro`（技術的な壁打ち・振り返りを見出し+箇条書きに整理してNotionの「📝 振り返り」DBへ記録する）、`glspinner-conventions`（`.claude/rules/`を管理）。該当する作業ではその場しのぎではなくこれらのスキルを優先して使うこと。
 
+思考フェーズを担当する`glspinner-design`/`glspinner-review`/`glspinner-ideation`/`glspinner-task-discovery`/`glspinner-conventions`は、frontmatterで`model: opus`を指定し、本文の手順0で`EnterPlanMode`を呼んでプランモードに入る（`glspinner-conventions`のみ、規約ドキュメントの構造判断を伴う場合に限る条件付き）。
+
 ## テストに関する注意
 
 - テストは`tests/`配下に`src/`のディレクトリ構造をミラーして置かれ、`XxxTest.ts`という命名（`Xxx.test.ts`ではない）で、相対パスでimportする（`jest.config.ts`の`@/`エイリアスは定義されているが既存テストでは使われていない）。
