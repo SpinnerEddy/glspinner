@@ -20,7 +20,7 @@ export class TextureLoader {
     public async loadTextureFromPath(texturePath: string): Promise<void> {
         const texture = new Texture2D(this.gl, texturePath);
 
-        let textureKey = texturePath.split('/').pop()?.split('.').shift() as string;
+        const textureKey = texturePath.split('/').pop()?.split('.').shift() as string;
         this.textureKeySet.add(textureKey);
 
         this.textureCache.set(textureKey, texture);

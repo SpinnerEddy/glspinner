@@ -11,7 +11,7 @@ export class ColorUtility {
             return MyColorConstants255.COLOR_EMPTY;
         }
 
-        let hexColor = result[1];
+        const hexColor = result[1];
 
         const r = parseInt(hexColor.slice(0, 2), 16);
         const g = parseInt(hexColor.slice(2, 4), 16);
@@ -29,19 +29,19 @@ export class ColorUtility {
     public static hsvToRgb(hue: number, saturation: number, value: number, alpha: number): Color {
         if (saturation > 1 || value > 1 || alpha > 1) return Color.empty();
 
-        var th = hue % 360;
-        var i = Math.floor(th / 60);
-        var f = th / 60 - i;
-        var m = value * (1 - saturation);
-        var n = value * (1 - saturation * f);
-        var k = value * (1 - saturation * (1 - f));
-        var color = new Array();
+        const th = hue % 360;
+        const i = Math.floor(th / 60);
+        const f = th / 60 - i;
+        const m = value * (1 - saturation);
+        const n = value * (1 - saturation * f);
+        const k = value * (1 - saturation * (1 - f));
+        const color = [];
         if (!(saturation > 0) && !(saturation < 0)) {
             color.push(value, value, value, alpha);
         } else {
-            var r = new Array(value, n, m, m, k, value);
-            var g = new Array(k, value, value, n, m, m);
-            var b = new Array(m, m, k, value, value, n);
+            const r = [value, n, m, m, k, value];
+            const g = [k, value, value, n, m, m];
+            const b = [m, m, k, value, value, n];
             color.push(r[i], g[i], b[i], alpha);
         }
         return new Color(color[0], color[1], color[2], color[3]);

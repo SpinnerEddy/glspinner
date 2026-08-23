@@ -20,15 +20,15 @@ export class ShaderLoader {
     public async loadShaderFromPath(vertShaderPath: string, fragShaderPath: string, varyings: string[] = []): Promise<void> {
         const vertShaderSource = await this.loadShader(vertShaderPath);
         const fragShaderSource = await this.loadShader(fragShaderPath);
-        let shaderKey = fragShaderPath.split('/').pop()?.split('.').shift() as string;
+        const shaderKey = fragShaderPath.split('/').pop()?.split('.').shift() as string;
 
-        let program = new ShaderProgram(this.gl, vertShaderSource, fragShaderSource, varyings);
+        const program = new ShaderProgram(this.gl, vertShaderSource, fragShaderSource, varyings);
         this.shaderProgramCache.set(shaderKey, program);
         this.shaderProgramKey.add(shaderKey);
     }
 
     public async loadShaderFromSource(shaderKey: string, vertShaderSource: string, fragShaderSource: string, varyings: string[] = []): Promise<void> {
-        let program = new ShaderProgram(this.gl, vertShaderSource, fragShaderSource, varyings);
+        const program = new ShaderProgram(this.gl, vertShaderSource, fragShaderSource, varyings);
         this.shaderProgramCache.set(shaderKey, program);
         this.shaderProgramKey.add(shaderKey);
     }
@@ -55,12 +55,12 @@ export class ShaderLoader {
         });
 
         for (const key of this.shaderProgramKey) {
-            let vertexShaderSource = vertexShaderCache.get(key) as string;
-            let fragmentShaderSource = fragmentShaderCache.get(key) as string;
+            const vertexShaderSource = vertexShaderCache.get(key) as string;
+            const fragmentShaderSource = fragmentShaderCache.get(key) as string;
             if (!vertexShaderSource || !fragmentShaderSource) {
                 continue;
             }
-            let program = new ShaderProgram(this.gl, vertexShaderSource, fragmentShaderSource);
+            const program = new ShaderProgram(this.gl, vertexShaderSource, fragmentShaderSource);
             this.shaderProgramCache.set(key, program);
         }
     }

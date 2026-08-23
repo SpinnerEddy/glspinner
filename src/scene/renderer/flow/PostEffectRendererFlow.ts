@@ -33,8 +33,8 @@ export class PostEffectRendererFlow extends BaseSceneRendererFlow {
             return;
         }
 
-        let readRT: RenderTargetOperation = inputRenderTarget;
-        let writeRT: RenderTargetOperation = outputRenderTarget;
+        const readRT: RenderTargetOperation = inputRenderTarget;
+        const writeRT: RenderTargetOperation = outputRenderTarget;
 
         this.shaderPass.render(gl, context, readRT, writeRT);
     }

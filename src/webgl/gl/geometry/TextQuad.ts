@@ -17,11 +17,11 @@ export class TextQuad extends BaseGeometry {
 
         let cursorX = 0;
         let indexOffset = 0;
-        let vertices = [];
-        let uvs = [];
-        let normals = [];
-        let indices = [];
-        let colors = [];
+        const vertices = [];
+        const uvs = [];
+        const normals = [];
+        const indices = [];
+        const colors = [];
 
         const scaleW = 1.0 / textTexture.getTextureSize().width;
         const scaleH = 1.0 / textTexture.getTextureSize().height;

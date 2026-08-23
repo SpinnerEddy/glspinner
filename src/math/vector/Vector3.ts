@@ -47,7 +47,7 @@ export class Vector3 extends Vector<Vector3> {
     }
 
     add(other: Vector3, out?: Vector3): Vector3 {
-        let result = out ?? this.create();
+        const result = out ?? this.create();
         result.x = this.x + other.x;
         result.y = this.y + other.y;
         result.z = this.z + other.z;
@@ -55,7 +55,7 @@ export class Vector3 extends Vector<Vector3> {
     }
 
     sub(other: Vector3, out?: Vector3): Vector3 {
-        let result = out ?? this.create();
+        const result = out ?? this.create();
         result.x = this.x - other.x;
         result.y = this.y - other.y;
         result.z = this.z - other.z;
@@ -63,7 +63,7 @@ export class Vector3 extends Vector<Vector3> {
     }
 
     multiply(other: number, out?: Vector3): Vector3 {
-        let result = out ?? this.create();
+        const result = out ?? this.create();
         result.x = this.x * other;
         result.y = this.y * other;
         result.z = this.z * other;
@@ -71,7 +71,7 @@ export class Vector3 extends Vector<Vector3> {
     }
 
     div(other: number, out?: Vector3): Vector3 {
-        let result = out ?? this.create();
+        const result = out ?? this.create();
         if (other == 0) return result;
 
         result.x = this.x / other;
@@ -147,7 +147,7 @@ export class Vector3 extends Vector<Vector3> {
     }
 
     cross(other: Vector3, out?: Vector3): Vector3 {
-        let result = out ?? this.create();
+        const result = out ?? this.create();
         result.x = this.y * other.z - this.z * other.y;
         result.y = this.z * other.x - this.x * other.z;
         result.z = this.x * other.y - this.y * other.x;

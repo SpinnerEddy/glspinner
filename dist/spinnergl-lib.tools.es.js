@@ -148,9 +148,10 @@ class c {
     return t * 60 / i;
   }
   static calculateGaussianCoefficients(t, i) {
-    let e = [], s = t * 2, a = -t, l = s / i, m = 0;
+    const e = [], s = t * 2, a = -t, l = s / i;
+    let m = 0;
     for (let d = a; d <= t; d += l) {
-      let p = c.exp(-(d * d) / s);
+      const p = c.exp(-(d * d) / s);
       m += p, e.push(p);
     }
     for (let d = 0; d < e.length; d++)
@@ -210,19 +211,19 @@ class g extends x {
     return e = t.length() < this.length() ? this : t, e;
   }
   add(t, i) {
-    let e = i ?? this.create();
+    const e = i ?? this.create();
     return e.x = this.x + t.x, e.y = this.y + t.y, e.z = this.z + t.z, e;
   }
   sub(t, i) {
-    let e = i ?? this.create();
+    const e = i ?? this.create();
     return e.x = this.x - t.x, e.y = this.y - t.y, e.z = this.z - t.z, e;
   }
   multiply(t, i) {
-    let e = i ?? this.create();
+    const e = i ?? this.create();
     return e.x = this.x * t, e.y = this.y * t, e.z = this.z * t, e;
   }
   div(t, i) {
-    let e = i ?? this.create();
+    const e = i ?? this.create();
     return t == 0 || (e.x = this.x / t, e.y = this.y / t, e.z = this.z / t), e;
   }
   setLength(t, i) {
@@ -265,7 +266,7 @@ class g extends x {
     return new g(this.x, this.y, this.z);
   }
   cross(t, i) {
-    let e = i ?? this.create();
+    const e = i ?? this.create();
     return e.x = this.y * t.z - this.z * t.y, e.y = this.z * t.x - this.x * t.z, e.z = this.x * t.y - this.y * t.x, e;
   }
   heading3D() {

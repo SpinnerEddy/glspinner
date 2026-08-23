@@ -55,7 +55,7 @@ export class Vector4 extends Vector<Vector4> {
     }
 
     add(other: Vector4, out?: Vector4): Vector4 {
-        let result = out ?? this.create();
+        const result = out ?? this.create();
         result.x = this.x + other.x;
         result.y = this.y + other.y;
         result.z = this.z + other.z;
@@ -64,7 +64,7 @@ export class Vector4 extends Vector<Vector4> {
     }
 
     sub(other: Vector4, out?: Vector4): Vector4 {
-        let result = out ?? this.create();
+        const result = out ?? this.create();
         result.x = this.x - other.x;
         result.y = this.y - other.y;
         result.z = this.z - other.z;
@@ -73,7 +73,7 @@ export class Vector4 extends Vector<Vector4> {
     }
 
     multiply(other: number, out?: Vector4): Vector4 {
-        let result = out ?? this.create();
+        const result = out ?? this.create();
         result.x = this.x * other;
         result.y = this.y * other;
         result.z = this.z * other;
@@ -82,7 +82,7 @@ export class Vector4 extends Vector<Vector4> {
     }
 
     div(other: number, out?: Vector4): Vector4 {
-        let result = out ?? this.create();
+        const result = out ?? this.create();
         if (other == 0) return result;
 
         result.x = this.x / other;

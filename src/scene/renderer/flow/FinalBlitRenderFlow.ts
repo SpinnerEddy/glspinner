@@ -15,8 +15,8 @@ export class FinalBlitRendererFlow extends BaseSceneRendererFlow {
         if (!this.finalBlitShaderPass) return;
         if (!outputRenderTarget) return;
 
-        let readRT: RenderTargetOperation = inputRenderTarget;
-        let writeRT: RenderTargetOperation = outputRenderTarget;
+        const readRT: RenderTargetOperation = inputRenderTarget;
+        const writeRT: RenderTargetOperation = outputRenderTarget;
 
         this.finalBlitShaderPass.render(gl, context, readRT, writeRT);
     }

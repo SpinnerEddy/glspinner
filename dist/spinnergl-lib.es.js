@@ -1,6 +1,6 @@
-var At = Object.defineProperty;
-var _t = (c, t, e) => t in c ? At(c, t, { enumerable: !0, configurable: !0, writable: !0, value: e }) : c[t] = e;
-var o = (c, t, e) => _t(c, typeof t != "symbol" ? t + "" : t, e);
+var _t = Object.defineProperty;
+var At = (c, t, e) => t in c ? _t(c, t, { enumerable: !0, configurable: !0, writable: !0, value: e }) : c[t] = e;
+var o = (c, t, e) => At(c, typeof t != "symbol" ? t + "" : t, e);
 import xt from "lil-gui";
 import Ut from "jszip";
 class Rt {
@@ -94,9 +94,10 @@ class w {
     return t * 60 / e;
   }
   static calculateGaussianCoefficients(t, e) {
-    let r = [], s = t * 2, i = -t, n = s / e, a = 0;
+    const r = [], s = t * 2, i = -t, n = s / e;
+    let a = 0;
     for (let h = i; h <= t; h += n) {
-      let u = w.exp(-(h * h) / s);
+      const u = w.exp(-(h * h) / s);
       a += u, r.push(u);
     }
     for (let h = 0; h < r.length; h++)
@@ -150,19 +151,19 @@ class H extends K {
     return r = t.length() < this.length() ? this : t, r;
   }
   add(t, e) {
-    let r = e ?? this.create();
+    const r = e ?? this.create();
     return r.x = this.x + t.x, r.y = this.y + t.y, r;
   }
   sub(t, e) {
-    let r = e ?? this.create();
+    const r = e ?? this.create();
     return r.x = this.x - t.x, r.y = this.y - t.y, r;
   }
   multiply(t, e) {
-    let r = e ?? this.create();
+    const r = e ?? this.create();
     return r.x = this.x * t, r.y = this.y * t, r;
   }
   div(t, e) {
-    let r = e ?? this.create();
+    const r = e ?? this.create();
     return t == 0 || (r.x = this.x / t, r.y = this.y / t), r;
   }
   setLength(t, e) {
@@ -242,19 +243,19 @@ class P extends K {
     return r = t.length() < this.length() ? this : t, r;
   }
   add(t, e) {
-    let r = e ?? this.create();
+    const r = e ?? this.create();
     return r.x = this.x + t.x, r.y = this.y + t.y, r.z = this.z + t.z, r;
   }
   sub(t, e) {
-    let r = e ?? this.create();
+    const r = e ?? this.create();
     return r.x = this.x - t.x, r.y = this.y - t.y, r.z = this.z - t.z, r;
   }
   multiply(t, e) {
-    let r = e ?? this.create();
+    const r = e ?? this.create();
     return r.x = this.x * t, r.y = this.y * t, r.z = this.z * t, r;
   }
   div(t, e) {
-    let r = e ?? this.create();
+    const r = e ?? this.create();
     return t == 0 || (r.x = this.x / t, r.y = this.y / t, r.z = this.z / t), r;
   }
   setLength(t, e) {
@@ -297,7 +298,7 @@ class P extends K {
     return new P(this.x, this.y, this.z);
   }
   cross(t, e) {
-    let r = e ?? this.create();
+    const r = e ?? this.create();
     return r.x = this.y * t.z - this.z * t.y, r.y = this.z * t.x - this.x * t.z, r.z = this.x * t.y - this.y * t.x, r;
   }
   heading3D() {
@@ -345,19 +346,19 @@ class q extends K {
     return r = t.length() < this.length() ? this : t, r;
   }
   add(t, e) {
-    let r = e ?? this.create();
+    const r = e ?? this.create();
     return r.x = this.x + t.x, r.y = this.y + t.y, r.z = this.z + t.z, r.w = this.w + t.w, r;
   }
   sub(t, e) {
-    let r = e ?? this.create();
+    const r = e ?? this.create();
     return r.x = this.x - t.x, r.y = this.y - t.y, r.z = this.z - t.z, r.w = this.w - t.w, r;
   }
   multiply(t, e) {
-    let r = e ?? this.create();
+    const r = e ?? this.create();
     return r.x = this.x * t, r.y = this.y * t, r.z = this.z * t, r.w = this.w * t, r;
   }
   div(t, e) {
-    let r = e ?? this.create();
+    const r = e ?? this.create();
     return t == 0 || (r.x = this.x / t, r.y = this.y / t, r.z = this.z / t, r.w = this.w / t), r;
   }
   setLength(t, e) {
@@ -1007,7 +1008,7 @@ class ot {
     return this.components[3];
   }
   toMatrix() {
-    let e = new R().identity();
+    const e = new R().identity();
     return e.set(0, 0, 1 - 2 * Math.pow(this.y, 2) - 2 * Math.pow(this.z, 2)), e.set(0, 1, 2 * this.x * this.y - 2 * this.z * this.w), e.set(0, 2, 2 * this.x * this.z + 2 * this.y * this.w), e.set(1, 0, 2 * this.x * this.y + 2 * this.z * this.w), e.set(1, 1, 1 - 2 * Math.pow(this.x, 2) - 2 * Math.pow(this.z, 2)), e.set(1, 2, 2 * this.y * this.z - 2 * this.x * this.w), e.set(2, 0, 2 * this.x * this.z - 2 * this.y * this.w), e.set(2, 1, 2 * this.y * this.z + 2 * this.x * this.w), e.set(2, 2, 1 - 2 * Math.pow(this.x, 2) - 2 * Math.pow(this.y, 2)), e;
   }
   toEuler() {
@@ -1305,8 +1306,7 @@ class et {
     const r = /^#([0-9A-Fa-f]{6})$/.exec(t);
     if (!r)
       return Xt.COLOR_EMPTY;
-    let s = r[1];
-    const i = parseInt(s.slice(0, 2), 16), n = parseInt(s.slice(2, 4), 16), a = parseInt(s.slice(4, 6), 16);
+    const s = r[1], i = parseInt(s.slice(0, 2), 16), n = parseInt(s.slice(2, 4), 16), a = parseInt(s.slice(4, 6), 16);
     return new B(i, n, a);
   }
   static hexToColor01(t) {
@@ -1314,11 +1314,11 @@ class et {
   }
   static hsvToRgb(t, e, r, s) {
     if (e > 1 || r > 1 || s > 1) return S.empty();
-    var i = t % 360, n = Math.floor(i / 60), a = i / 60 - n, h = r * (1 - e), u = r * (1 - e * a), p = r * (1 - e * (1 - a)), l = new Array();
+    const i = t % 360, n = Math.floor(i / 60), a = i / 60 - n, h = r * (1 - e), u = r * (1 - e * a), p = r * (1 - e * (1 - a)), l = [];
     if (!(e > 0) && !(e < 0))
       l.push(r, r, r, s);
     else {
-      var d = new Array(r, u, h, h, p, r), f = new Array(p, r, r, u, h, h), v = new Array(h, h, p, r, r, u);
+      const d = [r, u, h, h, p, r], f = [p, r, r, u, h, h], v = [h, h, p, r, r, u];
       l.push(d[n], f[n], v[n], s);
     }
     return new S(l[0], l[1], l[2], l[3]);
@@ -1652,7 +1652,7 @@ const Z = {
   Directional: 1,
   Point: 2,
   Ambient: 3
-}, Ar = 8, _r = 8;
+}, _r = 8, Ar = 8;
 class te extends D {
   constructor(e, r) {
     super(e);
@@ -2141,8 +2141,7 @@ class he {
   }
   async loadTextFontFromPath(t, e) {
     var h;
-    const r = new ut(this.gl, t);
-    let s = (h = t.split("/").pop()) == null ? void 0 : h.split(".").shift();
+    const r = new ut(this.gl, t), s = (h = t.split("/").pop()) == null ? void 0 : h.split(".").shift();
     this.sdfFontTextureCache.set(s, r);
     const i = await fetch(e), n = JSON.parse(await i.text()), a = /* @__PURE__ */ new Map();
     for (const u of n.chars) {
@@ -2438,10 +2437,10 @@ void main(void){\r
     vColor = aColor;\r
     vUv = aUv;\r
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(aPosition, 1.0);\r
-}`, Ae = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+}`, _e = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: Fe
-}, Symbol.toStringTag, { value: "Module" })), _e = `#version 300 es\r
+}, Symbol.toStringTag, { value: "Module" })), Ae = `#version 300 es\r
 \r
 layout(std140) uniform GlobalUniforms { // binding = 0 を削除\r
     mat4 viewMatrix;\r
@@ -2465,7 +2464,7 @@ void main(void){\r
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(aPosition, 1.0);\r
 }`, Ue = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  default: _e
+  default: Ae
 }, Symbol.toStringTag, { value: "Module" })), Le = `#version 300 es\r
 \r
 layout(std140) uniform GlobalUniforms { // binding = 0 を削除\r
@@ -3001,7 +3000,7 @@ class lt {
     return n !== t.INVALID_INDEX && t.uniformBlockBinding(i, n, Mt.GLOBAL), t.useProgram(i), i;
   }
   compileShader(t, e, r) {
-    let s = this.createShader(t, r);
+    const s = this.createShader(t, r);
     if (t.shaderSource(s, e), t.compileShader(s), !t.getShaderParameter(s, t.COMPILE_STATUS))
       throw console.log(t.getShaderInfoLog(s)), new Error("Cannot compile shader!!");
     return s;
@@ -3031,16 +3030,15 @@ class fr {
   }
   async loadShaderFromPath(t, e, r = []) {
     var h;
-    const s = await this.loadShader(t), i = await this.loadShader(e);
-    let n = (h = e.split("/").pop()) == null ? void 0 : h.split(".").shift(), a = new lt(this.gl, s, i, r);
+    const s = await this.loadShader(t), i = await this.loadShader(e), n = (h = e.split("/").pop()) == null ? void 0 : h.split(".").shift(), a = new lt(this.gl, s, i, r);
     this.shaderProgramCache.set(n, a), this.shaderProgramKey.add(n);
   }
   async loadShaderFromSource(t, e, r, s = []) {
-    let i = new lt(this.gl, e, r, s);
+    const i = new lt(this.gl, e, r, s);
     this.shaderProgramCache.set(t, i), this.shaderProgramKey.add(t);
   }
   async loadCommonShaders() {
-    const t = /* @__PURE__ */ Object.assign({ "../src/webgl/shader/blur.vert": le, "../src/webgl/shader/bright.vert": de, "../src/webgl/shader/compose.vert": me, "../src/webgl/shader/default.vert": pe, "../src/webgl/shader/framebuffer.vert": we, "../src/webgl/shader/glitch.vert": Te, "../src/webgl/shader/gouraudLighting.vert": be, "../src/webgl/shader/grayScale.vert": Re, "../src/webgl/shader/mosaic.vert": Me, "../src/webgl/shader/phongLighting.vert": Se, "../src/webgl/shader/rgbShift.vert": Ae, "../src/webgl/shader/text.vert": Ue, "../src/webgl/shader/texture.vert": De, "../src/webgl/shader/unlit.vert": Ie }), e = /* @__PURE__ */ Object.assign({ "../src/webgl/shader/blur.frag": Ne, "../src/webgl/shader/bright.frag": je, "../src/webgl/shader/compose.frag": Ge, "../src/webgl/shader/default.frag": Ve, "../src/webgl/shader/framebuffer.frag": We, "../src/webgl/shader/glitch.frag": $e, "../src/webgl/shader/gouraudLighting.frag": Ze, "../src/webgl/shader/grayScale.frag": Je, "../src/webgl/shader/mosaic.frag": tr, "../src/webgl/shader/phongLighting.frag": rr, "../src/webgl/shader/rgbShift.frag": ir, "../src/webgl/shader/text.frag": or, "../src/webgl/shader/texture.frag": hr, "../src/webgl/shader/unlit.frag": lr }), r = /* @__PURE__ */ new Map(), s = /* @__PURE__ */ new Map();
+    const t = /* @__PURE__ */ Object.assign({ "../src/webgl/shader/blur.vert": le, "../src/webgl/shader/bright.vert": de, "../src/webgl/shader/compose.vert": me, "../src/webgl/shader/default.vert": pe, "../src/webgl/shader/framebuffer.vert": we, "../src/webgl/shader/glitch.vert": Te, "../src/webgl/shader/gouraudLighting.vert": be, "../src/webgl/shader/grayScale.vert": Re, "../src/webgl/shader/mosaic.vert": Me, "../src/webgl/shader/phongLighting.vert": Se, "../src/webgl/shader/rgbShift.vert": _e, "../src/webgl/shader/text.vert": Ue, "../src/webgl/shader/texture.vert": De, "../src/webgl/shader/unlit.vert": Ie }), e = /* @__PURE__ */ Object.assign({ "../src/webgl/shader/blur.frag": Ne, "../src/webgl/shader/bright.frag": je, "../src/webgl/shader/compose.frag": Ge, "../src/webgl/shader/default.frag": Ve, "../src/webgl/shader/framebuffer.frag": We, "../src/webgl/shader/glitch.frag": $e, "../src/webgl/shader/gouraudLighting.frag": Ze, "../src/webgl/shader/grayScale.frag": Je, "../src/webgl/shader/mosaic.frag": tr, "../src/webgl/shader/phongLighting.frag": rr, "../src/webgl/shader/rgbShift.frag": ir, "../src/webgl/shader/text.frag": or, "../src/webgl/shader/texture.frag": hr, "../src/webgl/shader/unlit.frag": lr }), r = /* @__PURE__ */ new Map(), s = /* @__PURE__ */ new Map();
     Object.entries(t).forEach(([i, n]) => {
       var u;
       const a = n.default, h = (u = i.split("/").pop()) == null ? void 0 : u.split(".").shift();
@@ -3051,10 +3049,10 @@ class fr {
       s.set(h, a), this.shaderProgramKey.add(h);
     });
     for (const i of this.shaderProgramKey) {
-      let n = r.get(i), a = s.get(i);
+      const n = r.get(i), a = s.get(i);
       if (!n || !a)
         continue;
-      let h = new lt(this.gl, n, a);
+      const h = new lt(this.gl, n, a);
       this.shaderProgramCache.set(i, h);
     }
   }
@@ -3080,8 +3078,7 @@ class mr {
   }
   async loadTextureFromPath(t) {
     var s;
-    const e = new ut(this.gl, t);
-    let r = (s = t.split("/").pop()) == null ? void 0 : s.split(".").shift();
+    const e = new ut(this.gl, t), r = (s = t.split("/").pop()) == null ? void 0 : s.split(".").shift();
     this.textureKeySet.add(r), this.textureCache.set(r, e);
   }
 }
@@ -3133,7 +3130,7 @@ class pr {
     await this.shaderLoader.loadCommonShaders(), nt.init(this.shaderLoader, this.textureLoader, this.textFontLoader);
   }
 }
-class A {
+class _ {
   static initialize() {
     this.guiArrays.length > 0 || this.guiArrays.push(new xt());
   }
@@ -3164,17 +3161,17 @@ class A {
     return this.guiArrays.length == 0 && this.guiArrays.push(new xt()), this.guiArrays.at(-1);
   }
 }
-o(A, "guiArrays", []);
+o(_, "guiArrays", []);
 class U {
   static initialize(t, e, r) {
-    this.onRecordStart = t, this.onRecordEnd = e, this.onChangeClockType = r, A.initialize(), A.addFolder("Recording"), A.addElement(
+    this.onRecordStart = t, this.onRecordEnd = e, this.onChangeClockType = r, _.initialize(), _.addFolder("Recording"), _.addElement(
       { recordType: "SequencialFrames" },
       "recordType",
       (s) => {
         this.recordType = s;
       },
       ["Frame", "SequencialFrames", "StartAndStop"]
-    ), A.addElement(
+    ), _.addElement(
       { clockType: "RealTime" },
       "clockType",
       (s) => {
@@ -3182,24 +3179,24 @@ class U {
         this.clockType = s, (i = this.onChangeClockType) == null || i.call(this, this.clockType);
       },
       ["RealTime", "Fixed"]
-    ), A.addElement({ fps: 60 }, "fps", (s) => {
+    ), _.addElement({ fps: 60 }, "fps", (s) => {
       var i;
       this.fps = s, (i = this.onChangeClockType) == null || i.call(this, this.clockType);
-    }), A.addElement({ fixedFrameInterval: 60 }, "fixedFrameInterval", (s) => {
+    }), _.addElement({ fixedFrameInterval: 60 }, "fixedFrameInterval", (s) => {
       var i;
       this.fixedFrameInterval = s, (i = this.onChangeClockType) == null || i.call(this, this.clockType);
-    }), A.addElement({ frameNum: 300 }, "frameNum", (s) => {
+    }), _.addElement({ frameNum: 300 }, "frameNum", (s) => {
       this.frameNum = s;
-    }), A.addElement({ saveName: "test" }, "saveName", (s) => {
+    }), _.addElement({ saveName: "test" }, "saveName", (s) => {
       this.saveName = s;
-    }), A.addFolder("Resolution"), A.addElement({ width: 800 }, "width", (s) => {
+    }), _.addFolder("Resolution"), _.addElement({ width: 800 }, "width", (s) => {
       this.width = s;
-    }), A.addElement({ height: 800 }, "height", (s) => {
+    }), _.addElement({ height: 800 }, "height", (s) => {
       this.height = s;
-    }), A.resetFolder(), A.addAction(() => {
+    }), _.resetFolder(), _.addAction(() => {
       var s;
       (s = this.onRecordStart) == null || s.call(this);
-    }, "StartRecord"), A.addAction(() => {
+    }, "StartRecord"), _.addAction(() => {
       var s;
       (s = this.onRecordEnd) == null || s.call(this);
     }, "StopRecord");
@@ -3579,8 +3576,8 @@ class Or extends tt {
     o(this, "uv");
     o(this, "width", 0);
     o(this, "height", 0);
-    let i = 0, n = 0, a = [], h = [], u = [], p = [], l = [];
-    const d = 1 / s.getTextureSize().width, f = 1 / s.getTextureSize().height;
+    let i = 0, n = 0;
+    const a = [], h = [], u = [], p = [], l = [], d = 1 / s.getTextureSize().width, f = 1 / s.getTextureSize().height;
     let v = 0, T = 0;
     for (const g of r) {
       const k = g.getOffset(), y = g.getResolution(), C = k[0] + i, W = k[1], X = C + y[0], Y = W + y[1], gt = C * d, pt = W * f, vt = X * d, wt = Y * f;
@@ -3680,9 +3677,9 @@ class jr {
   dispose() {
   }
 }
-var _ = /* @__PURE__ */ ((c) => (c[c.COLOR = 0] = "COLOR", c[c.ID = 1] = "ID", c[c.NORMAL = 2] = "NORMAL", c[c.EMISSIVE = 3] = "EMISSIVE", c[c.DEPTH = 4] = "DEPTH", c[c.DEPTH_TEXTURE = 5] = "DEPTH_TEXTURE", c[c.STENCIL = 6] = "STENCIL", c[c.DEPTH_STENCIL = 7] = "DEPTH_STENCIL", c))(_ || {});
+var A = /* @__PURE__ */ ((c) => (c[c.COLOR = 0] = "COLOR", c[c.ID = 1] = "ID", c[c.NORMAL = 2] = "NORMAL", c[c.EMISSIVE = 3] = "EMISSIVE", c[c.DEPTH = 4] = "DEPTH", c[c.DEPTH_TEXTURE = 5] = "DEPTH_TEXTURE", c[c.STENCIL = 6] = "STENCIL", c[c.DEPTH_STENCIL = 7] = "DEPTH_STENCIL", c))(A || {});
 class kr {
-  constructor(t, e, r = { attachments: [{ type: _.COLOR }] }) {
+  constructor(t, e, r = { attachments: [{ type: A.COLOR }] }) {
     o(this, "gl");
     o(this, "framebuffer");
     o(this, "colorTextures");
@@ -3731,14 +3728,14 @@ class kr {
   setUpAttachment(t, e) {
     const r = this.getTextureFilters(t, e);
     switch (e.type) {
-      case _.DEPTH:
-      case _.STENCIL:
-      case _.DEPTH_STENCIL:
+      case A.DEPTH:
+      case A.STENCIL:
+      case A.DEPTH_STENCIL:
         this.depthRenderbuffer = t.createRenderbuffer(), t.bindRenderbuffer(t.RENDERBUFFER, this.depthRenderbuffer);
         const s = this.getRenderbufferSettingByAttachmentType(t, e.type);
         t.renderbufferStorage(t.RENDERBUFFER, s.internalFormat, this.width, this.height), t.framebufferRenderbuffer(t.FRAMEBUFFER, s.attachmentPoint, t.RENDERBUFFER, this.depthRenderbuffer);
         break;
-      case _.DEPTH_TEXTURE:
+      case A.DEPTH_TEXTURE:
         this.depthTexture = t.createTexture(), t.bindTexture(t.TEXTURE_2D, this.depthTexture), t.texImage2D(t.TEXTURE_2D, 0, t.DEPTH_COMPONENT24, this.width, this.height, 0, t.DEPTH_COMPONENT, t.UNSIGNED_INT, null), t.texParameteri(t.TEXTURE_2D, t.TEXTURE_MIN_FILTER, r.minFilter), t.texParameteri(t.TEXTURE_2D, t.TEXTURE_MAG_FILTER, r.magFilter), t.framebufferTexture2D(t.FRAMEBUFFER, t.DEPTH_ATTACHMENT, t.TEXTURE_2D, this.depthTexture, 0);
         break;
       default:
@@ -3754,16 +3751,16 @@ class kr {
   getColorTextureSettingByAttachmentType(t, e) {
     let r = -1, s = -1, i = -1;
     switch (e) {
-      case _.COLOR:
+      case A.COLOR:
         r = t.RGBA8, s = t.RGBA, i = t.UNSIGNED_BYTE;
         break;
-      case _.ID:
+      case A.ID:
         r = t.R8, s = t.RED, i = t.UNSIGNED_BYTE;
         break;
-      case _.NORMAL:
+      case A.NORMAL:
         r = t.RGB16F, s = t.RGB, i = t.HALF_FLOAT;
         break;
-      case _.EMISSIVE:
+      case A.EMISSIVE:
         r = t.RGBA16F, s = t.RGBA, i = t.HALF_FLOAT;
         break;
     }
@@ -3772,20 +3769,20 @@ class kr {
   getRenderbufferSettingByAttachmentType(t, e) {
     let r = -1, s = -1;
     switch (e) {
-      case _.DEPTH:
+      case A.DEPTH:
         r = t.DEPTH_COMPONENT16, s = t.DEPTH_ATTACHMENT;
         break;
-      case _.STENCIL:
+      case A.STENCIL:
         r = t.STENCIL_INDEX8, s = t.STENCIL_ATTACHMENT;
         break;
-      case _.DEPTH_STENCIL:
+      case A.DEPTH_STENCIL:
         r = t.DEPTH24_STENCIL8, s = t.DEPTH_STENCIL_ATTACHMENT;
         break;
     }
     return { internalFormat: r, attachmentPoint: s };
   }
   getTextureFilters(t, e) {
-    const r = e.type === _.ID || e.type === _.DEPTH_TEXTURE ? t.NEAREST : t.LINEAR;
+    const r = e.type === A.ID || e.type === A.DEPTH_TEXTURE ? t.NEAREST : t.LINEAR;
     return {
       minFilter: e.minFilter ?? r,
       magFilter: e.magFilter ?? r
@@ -4350,7 +4347,7 @@ class ss extends mt {
       ), e.bindFramebuffer(e.FRAMEBUFFER, null);
       return;
     }
-    let n = s, a = i;
+    const n = s, a = i;
     this.shaderPass.render(e, r, n, a);
   }
   isEnabled() {
@@ -4365,7 +4362,7 @@ class is extends mt {
   }
   render(e, r, s, i) {
     if (!this.finalBlitShaderPass || !i) return;
-    let n = s, a = i;
+    const n = s, a = i;
     this.finalBlitShaderPass.render(e, r, n, a);
   }
   isEnabled() {
@@ -4518,7 +4515,7 @@ function fs() {
 }
 export {
   ts as AmbientLightNode,
-  _ as AttachmentType,
+  A as AttachmentType,
   m as AttributeElementSize,
   Nt as AudioOutput,
   pr as BaseApplication,
@@ -4569,8 +4566,8 @@ export {
   $r as LightFactory,
   ft as LightNode,
   Z as LightType,
-  Ar as MAX_DIRECTIONAL_LIGHTS,
-  _r as MAX_POINT_LIGHTS,
+  _r as MAX_DIRECTIONAL_LIGHTS,
+  Ar as MAX_POINT_LIGHTS,
   Jt as MaskMaterial,
   ds as MaskShaderPass,
   nt as MaterialFactory,

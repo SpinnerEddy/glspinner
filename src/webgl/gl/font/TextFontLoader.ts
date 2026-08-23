@@ -64,7 +64,7 @@ export class TextFontLoader {
     public async loadTextFontFromPath(sdfFontTexturePath: string, sdfFontTextureReferenceJsonPath: string): Promise<void> {
         const texture = new Texture2D(this.gl, sdfFontTexturePath);
 
-        let textureKey = sdfFontTexturePath.split('/').pop()?.split('.').shift() as string;
+        const textureKey = sdfFontTexturePath.split('/').pop()?.split('.').shift() as string;
 
         this.sdfFontTextureCache.set(textureKey, texture);
 

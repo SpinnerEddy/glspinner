@@ -25,7 +25,7 @@ export class Quaternion {
 
     toMatrix(): Matrix44 {
         const matrix = new Matrix44();
-        let result = matrix.identity();
+        const result = matrix.identity();
 
         result.set(0, 0, 1 - 2 * Math.pow(this.y, 2) - 2 * Math.pow(this.z, 2));
         result.set(0, 1, 2 * this.x * this.y - 2 * this.z * this.w);

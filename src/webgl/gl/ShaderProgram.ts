@@ -70,7 +70,7 @@ export class ShaderProgram {
     }
 
     private compileShader(gl: WebGL2RenderingContext, shaderSourceStr: string, type: 'vert' | 'frag'): WebGLShader {
-        let shader = this.createShader(gl, type);
+        const shader = this.createShader(gl, type);
         gl.shaderSource(shader, shaderSourceStr);
         gl.compileShader(shader);
         if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {

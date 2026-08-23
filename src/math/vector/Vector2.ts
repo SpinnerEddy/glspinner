@@ -39,28 +39,28 @@ export class Vector2 extends Vector<Vector2> {
     }
 
     add(other: Vector2, out?: Vector2): Vector2 {
-        let result = out ?? this.create();
+        const result = out ?? this.create();
         result.x = this.x + other.x;
         result.y = this.y + other.y;
         return result;
     }
 
     sub(other: Vector2, out?: Vector2): Vector2 {
-        let result = out ?? this.create();
+        const result = out ?? this.create();
         result.x = this.x - other.x;
         result.y = this.y - other.y;
         return result;
     }
 
     multiply(other: number, out?: Vector2): Vector2 {
-        let result = out ?? this.create();
+        const result = out ?? this.create();
         result.x = this.x * other;
         result.y = this.y * other;
         return result;
     }
 
     div(other: number, out?: Vector2): Vector2 {
-        let result = out ?? this.create();
+        const result = out ?? this.create();
         if (other == 0) return result;
 
         result.x = this.x / other;

@@ -18,7 +18,7 @@ export type NotionClient = {
     getPageContent(pageId: string): Promise<string>;
 };
 
-async function notionRequest(token: string, path: string, init: RequestInit = {}): Promise<any> {
+async function notionRequest<T = unknown>(token: string, path: string, init: RequestInit = {}): Promise<T> {
     const res = await fetch(`${NOTION_API_BASE}${path}`, {
         ...init,
         headers: {
@@ -37,9 +37,11 @@ async function notionRequest(token: string, path: string, init: RequestInit = {}
     return res.json();
 }
 
+type NotionSelectOption = { id: string; name: string };
+
 async function resolveDataSourceId(token: string, databaseId: string): Promise<string> {
-    const database = await notionRequest(token, `/databases/${databaseId}`);
-    const dataSources = database.data_sources as Array<{ id: string; name: string }> | undefined;
+    const database = await notionRequest<{ data_sources?: Array<{ id: string; name: string }> }>(token, `/databases/${databaseId}`);
+    const dataSources = database.data_sources;
 
     if (!dataSources || dataSources.length === 0) {
         throw new Error(`データベース ${databaseId} にdata_sourceが見つからない`);
@@ -80,8 +82,17 @@ function isListBlock(type: string): boolean {
     return LIST_BLOCK_TYPES.has(type);
 }
 
-function blockToMarkdown(block: any): string | null {
-    const data = block[block.type];
+type NotionBlockData = { rich_text?: RichText[]; checked?: boolean };
+
+type NotionBlock = {
+    id: string;
+    type: string;
+    has_children?: boolean;
+    [key: string]: unknown;
+};
+
+function blockToMarkdown(block: NotionBlock): string | null {
+    const data = block[block.type] as NotionBlockData | undefined;
 
     switch (block.type) {
         case 'paragraph':
@@ -110,13 +121,15 @@ function blockToMarkdown(block: any): string | null {
     }
 }
 
-async function fetchBlockChildren(token: string, blockId: string): Promise<any[]> {
-    const results: any[] = [];
+type NotionBlockListResponse = { results: NotionBlock[]; has_more?: boolean; next_cursor?: string };
+
+async function fetchBlockChildren(token: string, blockId: string): Promise<NotionBlock[]> {
+    const results: NotionBlock[] = [];
     let cursor: string | undefined;
 
     do {
         const query = cursor ? `?page_size=100&start_cursor=${cursor}` : '?page_size=100';
-        const data = await notionRequest(token, `/blocks/${blockId}/children${query}`);
+        const data = await notionRequest<NotionBlockListResponse>(token, `/blocks/${blockId}/children${query}`);
         results.push(...data.results);
         cursor = data.has_more ? data.next_cursor : undefined;
     } while (cursor && results.length < MAX_CONTENT_BLOCKS);
@@ -141,12 +154,13 @@ export function createNotionClient(token: string): NotionClient {
         const body: Record<string, unknown> = { page_size: 50 };
         if (filter) body.filter = filter;
 
-        const data = await notionRequest(token, `/data_sources/${dataSourceId}/query`, {
+        type NotionPage = { id: string; url: string; created_time: string; properties: Record<string, unknown> };
+        const data = await notionRequest<{ results: NotionPage[] }>(token, `/data_sources/${dataSourceId}/query`, {
             method: 'POST',
             body: JSON.stringify(body)
         });
 
-        return (data.results as any[]).map((page) => ({
+        return data.results.map((page) => ({
             id: page.id,
             url: page.url,
             createdTime: page.created_time,
@@ -157,9 +171,10 @@ export function createNotionClient(token: string): NotionClient {
     // select/status型はNotionが未知の名前を渡すと新しい選択肢を無言で作ってしまうため、
     // 既存の選択肢一覧と突き合わせてから id 指定で更新する（typo等での事故防止）。
     async function findOptionId(dataSourceId: string, propertyName: string, kind: PropertyKind, value: string): Promise<string> {
-        const dataSource = await notionRequest(token, `/data_sources/${dataSourceId}`);
+        type NotionPropertyDefinition = { status?: { options?: NotionSelectOption[] }; select?: { options?: NotionSelectOption[] } };
+        const dataSource = await notionRequest<{ properties?: Record<string, NotionPropertyDefinition> }>(token, `/data_sources/${dataSourceId}`);
         const prop = dataSource.properties?.[propertyName];
-        const options = (kind === 'status' ? prop?.status?.options : prop?.select?.options) as Array<{ id: string; name: string }> | undefined;
+        const options = kind === 'status' ? prop?.status?.options : prop?.select?.options;
 
         const match = options?.find((o) => o.name === value);
         if (!match) {

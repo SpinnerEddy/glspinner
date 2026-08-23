@@ -68,14 +68,14 @@ export class MathUtility {
     }
 
     static calculateGaussianCoefficients(range: number, count: number): Float32Array {
-        let gCoefficients: number[] = [];
-        let totalRange = range * 2.0;
-        let startRange = -range;
-        let incrementValue = totalRange / count;
+        const gCoefficients: number[] = [];
+        const totalRange = range * 2.0;
+        const startRange = -range;
+        const incrementValue = totalRange / count;
         let totalValue = 0.0;
 
         for (let i = startRange; i <= range; i += incrementValue) {
-            let value = MathUtility.exp(-(i * i) / totalRange);
+            const value = MathUtility.exp(-(i * i) / totalRange);
             totalValue += value;
             gCoefficients.push(value);
         }

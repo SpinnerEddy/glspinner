@@ -13,25 +13,33 @@ type TaskDto = { id: string; name: string; status: string | null; order: number 
 type RetroDto = { id: string; name: string; url: string; createdTime: string };
 type IssueDto = { id: string; name: string; status: string | null; url: string };
 
-function extractTitle(properties: Record<string, any>): string {
-    for (const prop of Object.values(properties)) {
-        if (prop?.type === 'title') {
-            return (prop.title as any[]).map((t) => t.plain_text).join('');
+type NotionPropertyValue = {
+    type?: string;
+    title?: Array<{ plain_text: string }>;
+    status?: { name: string | null } | null;
+    select?: { name: string | null } | null;
+    number?: number | null;
+};
+
+function extractTitle(properties: Record<string, unknown>): string {
+    for (const prop of Object.values(properties) as (NotionPropertyValue | undefined)[]) {
+        if (prop?.type === 'title' && prop.title) {
+            return prop.title.map((t) => t.plain_text).join('');
         }
     }
     return '(無題)';
 }
 
-function extractSelectLike(properties: Record<string, any>, key: string): string | null {
-    const prop = properties[key];
+function extractSelectLike(properties: Record<string, unknown>, key: string): string | null {
+    const prop = properties[key] as NotionPropertyValue | undefined;
     if (!prop) return null;
     if (prop.type === 'status') return prop.status?.name ?? null;
     if (prop.type === 'select') return prop.select?.name ?? null;
     return null;
 }
 
-function extractNumber(properties: Record<string, any>, key: string): number | null {
-    const prop = properties[key];
+function extractNumber(properties: Record<string, unknown>, key: string): number | null {
+    const prop = properties[key] as NotionPropertyValue | undefined;
     if (prop?.type === 'number') return prop.number ?? null;
     return null;
 }
@@ -66,7 +74,7 @@ function toIssueDto(item: NotionListItem): IssueDto {
     };
 }
 
-function readJsonBody(req: IncomingMessage): Promise<any> {
+function readJsonBody(req: IncomingMessage): Promise<Record<string, unknown>> {
     return new Promise((resolve, reject) => {
         let raw = '';
         req.on('data', (chunk) => (raw += chunk));
@@ -125,7 +133,7 @@ export function notionRelayPlugin(env: DashboardEnv): Plugin {
                     const taskPatchMatch = url.match(/^\/tasks\/([^/]+)$/);
                     if (method === 'PATCH' && taskPatchMatch) {
                         const body = await readJsonBody(req);
-                        await getClientOrThrow().updateSelectLikeProperty(env.NOTION_DB_TASKS!, taskPatchMatch[1], 'Status', 'status', body.status);
+                        await getClientOrThrow().updateSelectLikeProperty(env.NOTION_DB_TASKS!, taskPatchMatch[1], 'Status', 'status', body.status as string);
                         return sendJson(res, 200, { ok: true });
                     }
 
@@ -148,7 +156,7 @@ export function notionRelayPlugin(env: DashboardEnv): Plugin {
                     const issuePatchMatch = url.match(/^\/issues\/([^/]+)$/);
                     if (method === 'PATCH' && issuePatchMatch) {
                         const body = await readJsonBody(req);
-                        await getClientOrThrow().updateSelectLikeProperty(env.NOTION_DB_ISSUES!, issuePatchMatch[1], 'ステータス', 'select', body.status);
+                        await getClientOrThrow().updateSelectLikeProperty(env.NOTION_DB_ISSUES!, issuePatchMatch[1], 'ステータス', 'select', body.status as string);
                         return sendJson(res, 200, { ok: true });
                     }
 
