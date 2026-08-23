@@ -16,6 +16,8 @@ export type ListDetailOptions = {
     onStatusChange?: (id: string, status: string) => Promise<void>;
     emptyMessage: string;
     detailHeight?: number;
+    // 'text'指定時はfetchContentの戻り値をMarkdownとして解釈せず、<pre>にそのまま流し込む（diff等の表示用）。
+    renderMode?: 'markdown' | 'text';
 };
 
 const UNKNOWN_STATUS_LABEL = '(不明)';
@@ -106,8 +108,15 @@ export function renderListDetailView(container: HTMLElement, options: ListDetail
 
         detailArea.textContent = '読み込み中...';
         try {
-            const markdown = await (options.fetchContent ?? fetchPageContent)(item.id);
-            detailArea.innerHTML = await marked.parse(markdown);
+            const content = await (options.fetchContent ?? fetchPageContent)(item.id);
+            if (options.renderMode === 'text') {
+                detailArea.innerHTML = '';
+                const pre = document.createElement('pre');
+                pre.textContent = content;
+                detailArea.appendChild(pre);
+            } else {
+                detailArea.innerHTML = await marked.parse(content);
+            }
         } catch (err) {
             detailArea.textContent = `エラー: ${(err as Error).message}`;
         }

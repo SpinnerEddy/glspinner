@@ -59,3 +59,47 @@ export async function fetchDocContent(root: DocsRoot, path: string): Promise<str
     const data = await getJson<{ text: string }>(`/api/docs/${root}/content?path=${encodeURIComponent(path)}`);
     return data.text;
 }
+
+export type GitBranchInfo = { branch: string; ahead: number; behind: number };
+export type GitChangedFile = { path: string; statusLabel: string };
+export type GitCommit = { hash: string; shortHash: string; author: string; date: string; subject: string };
+
+export function fetchGitBranchInfo(): Promise<GitBranchInfo> {
+    return getJson('/api/git/branch');
+}
+
+export function fetchGitChangedFiles(): Promise<GitChangedFile[]> {
+    return getJson('/api/git/status');
+}
+
+export async function fetchGitFileDiff(path: string): Promise<string> {
+    const data = await getJson<{ text: string }>(`/api/git/diff?path=${encodeURIComponent(path)}`);
+    return data.text;
+}
+
+export function fetchGitCommits(limit = 30): Promise<GitCommit[]> {
+    return getJson(`/api/git/commits?limit=${limit}`);
+}
+
+export async function fetchGitCommitDiff(hash: string): Promise<string> {
+    const data = await getJson<{ text: string }>(`/api/git/show?hash=${encodeURIComponent(hash)}`);
+    return data.text;
+}
+
+export type ScriptName = 'build' | 'lint' | 'test';
+export type ScriptRunResult = { exitCode: number | null; output: string };
+
+export async function runScript(script: ScriptName): Promise<ScriptRunResult> {
+    const res = await fetch('/api/scripts/run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ script })
+    });
+
+    if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error ?? `実行失敗: ${res.status}`);
+    }
+
+    return res.json();
+}

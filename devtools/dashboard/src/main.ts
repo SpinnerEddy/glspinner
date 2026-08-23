@@ -4,16 +4,20 @@ import { renderRetroView } from './views/RetroView';
 import { renderIssueView } from './views/IssueView';
 import { renderDesignView } from './views/DesignView';
 import { renderDocumentView } from './views/DocumentView';
+import { renderGitView } from './views/GitView';
+import { renderScriptsView } from './views/ScriptsView';
 import { renderPreviewPane } from './views/PreviewPane';
 
-type TabId = 'tasks' | 'retro' | 'issues' | 'design' | 'docs';
+type TabId = 'tasks' | 'retro' | 'issues' | 'design' | 'docs' | 'git' | 'scripts';
 
 const TABS: { id: TabId; label: string; render: (container: HTMLElement) => void }[] = [
     { id: 'tasks', label: 'タスク', render: renderTaskView },
     { id: 'retro', label: '振り返り', render: renderRetroView },
     { id: 'issues', label: '技術課題', render: renderIssueView },
     { id: 'design', label: '設計', render: renderDesignView },
-    { id: 'docs', label: 'ドキュメント', render: renderDocumentView }
+    { id: 'docs', label: 'ドキュメント', render: renderDocumentView },
+    { id: 'git', label: 'Git', render: renderGitView },
+    { id: 'scripts', label: 'ビルド', render: renderScriptsView }
 ];
 
 function renderNotionPane(): HTMLElement {
