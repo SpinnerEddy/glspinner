@@ -1,6 +1,6 @@
 ---
 name: glspinner-design
-description: glspinnerで新しい機能・サブシステムを作る前に、既存アーキテクチャ（Operation+Baseパターン、RenderTag/Slotベースの疎結合設計など）との整合性を踏まえた設計案を作る。合意した設計のうち規約として残す価値があるものは.claude/rules/配下（glspinner-conventions管理）へ反映する。「◯◯を実装する前に設計を詰めたい」「このクラス構成でいい？」「どこにどう配置すべき」「既存のパイプラインにどう組み込む」といった、コードを書き始める前の設計相談を頼まれたら必ずこのスキルを使う。実装そのものを始める場合はglspinner-implementに引き継ぐ。
+description: glspinnerで新しい機能・サブシステムを作る前に、既存アーキテクチャ（Operation+Baseパターン、RenderTag/Slotベースの疎結合設計など）との整合性を踏まえた設計案を作る。合意した設計のうち規約として残す価値があるものは.claude/rules/配下（glspinner-conventions管理）へ反映する。「◯◯を実装する前に設計を詰めたい」「このクラス構成でいい？」「どこにどう配置すべき」「既存のパイプラインにどう組み込む」といった、コードを書き始める前の設計相談を頼まれたら必ずこのスキルを使う。実装そのものを始める場合はglspinner-implementに引き継ぐ。合意した設計をリポジトリ内design/配下のドキュメントとして書き出したい場合はglspinner-design-doc（またはその実体である/glspinner-design-doc command）に引き継ぐ。
 model: opus
 ---
 
@@ -44,4 +44,4 @@ glspinnerには一貫した設計思想（`XxxOperation`インターフェース
 
 ### 5. 完了後
 
-設計方針が固まったら、次にどうするかをユーザーに確認する。すぐ実装に進む場合は`glspinner-implement`に引き継ぐ旨を伝える。実装は後回しにして、まず固まった設計をNotionのタスクとして残しておきたい場合は`glspinner-notion-tasks`に引き継ぐ旨を伝える（規模が大きい設計は、そのまま1タスクとして登録した後、実装手順単位への分割もそちらで行える）。
+設計方針が固まったら、次にどうするかをユーザーに確認する。すぐ実装に進む場合は`glspinner-implement`に引き継ぐ旨を伝える。実装は後回しにして、まず固まった設計をNotionのタスクとして残しておきたい場合は`glspinner-notion-tasks`に引き継ぐ旨を伝える（規模が大きい設計は、そのまま1タスクとして登録した後、実装手順単位への分割もそちらで行える）。リポジトリ内に設計提案として書き残しておきたい場合（後日ユーザー自身が`src/`を実装する際の実装メモとして残す用途など）は`/glspinner-design-doc`（`glspinner-design-doc`SKILLと共有のcommand）をそのまま呼んでよい。

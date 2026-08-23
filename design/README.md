@@ -19,3 +19,7 @@
 ## この設計提案の生まれた経緯
 
 `SceneRendererPipeline`・`RenderTargetRegistry`・`~Flow`ファミリーの現状分析（アプリ側でのRenderTarget手動確保、read/writeのping-pongハードコード、RTスロットの静的事前登録という3つの症状）から出発し、`glspinner-design`スキルでの設計相談を経て合意した内容をまとめたもの。既存アーキテクチャ（`Operation`+`Base`パターン、RenderTag/Slotベースの疎結合設計、`.claude/rules/pipeline.md`/`flow.md`/`pass.md`/`render-target.md`）との接続点・移行範囲を検討済み。
+
+## 新規ドキュメントの追加方法
+
+以後、同種の設計提案（既存処理の改善案についての壁打ち→設計案の書き出し）は`glspinner-design-doc`SKILL（実体は`/glspinner-design-doc` command）で行う。手動でこのフォルダへファイルを追加した場合も、ドキュメント一覧表への追記を忘れないこと。
