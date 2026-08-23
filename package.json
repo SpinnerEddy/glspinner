@@ -8,6 +8,7 @@
     },
     "module": "dist/spinnergl-lib.es.js",
     "types": "dist/spinnergl-lib.d.ts",
+    "files": ["dist", "README.md", "LICENSE"],
     "exports": {
         ".": {
             "types": "./dist/spinnergl-lib.d.ts",

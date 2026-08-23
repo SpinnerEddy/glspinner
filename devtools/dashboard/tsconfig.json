@@ -3,25 +3,21 @@
         "target": "ESNext",
         "useDefineForClassFields": true,
         "module": "ESNext",
-        "lib": ["dom", "esnext"],
+        "lib": ["DOM", "ESNext"],
         "skipLibCheck": true,
 
-        /* Bundler mode */
         "moduleResolution": "bundler",
         "allowImportingTsExtensions": true,
         "isolatedModules": true,
         "moduleDetection": "force",
         "noEmit": true,
-        "types": ["vite/client"],
+        "types": ["vite/client", "node"],
 
-        /* Linting */
         "strict": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true,
-        "noUncheckedSideEffectImports": true,
         "esModuleInterop": true
     },
-    "include": ["src"],
-    "exclude": ["devtools"]
+    "include": ["src", "server", "vite.config.ts"]
 }

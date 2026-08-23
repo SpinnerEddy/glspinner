@@ -1,0 +1,50 @@
+export type Task = { id: string; name: string; status: string | null; order: number | null; url: string };
+export type Retro = { id: string; name: string; url: string; createdTime: string };
+export type Issue = { id: string; name: string; status: string | null; url: string };
+
+async function getJson<T>(path: string): Promise<T> {
+    const res = await fetch(path);
+    if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error ?? `リクエスト失敗: ${res.status}`);
+    }
+    return res.json();
+}
+
+async function patchJson(path: string, body: unknown): Promise<void> {
+    const res = await fetch(path, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    });
+
+    if (!res.ok) {
+        const responseBody = await res.json().catch(() => ({}));
+        throw new Error(responseBody.error ?? `更新失敗: ${res.status}`);
+    }
+}
+
+export function fetchTasks(): Promise<Task[]> {
+    return getJson('/api/notion/tasks');
+}
+
+export function fetchRetro(): Promise<Retro[]> {
+    return getJson('/api/notion/retro');
+}
+
+export function fetchIssues(): Promise<Issue[]> {
+    return getJson('/api/notion/issues');
+}
+
+export function updateTaskStatus(id: string, status: string): Promise<void> {
+    return patchJson(`/api/notion/tasks/${id}`, { status });
+}
+
+export function updateIssueStatus(id: string, status: string): Promise<void> {
+    return patchJson(`/api/notion/issues/${id}`, { status });
+}
+
+export async function fetchPageContent(id: string): Promise<string> {
+    const data = await getJson<{ text: string }>(`/api/notion/pages/${id}/content`);
+    return data.text;
+}
