@@ -62,11 +62,13 @@ body {
 }
 
 .preview-frame-wrap {
-    flex: 1 1 60%;
-    min-height: 0;
+    flex: 0 0 auto;
+    height: 800px;
+    min-height: 200px;
+    resize: vertical;
+    overflow: hidden;
     border: 1px solid var(--border);
     border-radius: 8px;
-    overflow: hidden;
     background: var(--surface);
 }
 
@@ -87,8 +89,8 @@ body {
 }
 
 .log-panel {
-    flex: 1 1 40%;
-    min-height: 100px;
+    flex: 1 1 auto;
+    min-height: 60px;
     overflow-y: auto;
     background: var(--surface);
     border: 1px solid var(--border);
