@@ -4,6 +4,8 @@
 
 `.claude/rules/`配下にも詳細な規約ドキュメントが存在するが、あちらは「Claude Codeがこのプロジェクトのコードを書くときに従うべき規約」という切り口。本ドキュメントは「このプロジェクトを初めて読む人が、何が実装されていてどう繋がっているかを理解する」という異なる切り口でまとめている。なお作成過程で、`.claude/rules/`の一部記述が現状のソースと食い違っている（陳腐化している）ことが判明した。詳細は末尾「`.claude/rules/`との既知の食い違い」を参照。
 
+なお`docs/devtools/`配下のみ例外で、`src/`（glspinnerライブラリ本体）ではなく`devtools/`配下の開発効率化ツール（Notion閲覧＋プレビュー用ダッシュボード）の使い方を扱う。ライブラリ本体のドキュメントとは性質が異なることを踏まえ、下表でも注記している。
+
 ## プロジェクト概要
 
 - **名前**: glspinner（`package.json`の`description`: "SpinnerEddy's tool made for practicing WebGL"）
@@ -80,6 +82,7 @@ SceneRendererPipeline（scene/renderer/、1フレームを統括）
 | `src/scene/renderer/` | [`scene/renderer.md`](scene/renderer.md) | レンダリングパイプライン全体（このプロジェクトで最も複雑なサブシステム） |
 | `src/webgl/gl/` | [`webgl/gl.md`](webgl/gl.md) | Shader/Buffer/FBO/Geometry/Texture/Fontの低レベルラッパー層 |
 | `src/webgl/shader/` | [`webgl/shader.md`](webgl/shader.md) | GLSLシェーダー本体24ファイル |
+| `devtools/dashboard/` | [`devtools/dashboard.md`](devtools/dashboard.md) | ※`src/`ではなく開発効率化ツール。Notion閲覧＋glspinnerプレビュー/ログの2ペインダッシュボード |
 
 ## 実装状況サマリー
 
