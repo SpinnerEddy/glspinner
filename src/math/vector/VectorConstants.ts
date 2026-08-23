@@ -9,7 +9,7 @@ export const DefaultVectorConstants = {
     AXIS2DZ: new Vector3(0, 0, 1),
 };
 
-export const VectorClassAndSizePair: Record<number, new (...args: number[]) => Vector<any>> = {
+export const VectorClassAndSizePair: Record<number, new (...args: number[]) => Vector<Vector2 | Vector3 | Vector4>> = {
     2: Vector2,
     3: Vector3,
     4: Vector4,

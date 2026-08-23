@@ -43,7 +43,13 @@ export class CustomRenderTarget implements RenderTargetOperation {
         if (index !== 0) {
             throw new Error('Only single color attachment supported!');
         }
-        return this.colorTextures?.at(index)!;
+
+        const texture = this.colorTextures[index];
+        if (!texture) {
+            throw new Error('Color texture not initialized.');
+        }
+
+        return texture;
     }
 
     getDepthTexture(): WebGLTexture {
@@ -112,7 +118,7 @@ export class CustomRenderTarget implements RenderTargetOperation {
         switch (config.type) {
             case AttachmentType.DEPTH:
             case AttachmentType.STENCIL:
-            case AttachmentType.DEPTH_STENCIL:
+            case AttachmentType.DEPTH_STENCIL: {
                 this.depthRenderbuffer = gl.createRenderbuffer();
                 gl.bindRenderbuffer(gl.RENDERBUFFER, this.depthRenderbuffer);
 
@@ -120,6 +126,7 @@ export class CustomRenderTarget implements RenderTargetOperation {
                 gl.renderbufferStorage(gl.RENDERBUFFER, renderbufferSetting.internalFormat, this.width, this.height);
                 gl.framebufferRenderbuffer(gl.FRAMEBUFFER, renderbufferSetting.attachmentPoint, gl.RENDERBUFFER, this.depthRenderbuffer);
                 break;
+            }
             case AttachmentType.DEPTH_TEXTURE:
                 this.depthTexture = gl.createTexture();
                 gl.bindTexture(gl.TEXTURE_2D, this.depthTexture);
@@ -128,7 +135,7 @@ export class CustomRenderTarget implements RenderTargetOperation {
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, filterSetting.magFilter);
                 gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.depthTexture, 0);
                 break;
-            default:
+            default: {
                 const colorTexture = gl.createTexture();
                 gl.bindTexture(gl.TEXTURE_2D, colorTexture);
 
@@ -146,6 +153,7 @@ export class CustomRenderTarget implements RenderTargetOperation {
                 this.drawBufferAttachmentPoints.push(attachmentPoint);
                 this.colorTextureCount++;
                 break;
+            }
         }
     }
 

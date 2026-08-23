@@ -5,9 +5,9 @@ export interface SceneOperation {
     stop(): void;
     reset(): void;
     getClock(): ClockOperation;
-    setUpdate(updateFunction: Function): void;
-    setDraw(drawFunction: Function): void;
-    setAdditionalSupport(additionalSupport: Function): void;
+    setUpdate(updateFunction: () => void): void;
+    setDraw(drawFunction: () => void): void;
+    setAdditionalSupport(additionalSupport: () => void | Promise<void>): void;
     setRealTimeClock(fps: number): void;
     setFixedTimeClock(fps: number, frameInterval: number): void;
 }

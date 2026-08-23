@@ -15,7 +15,7 @@ export abstract class SceneNode {
         this.children = [];
         this.renderTag = RenderTagConstants.ALL;
 
-        const className = this.constructor as Function;
+        const className = this.constructor as { name: string};
         this.id = id !== '' ? id : SceneGraphNodeIdGenerator.generateId(className.name);
     }
 

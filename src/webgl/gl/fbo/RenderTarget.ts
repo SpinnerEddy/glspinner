@@ -38,7 +38,13 @@ export class RenderTarget implements RenderTargetOperation {
         if (index !== 0) {
             throw new Error('Only single color attachment supported!');
         }
-        return this.colorTextures?.at(index)!;
+
+        const texture = this.colorTextures[index];
+        if (!texture) {
+            throw new Error('Color texture not initialized.');
+        }
+
+        return texture;
     }
 
     getDepthTexture(): WebGLTexture {

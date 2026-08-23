@@ -42,14 +42,14 @@ export class ShaderLoader {
 
         Object.entries(vertShaderFiles).forEach(([filePath, module]) => {
             const content = (module as { default: string }).default;
-            const shaderKey = filePath.split('/').pop()?.split('.').shift()!;
+            const shaderKey = this.extractShaderKey(filePath);
             vertexShaderCache.set(shaderKey, content as string);
             this.shaderProgramKey.add(shaderKey);
         });
 
         Object.entries(fragShaderFiles).forEach(([filePath, module]) => {
             const content = (module as { default: string }).default;
-            const shaderKey = filePath.split('/').pop()?.split('.').shift()!;
+            const shaderKey = this.extractShaderKey(filePath);
             fragmentShaderCache.set(shaderKey, content as string);
             this.shaderProgramKey.add(shaderKey);
         });
@@ -74,5 +74,13 @@ export class ShaderLoader {
             console.error(error);
             throw new Error('Cannot load shader!!');
         }
+    }
+
+    private extractShaderKey(filePath: string): string {
+        const key = filePath.split('/').pop()?.split('.').shift();
+        if (!key) {
+            throw new Error(`Cannot extract shader key from path: ${filePath}`);
+        }
+        return key;
     }
 }

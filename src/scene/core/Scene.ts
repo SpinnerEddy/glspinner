@@ -6,9 +6,9 @@ import { SceneOperation } from './SceneOperation';
 export class Scene implements SceneOperation {
     private clock: ClockOperation;
     private isRunning: boolean;
-    private updateFunction: Function;
-    private drawFunction: Function;
-    private additionalSupportFunctionAsync: Function;
+    private updateFunction: () => void;
+    private drawFunction: () => void;
+    private additionalSupportFunctionAsync: () => void | Promise<void>;
     private animationId: number;
 
     constructor() {
@@ -45,15 +45,15 @@ export class Scene implements SceneOperation {
         return this.clock;
     }
 
-    public setUpdate(updateFunction: Function): void {
+    public setUpdate(updateFunction: () => void): void {
         this.updateFunction = updateFunction;
     }
 
-    public setDraw(drawFunction: Function): void {
+    public setDraw(drawFunction: () => void): void {
         this.drawFunction = drawFunction;
     }
 
-    public setAdditionalSupport(additionalSupport: Function): void {
+    public setAdditionalSupport(additionalSupport: () => void | Promise<void>): void {
         this.additionalSupportFunctionAsync = additionalSupport;
     }
 

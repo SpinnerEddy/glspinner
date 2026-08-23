@@ -1,1 +1,1 @@
-export type TextureOptions = {};
+export type TextureOptions = Record<string, string>;

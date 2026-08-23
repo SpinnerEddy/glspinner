@@ -144,6 +144,6 @@ export class VectorCalculator {
             throw new Error(`Unsupported vector size: ${size}`);
         }
 
-        return new VectorClassName(...values) as T;
+        return new VectorClassName(...values) as unknown as T;
     }
 }
