@@ -7,7 +7,8 @@ export default defineConfig(({ mode }) => {
     return {
         plugins: [notionRelayPlugin(env)],
         server: {
-            port: 5173
+            port: 5173,
+            host: '127.0.0.1'
         }
     };
 });

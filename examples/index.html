@@ -10,6 +10,28 @@
                 border: 5px dotted orangered;
             }
         </style>
+        <script>
+            (function () {
+                if (window.parent === window) return; // iframe埋め込み時のみ動作
+                const post = (level, args) => {
+                    try {
+                        window.parent.postMessage(
+                            { source: 'glspinner-preview', level, args: args.map(String), time: Date.now() },
+                            '*'
+                        );
+                    } catch (e) {}
+                };
+                ['log', 'warn', 'error', 'info'].forEach((level) => {
+                    const original = console[level];
+                    console[level] = function (...args) {
+                        post(level, args);
+                        original.apply(console, args);
+                    };
+                });
+                window.addEventListener('error', (e) => post('error', [`${e.message} (${e.filename}:${e.lineno})`]));
+                window.addEventListener('unhandledrejection', (e) => post('error', [`Unhandled rejection: ${e.reason}`]));
+            })();
+        </script>
     </head>
     <script type="module" src="sample.ts"></script>
     <body>

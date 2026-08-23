@@ -5,10 +5,12 @@
     "type": "module",
     "description": "glspinner開発時のNotion（タスク/振り返り/技術課題）閲覧用ダッシュボード。glspinnerライブラリ本体とは無関係な開発補助ツール。",
     "scripts": {
-        "dev": "vite"
+        "dev": "vite",
+        "dev:all": "concurrently -n glspinner,dashboard -c blue,magenta \"npm run dev --prefix ../..\" \"vite\""
     },
     "devDependencies": {
         "@types/node": "^22.10.5",
+        "concurrently": "^10.0.5",
         "typescript": "^5.8.2",
         "vite": "^6.2.1"
     },

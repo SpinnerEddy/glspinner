@@ -2,6 +2,7 @@ import './style.css';
 import { renderTaskView } from './views/TaskView';
 import { renderRetroView } from './views/RetroView';
 import { renderIssueView } from './views/IssueView';
+import { renderPreviewPane } from './views/PreviewPane';
 
 type TabId = 'tasks' | 'retro' | 'issues';
 
@@ -11,24 +12,22 @@ const TABS: { id: TabId; label: string; render: (container: HTMLElement) => void
     { id: 'issues', label: '技術課題', render: renderIssueView }
 ];
 
-function mount(): void {
-    const app = document.getElementById('app');
-    if (!app) throw new Error('#app が見つからない');
-
-    app.innerHTML = '';
+function renderNotionPane(): HTMLElement {
+    const pane = document.createElement('div');
+    pane.className = 'notion-pane';
 
     const header = document.createElement('header');
     header.className = 'app-header';
     header.textContent = 'glspinner Dashboard';
-    app.appendChild(header);
+    pane.appendChild(header);
 
     const tabBar = document.createElement('nav');
     tabBar.className = 'tab-bar';
-    app.appendChild(tabBar);
+    pane.appendChild(tabBar);
 
     const content = document.createElement('main');
     content.className = 'tab-content';
-    app.appendChild(content);
+    pane.appendChild(content);
 
     function activate(tabId: TabId): void {
         for (const btn of Array.from(tabBar.querySelectorAll('button'))) {
@@ -47,6 +46,17 @@ function mount(): void {
     }
 
     activate('tasks');
+    return pane;
+}
+
+function mount(): void {
+    const root = document.getElementById('root');
+    if (!root) throw new Error('#root が見つからない');
+
+    root.innerHTML = '';
+    root.className = 'shell';
+    root.appendChild(renderPreviewPane());
+    root.appendChild(renderNotionPane());
 }
 
 mount();

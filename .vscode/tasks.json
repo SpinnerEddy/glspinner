@@ -1,0 +1,22 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "glspinner: start dev (preview + dashboard)",
+            "type": "shell",
+            "command": "npm run dev:all",
+            "options": {
+                "cwd": "${workspaceFolder}/devtools/dashboard"
+            },
+            "isBackground": true,
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            }
+        }
+    ]
+}
