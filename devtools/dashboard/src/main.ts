@@ -2,14 +2,18 @@ import './style.css';
 import { renderTaskView } from './views/TaskView';
 import { renderRetroView } from './views/RetroView';
 import { renderIssueView } from './views/IssueView';
+import { renderDesignView } from './views/DesignView';
+import { renderDocumentView } from './views/DocumentView';
 import { renderPreviewPane } from './views/PreviewPane';
 
-type TabId = 'tasks' | 'retro' | 'issues';
+type TabId = 'tasks' | 'retro' | 'issues' | 'design' | 'docs';
 
 const TABS: { id: TabId; label: string; render: (container: HTMLElement) => void }[] = [
     { id: 'tasks', label: 'タスク', render: renderTaskView },
     { id: 'retro', label: '振り返り', render: renderRetroView },
-    { id: 'issues', label: '技術課題', render: renderIssueView }
+    { id: 'issues', label: '技術課題', render: renderIssueView },
+    { id: 'design', label: '設計', render: renderDesignView },
+    { id: 'docs', label: 'ドキュメント', render: renderDocumentView }
 ];
 
 function renderNotionPane(): HTMLElement {

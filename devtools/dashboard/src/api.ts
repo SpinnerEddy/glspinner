@@ -48,3 +48,14 @@ export async function fetchPageContent(id: string): Promise<string> {
     const data = await getJson<{ text: string }>(`/api/notion/pages/${id}/content`);
     return data.text;
 }
+
+export type DocsRoot = 'design' | 'docs';
+
+export function fetchDocList(root: DocsRoot): Promise<string[]> {
+    return getJson(`/api/docs/${root}/list`);
+}
+
+export async function fetchDocContent(root: DocsRoot, path: string): Promise<string> {
+    const data = await getJson<{ text: string }>(`/api/docs/${root}/content?path=${encodeURIComponent(path)}`);
+    return data.text;
+}

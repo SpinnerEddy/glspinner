@@ -303,9 +303,33 @@ body {
     text-decoration: underline;
 }
 
+.detail-resize-handle {
+    flex: none;
+    height: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: row-resize;
+    touch-action: none;
+}
+
+.detail-resize-handle::after {
+    content: '';
+    width: 36px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+}
+
+.detail-resize-handle:hover::after,
+.detail-resize-handle.dragging::after {
+    background: var(--accent);
+}
+
 .detail-area {
     height: 220px;
-    resize: vertical;
+    min-height: 80px;
+    resize: none;
     overflow-y: auto;
     background: var(--surface);
     color: var(--ink);

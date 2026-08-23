@@ -11,12 +11,17 @@ export type ListItem = {
 
 export type ListDetailOptions = {
     fetchItems: () => Promise<ListItem[]>;
+    fetchContent?: (id: string) => Promise<string>;
     statusOptions?: string[];
     onStatusChange?: (id: string, status: string) => Promise<void>;
     emptyMessage: string;
+    detailHeight?: number;
 };
 
 const UNKNOWN_STATUS_LABEL = '(不明)';
+const DEFAULT_DETAIL_HEIGHT = 220;
+const MIN_DETAIL_HEIGHT = 80;
+const MIN_LIST_HEIGHT = 40;
 
 // タスク/振り返り/技術課題の3タブで共通の「スクロールする一覧 + 下部の詳細エリア」レイアウト。
 // statusOptionsが与えられている場合はステータス別にグルーピングして表示する。
@@ -37,6 +42,13 @@ export function renderListDetailView(container: HTMLElement, options: ListDetail
     listEl.className = 'scroll-list';
     view.appendChild(listEl);
 
+    // 詳細エリアの上端をドラッグして高さを変える。ブラウザ組み込みのresizeハンドル（右下の角のみ）だと
+    // 全画面表示時に下方向の余白が無く広げられないため、常に見えている上方向へドラッグする方式にしている。
+    const resizeHandle = document.createElement('div');
+    resizeHandle.className = 'detail-resize-handle';
+    resizeHandle.title = 'ドラッグして詳細欄の高さを調整';
+    view.appendChild(resizeHandle);
+
     const detailWrap = document.createElement('div');
     detailWrap.className = 'detail-wrap';
     view.appendChild(detailWrap);
@@ -52,7 +64,35 @@ export function renderListDetailView(container: HTMLElement, options: ListDetail
     const detailArea = document.createElement('div');
     detailArea.className = 'detail-area markdown-body';
     detailArea.textContent = '一覧の項目をクリックすると詳細が表示されます';
+    detailArea.style.height = `${options.detailHeight ?? DEFAULT_DETAIL_HEIGHT}px`;
     detailWrap.appendChild(detailArea);
+
+    function onHandlePointerDown(e: PointerEvent): void {
+        resizeHandle.setPointerCapture(e.pointerId);
+        resizeHandle.classList.add('dragging');
+
+        const startY = e.clientY;
+        const startHeight = detailArea.getBoundingClientRect().height;
+        const maxDetailHeight = view.getBoundingClientRect().bottom - listEl.getBoundingClientRect().top - MIN_LIST_HEIGHT;
+
+        function onPointerMove(moveEvent: PointerEvent): void {
+            const delta = startY - moveEvent.clientY;
+            const nextHeight = Math.min(maxDetailHeight, Math.max(MIN_DETAIL_HEIGHT, startHeight + delta));
+            detailArea.style.height = `${nextHeight}px`;
+        }
+
+        function onPointerUp(upEvent: PointerEvent): void {
+            resizeHandle.releasePointerCapture(upEvent.pointerId);
+            resizeHandle.classList.remove('dragging');
+            resizeHandle.removeEventListener('pointermove', onPointerMove);
+            resizeHandle.removeEventListener('pointerup', onPointerUp);
+        }
+
+        resizeHandle.addEventListener('pointermove', onPointerMove);
+        resizeHandle.addEventListener('pointerup', onPointerUp);
+    }
+
+    resizeHandle.addEventListener('pointerdown', onHandlePointerDown);
 
     let selectedRow: HTMLElement | null = null;
 
@@ -66,7 +106,7 @@ export function renderListDetailView(container: HTMLElement, options: ListDetail
 
         detailArea.textContent = '読み込み中...';
         try {
-            const markdown = await fetchPageContent(item.id);
+            const markdown = await (options.fetchContent ?? fetchPageContent)(item.id);
             detailArea.innerHTML = await marked.parse(markdown);
         } catch (err) {
             detailArea.textContent = `エラー: ${(err as Error).message}`;
