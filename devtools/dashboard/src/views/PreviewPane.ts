@@ -1,4 +1,9 @@
+import { createResizeHandle } from '../resizeHandle';
+
 const PREVIEW_URL = import.meta.env.VITE_GLSPINNER_PREVIEW_URL || 'http://127.0.0.1:2222/';
+
+const MIN_FRAME_HEIGHT = 200;
+const MIN_LOG_HEIGHT = 60;
 
 type LogEntry = { level: string; text: string; time: number };
 
@@ -16,6 +21,16 @@ export function renderPreviewPane(): HTMLElement {
     iframe.title = 'glspinner preview';
     frameWrap.appendChild(iframe);
     pane.appendChild(frameWrap);
+
+    // Canvas領域の下端をドラッグして高さを変える。ListDetailView（Notionタスク一覧+Markdown詳細）と
+    // 同じ横バー方式で、ブラウザ組み込みのresizeハンドルやスクロールバーは使わない。
+    const resizeHandle = createResizeHandle({
+        target: frameWrap,
+        getMinSize: () => MIN_FRAME_HEIGHT,
+        getMaxSize: () => pane.getBoundingClientRect().bottom - frameWrap.getBoundingClientRect().top - MIN_LOG_HEIGHT,
+        direction: 'grow-down'
+    });
+    pane.appendChild(resizeHandle);
 
     const logHeader = document.createElement('div');
     logHeader.className = 'log-header';

@@ -7,6 +7,13 @@ import { renderDocumentView } from './views/DocumentView';
 import { renderGitView } from './views/GitView';
 import { renderScriptsView } from './views/ScriptsView';
 import { renderPreviewPane } from './views/PreviewPane';
+import { createResizeHandle } from './resizeHandle';
+
+const MIN_PREVIEW_PANE_WIDTH = 320;
+const MIN_NOTION_PANE_WIDTH = 360;
+// 固定pxではなくshell幅に対する割合にすることで、ディスプレイ解像度やChromeウィンドウの
+// 大きさに応じてドラッグできる最大幅も自動的に変わるようにしている。
+const MAX_NOTION_PANE_RATIO = 0.6;
 
 type TabId = 'tasks' | 'retro' | 'issues' | 'design' | 'docs' | 'git' | 'scripts';
 
@@ -63,8 +70,32 @@ function mount(): void {
 
     root.innerHTML = '';
     root.className = 'shell';
-    root.appendChild(renderPreviewPane());
-    root.appendChild(renderNotionPane());
+
+    const previewPane = renderPreviewPane();
+    root.appendChild(previewPane);
+
+    const notionPane = renderNotionPane();
+
+    // 左のプレビュー欄(Canvas+ログ)と右のNotionタブの横幅の境界をドラッグして変える。
+    // notion-paneの右端はレイアウト上常に固定（flex-growしない固定幅+右端に配置）で、
+    // ドラッグで動くのはnotion-paneの左端（=境界そのもの）だけ。preview-pane側はflex-growで
+    // 残りの幅を自動的に埋める（ログ/Canvas境界・Notion一覧/詳細境界と同じ横バー方式の横方向版）。
+    const resizeHandle = createResizeHandle({
+        target: notionPane,
+        getMinSize: () => MIN_NOTION_PANE_WIDTH,
+        getMaxSize: () => {
+            // CSS側のmax-width:60%はshellのcontent-box（padding除く）を基準に解決されるため、
+            // ここでも同じ基準に合わせないと、ドラッグ中の内部計算値と実際の描画サイズがズレる。
+            const shellStyle = getComputedStyle(root);
+            const paddingX = parseFloat(shellStyle.paddingLeft) + parseFloat(shellStyle.paddingRight);
+            const contentWidth = root.getBoundingClientRect().width - paddingX;
+            return Math.min(contentWidth * MAX_NOTION_PANE_RATIO, contentWidth - MIN_PREVIEW_PANE_WIDTH);
+        },
+        direction: 'grow-left'
+    });
+    root.appendChild(resizeHandle);
+
+    root.appendChild(notionPane);
 }
 
 mount();

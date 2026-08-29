@@ -1,5 +1,6 @@
 import { marked } from 'marked';
 import { fetchPageContent } from '../api';
+import { createResizeHandle } from '../resizeHandle';
 
 export type ListItem = {
     id: string;
@@ -44,16 +45,8 @@ export function renderListDetailView(container: HTMLElement, options: ListDetail
     listEl.className = 'scroll-list';
     view.appendChild(listEl);
 
-    // 詳細エリアの上端をドラッグして高さを変える。ブラウザ組み込みのresizeハンドル（右下の角のみ）だと
-    // 全画面表示時に下方向の余白が無く広げられないため、常に見えている上方向へドラッグする方式にしている。
-    const resizeHandle = document.createElement('div');
-    resizeHandle.className = 'detail-resize-handle';
-    resizeHandle.title = 'ドラッグして詳細欄の高さを調整';
-    view.appendChild(resizeHandle);
-
     const detailWrap = document.createElement('div');
     detailWrap.className = 'detail-wrap';
-    view.appendChild(detailWrap);
 
     const detailLink = document.createElement('a');
     detailLink.className = 'detail-open-link';
@@ -69,32 +62,16 @@ export function renderListDetailView(container: HTMLElement, options: ListDetail
     detailArea.style.height = `${options.detailHeight ?? DEFAULT_DETAIL_HEIGHT}px`;
     detailWrap.appendChild(detailArea);
 
-    function onHandlePointerDown(e: PointerEvent): void {
-        resizeHandle.setPointerCapture(e.pointerId);
-        resizeHandle.classList.add('dragging');
-
-        const startY = e.clientY;
-        const startHeight = detailArea.getBoundingClientRect().height;
-        const maxDetailHeight = view.getBoundingClientRect().bottom - listEl.getBoundingClientRect().top - MIN_LIST_HEIGHT;
-
-        function onPointerMove(moveEvent: PointerEvent): void {
-            const delta = startY - moveEvent.clientY;
-            const nextHeight = Math.min(maxDetailHeight, Math.max(MIN_DETAIL_HEIGHT, startHeight + delta));
-            detailArea.style.height = `${nextHeight}px`;
-        }
-
-        function onPointerUp(upEvent: PointerEvent): void {
-            resizeHandle.releasePointerCapture(upEvent.pointerId);
-            resizeHandle.classList.remove('dragging');
-            resizeHandle.removeEventListener('pointermove', onPointerMove);
-            resizeHandle.removeEventListener('pointerup', onPointerUp);
-        }
-
-        resizeHandle.addEventListener('pointermove', onPointerMove);
-        resizeHandle.addEventListener('pointerup', onPointerUp);
-    }
-
-    resizeHandle.addEventListener('pointerdown', onHandlePointerDown);
+    // 詳細エリアの上端をドラッグして高さを変える。ブラウザ組み込みのresizeハンドル（右下の角のみ）だと
+    // 全画面表示時に下方向の余白が無く広げられないため、常に見えている上方向へドラッグする方式にしている。
+    const resizeHandle = createResizeHandle({
+        target: detailArea,
+        getMinSize: () => MIN_DETAIL_HEIGHT,
+        getMaxSize: () => view.getBoundingClientRect().bottom - listEl.getBoundingClientRect().top - MIN_LIST_HEIGHT,
+        direction: 'grow-up'
+    });
+    view.appendChild(resizeHandle);
+    view.appendChild(detailWrap);
 
     let selectedRow: HTMLElement | null = null;
 
