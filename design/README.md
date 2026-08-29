@@ -16,6 +16,7 @@
 |---|---|---|
 | [`render-graph.md`](render-graph.md) | `src/scene/renderer/`のレンダリングパイプラインをRender Graph化する設計 | 提案（未実装） |
 | [`dashboard-app.md`](dashboard-app.md) | `devtools/dashboard/`に置く、Notion（タスク／振り返り／技術課題）閲覧用の開発効率化ダッシュボードアプリの設計。glspinnerライブラリ本体とは無関係だが、ライブラリ出力への非混入を保証する設計を含む | 提案（未実装） |
+| [`canvas-size-single-source.md`](canvas-size-single-source.md) | 4Kモニター向けCanvas暴走バグ修正の副作用で生じた「Canvasサイズ変更時に触るべき箇所（HTML属性/CSS/Cameraデフォルト値）が分散している」問題への対応として、p5.jsの`createCanvas()`/Processingの`size()`風に`setup()`内1箇所で完結する統一API（`BaseApplication.setCanvasSize()`）を新設する設計 | 提案（未実装） |
 
 ## この設計提案の生まれた経緯
 
