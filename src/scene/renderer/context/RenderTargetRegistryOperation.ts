@@ -5,10 +5,11 @@ import { ScreenRenderTarget } from '../../../webgl/gl/fbo/ScreenRenderTarget';
 
 export interface RenderTargetRegistryOperation {
     getRenderTargetFromPool(slot: RenderTargetSlotKey): RenderTargetOperation | undefined;
-    addRenderTargetToPool(slot: RenderTargetSlotKey, renderTarget: RenderTargetOperation): void;
+    addRenderTargetToPool(slot: RenderTargetSlotKey, renderTarget: RenderTargetOperation, scale?: number): void;
     getPingPongRenderTargetFromPool(slot: RenderTargetSlotKey): PingPongRenderTarget | undefined;
-    addPingPongRenderTargetToPool(slot: RenderTargetSlotKey, pingPongRenderTarget: PingPongRenderTarget): void;
+    addPingPongRenderTargetToPool(slot: RenderTargetSlotKey, pingPongRenderTarget: PingPongRenderTarget, scale?: number): void;
     getScreenRenderTarget(): ScreenRenderTarget;
     setScreenRenderTarget(screenRenderTarget: ScreenRenderTarget): void;
+    resizeAll(resolution: [number, number]): void;
     dispose(): void;
 }

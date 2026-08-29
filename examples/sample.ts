@@ -32,7 +32,11 @@ class Sample extends GLSpinner.BaseApplication {
         const rtRegistry = this.rendererContext.getRenderTargetRegistry();
         rtRegistry.addRenderTargetToPool(GLSpinner.RenderTargetSlot.CURRENT_FRAME, new GLSpinner.CustomRenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
         rtRegistry.addRenderTargetToPool(GLSpinner.RenderTargetSlot.TEMP_FRAME_BUFFER, new GLSpinner.CustomRenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
-        rtRegistry.addRenderTargetToPool(GLSpinner.RenderTargetSlot.HALF_RES_BUFFER, new GLSpinner.CustomRenderTarget(this.gl, [this.gl.drawingBufferWidth * 0.5, this.gl.drawingBufferHeight * 0.5]));
+        rtRegistry.addRenderTargetToPool(
+            GLSpinner.RenderTargetSlot.HALF_RES_BUFFER,
+            new GLSpinner.CustomRenderTarget(this.gl, [this.gl.drawingBufferWidth * 0.5, this.gl.drawingBufferHeight * 0.5]),
+            0.5
+        );
         rtRegistry.addRenderTargetToPool(GLSpinner.RenderTargetSlot.BRIGHT_PASS_BUFFER, new GLSpinner.CustomRenderTarget(this.gl, [this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]));
 
         rtRegistry.addPingPongRenderTargetToPool(
@@ -122,7 +126,9 @@ class Sample extends GLSpinner.BaseApplication {
     }
 
     draw(): void {
-        this.webglUtility.setViewport(this.canvas);
+        if (this.webglUtility.setViewport(this.canvas)) {
+            this.rendererContext.resize([this.gl.drawingBufferWidth, this.gl.drawingBufferHeight]);
+        }
         this.webglUtility.clearColor(GLSpinner.ColorUtility.hexToColor01(this.backgroundColorStr));
         this.rendererFlowPipeline.render(this.gl, this.rendererContext);
     }

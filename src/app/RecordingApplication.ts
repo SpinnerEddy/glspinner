@@ -16,6 +16,7 @@ export abstract class RecordingApplication extends BaseApplication {
 
     public async start(): Promise<void> {
         await this.preload();
+        this.webglUtility.resizeCanvasToDisplaySize(this.canvas);
         this.setup();
         this.scene.setUpdate(this.update.bind(this));
         this.scene.setDraw(this.draw.bind(this));

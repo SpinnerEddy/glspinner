@@ -32,9 +32,10 @@ export class WebGLUtility {
         return needResize;
     }
 
-    public setViewport(canvas: HTMLCanvasElement) {
-        this.resizeCanvasToDisplaySize(canvas);
+    public setViewport(canvas: HTMLCanvasElement): boolean {
+        const needResize = this.resizeCanvasToDisplaySize(canvas);
         this.gl.viewport(0, 0, canvas.width, canvas.height);
+        return needResize;
     }
 
     private initializeWebGL2RenderingContext(canvas: HTMLCanvasElement): WebGL2RenderingContext {

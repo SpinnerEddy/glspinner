@@ -37,6 +37,17 @@ export class RendererContext {
         return this.renderTargetRegistry;
     }
 
+    public resize(resolution: [number, number]): void {
+        if (resolution[0] <= 0 || resolution[1] <= 0) return;
+
+        this.renderTargetRegistry.resizeAll(resolution);
+        this.globalUniformBuffer.updateUniformValue(GlobalUniformKey.RESOLUTION, new ShaderUniformValue(new Vector2(resolution[0], resolution[1])));
+
+        if (this.camera !== undefined) {
+            this.camera.setViewport(resolution[0], resolution[1]);
+        }
+    }
+
     public setActivateRenderTag(renderTag: RenderTag): void {
         this.activateRenderTag = renderTag;
     }
