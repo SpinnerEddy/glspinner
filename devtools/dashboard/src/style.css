@@ -1,7 +1,7 @@
 :root {
     --bg: #f3f4f6;
     --surface: #ffffff;
-    --border: #d9dde3;
+    --border: #2f9bd6;
     --ink: #1a1d21;
     --muted: #6b7280;
     --accent: #c97a34;
@@ -12,7 +12,7 @@
     :root {
         --bg: #14171c;
         --surface: #1b1f26;
-        --border: #2b303a;
+        --border: #5cc2f0;
         --ink: #e8e9ec;
         --muted: #9aa1ad;
         --accent: #e0954c;
