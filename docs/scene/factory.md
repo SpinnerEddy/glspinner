@@ -41,7 +41,7 @@ export class MaterialFactory {
 | `unlitMaterial()` | `UnlitMaterial` | `'unlit'` |
 | `texturedMaterial(textureKey, texIndex)` | `TexturedMaterial` | `'texture'` |
 | `phongMaterial(shininess = 50.0)` | `PhongMaterial` | `'phongLighting'` |
-| `gouraudMaterial(lightDirection?, eyeDirection?, ambientColor?)` | `GouraudMaterial` | `'gouraudLighting'`（引数省略時は既定値: 光源方向`(-0.5,0.5,0.5)`・視点`(0,0,20)`・環境光`#000000`） |
+| `gouraudMaterial(shininess = 50.0)` | `GouraudMaterial` | `'gouraudLighting'`（`phongMaterial()`と同じシグネチャ。以前は`lightDirection?/eyeDirection?/ambientColor?`という別引数だったが、`PhongMaterial`との共通化（`LitMaterial`導入）に伴い揃えられた） |
 | `fragmentCanvasMaterial(programKey)` | `FragmentCanvasMaterial` | 任意（引数で指定） |
 | `frameBufferTextureMaterial()` | `FrameBufferTexturedMaterial` | `'framebuffer'` |
 | `texturedTextMaterial(smoothness, fontColorHex)` | `TexturedTextMaterial` | `'text'` |

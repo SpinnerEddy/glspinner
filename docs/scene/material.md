@@ -4,6 +4,8 @@
 
 `src/scene/material/`は、ジオメトリに対する「見た目の計算方法」を表すレイヤー。`MaterialOperation`インターフェース→`BaseMaterial`抽象クラス→15個の具象クラスという`Operation+Base`パターンの典型例で、通常の3D描画用マテリアル7種とポストエフェクト用マテリアル8種に大別される。各マテリアルの責務は「自分が使うシェーダプログラムに対して、必要なUniformをすべて設定すること」に限定されており、頂点・インデックスデータ自体は`scene/mesh`と`webgl/gl/geometry`側が持つ。
 
+ただし`PhongMaterial`/`GouraudMaterial`の2クラスだけは`BaseMaterial`を直接継承せず、新設の中間抽象クラス`LitMaterial`（`BaseMaterial`を継承）を経由する（後述「`LitMaterial`」節参照）。`~Material`ファミリーで唯一の2段構成。
+
 ## 主要クラス一覧
 
 | クラス/ファイル | 役割 | 備考 |
@@ -12,8 +14,9 @@
 | `BaseMaterial.ts` | 抽象基底 | `use`/`getAttribute`/`cleanup`を共通実装、`setUniform`のみ`abstract` |
 | `UnlitMaterial.ts` | ライティングなしの単色描画 | `modelMatrix`のみ設定する最小構成 |
 | `TexturedMaterial.ts` | テクスチャ貼り付け | `cleanup()`でテクスチャをアンバインド |
-| `PhongMaterial.ts` | フォンシェーディング（フラグメント単位） | 複数光源（Directional/Point/Ambient）に対応、自己完結型 |
-| `GouraudMaterial.ts` | グーローシェーディング（頂点単位） | ライトはコンストラクタ引数+setterで保持（単一光源想定） |
+| `LitMaterial.ts` | `PhongMaterial`/`GouraudMaterial`の共通基底（中間抽象クラス） | `shininess`・複数光源（Directional/Point/Ambient）対応・自己完結型のロジックをすべて保持 |
+| `PhongMaterial.ts` | フォンシェーディング（フラグメント単位） | `LitMaterial`を継承する空クラス（中身0行） |
+| `GouraudMaterial.ts` | グーローシェーディング（頂点単位） | `LitMaterial`を継承する空クラス（中身0行）。以前はコンストラクタ引数+setterで単一光源のみ保持していたが解消済み |
 | `FragmentCanvasMaterial.ts` | 任意フラグメントシェーダのキャンバス化 | `customUniforms`という汎用Mapを持つ |
 | `FrameBufferTexturedMaterial.ts` | オフスクリーンRTの内容をそのまま描画 | `CURRENT_FRAME`スロット固定 |
 | `TexturedTextMaterial.ts` | テキストレンダリング用 | フォントアトラステクスチャ + SDF風`smoothness`パラメータ |
@@ -36,26 +39,30 @@
 
 ## 主要クラス詳細
 
-### `PhongMaterial`（自己完結型・複数光源対応）
+### `LitMaterial`（`PhongMaterial`/`GouraudMaterial`の共通基底、自己完結型・複数光源対応）
 
 ```ts
-setUniform(gl, context, transform): void {
-    const modelMatrix = transform.getWorldMatrix();
-    const invertMatrix = modelMatrix.inverse();
-    const eyeDirection = context.getCamera().calculateEyeDirection();
-    // modelMatrix / invMatrix / eyeDirection / shininess を送信
-    if (context.getLights().length == 0) return;
-    this.setLightUniforms(gl, context.getLights());
+// LitMaterial.ts
+export abstract class LitMaterial extends BaseMaterial {
+    private shininess: number;
+
+    setUniform(gl, context, transform): void {
+        const modelMatrix = transform.getWorldMatrix();
+        const invertMatrix = modelMatrix.inverse();
+        const eyeDirection = context.getCamera().calculateEyeDirection();
+        // modelMatrix / invMatrix / eyeDirection / shininess を送信
+        if (context.getLights().length == 0) return;
+        this.setLightUniforms(gl, context.getLights());
+    }
+
+    setShininess(shininess: number): void { this.shininess = shininess; }
 }
 ```
 
 - `modelMatrix`/`invMatrix`（法線変換用の逆行列）/`eyeDirection`（`Camera.calculateEyeDirection()`）/`shininess`（コンストラクタ引数、`setShininess()`で変更可）を自己計算して送信する。
 - `context.getLights()`から取得した`LightParams[]`を`setLightUniforms()`が`LightType`（`Directional`/`Point`/`Ambient`、`src/scene/light/LightConstants.ts`）ごとにフィルタし、`setDirectionalLightUniforms`/`setPointLightUniforms`/`setAmbientLightUniform`の3メソッドへ振り分ける。Directional/Pointはそれぞれ配列Uniform（`directionalLights[i].direction/color/intensity`等）+件数Uniform(`directionalLightCounts`)を送り、Ambientは複数光源があれば`color * intensity`を合算して単一の`ambientLightColor`にまとめる。
-- 単一光源前提だった旧実装から、複数光源・複数種別（Directional/Point/Ambient）対応へ拡張済み（`MAX_DIRECTIONAL_LIGHTS`/`MAX_POINT_LIGHTS`は共に8）。
-
-### `GouraudMaterial`（コンストラクタ引数+setter型・単一光源）
-
-`PhongMaterial`とは異なり、ライトを`context.getLights()`から取得せず、コンストラクタ引数（`lightDirection`/`eyeDirection`/`ambientColor`）+`setLightDirection()`/`setEyeDirection()`/`setAmbientColor()`という旧来のsetterパターンで保持し続けている。`PhongMaterial`と完全に同じ自己完結方針を採るかどうかは意図的に据え置かれた状態（両者の非対称性はこのファミリーの既知の揺れ）。
+- `PhongMaterial`/`GouraudMaterial`はどちらもこの`LitMaterial`を継承するだけの空クラス（`export class PhongMaterial extends LitMaterial { }`）で、コンストラクタも再宣言していない。両者の違いはTypeScriptコード上には一切現れず、`MaterialFactory`がどちらのシェーダキー（`'phongLighting'`/`'gouraudLighting'`）を渡すかだけで区別される——シェーダー側の計算タイミング（`phongLighting.frag`＝フラグメントごと／`gouraudLighting.vert`＝頂点ごと）の違いは維持したまま、TypeScript側の重複だけを解消した設計。
+- 以前は`GouraudMaterial`だけコンストラクタ引数+setter（`lightDirection`/`eyeDirection`/`ambientColor`）で単一光源を保持する旧実装だったが、`PhongMaterial`と同じ自己完結・複数光源方式に揃えられ、その後両クラスが完全に同一コードになったため`LitMaterial`へ集約された（`MAX_DIRECTIONAL_LIGHTS`/`MAX_POINT_LIGHTS`は共に8）。
 
 ### `FragmentCanvasMaterial`
 
@@ -92,9 +99,8 @@ export class MosaicMaterial extends BaseMaterial {
 - **`scene/factory` (`MaterialFactory`)**: すべての具象マテリアルは`MaterialFactory.xxxMaterial()`から生成する。ジオメトリ・メッシュと異なりマテリアルだけがFactory化されている非対称な設計。
 - **`scene/mesh`**: `BaseMesh`が`material: MaterialOperation`を保持し、`draw()`直前に`updateUniforms()`→`setUniform()`を呼ぶ。
 - **`scene/renderer/postEffect` (`~ShaderPass`)**: ポストエフェクト用マテリアル8種は対応する`~ShaderPass`（`BrightShaderPass`, `MosaicShaderPass`等）が内部で保持し、`BaseShaderPass`コンストラクタが`Plane`ジオメトリ+`UnlitMesh`+`MeshNode`を組み立てる際に使われる。詳細は`docs/scene/renderer.md`参照。
-- **`scene/renderer/RendererContext`**: `PhongMaterial`が`getCamera()`/`getLights()`を参照する唯一の接続点。
+- **`scene/renderer/RendererContext`**: `LitMaterial`（`PhongMaterial`/`GouraudMaterial`双方）が`getCamera()`/`getLights()`を参照する接続点。
 
 ## 既知の制約・未完成部分
 
-- `GouraudMaterial`のライト取得方法が`PhongMaterial`（`context.getLights()`から自己取得）と揃っていない（上記参照、意図的な保留）。
 - `examples/sample.ts`では`update()`内でシーングラフを走査して`LightNode`インスタンスを集め`rendererContext.setLights(lights)`を呼ぶ配線が実装済み。ライト経由の描画は機能する状態にある（詳細は`docs/scene/light.md`参照）。

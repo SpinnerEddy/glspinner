@@ -1,6 +1,4 @@
-import { Color } from '../../color/Color';
 import { ColorUtility } from '../../color/ColorUtility';
-import { Vector3 } from '../../math/vector/Vector3';
 import { TextFontLoader } from '../../webgl/gl/font/TextFontLoader';
 import { ShaderLoader } from '../../webgl/gl/ShaderLoader';
 import { TextureLoader } from '../../webgl/gl/texture/TextureLoader';

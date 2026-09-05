@@ -100,6 +100,7 @@ export * from './scene/material/FragmentCanvasMaterial';
 export * from './scene/material/UnlitMaterial';
 export * from './scene/material/GouraudMaterial';
 export * from './scene/material/PhongMaterial';
+export * from './scene/material/LitMaterial';
 export * from './scene/material/TexturedMaterial';
 export * from './scene/material/FrameBufferTexturedMaterial';
 export * from './scene/material/GrayScaleMaterial';

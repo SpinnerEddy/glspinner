@@ -2,7 +2,7 @@
 
 ## 概要
 
-glspinnerのライティングは2つの別レイヤーで表現される。「色・強度そのもの」を表す`Light`（`src/scene/light/`、`LightOperation`実装の値オブジェクト）と、「シーングラフ上の位置・方向」を持つ`~LightNode`（`src/scene/core/node/`、`docs/scene/core.md`で扱ったノード階層の一部）。両者は`getLightData(): LightParams`という橋渡しメソッドで接続され、最終的に`RendererContext.setLights()`経由で`PhongMaterial`（`docs/scene/material.md`参照）へ渡る。
+glspinnerのライティングは2つの別レイヤーで表現される。「色・強度そのもの」を表す`Light`（`src/scene/light/`、`LightOperation`実装の値オブジェクト）と、「シーングラフ上の位置・方向」を持つ`~LightNode`（`src/scene/core/node/`、`docs/scene/core.md`で扱ったノード階層の一部）。両者は`getLightData(): LightParams`という橋渡しメソッドで接続され、最終的に`RendererContext.setLights()`経由で`LitMaterial`（`PhongMaterial`/`GouraudMaterial`の共通基底、`docs/scene/material.md`参照）へ渡る。
 
 ## 主要クラス一覧
 
@@ -54,7 +54,7 @@ export type AmbientLightParams = LightCommonParams & { lightType: typeof LightTy
 export type LightParams = DirectionalLightParams | PointLightParams | AmbientLightParams;
 ```
 
-`LightParams`は3種別のタグ付きUnion型（`lightType`で判別）。`PhongMaterial.setLightUniforms()`（`docs/scene/material.md`参照）が`lightType`でフィルタしてシェーダへ送る。
+`LightParams`は3種別のタグ付きUnion型（`lightType`で判別）。`LitMaterial.setLightUniforms()`（`docs/scene/material.md`参照。`PhongMaterial`/`GouraudMaterial`双方が継承）が`lightType`でフィルタしてシェーダへ送る。
 
 ### `~LightNode`: シーングラフ上の位置を持つラッパー
 
@@ -93,7 +93,7 @@ this.rendererContext.setLights(lights);
 
 ## 他モジュールとの関係
 
-- **`scene/material.md` (`PhongMaterial`)**: `context.getLights()`を呼び、`LightType`ごとにフィルタしてシェーダUniformへ送る唯一の消費者。
+- **`scene/material.md` (`LitMaterial`)**: `context.getLights()`を呼び、`LightType`ごとにフィルタしてシェーダUniformへ送る消費者（`PhongMaterial`/`GouraudMaterial`双方がこれを継承）。
 - **`scene/factory.md` (`LightFactory`)**: `Light`インスタンスの生成元。
 - **`scene/core.md` (`~LightNode`)**: ライトのシーングラフ上の配置を担う。
 - **`scene/renderer.md` (`RendererContext`)**: `lights: LightParams[]`を保持するハブ。

@@ -98,7 +98,7 @@ export class Recorder {
 
 ### `LightGuiController`
 
-`ambientColor`（16進カラー文字列）・`lightDirection`（X/Y/Z別々のスライダーで`-1.0〜1.0`）・`eyeDirection`（X/Y/Z別々のスライダーで`0.0〜20.0`）を調整するGUIを構築し、`lightOptions`ゲッターで`LightOptions`（`{ambientColor, lightDirection: Vector3, eyeDirection: Vector3}`）としてまとめて返す。`GouraudMaterial`（`docs/scene/material.md`参照）のコンストラクタ引数と対応する構成になっている。
+`ambientColor`（16進カラー文字列）・`lightDirection`（X/Y/Z別々のスライダーで`-1.0〜1.0`）・`eyeDirection`（X/Y/Z別々のスライダーで`0.0〜20.0`）を調整するGUIを構築し、`lightOptions`ゲッターで`LightOptions`（`{ambientColor, lightDirection: Vector3, eyeDirection: Vector3}`）としてまとめて返す。この形は元々`GouraudMaterial`の旧コンストラクタ引数（`lightDirection`/`eyeDirection`/`ambientColor`）と対応させたものだったが、`GouraudMaterial`が`PhongMaterial`と同じ自己完結・複数光源方式（`LitMaterial`、`docs/scene/material.md`参照）に置き換わり該当引数が無くなったため、現状`LightOptions`を受け取る消費者が見当たらない（`examples/`内にも参照箇所なし）。孤立した状態になっている可能性がある——`glspinner-task-discovery`等で扱うべき既知のギャップとして下記に追記。
 
 ### `PostEffectGuiController`
 
@@ -112,4 +112,5 @@ export class Recorder {
 
 ## 既知の制約・未完成部分
 
-`Recorder`のコンストラクタ初期値(450)と`resetRecord()`の初期値(0)の食い違いは、意図的な初期値なのかバグなのか確認が取れていない差異として存在する。
+- `Recorder`のコンストラクタ初期値(450)と`resetRecord()`の初期値(0)の食い違いは、意図的な初期値なのかバグなのか確認が取れていない差異として存在する。
+- `LightGuiController.lightOptions`（`LightOptions`型）は、対応していた`GouraudMaterial`の旧コンストラクタ引数が`LitMaterial`導入（2026-09）で無くなったため、現状呼び出し元が見当たらない孤立コードになっている可能性がある（上記「`LightGuiController`」節参照）。

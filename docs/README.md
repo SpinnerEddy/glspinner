@@ -92,7 +92,7 @@ README.md（プロジェクトルート）に記載の「次やること」「�
 |---|---|
 | マテリアルとジオメトリの精査と関係性の調整 | ジオメトリはFactory化されておらず`new`直接呼び出し、マテリアルのみ`MaterialFactory`経由という非対称は現在も残る（意図的な非対称、[`scene/factory.md`](scene/factory.md)参照） |
 | 立方体など描けるジオメトリの種類を増やす | **`Box`ジオメトリは実装済み**（6面24頂点、`src/index.ts`からexport、`examples/sample.ts`で使用）。README作成時点では未着手だったと見られるが、現状は解消している（[`webgl/gl.md`](webgl/gl.md)参照） |
-| ライティング | **大きく前進している**。`PhongMaterial`は平行光源・点光源（各最大8個）+環境光+`shininess`のuniform化に対応し、`AmbientLightNode`/`DirectionalLightNode`/`PointLightNode`の3種のライトノードが揃っている。ただし`GouraudMaterial`は単一光源のまま据え置き（[`scene/material.md`](scene/material.md)/[`scene/light.md`](scene/light.md)参照） |
+| ライティング | **大きく前進している**。`PhongMaterial`/`GouraudMaterial`はいずれも平行光源・点光源（各最大8個）+環境光+`shininess`のuniform化に対応し、`AmbientLightNode`/`DirectionalLightNode`/`PointLightNode`の3種のライトノードが揃っている。両クラスの実装が完全に同一になったため、共通ロジックは新設の`LitMaterial`（中間抽象クラス）へ集約済み（[`scene/material.md`](scene/material.md)/[`scene/light.md`](scene/light.md)参照） |
 | インスタンシング | 未着手（該当する実装はコード上に見当たらない） |
 | UBOの情報のまとめ方 | `ShaderUniformBuffer`によるstd140アライメント計算・`GlobalUniforms`ブロックの自動バインドという現状の仕組みは動作しているが、`UniformBindingPoint`の`MATERIAL`/`OBJECT`/`LIGHT`/`DEBUG`は定義のみで未配線（[`webgl/gl.md`](webgl/gl.md)参照）——「これで良いか」という課題自体は未解決のまま |
 | MIDIコントローラーの設計 | 未解決のまま。`MidiDevice`は受信側が`console.log`止まり・`isDown`/`isPressed`/`isReleased`は`false`固定のスタブ。一方でコンストラクタ内にLED点灯を試みる送信側の実験コードが存在するという非対称な状態（[`input/input.md`](input/input.md)参照） |
@@ -104,7 +104,7 @@ README.md（プロジェクトルート）に記載の「次やること」「�
 1. **`LightFactory`は空ファイルではない**（`operation-base.md`/`general.md`の記述）。実際は`light(color, intensity): Light`が実装され、`examples/sample.ts`から呼ばれている（[`scene/factory.md`](scene/factory.md)/[`scene/light.md`](scene/light.md)）。
 2. **`Box`ジオメトリは未実装ではない**（`geometry.md`の記述）。6面24頂点で完全実装済み（[`webgl/gl.md`](webgl/gl.md)）。
 3. **`RendererContext.setLights()`には呼び出し元がある**（`pipeline.md`の記述は「呼び出し元が存在しない」）。`examples/sample.ts`の`update()`が毎フレーム呼んでいる（[`scene/renderer.md`](scene/renderer.md)）。
-4. **`PhongMaterial`は単一光源前提ではない**（`material.md`の記述）。平行光源・点光源（各最大8個）+環境光に対応済み（[`scene/material.md`](scene/material.md)）。
+4. **`PhongMaterial`は単一光源前提ではない**（`material.md`の記述）。平行光源・点光源（各最大8個）+環境光に対応済み（[`scene/material.md`](scene/material.md)）。（2026-09-05追記: `.claude/rules/material.md`側を更新し解消済み。あわせて`GouraudMaterial`も同方式に揃い、共通ロジックは新設の`LitMaterial`へ集約された）
 5. **`AmbientLightNode`が`node.md`に未記載**。`PointLightNode`/`DirectionalLightNode`と並ぶ3つ目の`LightNode`具象クラスとして存在する（[`scene/core.md`](scene/core.md)）。
 6. **`.claude/CLAUDE.md`のポストエフェクトチェーン例（「Bloom→Bright→横Blur→縦Blur→GrayScale→Mosaic→RGBShift→Glitch」）は現状と不一致**。現在の`examples/sample.ts`はBloom関連の配線一式がコメントアウトされ、ポストエフェクトなしの最小構成で動いている（[`scene/renderer.md`](scene/renderer.md)）。
 7. **ファイル名/クラス名の不一致を新規発見**: `flow/FinalBlitRenderFlow.ts`のクラス名は`FinalBlitRendererFlow`（"er"が1つ欠落）。`general.md`の「ファイル名とクラス名は1:1で完全一致する」という規約からの逸脱で、`flow.md`には記録されていない（[`scene/renderer.md`](scene/renderer.md)）。

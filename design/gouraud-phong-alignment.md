@@ -1,6 +1,6 @@
 # GouraudMaterial/gouraudLighting.vertをPhongMaterialの実装に揃える
 
-**ステータス**: 提案（未実装）
+**ステータス**: 実装済み（2026-09-05、ユーザー自身が本提案どおりに実装。ただし`GouraudMaterial`/`PhongMaterial`のTS側ロジックはその後`design/lit-material-extraction.md`により`LitMaterial`へ集約されている。`.claude/rules/material.md`・`docs/scene/material.md`ほか関連ドキュメントへの反映は別途未実施）
 **対象**: `src/scene/material/GouraudMaterial.ts`, `src/scene/factory/MaterialFactory.ts`, `src/webgl/shader/gouraudLighting.vert`
 
 ## Context（なぜこの変更をするか）
