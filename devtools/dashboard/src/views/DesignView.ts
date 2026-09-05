@@ -9,7 +9,6 @@ export function renderDesignView(container: HTMLElement): void {
             return paths.map((p) => ({ id: p, name: p }));
         },
         fetchContent: (id) => fetchDocContent('design', id),
-        emptyMessage: 'design/配下にMarkdownファイルがありません',
-        detailHeight: 480
+        emptyMessage: 'design/配下にMarkdownファイルがありません'
     });
 }

@@ -2,7 +2,6 @@ import { marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
 import hljs from 'highlight.js';
 import { fetchPageContent } from '../api';
-import { createResizeHandle } from '../resizeHandle';
 
 // Markdown内のコードブロックをhighlight.jsでシンタックスハイライトする。
 // 言語未指定/未対応言語の場合はhighlightAutoでベストエフォート判定する。
@@ -30,19 +29,16 @@ export type ListDetailOptions = {
     statusOptions?: string[];
     onStatusChange?: (id: string, status: string) => Promise<void>;
     emptyMessage: string;
-    detailHeight?: number;
     // 'text'指定時はfetchContentの戻り値をMarkdownとして解釈せず、<pre>にそのまま流し込む（diff等の表示用）。
     renderMode?: 'markdown' | 'text';
 };
 
 const UNKNOWN_STATUS_LABEL = '(不明)';
-const DEFAULT_DETAIL_HEIGHT = 220;
-const MIN_DETAIL_HEIGHT = 80;
-const MIN_LIST_HEIGHT = 40;
 
-// タスク/振り返り/技術課題の3タブで共通の「スクロールする一覧 + 下部の詳細エリア」レイアウト。
+// タスク/振り返り/技術課題などで共通の「スクロールする一覧 + 詳細オーバーレイ」レイアウト。
 // statusOptionsが与えられている場合はステータス別にグルーピングして表示する。
-// 一覧行クリックでNotionページ本文を取得しMarkdownとして詳細エリアに表示する（外部Notion画面へは飛ばない）。
+// 一覧行クリックでNotionページ本文を取得し、コンテナ全域を覆う詳細オーバーレイを右からスライドインさせて表示する
+// （外部Notion画面へは飛ばない）。閉じるボタンでスライドアウトして一覧に戻る。
 export function renderListDetailView(container: HTMLElement, options: ListDetailOptions): void {
     container.innerHTML = '';
 
@@ -59,8 +55,20 @@ export function renderListDetailView(container: HTMLElement, options: ListDetail
     listEl.className = 'scroll-list';
     view.appendChild(listEl);
 
-    const detailWrap = document.createElement('div');
-    detailWrap.className = 'detail-wrap';
+    // list/detailの親であるcontainer全域を覆うオーバーレイとして詳細を表示する。
+    // containerに直付けすることで、tab切り替え時のcontainer.innerHTML=''によって
+    // 開きっぱなしのオーバーレイも一緒に破棄される（後始末を別途書かずに済む）。
+    const overlay = document.createElement('div');
+    overlay.className = 'detail-overlay';
+    container.appendChild(overlay);
+
+    const overlayHeader = document.createElement('div');
+    overlayHeader.className = 'detail-overlay-header';
+    overlay.appendChild(overlayHeader);
+
+    const overlayTitle = document.createElement('span');
+    overlayTitle.className = 'detail-overlay-title';
+    overlayHeader.appendChild(overlayTitle);
 
     const detailLink = document.createElement('a');
     detailLink.className = 'detail-open-link';
@@ -68,34 +76,35 @@ export function renderListDetailView(container: HTMLElement, options: ListDetail
     detailLink.rel = 'noreferrer';
     detailLink.textContent = 'Notionで開く ↗';
     detailLink.hidden = true;
-    detailWrap.appendChild(detailLink);
+    overlayHeader.appendChild(detailLink);
+
+    const closeBtn = document.createElement('button');
+    closeBtn.type = 'button';
+    closeBtn.className = 'detail-close-btn';
+    closeBtn.textContent = '✕ 閉じる';
+    overlayHeader.appendChild(closeBtn);
 
     const detailArea = document.createElement('div');
-    detailArea.className = 'detail-area markdown-body';
-    detailArea.textContent = '一覧の項目をクリックすると詳細が表示されます';
-    detailArea.style.height = `${options.detailHeight ?? DEFAULT_DETAIL_HEIGHT}px`;
-    detailWrap.appendChild(detailArea);
-
-    // 詳細エリアの上端をドラッグして高さを変える。ブラウザ組み込みのresizeハンドル（右下の角のみ）だと
-    // 全画面表示時に下方向の余白が無く広げられないため、常に見えている上方向へドラッグする方式にしている。
-    const resizeHandle = createResizeHandle({
-        target: detailArea,
-        getMinSize: () => MIN_DETAIL_HEIGHT,
-        getMaxSize: () => view.getBoundingClientRect().bottom - listEl.getBoundingClientRect().top - MIN_LIST_HEIGHT,
-        direction: 'grow-up'
-    });
-    view.appendChild(resizeHandle);
-    view.appendChild(detailWrap);
+    detailArea.className = 'detail-overlay-body markdown-body';
+    overlay.appendChild(detailArea);
 
     let selectedRow: HTMLElement | null = null;
+
+    function closeOverlay(): void {
+        overlay.classList.remove('open');
+    }
+
+    closeBtn.addEventListener('click', closeOverlay);
 
     async function showDetail(item: ListItem, row: HTMLElement): Promise<void> {
         selectedRow?.classList.remove('selected');
         row.classList.add('selected');
         selectedRow = row;
 
+        overlayTitle.textContent = item.name;
         detailLink.hidden = !item.url;
         if (item.url) detailLink.href = item.url;
+        overlay.classList.add('open');
 
         detailArea.textContent = '読み込み中...';
         try {
