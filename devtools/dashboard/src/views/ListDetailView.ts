@@ -81,7 +81,13 @@ export function renderListDetailView(container: HTMLElement, options: ListDetail
     const closeBtn = document.createElement('button');
     closeBtn.type = 'button';
     closeBtn.className = 'detail-close-btn';
-    closeBtn.textContent = '✕ 閉じる';
+    closeBtn.title = '閉じる';
+    // 「×」グリフはフォントの重心が上寄りで、line-heightでの中央揃えだと見た目がやや下にずれるため、
+    // 専用spanに包んでtransformで見た目だけ上へ補正する（ボタン自体の位置・当たり判定は変えない）。
+    const closeIcon = document.createElement('span');
+    closeIcon.className = 'detail-close-icon';
+    closeIcon.textContent = '×';
+    closeBtn.appendChild(closeIcon);
     overlayHeader.appendChild(closeBtn);
 
     const detailArea = document.createElement('div');

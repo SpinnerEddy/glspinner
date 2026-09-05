@@ -440,19 +440,30 @@ body {
 .detail-close-btn {
     appearance: none;
     flex: none;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: var(--bg);
-    border: 1px solid var(--border);
+    border: 1px solid #dc2626;
     border-radius: 6px;
-    color: var(--ink);
+    color: #dc2626;
     font: inherit;
-    font-size: 12px;
-    padding: 4px 10px;
+    font-size: 16px;
+    line-height: 1;
+    padding: 0;
     cursor: pointer;
 }
 
 .detail-close-btn:hover {
-    color: var(--accent);
-    border-color: var(--accent);
+    background: #dc2626;
+    color: var(--surface);
+}
+
+.detail-close-icon {
+    display: inline-block;
+    transform: translateY(-1px);
 }
 
 .detail-overlay-body {
@@ -610,6 +621,15 @@ body {
 @media (prefers-color-scheme: dark) {
     .markdown-body code {
         color: #7fabe0;
+    }
+
+    .detail-close-btn {
+        border-color: #f87171;
+        color: #f87171;
+    }
+
+    .detail-close-btn:hover {
+        background: #f87171;
     }
 
     .hljs-keyword,
