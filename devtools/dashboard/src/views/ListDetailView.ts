@@ -1,6 +1,20 @@
 import { marked } from 'marked';
+import { markedHighlight } from 'marked-highlight';
+import hljs from 'highlight.js';
 import { fetchPageContent } from '../api';
 import { createResizeHandle } from '../resizeHandle';
+
+// Markdown内のコードブロックをhighlight.jsでシンタックスハイライトする。
+// 言語未指定/未対応言語の場合はhighlightAutoでベストエフォート判定する。
+marked.use(
+    markedHighlight({
+        langPrefix: 'hljs language-',
+        highlight(code, lang) {
+            const language = lang && hljs.getLanguage(lang) ? lang : undefined;
+            return language ? hljs.highlight(code, { language }).value : hljs.highlightAuto(code).value;
+        }
+    })
+);
 
 export type ListItem = {
     id: string;

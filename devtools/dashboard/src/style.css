@@ -468,6 +468,85 @@ body {
     padding: 0;
 }
 
+/* highlight.js トークン色。プリセットテーマは読み込まず、既存のダッシュボードのカラー変数に合わせて最小限だけ定義する。 */
+.hljs-comment,
+.hljs-quote {
+    color: var(--muted);
+    font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-tag {
+    color: #7c5cbf;
+}
+
+.hljs-string,
+.hljs-attr,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-addition {
+    color: #3d8a5f;
+}
+
+.hljs-number,
+.hljs-symbol,
+.hljs-bullet {
+    color: var(--accent);
+}
+
+.hljs-title,
+.hljs-name,
+.hljs-section,
+.hljs-type,
+.hljs-class .hljs-title {
+    color: #3574c9;
+}
+
+.hljs-variable,
+.hljs-attribute,
+.hljs-params {
+    color: var(--ink);
+}
+
+.hljs-deletion {
+    color: var(--error);
+}
+
+.hljs-emphasis {
+    font-style: italic;
+}
+
+.hljs-strong {
+    font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+    .hljs-keyword,
+    .hljs-selector-tag,
+    .hljs-literal,
+    .hljs-tag {
+        color: #b39ce8;
+    }
+
+    .hljs-string,
+    .hljs-attr,
+    .hljs-template-tag,
+    .hljs-template-variable,
+    .hljs-addition {
+        color: #7fc99a;
+    }
+
+    .hljs-title,
+    .hljs-name,
+    .hljs-section,
+    .hljs-type,
+    .hljs-class .hljs-title {
+        color: #7fabe0;
+    }
+}
+
 .markdown-body blockquote {
     margin: 0 0 10px;
     padding-left: 10px;
