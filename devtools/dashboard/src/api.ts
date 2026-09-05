@@ -103,3 +103,20 @@ export async function runScript(script: ScriptName): Promise<ScriptRunResult> {
 
     return res.json();
 }
+
+// Markdown中のインラインコード片(クラス名/ファイル名)を実ファイルへ解決する。
+// 失敗時は例外を投げず空オブジェクトを返す——この機能はあくまで補助的な拡張であり、
+// 呼び出し元(codeLinks.ts)が既に描画済みの本文を壊さないようにするため。
+export async function resolveCodeLinks(names: string[]): Promise<Record<string, string>> {
+    if (names.length === 0) return {};
+
+    const res = await fetch('/api/code/resolve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ names })
+    });
+
+    if (!res.ok) return {};
+
+    return res.json();
+}

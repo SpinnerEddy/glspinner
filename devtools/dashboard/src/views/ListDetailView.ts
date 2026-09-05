@@ -2,6 +2,7 @@ import { marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
 import hljs from 'highlight.js';
 import { fetchPageContent } from '../api';
+import { linkifyCodeSpans } from '../codeLinks';
 
 // Markdown内のコードブロックをhighlight.jsでシンタックスハイライトする。
 // 言語未指定/未対応言語の場合はhighlightAutoでベストエフォート判定する。
@@ -122,6 +123,7 @@ export function renderListDetailView(container: HTMLElement, options: ListDetail
                 detailArea.appendChild(pre);
             } else {
                 detailArea.innerHTML = await marked.parse(content);
+                await linkifyCodeSpans(detailArea);
             }
         } catch (err) {
             detailArea.textContent = `エラー: ${(err as Error).message}`;

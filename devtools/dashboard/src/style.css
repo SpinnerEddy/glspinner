@@ -542,6 +542,22 @@ body {
     color: var(--ink);
 }
 
+/* クラス名/ファイル名としてVSCodeで開けることが判明したインラインコードだけ、通常の青系と区別できる
+   アクセントカラー+破線下線にする（codeLinks.tsがサーバー解決後にこのクラスを付与する） */
+.code-link {
+    text-decoration: none;
+}
+
+.code-link code {
+    color: var(--accent);
+    text-decoration: underline dashed;
+    cursor: pointer;
+}
+
+.code-link:hover code {
+    color: var(--ink);
+}
+
 .markdown-body table {
     display: block;
     width: max-content;

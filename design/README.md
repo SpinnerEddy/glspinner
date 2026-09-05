@@ -18,7 +18,8 @@
 | [`dashboard-app.md`](dashboard-app.md) | `devtools/dashboard/`に置く、Notion（タスク／振り返り／技術課題）閲覧用の開発効率化ダッシュボードアプリの設計。glspinnerライブラリ本体とは無関係だが、ライブラリ出力への非混入を保証する設計を含む | 提案（未実装） |
 | [`canvas-size-single-source.md`](canvas-size-single-source.md) | 4Kモニター向けCanvas暴走バグ修正の副作用で生じた「Canvasサイズ変更時に触るべき箇所（HTML属性/CSS/Cameraデフォルト値）が分散している」問題への対応として、p5.jsの`createCanvas()`/Processingの`size()`風に`setup()`内1箇所で完結する統一API（`BaseApplication.setCanvasSize()`）を新設する設計 | 提案（未実装） |
 | [`gouraud-phong-alignment.md`](gouraud-phong-alignment.md) | `GouraudMaterial`/`gouraudLighting.vert`を、2026-07リファクタで自己完結化・複数光源対応済みの`PhongMaterial`/`phongLighting.frag`と同じ構造に揃える設計 | 実装済み（`.claude/rules/`/`docs/`未反映） |
-| [`lit-material-extraction.md`](lit-material-extraction.md) | 上記の整合後に完全重複となった`PhongMaterial`/`GouraudMaterial`のTypeScript側ロジックを、新設する中間抽象クラス`LitMaterial`へ集約する設計（型としての区別は維持） | 実装済み（`.claude/rules/`未反映） |
+| [`lit-material-extraction.md`](lit-material-extraction.md) | 上記の整合後に完全重複となった`PhongMaterial`/`GouraudMaterial`のTypeScript側ロジックを、新設する中間抽象クラス`LitMaterial`へ集約する設計（型としての区別は維持） | 実装済み（`.claude/rules/material.md`反映済み、`docs/`反映済み） |
+| [`spot-light.md`](spot-light.md) | `LightType`に`Spot`を追加し、`SpotLightNode`・`LitMaterial.setSpotLightUniforms`・`phongLighting.frag`/`gouraudLighting.vert`のコーン減衰計算を新設する設計（Notionタスク「⑤ Spotライトタイプの拡張」対応） | 提案（未実装） |
 
 ## この設計提案の生まれた経緯
 
