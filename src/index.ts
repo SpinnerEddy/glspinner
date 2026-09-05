@@ -146,6 +146,7 @@ export * from './scene/core/node/LightNode';
 export * from './scene/core/node/PointLightNode';
 export * from './scene/core/node/DirectionalLightNode';
 export * from './scene/core/node/AmbientLightNode';
+export * from './scene/core/node/SpotLightNode'
 export * from './scene/core/node/TextMeshNode';
 
 // Scene/Renderer

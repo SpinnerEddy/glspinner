@@ -9,6 +9,7 @@ class Sample extends GLSpinner.BaseApplication {
     private shaderAudioInput!: GLSpinner.ShaderAudioInput;
     private baseSceneRoot!: GLSpinner.EmptyNode;
     private boxNode!: GLSpinner.MeshNode;
+    private spotLightNode!: GLSpinner.SpotLightNode;
     private shaderPasses!: Map<string, GLSpinner.ShaderPassOperation>;
     private shaderPassEnabledSwitch!: Map<string, boolean>;
 
@@ -97,6 +98,14 @@ class Sample extends GLSpinner.BaseApplication {
         pointLightNode.getTransform().setPosition(new GLSpinner.Vector3(6, 0, 6));
         GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, pointLightNode);
 
+        const spotLight = GLSpinner.LightFactory.light(new GLSpinner.Color(1.0, 1.0, 0.5), 0.9);
+        this.spotLightNode = new GLSpinner.SpotLightNode(spotLight, GLSpinner.TrigonometricConstants.PI / 30.0, GLSpinner.TrigonometricConstants.PI / 15);
+        // 切り分け用: 回転は加えずデフォルトのidentityのままにする。
+        // Transform.getForwardVector()の基準前方向(0,0,-1)がそのまま-Z方向を向くため、
+        // 箱の手前(+Z側)に置けば回転の符号を気にせず箱の正面（カメラから見える面）を照らせる。
+        this.spotLightNode.getTransform().setPosition(new GLSpinner.Vector3(0.0, 0.0, 10.0));
+        GLSpinner.SceneGraphUtility.addChild(this.baseSceneRoot, this.spotLightNode);
+
         this.camera = new GLSpinner.Camera(GLSpinner.CameraType.Perspective);
         this.rendererContext.setCamera(this.camera);
 
@@ -110,7 +119,8 @@ class Sample extends GLSpinner.BaseApplication {
 
     update(): void {
         const elapsed = this.scene.getClock().getElapsedTime();
-        this.boxNode.getTransform().setRotation(GLSpinner.QuaternionCalculator.createFromAxisAndRadians(GLSpinner.DefaultVectorConstants.AXIS2DY, elapsed));
+        this.boxNode.getTransform().setRotation(GLSpinner.QuaternionCalculator.createFromAxisAndRadians(GLSpinner.DefaultVectorConstants.AXIS2DY, -elapsed));
+        this.spotLightNode.getTransform().setRotation(GLSpinner.QuaternionCalculator.createFromAxisAndRadians(GLSpinner.DefaultVectorConstants.AXIS2DY, -elapsed));
 
         const lights: GLSpinner.LightParams[] = [];
         GLSpinner.SceneGraphUtility.traverse(this.baseSceneRoot, (node) => {

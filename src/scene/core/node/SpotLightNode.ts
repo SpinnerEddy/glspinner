@@ -7,7 +7,7 @@ export class SpotLightNode extends LightNode {
     private innerConeAngle: number;
     private outerConeAngle: number;
 
-    constructor(light: Light, innerConeAngle: number = TrigonometricConstants.PI / 8, outerConeAngle: number = TrigonometricConstants.PI / 8) {
+    constructor(light: Light, innerConeAngle: number = TrigonometricConstants.PI / 8, outerConeAngle: number = TrigonometricConstants.PI / 6) {
         super(light);
         this.innerConeAngle = innerConeAngle;
         this.outerConeAngle = outerConeAngle;
