@@ -20,6 +20,7 @@
 | [`gouraud-phong-alignment.md`](gouraud-phong-alignment.md) | `GouraudMaterial`/`gouraudLighting.vert`を、2026-07リファクタで自己完結化・複数光源対応済みの`PhongMaterial`/`phongLighting.frag`と同じ構造に揃える設計 | 実装済み（`.claude/rules/`/`docs/`未反映） |
 | [`lit-material-extraction.md`](lit-material-extraction.md) | 上記の整合後に完全重複となった`PhongMaterial`/`GouraudMaterial`のTypeScript側ロジックを、新設する中間抽象クラス`LitMaterial`へ集約する設計（型としての区別は維持） | 実装済み（`.claude/rules/material.md`反映済み、`docs/`反映済み） |
 | [`spot-light.md`](spot-light.md) | `LightType`に`Spot`を追加し、`SpotLightNode`・`LitMaterial.setSpotLightUniforms`・`phongLighting.frag`/`gouraudLighting.vert`のコーン減衰計算を新設する設計（Notionタスク「⑤ Spotライトタイプの拡張」対応）。向きは`Transform`の回転から導出する方式に改訂し、`Transform.getRotation()`/`getForwardVector()`の新設も伴う | 提案（未実装） |
+| [`recording-scene-fix.md`](recording-scene-fix.md) | `FixedTimeClock`が効かない問題の修正設計。実際には未使用だった`RecordScene`（削除推奨）ではなく、`Scene.run()`内で無効化されたままの`shouldDraw()`ゲートを再有効化するのが真の修正箇所と特定 | 提案（未実装） |
 
 ## この設計提案の生まれた経緯
 
