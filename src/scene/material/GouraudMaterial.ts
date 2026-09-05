@@ -1,43 +1,82 @@
-import { Color } from '../../color/Color';
-import { Vector3 } from '../../math/vector/Vector3';
+import { Vector4 } from '../../math/vector/Vector4';
 import { ShaderProgram } from '../../webgl/gl/ShaderProgram';
 import { ShaderUniformValue } from '../../webgl/gl/uniform/ShaderUniformValue';
+import { LightParams, LightType } from '../light/LightConstants';
 import { RendererContext } from '../renderer/RendererContext';
 import { Transform } from '../transform/Transform';
 import { BaseMaterial } from './BaseMaterial';
 
 export class GouraudMaterial extends BaseMaterial {
-    private lightDirection: Vector3;
-    private eyeDirection: Vector3;
-    private ambientColor: Color;
+    private shininess: number;
 
-    constructor(shaderProgram: ShaderProgram, lightDirection: Vector3, eyeDirection: Vector3, ambientColor: Color) {
+    constructor(shaderProgram: ShaderProgram, shininess: number) {
         super(shaderProgram);
-        this.lightDirection = lightDirection;
-        this.eyeDirection = eyeDirection;
-        this.ambientColor = ambientColor;
+        this.shininess = shininess;
     }
 
-    setUniform(gl: WebGL2RenderingContext, _context: RendererContext, transform: Transform): void {
+    setUniform(gl: WebGL2RenderingContext, context: RendererContext, transform: Transform): void {
         const modelMatrix = transform.getWorldMatrix();
         const invertMatrix = modelMatrix.inverse();
+        const eyeDirection = context.getCamera().calculateEyeDirection();
 
         this.shaderProgram.setUniform(gl, 'modelMatrix', new ShaderUniformValue(modelMatrix));
         this.shaderProgram.setUniform(gl, 'invMatrix', new ShaderUniformValue(invertMatrix));
-        this.shaderProgram.setUniform(gl, 'lightDirection', new ShaderUniformValue(this.lightDirection));
-        this.shaderProgram.setUniform(gl, 'eyeDirection', new ShaderUniformValue(this.eyeDirection));
-        this.shaderProgram.setUniform(gl, 'ambientColor', new ShaderUniformValue(this.ambientColor.toVector4()));
-    }
-    
-    setLightDirection(lightDirection: Vector3): void {
-        this.lightDirection = lightDirection;
+        this.shaderProgram.setUniform(gl, 'eyeDirection', new ShaderUniformValue(eyeDirection));
+        this.shaderProgram.setUniform(gl, 'shininess', new ShaderUniformValue(this.shininess));
+
+        if (context.getLights().length == 0) return;
+
+        const lights = context.getLights();
+        this.setLightUniforms(gl, lights);
     }
 
-    setEyeDirection(eyeDirection: Vector3): void {
-        this.eyeDirection = eyeDirection;
+    setShininess(shininess: number): void {
+        this.shininess = shininess;
     }
 
-    setAmbientColor(ambientColor: Color): void {
-        this.ambientColor = ambientColor;
+    private setLightUniforms(gl: WebGL2RenderingContext, lights: LightParams[]): void {
+        this.setDirectionalLightUniforms(gl, lights);
+        this.setPointLightUniforms(gl, lights);
+        this.setAmbientLightUniform(gl, lights);
+    }
+
+    private setDirectionalLightUniforms(gl: WebGL2RenderingContext, lights: LightParams[]): void {
+        const directionalLights = lights.filter((light) => light.lightType === LightType.Directional);
+        if (directionalLights.length === 0) return;
+
+        this.shaderProgram.setUniform(gl, 'directionalLightCounts', new ShaderUniformValue(directionalLights.length, 'int'));
+        for (let i = 0; i < directionalLights.length; i++) {
+            const light = directionalLights[i];
+            const commonUniformStr = `directionalLights[${i}]`; 
+            this.shaderProgram.setUniform(gl, commonUniformStr + `.direction`, new ShaderUniformValue(light.direction));
+            this.shaderProgram.setUniform(gl, commonUniformStr + '.color', new ShaderUniformValue(light.color.toVector4()));
+            this.shaderProgram.setUniform(gl, commonUniformStr + '.intensity', new ShaderUniformValue(light.intensity));
+        }
+    }
+
+    private setPointLightUniforms(gl: WebGL2RenderingContext, lights: LightParams[]): void {
+        const pointLights = lights.filter((light) => light.lightType === LightType.Point);
+        if (pointLights.length === 0) return;
+        
+        this.shaderProgram.setUniform(gl, 'pointLightCounts', new ShaderUniformValue(pointLights.length, 'int'));
+        for (let i = 0; i < pointLights.length; i++) {
+            const light = pointLights[i];
+            const commonUniformStr = `pointLights[${i}]`; 
+            this.shaderProgram.setUniform(gl, commonUniformStr + `.position`, new ShaderUniformValue(light.position));
+            this.shaderProgram.setUniform(gl, commonUniformStr + '.color', new ShaderUniformValue(light.color.toVector4()));
+            this.shaderProgram.setUniform(gl, commonUniformStr + '.intensity', new ShaderUniformValue(light.intensity));
+        }
+    }
+
+    private setAmbientLightUniform(gl: WebGL2RenderingContext, lights: LightParams[]): void {
+        const ambientLights = lights.filter((light) => light.lightType === LightType.Ambient);
+        if (ambientLights.length === 0) return;
+
+        const calculatedAmbientColor = new Vector4(0, 0, 0, 0);
+        for (const light of ambientLights) {
+            calculatedAmbientColor.add(light.color.toVector4().multiply(light.intensity), calculatedAmbientColor);
+        }
+
+        this.shaderProgram.setUniform(gl, 'ambientLightColor', new ShaderUniformValue(calculatedAmbientColor));
     }
 }
