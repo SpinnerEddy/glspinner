@@ -5,6 +5,7 @@ export const LightType = {
     Directional: 1,
     Point: 2,
     Ambient: 3,
+    Spot: 4,
 } as const;
 
 export const MAX_DIRECTIONAL_LIGHTS = 8;
@@ -29,4 +30,12 @@ export type AmbientLightParams = LightCommonParams & {
     lightType: typeof LightType.Ambient;
 };
 
-export type LightParams = DirectionalLightParams | PointLightParams | AmbientLightParams;
+export type SpotLightParams = LightCommonParams & {
+    lightType: typeof LightType.Spot;
+    position: Vector3;
+    direction: Vector3;
+    innerConeAngle: number;
+    outerConeAngle: number;
+};
+
+export type LightParams = DirectionalLightParams | PointLightParams | AmbientLightParams | SpotLightParams;

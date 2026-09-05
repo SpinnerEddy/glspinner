@@ -3,11 +3,12 @@ import { LightType, PointLightParams } from '../../light/LightConstants';
 import { LightNode } from './LightNode';
 
 export class PointLightNode extends LightNode {
+    
     constructor(light: Light) {
         super(light);
     }
 
-    public getLightData(): PointLightParams {
+    getLightData(): PointLightParams {
         return {
             position: this.transform.getWorldPosition(),
             lightType: LightType.Point,

@@ -3,6 +3,7 @@ precision highp float;
 
 #define MAX_POINT_LIGHTS 8
 #define MAX_DIRECTIONAL_LIGHTS 8
+#define MAX_SPOT_LIGHTS 8
 
 layout(std140) uniform GlobalUniforms { // binding = 0 を削除
     mat4 viewMatrix;
@@ -19,6 +20,15 @@ struct PointLight {
 
 struct DirectionalLight {
     vec3 direction;
+    vec4 color;
+    float intensity;
+};
+
+struct SpotLight {
+    vec3 position;
+    vec3 direction;
+    float innerConeAngle;
+    float outerConeAngle;
     vec4 color;
     float intensity;
 };
@@ -41,6 +51,8 @@ uniform PointLight pointLights[MAX_POINT_LIGHTS];
 uniform int pointLightCounts;
 uniform DirectionalLight directionalLights[MAX_DIRECTIONAL_LIGHTS];
 uniform int directionalLightCounts;
+uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
+uniform int spotLightCounts;
 uniform vec4 ambientLightColor;
 
 out vec4 vColor;
@@ -63,6 +75,20 @@ LightResult calculatePointLight(PointLight light, vec3 worldPosition, vec3 norma
     return calculateLight(light.position - worldPosition, light.color.rgb, light.intensity, normal);
 }
 
+LightResult calculateSpotLight(SpotLight light, vec3 worldPosition, vec3 normal){
+    vec3 toLight = light.position - worldPosition;
+    LightResult result = calculateLight(toLight, light.color.rgb, light.intensity, normal);
+
+    vec3 lightToFrag = normalize(-toLight);
+    float cosAngle = dot(lightToFrag, normalize(light.direction));
+    float epsilon = cos(light.innerConeAngle) - cos(light.outerConeAngle);
+    float coneAttenuation = clamp((cosAngle - cos(light.outerConeAngle)) / epsilon, 0.0, 1.0);
+
+    result.diffuse *= coneAttenuation;
+    result.specular *= coneAttenuation;
+    return result;
+}
+
 void main(void){
     vec3 worldPosition = (modelMatrix * vec4(aPosition, 1.0)).xyz;
 
@@ -77,6 +103,13 @@ void main(void){
     int clampedPointLightCounts = min(pointLightCounts, MAX_POINT_LIGHTS);
     for(int i = 0; i < clampedPointLightCounts; i++){
         LightResult calculatedParam = calculatePointLight(pointLights[i], worldPosition, aNormal);
+        result.diffuse += calculatedParam.diffuse;
+        result.specular += calculatedParam.specular;
+    }
+
+    int clampedSpotLightCounts = min(spotLightCounts, MAX_SPOT_LIGHTS);
+    for(int i = 0; i < clampedSpotLightCounts; i++){
+        LightResult calculatedParam = calculateSpotLight(spotLights[i], worldPosition, aNormal);
         result.diffuse += calculatedParam.diffuse;
         result.specular += calculatedParam.specular;
     }

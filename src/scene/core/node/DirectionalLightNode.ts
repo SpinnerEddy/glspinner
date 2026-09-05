@@ -11,11 +11,11 @@ export class DirectionalLightNode extends LightNode {
         this.lightDirection = lightDirection;
     }
 
-    public setLightDirection(lightDirection: Vector3): void {
+    setLightDirection(lightDirection: Vector3): void {
         this.lightDirection = lightDirection;
     }
 
-    public getLightData(): DirectionalLightParams {
+    getLightData(): DirectionalLightParams {
         return {
             direction: this.lightDirection,
             lightType: LightType.Directional,

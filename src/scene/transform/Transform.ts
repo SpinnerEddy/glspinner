@@ -3,6 +3,7 @@ import { MatrixCalculator } from '../../math/MatrixCalculator';
 import { Quaternion } from '../../math/quaternion/Quaternion';
 import { QuaternionCalculator } from '../../math/QuaternionCalculator';
 import { Vector3 } from '../../math/vector/Vector3';
+import { VectorCalculator } from '../../math/VectorCalculator';
 
 export class Transform {
     private position: Vector3;
@@ -24,7 +25,7 @@ export class Transform {
         this.isRequiredRecalculation = false;
     }
 
-    public updateMatrix(parentMatrix: Matrix44 | undefined = undefined): void {
+    updateMatrix(parentMatrix: Matrix44 | undefined = undefined): void {
         if (!this.isRequiredRecalculation) return;
 
         this.calculateLocalMatrix();
@@ -33,27 +34,36 @@ export class Transform {
         this.isRequiredRecalculation = false;
     }
 
-    public getWorldMatrix(): Matrix44 {
+    getWorldMatrix(): Matrix44 {
         return this.worldMatrix;
     }
 
-    public setPosition(position: Vector3): void {
+    setPosition(position: Vector3): void {
         this.position = position;
         this.isRequiredRecalculation = true;
     }
 
-    public setScale(scale: Vector3): void {
+    setScale(scale: Vector3): void {
         this.scale = scale;
         this.isRequiredRecalculation = true;
     }
 
-    public setRotation(rotation: Quaternion): void {
+    setRotation(rotation: Quaternion): void {
         this.rotation = rotation;
         this.isRequiredRecalculation = true;
     }
 
-    public getWorldPosition(): Vector3 {
+    getWorldPosition(): Vector3 {
         return new Vector3(this.worldMatrix.get(0, 3), this.worldMatrix.get(1, 3), this.worldMatrix.get(2, 3));
+    }
+
+    getRotation(): Quaternion {
+        return this.rotation;
+    }
+
+    getForwardVector(): Vector3 {
+        const forward = new Vector3(0.0, 0.0, -1.0);
+        return VectorCalculator.normalize(QuaternionCalculator.rotateVector(this.rotation, forward));
     }
 
     private calculateLocalMatrix(): void {

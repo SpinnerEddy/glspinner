@@ -11,9 +11,7 @@ export abstract class LightNode extends SceneNode {
         this.light = light;
     }
 
-    public abstract getLightData(): LightParams;
-
-    public update(): void {
+    update(): void {
         this.transform.updateMatrix(this.parent?.getTransform().getWorldMatrix());
 
         for (const child of this.children) {
@@ -21,9 +19,11 @@ export abstract class LightNode extends SceneNode {
         }
     }
 
-    public draw(gl: WebGL2RenderingContext, context: RendererContext): void {
+    draw(gl: WebGL2RenderingContext, context: RendererContext): void {
         for (const child of this.children) {
             child.draw(gl, context);
         }
     }
+
+    abstract getLightData(): LightParams;
 }

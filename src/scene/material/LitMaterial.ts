@@ -38,6 +38,7 @@ export abstract class LitMaterial extends BaseMaterial {
         this.setDirectionalLightUniforms(gl, lights);
         this.setPointLightUniforms(gl, lights);
         this.setAmbientLightUniform(gl, lights);
+        this.setSpotLightUniform(gl, lights);
     }
 
     private setDirectionalLightUniforms(gl: WebGL2RenderingContext, lights: LightParams[]): void {
@@ -78,5 +79,22 @@ export abstract class LitMaterial extends BaseMaterial {
         }
 
         this.shaderProgram.setUniform(gl, 'ambientLightColor', new ShaderUniformValue(calculatedAmbientColor));
+    }
+
+    private setSpotLightUniform(gl: WebGL2RenderingContext, lights: LightParams[]): void {
+        const spotLights = lights.filter((light) => light.lightType === LightType.Spot);
+        if (spotLights.length === 0) return;
+
+        this.shaderProgram.setUniform(gl, 'spotLightCounts', new ShaderUniformValue(spotLights.length, 'int'));
+        for (let i = 0; i < spotLights.length; i++) {
+            const light = spotLights[i];
+            const commonUniformStr = `spotLights[${i}]`;
+            this.shaderProgram.setUniform(gl, commonUniformStr + `.position`, new ShaderUniformValue(light.position));
+            this.shaderProgram.setUniform(gl, commonUniformStr + `.direction`, new ShaderUniformValue(light.direction));
+            this.shaderProgram.setUniform(gl, commonUniformStr + '.innerConeAngle', new ShaderUniformValue(light.innerConeAngle));
+            this.shaderProgram.setUniform(gl, commonUniformStr + '.outerConeAngle', new ShaderUniformValue(light.outerConeAngle));
+            this.shaderProgram.setUniform(gl, commonUniformStr + '.color', new ShaderUniformValue(light.color.toVector4()));
+            this.shaderProgram.setUniform(gl, commonUniformStr + '.intensity', new ShaderUniformValue(light.intensity));
+        }
     }
 }
